@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stories Budapest — A hotel of stories, quietly told.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ivory: #F2EDE4;
+  --ivory-2: #EDE8DF;
+  --rule: #D9D3C6;
+  --ink: #0D0B08;
+  --ink-2: #1A1712;
+  --text: #2B261E;
+  --text-2: #6A6254;
+  --text-3: #9A9184;
+  --gold: #B9904E;
+  --green: #2A5C45;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  background: var(--ink);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+::selection { background: var(--gold); color: var(--ink); }
+
+/* NAV */
+nav.top {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 80;
+  padding: 22px clamp(24px, 4vw, 56px);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  transition: background 0.4s var(--ease), border-color 0.4s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+nav.top.scrolled {
+  background: rgba(13, 11, 8, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: rgba(255,255,255,0.08);
+}
+.brand {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+.brand em { font-style: italic; color: var(--gold); font-weight: 400; }
+.nav-links { display: flex; gap: 32px; justify-self: center; }
+.nav-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.72);
+  padding: 8px 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.nav-links a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+.nav-cta {
+  justify-self: end;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--gold);
+  padding: 11px 22px;
+  transition: background 0.3s var(--ease);
+}
+.nav-cta:hover { background: #fff; }
+
+/* RUNNING LABEL */
+.runlabel {
+  position: fixed;
+  top: 50%; left: 24px;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: left center;
+  z-index: 40;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  pointer-events: none;
+  white-space: nowrap;
+  transition: color 0.4s var(--ease);
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.runlabel.light { color: rgba(22,19,14,0.55); }
+.runlabel .sep { margin: 0 14px; color: var(--gold); }
+
+/* PLATE */
+.plate {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+  background: var(--ink);
+}
+.plate.tall { height: 110vh; }
+.plate .bg {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.06);
+  transition: transform 1.6s var(--ease);
+}
+.plate .bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(13,11,8,0.45) 0%, rgba(13,11,8,0.1) 30%, rgba(13,11,8,0.1) 55%, rgba(13,11,8,0.72) 100%);
+}
+.plate.visible .bg { transform: scale(1.0); }
+.plate-grain {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+}
+.plate-content {
+  position: relative; z-index: 2;
+  height: 100%;
+  padding: clamp(96px, 10vw, 140px) clamp(40px, 6vw, 96px) clamp(40px, 5vw, 72px);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  color: #fff;
+}
+.plate-id {
+  align-self: start;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.plate-id::before { content: ""; width: 40px; height: 1px; background: rgba(255,255,255,0.5); }
+.plate-id .n { color: var(--gold); }
+.plate-title-block { align-self: end; max-width: 1080px; }
+.plate-title-block h1, .plate-title-block h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: clamp(52px, 8.5vw, 148px);
+  line-height: 0.96;
+  letter-spacing: -0.018em;
+  color: #fff;
+  margin-bottom: 24px;
+  text-wrap: balance;
+}
+.plate-title-block em { font-style: italic; color: var(--gold); font-weight: 400; }
+.plate-deck {
+  font-size: 17px;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.78);
+  max-width: 540px;
+  font-weight: 300;
+  margin-bottom: 28px;
+}
+.plate-meta-row {
+  display: flex;
+  gap: clamp(24px, 3vw, 56px);
+  flex-wrap: wrap;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+.plate-meta-row > div { display: flex; flex-direction: column; gap: 4px; }
+.plate-meta-row .l {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+}
+.plate-meta-row .v { font-family: 'Playfair Display', serif; font-size: 19px; color: #fff; font-weight: 500; }
+.scrollcue {
+  position: absolute;
+  right: clamp(40px, 6vw, 96px);
+  bottom: clamp(40px, 5vw, 72px);
+  color: rgba(255,255,255,0.55);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 3;
+}
+.scrollcue .line {
+  width: 1px; height: 52px;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: scrolldrop 2.2s ease-in-out infinite;
+}
+@keyframes scrolldrop {
+  0%, 100% { opacity: 0.3; transform: translateY(-8px); }
+  50% { opacity: 1; transform: translateY(8px); }
+}
+
+/* BODY */
+.body {
+  background: var(--ivory);
+  color: var(--text);
+  padding: clamp(80px, 10vw, 140px) clamp(40px, 6vw, 96px);
+}
+.body.dark { background: var(--ink-2); color: rgba(255,255,255,0.84); }
+.body-inner { max-width: 1200px; margin: 0 auto; }
+
+/* ROOMS */
+.rooms-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 4vw, 64px);
+  margin-bottom: clamp(48px, 6vw, 80px);
+  align-items: end;
+}
+.rooms-head h3 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.rooms-head h3 em { font-style: italic; color: var(--green); }
+.rooms-head p { color: var(--text-2); max-width: 500px; font-weight: 300; font-size: 16px; line-height: 1.65; }
+.rooms-head .overline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 20px;
+}
+.rooms-head .overline .n { color: var(--green); }
+.room-rail {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 4px 0 28px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-3) transparent;
+  margin: 0 calc(-1 * clamp(40px, 6vw, 96px));
+  padding-left: clamp(40px, 6vw, 96px);
+  padding-right: clamp(40px, 6vw, 96px);
+}
+.room-rail::-webkit-scrollbar { height: 4px; }
+.room-rail::-webkit-scrollbar-thumb { background: var(--text-3); }
+.room-card {
+  flex: 0 0 clamp(280px, 28vw, 400px);
+  scroll-snap-align: start;
+  position: relative;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  background: var(--ivory-2);
+  cursor: pointer;
+  display: block;
+}
+.room-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
+.room-card:hover img { transform: scale(1.05); }
+.room-card::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(13,11,8,0) 40%, rgba(13,11,8,0.85) 100%);
+}
+.room-card .rc-inner { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 2; color: #fff; }
+.room-card .rc-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 10px;
+}
+.room-card .rc-top .idx { color: var(--gold); }
+.room-card h4 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.room-card h4 em { font-style: italic; color: var(--gold); font-weight: 400; }
+.room-card .rc-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: rgba(255,255,255,0.75); }
+.room-card.soon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-2);
+  background: var(--ivory-2);
+  border: 1px dashed var(--rule);
+}
+.room-card.soon::after { display: none; }
+.room-card.soon .sp { font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; color: var(--text-2); padding: 30px; line-height: 1.5; }
+.room-card.soon .sp b { font-family: 'Playfair Display', serif; font-weight: 500; font-style: normal; color: var(--ink); font-size: 22px; display: block; margin-bottom: 6px; }
+
+/* PLEASURES */
+.pleasures-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(220px, auto);
+  gap: 16px;
+  margin-top: 40px;
+}
+.pcard { position: relative; overflow: hidden; background: #222; min-height: 380px; }
+.pcard.a { grid-column: 1 / 7; grid-row: span 2; }
+.pcard.b { grid-column: 7 / 13; }
+.pcard.c { grid-column: 7 / 13; }
+.pcard img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
+.pcard:hover img { transform: scale(1.05); }
+.pcard::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,11,8,0) 35%, rgba(13,11,8,0.85) 100%); }
+.pcard .inner { position: absolute; z-index: 2; left: clamp(20px, 2vw, 32px); right: clamp(20px, 2vw, 32px); bottom: clamp(20px, 2vw, 32px); color: #fff; }
+.pcard .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+.pcard h4 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(26px, 3vw, 42px); line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 10px; }
+.pcard h4 em { font-style: italic; color: var(--gold); }
+.pcard p { font-size: 14px; color: rgba(255,255,255,0.75); max-width: 440px; font-weight: 300; line-height: 1.55; }
+.pcard .more {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  padding-bottom: 3px;
+  transition: gap 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.pcard .more:hover { gap: 14px; color: var(--gold); border-bottom-color: var(--gold); }
+
+/* BREAKFAST */
+.bk-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(40px, 5vw, 80px); align-items: start; margin-top: 40px; }
+.bk-grid h3 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; color: var(--ink); margin-bottom: 20px; letter-spacing: -0.01em; }
+.bk-grid h3 em { font-style: italic; color: var(--green); }
+.bk-grid p { font-size: 16px; line-height: 1.7; color: var(--text); margin-bottom: 14px; font-weight: 300; }
+.bk-right { padding-top: 4px; }
+.bk-fact { display: flex; justify-content: space-between; padding: 18px 0; border-top: 1px solid var(--rule); }
+.bk-fact:last-child { border-bottom: 1px solid var(--rule); }
+.bk-fact .l { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-2); }
+.bk-fact .v { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--ink); font-weight: 500; }
+.bk-fact .v em { font-style: italic; color: var(--green); font-weight: 400; }
+.bk-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 3px;
+  transition: gap 0.3s var(--ease);
+}
+.bk-cta:hover { gap: 16px; }
+
+/* NEIGHBOURHOOD */
+.neigh-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 4vw, 64px); margin-top: 40px; }
+.neigh-grid .ix { display: grid; grid-template-columns: 40px 1fr 1fr auto; column-gap: 20px; }
+.neigh-grid .ix > * { padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.12); font-weight: 400; }
+.neigh-grid .ix .n { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: rgba(255,255,255,0.5); }
+.neigh-grid .ix .pl { font-family: 'Playfair Display', serif; font-size: 19px; color: #fff; }
+.neigh-grid .ix .pl em { font-style: italic; color: var(--gold); font-weight: 400; }
+.neigh-grid .ix .k { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 300; }
+.neigh-grid .ix .d { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gold); letter-spacing: 0.1em; white-space: nowrap; }
+.neigh-map { background: #0F0D0A; border: 1px solid rgba(255,255,255,0.08); aspect-ratio: 4/5; position: relative; overflow: hidden; }
+.neigh-map::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(185,144,78,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(185,144,78,0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.neigh-map-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); transform: translate(-50%, -50%); box-shadow: 0 0 0 4px rgba(185,144,78,0.2); }
+.neigh-map-dot.stories { width: 16px; height: 16px; background: #fff; box-shadow: 0 0 0 6px rgba(255,255,255,0.15); }
+.neigh-map-dot .lab { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.7); white-space: nowrap; }
+.neigh-map-dot.stories .lab { color: #fff; font-weight: 500; }
+.neigh-map-legend { position: absolute; bottom: 16px; left: 16px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+.neigh-map-rose { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: rgba(255,255,255,0.6); }
+
+/* RESERVE */
+.reserve-plate {
+  position: relative;
+  min-height: 80vh;
+  padding: clamp(80px, 10vw, 140px) clamp(40px, 6vw, 96px);
+  background: var(--ink);
+  color: #fff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.reserve-plate::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: url('assets/brand/DorS347-R1-11-12.JPG') center / cover no-repeat;
+  opacity: 0.24;
+  filter: grayscale(0.3) contrast(1.1);
+}
+.reserve-plate::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 0%, rgba(13,11,8,0.7) 100%); }
+.reserve-inner { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; text-align: center; width: 100%; }
+.reserve-over { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); margin-bottom: 28px; display: inline-flex; align-items: center; gap: 12px; }
+.reserve-over::before, .reserve-over::after { content: ""; width: 32px; height: 1px; background: var(--gold); }
+.reserve-inner h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(44px, 6vw, 108px); line-height: 0.98; letter-spacing: -0.018em; margin-bottom: 28px; text-wrap: balance; }
+.reserve-inner h2 em { font-style: italic; color: var(--gold); }
+.reserve-inner > p { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.7); max-width: 560px; margin: 0 auto 44px; font-weight: 300; }
+.reserve-form {
+  max-width: 720px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.reserve-form .field { display: flex; flex-direction: column; padding: 16px 18px; text-align: left; border-right: 1px solid rgba(255,255,255,0.08); }
+.reserve-form .lab { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 6px; }
+.reserve-form input, .reserve-form select { background: transparent; border: none; color: #fff; font-family: 'Playfair Display', serif; font-size: 16px; padding: 0; outline: none; cursor: pointer; }
+.reserve-form select option { color: var(--ink); background: var(--ivory); }
+.reserve-form .go { background: var(--gold); border: none; color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; padding: 0 28px; cursor: pointer; font-weight: 500; transition: background 0.3s var(--ease); white-space: nowrap; }
+.reserve-form .go:hover { background: #fff; }
+
+/* FOOTER */
+footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px, 8vw, 96px) clamp(40px, 6vw, 96px) 28px; }
+.foot-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.foot-grid h3 { font-family: 'Playfair Display', serif; font-size: 28px; color: #fff; font-weight: 500; }
+.foot-grid .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 8px 0 24px; }
+.foot-grid address { font-style: normal; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
+.foot-grid a.ph { font-size: 14px; color: rgba(255,255,255,0.88); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1px; display: inline-block; margin-bottom: 4px; }
+.foot-grid a.ph:hover { color: var(--gold); border-bottom-color: var(--gold); }
+.foot-grid h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 18px; font-weight: 400; }
+.foot-grid ul { list-style: none; }
+.foot-grid li a { font-family: 'Playfair Display', serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
+.foot-grid li a:hover { color: var(--gold); padding-left: 5px; }
+.foot-bar { max-width: 1280px; margin: 24px auto 0; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .nav-links { display: none; }
+  .runlabel { display: none; }
+  .rooms-head, .bk-grid, .neigh-grid { grid-template-columns: 1fr; }
+  .pleasures-grid { grid-template-columns: 1fr; }
+  .pcard.a, .pcard.b, .pcard.c { grid-column: 1 / -1; grid-row: span 1; min-height: 300px; }
+  .reserve-form { grid-template-columns: 1fr; }
+  .reserve-form .field { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .plate-title-block h1, .plate-title-block h2 { font-size: clamp(40px, 10vw, 56px); }
+  .foot-grid { grid-template-columns: 1fr; }
+  .plate-meta-row { gap: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .bg { transform: none !important; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top" id="topnav">
+  <a href="index.html" class="brand">Stories <em>Budapest</em></a>
+  <div class="nav-links">
+    <a href="rooms.html">Rooms</a>
+    <a href="pleasures.html">Pleasures</a>
+    <a href="breakfast.html">Breakfast</a>
+    <a href="neighbourhood.html">Neighbourhood</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <a href="#reserve" class="nav-cta">Reserve</a>
+</nav>
+
+<div class="runlabel" id="runlabel">
+  <span id="rl-num">01</span><span class="sep">◆</span><span id="rl-text">The House</span>
+</div>
+
+<!-- HERO -->
+<section class="plate tall visible" data-label="01 / The House" id="hero">
+  <div class="bg" style="background-image: url('assets/brand/DorSharon341-R1-14-15.JPG');"></div>
+  <div class="plate-grain"></div>
+  <div class="plate-content">
+    <div class="plate-id"><span class="n">I</span><span>·</span><span>Stories Hotel · Budapest VI · Király utca 26</span></div>
+    <div class="plate-title-block">
+      <h1>A hotel<br>of <em>stories,</em><br>quietly told.</h1>
+      <p class="plate-deck">Six rooms, one Twenty Six building. A small house on Király utca, lived-in and attentive — the opposite of anonymous.</p>
+      <div class="plate-meta-row">
+        <div><span class="l">Form</span><span class="v">Boutique · 6 suites</span></div>
+        <div><span class="l">Address</span><span class="v">Király utca 26</span></div>
+        <div><span class="l">Opened</span><span class="v">MMXXIV</span></div>
+        <div><span class="l">Reservations</span><span class="v">+36 1 234 5678</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="scrollcue"><span>Scroll</span><span class="line"></span></div>
+</section>
+
+<!-- ROOMS PLATE + BODY -->
+<section class="plate" data-label="02 / The Rooms" id="rooms">
+  <div class="bg" style="background-image: url('assets/photos/presidential-suite/7893_Assaf-Pinchuk-photography.jpg');"></div>
+  <div class="plate-grain"></div>
+  <div class="plate-content">
+    <div class="plate-id"><span class="n">II</span><span>·</span><span>Six rooms, six temperaments</span></div>
+    <div class="plate-title-block">
+      <h2>Find your <em>room.</em></h2>
+      <p class="plate-deck">From a two-floor Presidential suite with a private sauna, to a Superior that is cosy on purpose. Each room is numbered, each carries its own tone.</p>
+    </div>
+  </div>
+  <div class="scrollcue"><span>The rooms</span><span class="line"></span></div>
+</section>
+
+<section class="body" data-label="02 / The Rooms">
+  <div class="body-inner">
+    <div class="rooms-head">
+      <div>
+        <div class="overline"><span class="n">02 — I</span> · Plates I through VI</div>
+        <h3>A house of <em>six.</em></h3>
+      </div>
+      <p>Scroll the plates or choose a number. Each room has its own page with full photography, floor plan, and amenities. Direct bookings include welcome drinks at the bar.</p>
+    </div>
+    <div class="room-rail">
+      <a class="room-card" href="rooms.html#presidential">
+        <img src="assets/photos/presidential-suite/7893_Assaf-Pinchuk-photography.jpg" alt="Presidential Suite">
+        <div class="rc-inner">
+          <div class="rc-top"><span class="idx">I</span><span>01 / 06</span></div>
+          <h4>Presidential <em>Suite</em></h4>
+          <div class="rc-meta">165–180 m² · 2 beds · Jacuzzi · Sauna</div>
+        </div>
+      </a>
+      <a class="room-card" href="rooms.html#king">
+        <img src="assets/photos/king-suite/Screenshot 2026-04-01 092237.png" alt="King Suite">
+        <div class="rc-inner">
+          <div class="rc-top"><span class="idx">II</span><span>02 / 06</span></div>
+          <h4>King Suite <em>— Jacuzzi</em></h4>
+          <div class="rc-meta">85 m² · Jacuzzi · Green-wall shower</div>
+        </div>
+      </a>
+      <a class="room-card" href="rooms.html#junior">
+        <img src="assets/photos/junior-suite/Stories Hotel_4.jpg" alt="Junior Suite">
+        <div class="rc-inner">
+          <div class="rc-top"><span class="idx">III</span><span>03 / 06</span></div>
+          <h4>Junior <em>Suite</em></h4>
+          <div class="rc-meta">65–75 m² · King + sofa-bed · Living room</div>
+        </div>
+      </a>
+      <a class="room-card" href="rooms.html#deluxe">
+        <img src="assets/photos/deluxe/Deluxe1.jpg" alt="Deluxe Room">
+        <div class="rc-inner">
+          <div class="rc-top"><span class="idx">IV</span><span>04 / 06</span></div>
+          <h4>Deluxe <em>Room</em></h4>
+          <div class="rc-meta">34–45 m² · King · Original art</div>
+        </div>
+      </a>
+      <a class="room-card" href="rooms.html#deluxe-queen">
+        <img src="assets/photos/deluxe-queen/Screenshot 2026-04-01 092456.png" alt="Deluxe Queen">
+        <div class="rc-inner">
+          <div class="rc-top"><span class="idx">V</span><span>05 / 06</span></div>
+          <h4>Deluxe <em>Queen</em></h4>
+          <div class="rc-meta">30 m² · Queen · Courtyard view</div>
+        </div>
+      </a>
+      <div class="room-card soon">
+        <div class="sp">
+          <b>VI · Superior Room</b>
+          17 m² · Queen bed · Intimate<br>
+          <em>Photography coming soon.</em>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLEASURES PLATE + BODY -->
+<section class="plate" data-label="03 / Little Luxuries" id="pleasures">
+  <div class="bg" style="background-image: url('assets/brand/4T4B5708.JPG');"></div>
+  <div class="plate-grain"></div>
+  <div class="plate-content">
+    <div class="plate-id"><span class="n">III</span><span>·</span><span>Rituals of the house</span></div>
+    <div class="plate-title-block">
+      <h2>Little <em>luxuries.</em></h2>
+      <p class="plate-deck">The small things that make a stay feel particular. A bar, a gym, a place to think — each with its own rhythm, each included.</p>
+    </div>
+  </div>
+  <div class="scrollcue"><span>Explore</span><span class="line"></span></div>
+</section>
+
+<section class="body dark" data-label="03 / Little Luxuries">
+  <div class="body-inner">
+    <div class="pleasures-grid">
+      <div class="pcard a">
+        <img src="assets/photos/restaurant/Screenshot 2026-04-01 093455.png" alt="Bar and lounge">
+        <div class="inner">
+          <div class="tag">III · 01 — Social</div>
+          <h4>Bar &amp; social <em>lounge</em></h4>
+          <p>Hungarian vermouths, natural wines from Tokaj, classics made slowly. A room that spills into the Twenty Six courtyard every evening after five.</p>
+          <a href="pleasures.html#bar" class="more">Read the bar chapter →</a>
+        </div>
+      </div>
+      <div class="pcard b">
+        <img src="assets/photos/GYM/GoActive-5-19.jpg" alt="Gym">
+        <div class="inner">
+          <div class="tag">III · 02 — Body</div>
+          <h4>Gym, with <em>GoActive</em></h4>
+          <p>Full access to our neighbour's studio — Technogym equipment and a sauna, complimentary with every stay.</p>
+          <a href="pleasures.html#gym" class="more">See schedule →</a>
+        </div>
+      </div>
+      <div class="pcard c">
+        <img src="assets/photos/Coworking/coworking26.jpg" alt="Create 26">
+        <div class="inner">
+          <div class="tag">III · 03 — Work</div>
+          <h4>Create 26 <em>coworking</em></h4>
+          <p>A quiet floor of private desks and meeting rooms, shared with the Twenty Six building. One desk per guest, at no charge.</p>
+          <a href="pleasures.html#coworking" class="more">Request a desk →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BREAKFAST PLATE + BODY -->
+<section class="plate" data-label="04 / Breakfast" id="breakfast">
+  <div class="bg" style="background-image: url('assets/photos/breakfast/background breakfast.png');"></div>
+  <div class="plate-grain"></div>
+  <div class="plate-content">
+    <div class="plate-id"><span class="n">IV</span><span>·</span><span>Breakfast at Twenty Six</span></div>
+    <div class="plate-title-block">
+      <h2>A table set<br>with <em>intention.</em></h2>
+      <p class="plate-deck">Not a buffet. You order, you sit, you talk. Local produce from Hunyadi tér, bread baked at dawn — a gentle ritual to start each day.</p>
+    </div>
+  </div>
+  <div class="scrollcue"><span>The menu</span><span class="line"></span></div>
+</section>
+
+<section class="body" data-label="04 / Breakfast">
+  <div class="body-inner">
+    <div class="bk-grid">
+      <div>
+        <h3>Ground floor of the <em>Twenty Six</em> building.</h3>
+        <p>Breakfast is served in the Twenty Six restaurant downstairs — a room that functions as a living room for District VI. Hungarian produce from the markets at Hunyadi tér, bread baked at dawn, a menu that shifts with the seasons.</p>
+        <p>We don't do buffets. You order, you sit, you talk. Eggs cooked by someone who cares.</p>
+        <a href="breakfast.html" class="bk-cta">See the full menu →</a>
+      </div>
+      <div class="bk-right">
+        <div class="bk-fact"><span class="l">Hours</span><span class="v">07:00 — 11:00</span></div>
+        <div class="bk-fact"><span class="l">Place</span><span class="v">Twenty Six, ground</span></div>
+        <div class="bk-fact"><span class="l">Style</span><span class="v"><em>À la carte</em></span></div>
+        <div class="bk-fact"><span class="l">Included</span><span class="v">All room rates</span></div>
+        <div class="bk-fact"><span class="l">Sourcing</span><span class="v">Hunyadi tér market</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEIGHBOURHOOD PLATE + BODY -->
+<section class="plate" data-label="05 / Neighbourhood" id="neigh">
+  <div class="bg" style="background-image: url('assets/brand/DorS347-R1-11-12.JPG');"></div>
+  <div class="plate-grain"></div>
+  <div class="plate-content">
+    <div class="plate-id"><span class="n">V</span><span>·</span><span>District VI, on foot</span></div>
+    <div class="plate-title-block">
+      <h2>A quarter worth<br>the <em>walk.</em></h2>
+      <p class="plate-deck">Király utca runs through one of Budapest's most walkable districts. Seven short steps from the door — the places we send guests when they ask.</p>
+    </div>
+  </div>
+  <div class="scrollcue"><span>The list</span><span class="line"></span></div>
+</section>
+
+<section class="body dark" data-label="05 / Neighbourhood">
+  <div class="body-inner">
+    <div class="neigh-grid">
+      <div class="ix">
+        <span class="n">01</span><span class="pl">Gerbeaud <em>—</em></span><span class="k">1858 · Coffee &amp; confectionery</span><span class="d">8 min</span>
+        <span class="n">02</span><span class="pl">Opera House <em>—</em></span><span class="k">Andrássy út · Restored 2022</span><span class="d">6 min</span>
+        <span class="n">03</span><span class="pl">Szimpla Kert <em>—</em></span><span class="k">The original ruin bar</span><span class="d">4 min</span>
+        <span class="n">04</span><span class="pl">Rumbach Synagogue <em>—</em></span><span class="k">Jewish Quarter</span><span class="d">3 min</span>
+        <span class="n">05</span><span class="pl">Gozsdu Udvar <em>—</em></span><span class="k">Seven connected courtyards</span><span class="d">5 min</span>
+        <span class="n">06</span><span class="pl">Dobrumba <em>—</em></span><span class="k">Levantine, Dob utca</span><span class="d">7 min</span>
+        <span class="n">07</span><span class="pl">Mazel Tov <em>—</em></span><span class="k">Garden, Middle-Eastern</span><span class="d">4 min</span>
+      </div>
+      <div class="neigh-map">
+        <div class="neigh-map-rose">N</div>
+        <div class="neigh-map-dot stories" style="top:52%;left:50%;"><span class="lab">Stories</span></div>
+        <div class="neigh-map-dot" style="top:30%;left:70%;"><span class="lab">Gerbeaud</span></div>
+        <div class="neigh-map-dot" style="top:38%;left:28%;"><span class="lab">Opera</span></div>
+        <div class="neigh-map-dot" style="top:66%;left:66%;"><span class="lab">Szimpla</span></div>
+        <div class="neigh-map-dot" style="top:46%;left:32%;"><span class="lab">Rumbach</span></div>
+        <div class="neigh-map-dot" style="top:60%;left:40%;"><span class="lab">Gozsdu</span></div>
+        <div class="neigh-map-legend">Király utca 26 · District VI · Scale ≈ 400m</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVE -->
+<section class="reserve-plate" id="reserve" data-label="06 / Reservations">
+  <div class="reserve-inner">
+    <div class="reserve-over">06 / Reservations</div>
+    <h2>Begin <em>your</em><br>Budapest chapter.</h2>
+    <p>Direct bookings include a complimentary welcome drink at the bar and late checkout (subject to availability). We answer within the same day.</p>
+    <form class="reserve-form" onsubmit="event.preventDefault();">
+      <div class="field">
+        <span class="lab">Check-in</span>
+        <input type="date">
+      </div>
+      <div class="field">
+        <span class="lab">Check-out</span>
+        <input type="date">
+      </div>
+      <div class="field">
+        <span class="lab">Guests</span>
+        <select>
+          <option>1 guest</option>
+          <option selected>2 guests</option>
+          <option>3 guests</option>
+          <option>4 guests</option>
+        </select>
+      </div>
+      <button class="go" type="submit">Check availability →</button>
+    </form>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="foot-grid">
+    <div>
+      <h3>Stories</h3>
+      <div class="sub">Budapest · Király utca 26</div>
+      <address>Twenty Six Building<br>Király utca 26, 1061 Budapest<br>Hungary</address>
+      <a href="tel:+3612345678" class="ph">+36 1 234 5678</a><br>
+      <a href="mailto:hello@storiesbudapest.com" class="ph">hello@storiesbudapest.com</a>
+    </div>
+    <div>
+      <h4>House</h4>
+      <ul>
+        <li><a href="rooms.html">Rooms</a></li>
+        <li><a href="breakfast.html">Breakfast</a></li>
+        <li><a href="pleasures.html">Bar &amp; lounge</a></li>
+        <li><a href="pleasures.html#gym">Gym · GoActive</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Visiting</h4>
+      <ul>
+        <li><a href="neighbourhood.html">Neighbourhood</a></li>
+        <li><a href="contact.html">Directions</a></li>
+        <li><a href="faqs.html">FAQ</a></li>
+        <li><a href="contact.html">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Follow</h4>
+      <ul>
+        <li><a href="#">Instagram ↗</a></li>
+        <li><a href="#">Journal</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <span>© 2026 Stories Hotel Budapest</span>
+    <span>Photography · Assaf Pinchuk &amp; Dor Sharon</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var nav = document.getElementById('topnav');
+  window.addEventListener('scroll', function () {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  var rlNum = document.getElementById('rl-num');
+  var rlText = document.getElementById('rl-text');
+  var label = document.getElementById('runlabel');
+  var sections = document.querySelectorAll('.plate, .body, .reserve-plate');
+
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && e.intersectionRatio > 0.35) {
+        var l = e.target.dataset.label;
+        if (l) {
+          var parts = l.split('/');
+          rlNum.textContent = parts[0].trim();
+          rlText.textContent = parts[1] ? parts[1].trim() : '';
+        }
+        if (e.target.classList.contains('body') && !e.target.classList.contains('dark')) {
+          label.classList.add('light');
+        } else {
+          label.classList.remove('light');
+        }
+        if (e.target.classList.contains('plate')) {
+          e.target.classList.add('visible');
+        }
+      }
+    });
+  }, { threshold: [0.35, 0.6] });
+
+  sections.forEach(function (s) { obs.observe(s); });
+}());
+</script>
+</body>
+</html>

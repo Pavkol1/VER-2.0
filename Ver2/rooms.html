@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rooms — Stories Budapest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ivory: #F2EDE4;
+  --ivory-2: #EDE8DF;
+  --rule: #D9D3C6;
+  --ink: #0D0B08;
+  --ink-2: #1A1712;
+  --text: #2B261E;
+  --text-2: #6A6254;
+  --text-3: #9A9184;
+  --gold: #B9904E;
+  --green: #2A5C45;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; font-weight: 400; background: var(--ink); color: var(--text); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+::selection { background: var(--gold); color: var(--ink); }
+
+/* NAV */
+nav.top { position: fixed; top: 0; left: 0; right: 0; z-index: 80; padding: 22px clamp(24px, 4vw, 56px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; transition: background 0.4s var(--ease), border-color 0.4s var(--ease); border-bottom: 1px solid transparent; }
+nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom-color: rgba(255,255,255,0.08); }
+.brand { font-family: 'Playfair Display', serif; font-weight: 500; font-size: 22px; letter-spacing: 0.02em; color: #fff; }
+.brand em { font-style: italic; color: var(--gold); font-weight: 400; }
+.nav-links { display: flex; gap: 32px; justify-self: center; }
+.nav-links a { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.72); padding: 8px 0; border-bottom: 1px solid transparent; transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.nav-links a:hover, .nav-links a.active { color: var(--gold); border-bottom-color: var(--gold); }
+.nav-cta { justify-self: end; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); background: var(--gold); padding: 11px 22px; transition: background 0.3s var(--ease); }
+.nav-cta:hover { background: #fff; }
+
+/* PLATE */
+.plate { position: relative; width: 100%; height: 100vh; min-height: 640px; overflow: hidden; background: var(--ink); }
+.plate .bg { position: absolute; inset: 0; background-size: cover; background-position: center; transform: scale(1.06); transition: transform 1.6s var(--ease); }
+.plate .bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,11,8,0.45) 0%, rgba(13,11,8,0.1) 30%, rgba(13,11,8,0.1) 55%, rgba(13,11,8,0.72) 100%); }
+.plate.visible .bg { transform: scale(1.0); }
+.plate-grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.12; mix-blend-mode: overlay; background-image: radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1px); background-size: 3px 3px, 5px 5px; }
+.plate-content { position: relative; z-index: 2; height: 100%; padding: clamp(96px, 10vw, 140px) clamp(40px, 6vw, 96px) clamp(40px, 5vw, 72px); display: grid; grid-template-rows: 1fr auto; color: #fff; }
+.plate-id { align-self: start; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.65); display: flex; align-items: center; gap: 14px; }
+.plate-id::before { content: ""; width: 40px; height: 1px; background: rgba(255,255,255,0.5); }
+.plate-id .n { color: var(--gold); }
+.plate-title-block { align-self: end; max-width: 1080px; }
+.plate-title-block h1 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(52px, 8.5vw, 148px); line-height: 0.96; letter-spacing: -0.018em; color: #fff; margin-bottom: 24px; text-wrap: balance; }
+.plate-title-block em { font-style: italic; color: var(--gold); font-weight: 400; }
+.plate-deck { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.78); max-width: 540px; font-weight: 300; }
+.scrollcue { position: absolute; right: clamp(40px, 6vw, 96px); bottom: clamp(40px, 5vw, 72px); color: rgba(255,255,255,0.55); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; display: flex; align-items: center; gap: 12px; z-index: 3; }
+.scrollcue .line { width: 1px; height: 52px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.6), transparent); animation: scrolldrop 2.2s ease-in-out infinite; }
+@keyframes scrolldrop { 0%, 100% { opacity: 0.3; transform: translateY(-8px); } 50% { opacity: 1; transform: translateY(8px); } }
+
+/* ROOM ENTRIES */
+.room-entry {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 80vh;
+}
+.room-entry:nth-child(even) { direction: rtl; }
+.room-entry:nth-child(even) > * { direction: ltr; }
+.room-photo {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink-2);
+}
+.room-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
+.room-entry:hover .room-photo img { transform: scale(1.04); }
+.room-info {
+  background: var(--ivory);
+  padding: clamp(60px, 8vw, 100px) clamp(48px, 6vw, 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.room-entry.dark-info .room-info { background: var(--ink-2); color: rgba(255,255,255,0.84); }
+.room-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.room-num::before { content: ""; width: 24px; height: 1px; background: var(--gold); }
+.room-info h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(32px, 4vw, 56px); line-height: 1.05; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 16px; }
+.room-entry.dark-info .room-info h2 { color: #fff; }
+.room-info h2 em { font-style: italic; color: var(--green); }
+.room-entry.dark-info .room-info h2 em { color: var(--gold); }
+.room-info .room-desc { font-size: 16px; line-height: 1.7; color: var(--text-2); font-weight: 300; max-width: 440px; margin-bottom: 28px; }
+.room-entry.dark-info .room-info .room-desc { color: rgba(255,255,255,0.65); }
+.room-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  margin-bottom: 28px;
+}
+.room-entry.dark-info .room-specs { border-top-color: rgba(255,255,255,0.12); }
+.spec-item { padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.room-entry.dark-info .spec-item { border-bottom-color: rgba(255,255,255,0.12); }
+.spec-item:nth-child(odd) { padding-right: 20px; }
+.spec-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3); margin-bottom: 3px; }
+.room-entry.dark-info .spec-label { color: rgba(255,255,255,0.4); }
+.spec-val { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 500; color: var(--ink); }
+.room-entry.dark-info .spec-val { color: #fff; }
+.room-cta { display: inline-flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); background: transparent; border: 1px solid var(--ink); padding: 13px 22px; transition: background 0.3s var(--ease), color 0.3s var(--ease); cursor: pointer; }
+.room-cta:hover { background: var(--ink); color: #fff; }
+.room-entry.dark-info .room-cta { color: #fff; border-color: rgba(255,255,255,0.4); }
+.room-entry.dark-info .room-cta:hover { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+.room-photo-placeholder { width: 100%; height: 100%; min-height: 500px; background: var(--ivory-2); display: flex; align-items: center; justify-content: center; }
+.room-photo-placeholder span { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: var(--text-3); }
+
+/* FOOTER */
+footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px, 8vw, 96px) clamp(40px, 6vw, 96px) 28px; }
+.foot-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.foot-grid h3 { font-family: 'Playfair Display', serif; font-size: 28px; color: #fff; font-weight: 500; }
+.foot-grid .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 8px 0 24px; }
+.foot-grid address { font-style: normal; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
+.foot-grid a.ph { font-size: 14px; color: rgba(255,255,255,0.88); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1px; display: inline-block; margin-bottom: 4px; }
+.foot-grid a.ph:hover { color: var(--gold); border-bottom-color: var(--gold); }
+.foot-grid h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 18px; font-weight: 400; }
+.foot-grid ul { list-style: none; }
+.foot-grid li a { font-family: 'Playfair Display', serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
+.foot-grid li a:hover { color: var(--gold); padding-left: 5px; }
+.foot-bar { max-width: 1280px; margin: 24px auto 0; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+
+@media (max-width: 1024px) {
+  .nav-links { display: none; }
+  .room-entry, .room-entry:nth-child(even) { grid-template-columns: 1fr; direction: ltr; }
+  .room-photo { min-height: 60vw; }
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .foot-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .bg { transform: none !important; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top" id="topnav">
+  <a href="index.html" class="brand">Stories <em>Budapest</em></a>
+  <div class="nav-links">
+    <a href="rooms.html" class="active">Rooms</a>
+    <a href="pleasures.html">Pleasures</a>
+    <a href="breakfast.html">Breakfast</a>
+    <a href="neighbourhood.html">Neighbourhood</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <a href="index.html#reserve" class="nav-cta">Reserve</a>
+</nav>
+
+<!-- PLATE -->
+<section class="plate visible" id="hero">
+  <div class="bg" style="background-image: url('assets/photos/presidential-suite/7893_Assaf-Pinchuk-photography.jpg');"></div>
+  <div class="plate-grain"></div>
+  <div class="plate-content">
+    <div class="plate-id"><span class="n">II</span><span>·</span><span>Six rooms, six temperaments</span></div>
+    <div class="plate-title-block">
+      <h1>The <em>rooms.</em></h1>
+      <p class="plate-deck">Every room in the house has a number and a nature. Choose by size, by mood, by what you need a stay to feel like.</p>
+    </div>
+  </div>
+  <div class="scrollcue"><span>The rooms</span><span class="line"></span></div>
+</section>
+
+<!-- ROOM I: Presidential Suite -->
+<article class="room-entry" id="presidential">
+  <div class="room-photo">
+    <img src="assets/photos/presidential-suite/7893_Assaf-Pinchuk-photography.jpg" alt="Presidential Suite">
+  </div>
+  <div class="room-info">
+    <div class="room-num">I · 01 / 06</div>
+    <h2>Presidential <em>Suite</em></h2>
+    <p class="room-desc">The largest room in the house — a two-floor suite with a private sauna, Jacuzzi, and a terrace that overlooks the inner courtyard of Twenty Six. For stays that call for more space, more quiet, more of everything.</p>
+    <div class="room-specs">
+      <div class="spec-item"><div class="spec-label">Size</div><div class="spec-val">165–180 m²</div></div>
+      <div class="spec-item"><div class="spec-label">Beds</div><div class="spec-val">2 King beds</div></div>
+      <div class="spec-item"><div class="spec-label">Bathrooms</div><div class="spec-val">2.5 baths</div></div>
+      <div class="spec-item"><div class="spec-label">Extras</div><div class="spec-val">Jacuzzi · Sauna</div></div>
+      <div class="spec-item"><div class="spec-label">Floors</div><div class="spec-val">Two-level</div></div>
+      <div class="spec-item"><div class="spec-label">View</div><div class="spec-val">Courtyard terrace</div></div>
+    </div>
+    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+  </div>
+</article>
+
+<!-- ROOM II: King Suite -->
+<article class="room-entry dark-info" id="king">
+  <div class="room-photo">
+    <img src="assets/photos/king-suite/Screenshot 2026-04-01 092237.png" alt="King Suite with Jacuzzi">
+  </div>
+  <div class="room-info">
+    <div class="room-num">II · 02 / 06</div>
+    <h2>King Suite <em>— Jacuzzi</em></h2>
+    <p class="room-desc">A generous suite built around the ritual of the bath. A full Jacuzzi tub, a living area, and a green-wall shower that brings the outside in. Eighty-five square metres of considered quiet.</p>
+    <div class="room-specs">
+      <div class="spec-item"><div class="spec-label">Size</div><div class="spec-val">85 m²</div></div>
+      <div class="spec-item"><div class="spec-label">Bed</div><div class="spec-val">King bed</div></div>
+      <div class="spec-item"><div class="spec-label">Bath</div><div class="spec-val">Jacuzzi tub</div></div>
+      <div class="spec-item"><div class="spec-label">Shower</div><div class="spec-val">Green-wall shower</div></div>
+      <div class="spec-item"><div class="spec-label">Sauna</div><div class="spec-val">Private sauna</div></div>
+      <div class="spec-item"><div class="spec-label">Living</div><div class="spec-val">Separate lounge</div></div>
+    </div>
+    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+  </div>
+</article>
+
+<!-- ROOM III: Junior Suite -->
+<article class="room-entry" id="junior">
+  <div class="room-photo">
+    <img src="assets/photos/junior-suite/Stories Hotel_4.jpg" alt="Junior Suite">
+  </div>
+  <div class="room-info">
+    <div class="room-num">III · 03 / 06</div>
+    <h2>Junior <em>Suite</em></h2>
+    <p class="room-desc">A suite designed for flexibility — a king bed in the sleeping area and a sofa-bed in the living room, separated by a thoughtful arrangement of space. The right room when you need more than a room.</p>
+    <div class="room-specs">
+      <div class="spec-item"><div class="spec-label">Size</div><div class="spec-val">65–75 m²</div></div>
+      <div class="spec-item"><div class="spec-label">Bed</div><div class="spec-val">King + sofa-bed</div></div>
+      <div class="spec-item"><div class="spec-label">Living</div><div class="spec-val">Separate room</div></div>
+      <div class="spec-item"><div class="spec-label">Guests</div><div class="spec-val">Up to 3</div></div>
+      <div class="spec-item"><div class="spec-label">Bath</div><div class="spec-val">1 full bathroom</div></div>
+      <div class="spec-item"><div class="spec-label">Desk</div><div class="spec-val">Writing desk</div></div>
+    </div>
+    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+  </div>
+</article>
+
+<!-- ROOM IV: Deluxe Room -->
+<article class="room-entry dark-info" id="deluxe">
+  <div class="room-photo">
+    <img src="assets/photos/deluxe/Deluxe1.jpg" alt="Deluxe Room">
+  </div>
+  <div class="room-info">
+    <div class="room-num">IV · 04 / 06</div>
+    <h2>Deluxe <em>Room</em></h2>
+    <p class="room-desc">A room with strong ideas about how a space should look and feel. Original art from Budapest artists on the walls, a king bed positioned toward the window, and enough square metres to feel unhurried.</p>
+    <div class="room-specs">
+      <div class="spec-item"><div class="spec-label">Size</div><div class="spec-val">34–45 m²</div></div>
+      <div class="spec-item"><div class="spec-label">Bed</div><div class="spec-val">King bed</div></div>
+      <div class="spec-item"><div class="spec-label">Art</div><div class="spec-val">Original works</div></div>
+      <div class="spec-item"><div class="spec-label">Living</div><div class="spec-val">Sitting area</div></div>
+      <div class="spec-item"><div class="spec-label">Bath</div><div class="spec-val">1 full bathroom</div></div>
+      <div class="spec-item"><div class="spec-label">Floor</div><div class="spec-val">Upper floors</div></div>
+    </div>
+    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+  </div>
+</article>
+
+<!-- ROOM V: Deluxe Queen -->
+<article class="room-entry" id="deluxe-queen">
+  <div class="room-photo">
+    <img src="assets/photos/deluxe-queen/Screenshot 2026-04-01 092456.png" alt="Deluxe Queen Room">
+  </div>
+  <div class="room-info">
+    <div class="room-num">V · 05 / 06</div>
+    <h2>Deluxe <em>Queen</em></h2>
+    <p class="room-desc">A queen-bed room that looks onto the inner courtyard — the quiet face of Twenty Six. Thirty square metres arranged with care. The courtyard view changes colour through the day, and the room is better for it.</p>
+    <div class="room-specs">
+      <div class="spec-item"><div class="spec-label">Size</div><div class="spec-val">30 m²</div></div>
+      <div class="spec-item"><div class="spec-label">Bed</div><div class="spec-val">Queen bed</div></div>
+      <div class="spec-item"><div class="spec-label">View</div><div class="spec-val">Inner courtyard</div></div>
+      <div class="spec-item"><div class="spec-label">Bath</div><div class="spec-val">1 full bathroom</div></div>
+      <div class="spec-item"><div class="spec-label">Light</div><div class="spec-val">South-facing</div></div>
+      <div class="spec-item"><div class="spec-label">Guests</div><div class="spec-val">Up to 2</div></div>
+    </div>
+    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+  </div>
+</article>
+
+<!-- ROOM VI: Superior Room -->
+<article class="room-entry dark-info" id="superior">
+  <div class="room-photo">
+    <div class="room-photo-placeholder">
+      <span>Photography coming soon.</span>
+    </div>
+  </div>
+  <div class="room-info">
+    <div class="room-num">VI · 06 / 06</div>
+    <h2>Superior <em>Room</em></h2>
+    <p class="room-desc">The smallest room in the house — deliberately so. Seventeen square metres shaped around a queen bed, designed on the premise that a hotel room is a place for sleeping, not for pacing. Cosy by intention.</p>
+    <div class="room-specs">
+      <div class="spec-item"><div class="spec-label">Size</div><div class="spec-val">17 m²</div></div>
+      <div class="spec-item"><div class="spec-label">Bed</div><div class="spec-val">Queen bed</div></div>
+      <div class="spec-item"><div class="spec-label">Bath</div><div class="spec-val">1 bathroom</div></div>
+      <div class="spec-item"><div class="spec-label">Character</div><div class="spec-val">Intimate</div></div>
+      <div class="spec-item"><div class="spec-label">Photo</div><div class="spec-val">Coming soon</div></div>
+      <div class="spec-item"><div class="spec-label">Rate</div><div class="spec-val">From inquiry</div></div>
+    </div>
+    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+  </div>
+</article>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <h3>Stories</h3>
+      <div class="sub">Budapest · Király utca 26</div>
+      <address>Twenty Six Building<br>Király utca 26, 1061 Budapest<br>Hungary</address>
+      <a href="tel:+3612345678" class="ph">+36 1 234 5678</a><br>
+      <a href="mailto:hello@storiesbudapest.com" class="ph">hello@storiesbudapest.com</a>
+    </div>
+    <div>
+      <h4>House</h4>
+      <ul>
+        <li><a href="rooms.html">Rooms</a></li>
+        <li><a href="breakfast.html">Breakfast</a></li>
+        <li><a href="pleasures.html">Bar &amp; lounge</a></li>
+        <li><a href="pleasures.html#gym">Gym · GoActive</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Visiting</h4>
+      <ul>
+        <li><a href="neighbourhood.html">Neighbourhood</a></li>
+        <li><a href="contact.html">Directions</a></li>
+        <li><a href="faqs.html">FAQ</a></li>
+        <li><a href="contact.html">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Follow</h4>
+      <ul>
+        <li><a href="#">Instagram ↗</a></li>
+        <li><a href="#">Journal</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <span>© 2026 Stories Hotel Budapest</span>
+    <span>Photography · Assaf Pinchuk &amp; Dor Sharon</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var nav = document.getElementById('topnav');
+  window.addEventListener('scroll', function () {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+}());
+</script>
+</body>
+</html>
