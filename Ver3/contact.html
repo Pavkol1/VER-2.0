@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Stories Budapest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:     #0B1410;
+  --ink-2:   #1A1F1A;
+  --paper:   #EDE7DA;
+  --paper-2: #E5DECE;
+  --rule:    #C9C1B0;
+  --text:    #2A2A22;
+  --text-2:  #6A6A5C;
+  --text-3:  #9A9A8C;
+  --primary: #123524;
+  --accent:  #B9904E;
+  --ease:    cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; font-weight: 400; background: var(--ink); color: var(--text); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+::selection { background: var(--accent); color: var(--ink); }
+
+nav.top { position: fixed; top: 0; left: 0; right: 0; z-index: 80; padding: 22px clamp(24px, 4vw, 56px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; transition: background 0.4s var(--ease), border-color 0.4s var(--ease); border-bottom: 1px solid transparent; }
+nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom-color: rgba(255,255,255,0.08); }
+.brand { font-family: 'Playfair Display', serif; font-weight: 500; font-size: 22px; letter-spacing: 0.02em; color: #fff; }
+.brand em { font-style: italic; color: var(--accent); font-weight: 400; }
+.nav-links { display: flex; gap: 32px; justify-self: center; }
+.nav-links a { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.72); padding: 8px 0; border-bottom: 1px solid transparent; transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.nav-links a:hover, .nav-links a.active { color: var(--accent); border-bottom-color: var(--accent); }
+.nav-cta { justify-self: end; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); background: var(--accent); padding: 11px 22px; transition: background 0.3s var(--ease); }
+.nav-cta:hover { background: #fff; }
+
+/* PLATE */
+.plate { position: relative; width: 100%; height: 100vh; min-height: 640px; overflow: hidden; background: var(--ink); }
+.plate .bg { position: absolute; inset: 0; background-size: cover; background-position: center; transform: scale(1.06); transition: transform 1.6s var(--ease); }
+.plate .bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,11,8,0.45) 0%, rgba(13,11,8,0.1) 30%, rgba(13,11,8,0.1) 55%, rgba(13,11,8,0.72) 100%); }
+.plate.visible .bg { transform: scale(1.0); }
+.plate-grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.12; mix-blend-mode: overlay; background-image: radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1px); background-size: 3px 3px, 5px 5px; }
+.plate-content { position: relative; z-index: 2; height: 100%; padding: clamp(96px, 10vw, 140px) clamp(40px, 6vw, 96px) clamp(40px, 5vw, 72px); display: grid; grid-template-rows: 1fr auto; color: #fff; }
+.plate-id { align-self: start; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.65); display: flex; align-items: center; gap: 14px; }
+.plate-id::before { content: ""; width: 40px; height: 1px; background: rgba(255,255,255,0.5); }
+.plate-id .n { color: var(--accent); }
+.plate-title-block { align-self: end; max-width: 1080px; }
+.plate-title-block h1 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(52px, 8.5vw, 148px); line-height: 0.96; letter-spacing: -0.018em; color: #fff; margin-bottom: 24px; text-wrap: balance; }
+.plate-title-block em { font-style: italic; color: var(--accent); font-weight: 400; }
+.plate-deck { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.78); max-width: 540px; font-weight: 300; }
+
+/* CONTACT LAYOUT */
+.contact-body { background: var(--paper); padding: clamp(80px, 10vw, 140px) clamp(40px, 6vw, 96px); }
+.contact-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(48px, 6vw, 96px); }
+.contact-info h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; color: var(--ink); margin-bottom: 24px; letter-spacing: -0.01em; }
+.contact-info h2 em { font-style: italic; color: var(--primary); }
+.contact-info p { font-size: 16px; line-height: 1.7; color: var(--text-2); font-weight: 300; margin-bottom: 32px; }
+.contact-details { margin-bottom: 32px; }
+.detail-row { display: flex; flex-direction: column; padding: 16px 0; border-top: 1px solid var(--rule); }
+.detail-row:last-child { border-bottom: 1px solid var(--rule); }
+.detail-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
+.detail-val { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--ink); font-weight: 500; }
+.detail-val a { color: var(--ink); border-bottom: 1px solid var(--rule); transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.detail-val a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+
+/* GETTING HERE */
+.directions { background: var(--paper-2); padding: 32px; margin-top: 32px; }
+.directions h3 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: 20px; color: var(--ink); margin-bottom: 16px; }
+.dir-item { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.dir-item:last-child { border-bottom: none; }
+.dir-icon { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--accent); min-width: 40px; }
+.dir-text { font-size: 14px; color: var(--text-2); font-weight: 300; line-height: 1.5; }
+
+/* CONTACT FORM */
+.contact-form-wrap { padding-top: 8px; }
+.contact-form-wrap h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(24px, 2.8vw, 36px); line-height: 1.1; color: var(--ink); margin-bottom: 8px; letter-spacing: -0.01em; }
+.contact-form-wrap h2 em { font-style: italic; color: var(--primary); }
+.contact-form-wrap .sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3); margin-bottom: 32px; }
+.cform { display: flex; flex-direction: column; gap: 0; }
+.cform-field { display: flex; flex-direction: column; border-bottom: 1px solid var(--rule); padding: 16px 0; }
+.cform-field:first-child { border-top: 1px solid var(--rule); }
+.cform-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px; }
+.cform-field input, .cform-field select, .cform-field textarea { background: transparent; border: none; font-family: 'Playfair Display', serif; font-size: 17px; color: var(--ink); padding: 0; outline: none; resize: none; }
+.cform-field textarea { min-height: 100px; line-height: 1.5; }
+.cform-field input::placeholder, .cform-field textarea::placeholder { color: var(--text-3); font-style: italic; }
+.cform-submit { margin-top: 24px; display: flex; align-items: center; gap: 24px; }
+.cform-btn { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #fff; background: var(--ink); border: 1px solid var(--ink); padding: 14px 28px; cursor: pointer; transition: background 0.3s var(--ease); }
+.cform-btn:hover { background: var(--primary); border-color: var(--primary); }
+.cform-note { font-size: 13px; color: var(--text-3); font-weight: 300; }
+
+footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px, 8vw, 96px) clamp(40px, 6vw, 96px) 28px; }
+.foot-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.foot-grid h3 { font-family: 'Playfair Display', serif; font-size: 28px; color: #fff; font-weight: 500; }
+.foot-grid .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 8px 0 24px; }
+.foot-grid address { font-style: normal; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
+.foot-grid a.ph { font-size: 14px; color: rgba(255,255,255,0.88); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1px; display: inline-block; margin-bottom: 4px; }
+.foot-grid a.ph:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.foot-grid h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 18px; font-weight: 400; }
+.foot-grid ul { list-style: none; }
+.foot-grid li a { font-family: 'Playfair Display', serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
+.foot-grid li a:hover { color: var(--accent); padding-left: 5px; }
+.foot-bar { max-width: 1280px; margin: 24px auto 0; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+
+@media (max-width: 1024px) {
+  .nav-links { display: none; }
+  .contact-inner { grid-template-columns: 1fr; }
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) { .foot-grid { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } .bg { transform: none !important; } }
+
+/* HERO LOGO SYSTEM (Ver3 — Emerald Boutique) */
+.logo-stage {
+  position: fixed; inset: 0;
+  z-index: 90; pointer-events: none;
+  display: grid; place-items: center;
+}
+.logo-mover {
+  --p: var(--logo-p, var(--logo-init-p, 1));
+  --tx: calc(var(--p) * (clamp(80px, 8vw, 120px) - 50vw));
+  --ty: calc(var(--p) * (34px - 50vh));
+  --scale: calc(1 - 0.82 * var(--p));
+  transform: translate(var(--tx), var(--ty)) scale(var(--scale));
+  transform-origin: center center;
+  will-change: transform;
+  pointer-events: auto;
+}
+.logo-mark {
+  display: block; text-align: center;
+  color: var(--paper);
+  text-decoration: none;
+  transition: color 0.6s var(--ease);
+}
+body { --logo-accent: #320A18; }                       /* wine outline, all surfaces */
+.logo-word {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: clamp(64px, 11vw, 196px);
+  line-height: 1;
+  letter-spacing: 0.20em;
+  text-shadow:
+    calc(-1.4px / var(--scale)) 0                           0 var(--logo-accent),
+    calc( 1.4px / var(--scale)) 0                           0 var(--logo-accent),
+    0                           calc(-1.4px / var(--scale)) 0 var(--logo-accent),
+    0                           calc( 1.4px / var(--scale)) 0 var(--logo-accent),
+    calc(-1px   / var(--scale)) calc(-1px   / var(--scale)) 0 var(--logo-accent),
+    calc( 1px   / var(--scale)) calc(-1px   / var(--scale)) 0 var(--logo-accent),
+    calc(-1px   / var(--scale)) calc( 1px   / var(--scale)) 0 var(--logo-accent),
+    calc( 1px   / var(--scale)) calc( 1px   / var(--scale)) 0 var(--logo-accent);
+  white-space: nowrap;
+}
+.logo-sub {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.18em;
+  color: var(--logo-accent, #320A18);
+  letter-spacing: 0.06em;
+  margin-top: -0.16em;
+  text-indent: 0.06em;
+}
+body:not(.page-home) { --logo-init-p: 1; }
+.nav-brand-slot { display: block; }
+@media (prefers-reduced-motion: reduce) { .logo-mover { --p: 1; } }
+
+</style>
+</head>
+<body>
+
+<nav class="top" id="topnav">
+  <span class="nav-brand-slot" aria-hidden="true"></span>
+  <div class="nav-links">
+    <a href="rooms.html">Rooms</a>
+    <a href="pleasures.html">Pleasures</a>
+    <a href="breakfast.html">Breakfast</a>
+    <a href="neighbourhood.html">Neighbourhood</a>
+    <a href="contact.html" class="active">Contact</a>
+  </div>
+  <a href="index.html#reserve" class="nav-cta">Reserve</a>
+</nav>
+
+<div class="logo-stage">
+  <div class="logo-mover">
+    <a href="index.html" class="logo-mark" aria-label="Stories Hotel — Home">
+      <span class="logo-word">STORIES</span>
+      <span class="logo-sub">hotel</span>
+    </a>
+  </div>
+</div>
+
+
+<section class="plate visible">
+  <div class="bg" style="background-image: url('assets/brand/DorSharon341-R1-14-15.JPG');"></div>
+  <div class="plate-grain"></div>
+  <div class="plate-content">
+    <div class="plate-id"><span class="n">VI</span><span>·</span><span>Find us · Király utca 26</span></div>
+    <div class="plate-title-block">
+      <h1>Say <em>hello.</em></h1>
+      <p class="plate-deck">A small team, and one that reads every message. Whether you're asking about a stay, a press inquiry, or a question only we can answer — we'll be back to you the same day.</p>
+    </div>
+  </div>
+</section>
+
+<section class="contact-body">
+  <div class="contact-inner">
+    <div class="contact-info">
+      <h2>The house, in <em>detail.</em></h2>
+      <p>Stories Hotel Budapest is housed in the Twenty Six building on Király utca — a five-minute walk from the Jewish Quarter, a ten-minute walk from Vörösmarty tér. We'll send directions when you book.</p>
+      <div class="contact-details">
+        <div class="detail-row">
+          <div class="detail-label">Address</div>
+          <div class="detail-val">Király utca 26, 1061 Budapest, Hungary</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Telephone</div>
+          <div class="detail-val"><a href="tel:+3612345678">+36 1 234 5678</a></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Email</div>
+          <div class="detail-val"><a href="mailto:hello@storiesbudapest.com">hello@storiesbudapest.com</a></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Check-in</div>
+          <div class="detail-val">15:00 — 22:00</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Check-out</div>
+          <div class="detail-val">Until 11:00</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Response</div>
+          <div class="detail-val">Same day</div>
+        </div>
+      </div>
+
+      <div class="directions">
+        <h3>Getting here</h3>
+        <div class="dir-item"><div class="dir-icon">M1</div><div class="dir-text">Metro line 1 (yellow) — Opera station, 8 min walk</div></div>
+        <div class="dir-item"><div class="dir-icon">M2</div><div class="dir-text">Metro line 2 (red) — Astoria station, 6 min walk</div></div>
+        <div class="dir-item"><div class="dir-icon">BUS</div><div class="dir-text">Lines 9, 16, 105 — Király utca stop, 1 min walk</div></div>
+        <div class="dir-item"><div class="dir-icon">AIR</div><div class="dir-text">Budapest Liszt Ferenc Airport — 35 min by taxi or shuttle</div></div>
+        <div class="dir-item"><div class="dir-icon">CAR</div><div class="dir-text">Parking available nearby — we'll send details on booking</div></div>
+      </div>
+    </div>
+
+    <div class="contact-form-wrap">
+      <h2>Send us a <em>note.</em></h2>
+      <div class="sub">Reservations · Press · General enquiries</div>
+      <form class="cform" onsubmit="event.preventDefault();">
+        <div class="cform-field">
+          <label class="cform-label" for="cf-name">Your name</label>
+          <input type="text" id="cf-name" placeholder="First and last name" autocomplete="name">
+        </div>
+        <div class="cform-field">
+          <label class="cform-label" for="cf-email">Email</label>
+          <input type="email" id="cf-email" placeholder="your@email.com" autocomplete="email">
+        </div>
+        <div class="cform-field">
+          <label class="cform-label" for="cf-subject">Subject</label>
+          <select id="cf-subject">
+            <option value="">Select a topic</option>
+            <option>Reservation enquiry</option>
+            <option>Press &amp; media</option>
+            <option>Events &amp; private hire</option>
+            <option>General question</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="cform-field">
+          <label class="cform-label" for="cf-msg">Message</label>
+          <textarea id="cf-msg" placeholder="Tell us what you need…"></textarea>
+        </div>
+        <div class="cform-submit">
+          <button class="cform-btn" type="submit">Send message →</button>
+          <span class="cform-note">We reply within the same day.</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <h3>Stories</h3>
+      <div class="sub">Budapest · Király utca 26</div>
+      <address>Twenty Six Building<br>Király utca 26, 1061 Budapest<br>Hungary</address>
+      <a href="tel:+3612345678" class="ph">+36 1 234 5678</a><br>
+      <a href="mailto:hello@storiesbudapest.com" class="ph">hello@storiesbudapest.com</a>
+    </div>
+    <div>
+      <h4>House</h4>
+      <ul>
+        <li><a href="rooms.html">Rooms</a></li>
+        <li><a href="breakfast.html">Breakfast</a></li>
+        <li><a href="pleasures.html">Bar &amp; lounge</a></li>
+        <li><a href="pleasures.html#gym">Gym · GoActive</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Visiting</h4>
+      <ul>
+        <li><a href="neighbourhood.html">Neighbourhood</a></li>
+        <li><a href="contact.html">Directions</a></li>
+        <li><a href="faqs.html">FAQ</a></li>
+        <li><a href="contact.html">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Follow</h4>
+      <ul>
+        <li><a href="#">Instagram ↗</a></li>
+        <li><a href="#">Journal</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <span>© 2026 Stories Hotel Budapest</span>
+    <span>Photography · Assaf Pinchuk &amp; Dor Sharon</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var body = document.body;
+  var nav = document.getElementById('topnav');
+  // 1) Nav background after first scroll past 40px.
+  if (nav) {
+    window.addEventListener('scroll', function () {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+  }
+  // 2) Sync body.logo-on-light with the section currently in view so the
+  //    small logo flips ink ⇄ paper as we cross light/dark surfaces.
+  function isLight(el) {
+    var c = ' ' + el.className + ' ';
+    if (c.indexOf(' plate ') !== -1 || c.indexOf('hero') !== -1) return false;
+    if (c.indexOf('dark') !== -1) return false;
+    return c.indexOf('body') !== -1 || c.indexOf('faq-body') !== -1 ||
+           c.indexOf('page-header') !== -1;
+  }
+  var sections = document.querySelectorAll(
+    '.plate, .body, .body-dark, .reserve-plate, .page-header, .faq-body, .hero'
+  );
+  if (sections.length === 0) return;
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && e.intersectionRatio > 0.35) {
+        body.classList.toggle('logo-on-light', isLight(e.target));
+      }
+    });
+  }, { threshold: [0.35, 0.6] });
+  sections.forEach(function (s) { obs.observe(s); });
+}());
+</script>
+</body>
+</html>
