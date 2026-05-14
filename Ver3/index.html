@@ -6,7 +6,7 @@
 <title>Stories Budapest — A hotel of stories, quietly told.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..700;1,300..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --ink:     #0B1410;
@@ -55,7 +55,7 @@ nav.top.scrolled {
   border-bottom-color: rgba(255,255,255,0.08);
 }
 .brand {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 22px;
   letter-spacing: 0.02em;
@@ -195,7 +195,7 @@ nav.top.scrolled {
 body { --logo-accent: #320A18; }                       /* wine outline, all surfaces */
 .logo-word {
   display: block;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: clamp(64px, 11vw, 196px);
   line-height: 1;
@@ -214,7 +214,7 @@ body { --logo-accent: #320A18; }                       /* wine outline, all surf
 }
 .logo-sub {
   display: block;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-style: italic;
   font-weight: 400;
   font-size: 0.18em;
@@ -267,7 +267,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   content: ""; width: 48px; height: 1px; background: var(--accent);
 }
 .intro-strip h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-size: clamp(48px, 7.2vw, 124px);
   line-height: 0.98;
@@ -303,7 +303,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   color: rgba(237,231,218,0.45);
 }
 .intro-strip .meta .v {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-size: 18px;
   color: var(--paper);
 }
@@ -369,7 +369,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .plate-id .n { color: var(--accent); }
 .plate-title-block { align-self: end; max-width: 1080px; }
 .plate-title-block h1, .plate-title-block h2 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-size: clamp(52px, 8.5vw, 148px);
   line-height: 0.96;
@@ -402,7 +402,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   text-transform: uppercase;
   color: rgba(255,255,255,0.5);
 }
-.plate-meta-row .v { font-family: 'Playfair Display', serif; font-size: 19px; color: #fff; font-weight: 500; }
+.plate-meta-row .v { font-family: 'Inter', sans-serif; font-size: 19px; color: #fff; font-weight: 500; }
 .scrollcue {
   position: absolute;
   right: clamp(40px, 6vw, 96px);
@@ -445,7 +445,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   align-items: end;
 }
 .rooms-head h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-size: clamp(32px, 4vw, 56px);
   line-height: 1.05;
@@ -509,7 +509,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .room-card .rc-top .idx { color: var(--accent); }
 .room-card h4 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: clamp(22px, 2vw, 28px);
   line-height: 1.1;
@@ -527,8 +527,205 @@ body:not(.page-home) { --logo-init-p: 1; }
   border: 1px dashed var(--rule);
 }
 .room-card.soon::after { display: none; }
-.room-card.soon .sp { font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; color: var(--text-2); padding: 30px; line-height: 1.5; }
-.room-card.soon .sp b { font-family: 'Playfair Display', serif; font-weight: 500; font-style: normal; color: var(--ink); font-size: 22px; display: block; margin-bottom: 6px; }
+.room-card.soon .sp { font-family: 'Inter', sans-serif; font-style: italic; font-size: 16px; color: var(--text-2); padding: 30px; line-height: 1.5; }
+.room-card.soon .sp b { font-family: 'Inter', sans-serif; font-weight: 500; font-style: normal; color: var(--ink); font-size: 22px; display: block; margin-bottom: 6px; }
+
+/* ROOMS CINEMA (Ver3 M2 — alma-style split-pane gallery) */
+.rooms-cinema {
+  position: relative;
+  background: var(--room-bg, var(--paper));
+  color: var(--room-ink, var(--ink));
+  transition:
+    background-color 0.9s var(--ease),
+    color 0.9s var(--ease);
+}
+.rooms-cinema-intro {
+  padding: clamp(72px, 9vw, 120px) clamp(40px, 6vw, 96px) clamp(32px, 4vw, 56px);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.rooms-cinema-intro .overline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.rooms-cinema-intro .overline::before {
+  content: ""; width: 48px; height: 1px; background: var(--accent);
+}
+.rooms-cinema-intro h2 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: clamp(36px, 4.6vw, 76px);
+  line-height: 1.05;
+  letter-spacing: -0.018em;
+  max-width: 880px;
+}
+.rooms-cinema-intro h2 em {
+  font-style: italic; font-weight: 400; color: var(--accent);
+}
+.rooms-cinema-intro p {
+  font-size: 17px; line-height: 1.55; font-weight: 400;
+  max-width: 560px; opacity: 0.75; margin-top: 18px;
+}
+
+/* Each room is a section split into sticky-left panel + scrolling-right gallery */
+.room-frame {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: start;       /* required so the panel can be sticky inside the grid track */
+  max-width: 1600px;
+  margin: 0 auto;
+  border-top: 1px solid color-mix(in oklab, currentColor 16%, transparent);
+}
+.room-panel {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  padding: clamp(56px, 7vw, 96px) clamp(40px, 5vw, 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+}
+.room-panel header { display: block; }
+.room-panel .panel-over {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.room-panel .panel-intro {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  opacity: 0.78;
+  max-width: 440px;
+  margin-top: 22px;
+}
+.room-panel .panel-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.room-panel .panel-num::before {
+  content: ""; width: 36px; height: 1px; background: var(--accent);
+}
+.room-panel h3.panel-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: clamp(36px, 4.4vw, 64px);
+  line-height: 1.0;
+  letter-spacing: -0.018em;
+  margin-bottom: 14px;
+  text-wrap: balance;
+}
+.room-panel h3.panel-title em {
+  font-style: italic; font-weight: 400; color: var(--accent);
+}
+.room-panel .panel-deck {
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 400;
+  opacity: 0.82;
+  max-width: 420px;
+}
+
+.room-list {
+  display: flex;
+  flex-direction: column;
+}
+.room-list a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 16px 0;
+  border-top: 1px solid color-mix(in oklab, currentColor 18%, transparent);
+  opacity: 0.45;
+  transition: opacity 0.3s var(--ease), letter-spacing 0.3s var(--ease);
+  text-decoration: none;
+  display: block;
+}
+.room-list a:last-child {
+  border-bottom: 1px solid color-mix(in oklab, currentColor 18%, transparent);
+}
+.room-list a:hover { opacity: 0.85; letter-spacing: 0.26em; }
+.room-list a:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
+.room-list a.active { opacity: 1; font-weight: 600; letter-spacing: 0.26em; }
+
+.room-panel-cta {
+  align-self: flex-start;
+  padding: 14px 26px;
+  border: 1px solid color-mix(in oklab, currentColor 35%, transparent);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  transition:
+    background 0.3s var(--ease),
+    color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+  min-height: 44px;       /* a11y tap target */
+}
+.room-panel-cta:hover,
+.room-panel-cta:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+  outline: none;
+}
+
+.room-gallery {
+  display: flex;
+  flex-direction: column;
+}
+.room-gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.room-gallery img + img {
+  margin-top: 0;
+}
+
+/* Logo color sync — small logo over cinema uses --room-ink */
+body.in-cinema .logo-mark { color: var(--room-ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rooms-cinema { transition: none; }
+}
+
+@media (max-width: 880px) {
+  .room-frame { grid-template-columns: 1fr; }
+  .room-panel {
+    position: static;
+    height: auto;
+    padding: 56px clamp(24px, 5vw, 40px);
+  }
+  .room-list { display: none; }
+}
 
 /* PLEASURES */
 .pleasures-grid {
@@ -547,7 +744,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .pcard::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,11,8,0) 35%, rgba(13,11,8,0.85) 100%); }
 .pcard .inner { position: absolute; z-index: 2; left: clamp(20px, 2vw, 32px); right: clamp(20px, 2vw, 32px); bottom: clamp(20px, 2vw, 32px); color: #fff; }
 .pcard .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-.pcard h4 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(26px, 3vw, 42px); line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 10px; }
+.pcard h4 { font-family: 'Inter', sans-serif; font-weight: 400; font-size: clamp(26px, 3vw, 42px); line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 10px; }
 .pcard h4 em { font-style: italic; color: var(--accent); }
 .pcard p { font-size: 14px; color: rgba(255,255,255,0.75); max-width: 440px; font-weight: 300; line-height: 1.55; }
 .pcard .more {
@@ -567,14 +764,14 @@ body:not(.page-home) { --logo-init-p: 1; }
 
 /* BREAKFAST */
 .bk-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(40px, 5vw, 80px); align-items: start; margin-top: 40px; }
-.bk-grid h3 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; color: var(--ink); margin-bottom: 20px; letter-spacing: -0.01em; }
+.bk-grid h3 { font-family: 'Inter', sans-serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; color: var(--ink); margin-bottom: 20px; letter-spacing: -0.01em; }
 .bk-grid h3 em { font-style: italic; color: var(--primary); }
 .bk-grid p { font-size: 16px; line-height: 1.7; color: var(--text); margin-bottom: 14px; font-weight: 300; }
 .bk-right { padding-top: 4px; }
 .bk-fact { display: flex; justify-content: space-between; padding: 18px 0; border-top: 1px solid var(--rule); }
 .bk-fact:last-child { border-bottom: 1px solid var(--rule); }
 .bk-fact .l { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-2); }
-.bk-fact .v { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--ink); font-weight: 500; }
+.bk-fact .v { font-family: 'Inter', sans-serif; font-size: 18px; color: var(--ink); font-weight: 500; }
 .bk-fact .v em { font-style: italic; color: var(--primary); font-weight: 400; }
 .bk-cta {
   display: inline-flex;
@@ -597,7 +794,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .neigh-grid .ix { display: grid; grid-template-columns: 40px 1fr 1fr auto; column-gap: 20px; }
 .neigh-grid .ix > * { padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.12); font-weight: 400; }
 .neigh-grid .ix .n { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: rgba(255,255,255,0.5); }
-.neigh-grid .ix .pl { font-family: 'Playfair Display', serif; font-size: 19px; color: #fff; }
+.neigh-grid .ix .pl { font-family: 'Inter', sans-serif; font-size: 19px; color: #fff; }
 .neigh-grid .ix .pl em { font-style: italic; color: var(--accent); font-weight: 400; }
 .neigh-grid .ix .k { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 300; }
 .neigh-grid .ix .d { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.1em; white-space: nowrap; }
@@ -613,7 +810,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .neigh-map-dot .lab { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.7); white-space: nowrap; }
 .neigh-map-dot.stories .lab { color: #fff; font-weight: 500; }
 .neigh-map-legend { position: absolute; bottom: 16px; left: 16px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
-.neigh-map-rose { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: rgba(255,255,255,0.6); }
+.neigh-map-rose { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; font-style: italic; font-size: 14px; color: rgba(255,255,255,0.6); }
 
 /* RESERVE */
 .reserve-plate {
@@ -637,7 +834,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .reserve-inner { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; text-align: center; width: 100%; }
 .reserve-over { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; display: inline-flex; align-items: center; gap: 12px; }
 .reserve-over::before, .reserve-over::after { content: ""; width: 32px; height: 1px; background: var(--accent); }
-.reserve-inner h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(44px, 6vw, 108px); line-height: 0.98; letter-spacing: -0.018em; margin-bottom: 28px; text-wrap: balance; }
+.reserve-inner h2 { font-family: 'Inter', sans-serif; font-weight: 400; font-size: clamp(44px, 6vw, 108px); line-height: 0.98; letter-spacing: -0.018em; margin-bottom: 28px; text-wrap: balance; }
 .reserve-inner h2 em { font-style: italic; color: var(--accent); }
 .reserve-inner > p { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.7); max-width: 560px; margin: 0 auto 44px; font-weight: 300; }
 .reserve-form {
@@ -652,7 +849,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .reserve-form .field { display: flex; flex-direction: column; padding: 16px 18px; text-align: left; border-right: 1px solid rgba(255,255,255,0.08); }
 .reserve-form .lab { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 6px; }
-.reserve-form input, .reserve-form select { background: transparent; border: none; color: #fff; font-family: 'Playfair Display', serif; font-size: 16px; padding: 0; outline: none; cursor: pointer; }
+.reserve-form input, .reserve-form select { background: transparent; border: none; color: #fff; font-family: 'Inter', sans-serif; font-size: 16px; padding: 0; outline: none; cursor: pointer; }
 .reserve-form select option { color: var(--ink); background: var(--paper); }
 .reserve-form .go { background: var(--accent); border: none; color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; padding: 0 28px; cursor: pointer; font-weight: 500; transition: background 0.3s var(--ease); white-space: nowrap; }
 .reserve-form .go:hover { background: #fff; }
@@ -660,14 +857,14 @@ body:not(.page-home) { --logo-init-p: 1; }
 /* FOOTER */
 footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px, 8vw, 96px) clamp(40px, 6vw, 96px) 28px; }
 .foot-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.foot-grid h3 { font-family: 'Playfair Display', serif; font-size: 28px; color: #fff; font-weight: 500; }
+.foot-grid h3 { font-family: 'Inter', sans-serif; font-size: 28px; color: #fff; font-weight: 500; }
 .foot-grid .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 8px 0 24px; }
 .foot-grid address { font-style: normal; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
 .foot-grid a.ph { font-size: 14px; color: rgba(255,255,255,0.88); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1px; display: inline-block; margin-bottom: 4px; }
 .foot-grid a.ph:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .foot-grid h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 18px; font-weight: 400; }
 .foot-grid ul { list-style: none; }
-.foot-grid li a { font-family: 'Playfair Display', serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
+.foot-grid li a { font-family: 'Inter', sans-serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
 .foot-grid li a:hover { color: var(--accent); padding-left: 5px; }
 .foot-bar { max-width: 1280px; margin: 24px auto 0; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
 
@@ -744,79 +941,172 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
   </div>
 </section>
 
-<!-- ROOMS PLATE + BODY -->
-<section class="plate" data-label="02 / The Rooms" id="rooms">
-  <div class="bg" style="background-image: url('assets/photos/presidential-suite/7893_Assaf-Pinchuk-photography.jpg');"></div>
-  <div class="plate-grain"></div>
-  <div class="plate-content">
-    <div class="plate-id"><span class="n">II</span><span>·</span><span>Six rooms, six temperaments</span></div>
-    <div class="plate-title-block">
-      <h2>Find your <em>room.</em></h2>
-      <p class="plate-deck">From a two-floor Presidential suite with a private sauna, to a Superior that is cosy on purpose. Each room is numbered, each carries its own tone.</p>
-    </div>
-  </div>
-  <div class="scrollcue"><span>The rooms</span><span class="line"></span></div>
-</section>
+<!-- ROOMS CINEMA — alma-style split-pane gallery -->
+<section class="rooms-cinema" id="roomsCinema" data-label="02 / The Rooms">
 
-<section class="body" data-label="02 / The Rooms">
-  <div class="body-inner">
-    <div class="rooms-head">
-      <div>
-        <div class="overline"><span class="n">02 — I</span> · Plates I through VI</div>
-        <h3>A house of <em>six.</em></h3>
-      </div>
-      <p>Scroll the plates or choose a number. Each room has its own page with full photography, floor plan, and amenities. Direct bookings include welcome drinks at the bar.</p>
-    </div>
-    <div class="room-rail">
-      <a class="room-card" href="rooms.html#presidential">
-        <img src="assets/photos/presidential-suite/7893_Assaf-Pinchuk-photography.jpg" alt="Presidential Suite">
-        <div class="rc-inner">
-          <div class="rc-top"><span class="idx">I</span><span>01 / 06</span></div>
-          <h4>Presidential <em>Suite</em></h4>
-          <div class="rc-meta">165–180 m² · 2 beds · Jacuzzi · Sauna</div>
-        </div>
-      </a>
-      <a class="room-card" href="rooms.html#king">
-        <img src="assets/photos/king-suite/Screenshot 2026-04-01 092237.png" alt="King Suite">
-        <div class="rc-inner">
-          <div class="rc-top"><span class="idx">II</span><span>02 / 06</span></div>
-          <h4>King Suite <em>— Jacuzzi</em></h4>
-          <div class="rc-meta">85 m² · Jacuzzi · Green-wall shower</div>
-        </div>
-      </a>
-      <a class="room-card" href="rooms.html#junior">
-        <img src="assets/photos/junior-suite/Stories Hotel_4.jpg" alt="Junior Suite">
-        <div class="rc-inner">
-          <div class="rc-top"><span class="idx">III</span><span>03 / 06</span></div>
-          <h4>Junior <em>Suite</em></h4>
-          <div class="rc-meta">65–75 m² · King + sofa-bed · Living room</div>
-        </div>
-      </a>
-      <a class="room-card" href="rooms.html#deluxe">
-        <img src="assets/photos/deluxe/Deluxe1.jpg" alt="Deluxe Room">
-        <div class="rc-inner">
-          <div class="rc-top"><span class="idx">IV</span><span>04 / 06</span></div>
-          <h4>Deluxe <em>Room</em></h4>
-          <div class="rc-meta">34–45 m² · King · Original art</div>
-        </div>
-      </a>
-      <a class="room-card" href="rooms.html#deluxe-queen">
-        <img src="assets/photos/deluxe-queen/Screenshot 2026-04-01 092456.png" alt="Deluxe Queen">
-        <div class="rc-inner">
-          <div class="rc-top"><span class="idx">V</span><span>05 / 06</span></div>
-          <h4>Deluxe <em>Queen</em></h4>
-          <div class="rc-meta">30 m² · Queen · Courtyard view</div>
-        </div>
-      </a>
-      <div class="room-card soon">
-        <div class="sp">
-          <b>VI · Superior Room</b>
-          17 m² · Queen bed · Intimate<br>
-          <em>Photography coming soon.</em>
-        </div>
-      </div>
-    </div>
+  <div class="rooms-cinema-intro">
+    <div class="overline"><span>II</span><span>&middot;</span><span>Six rooms, six temperaments</span></div>
+    <h2>Find your <em>room.</em></h2>
+    <p>Each room carries its own tone &mdash; and as you scroll, the house takes that colour. From a two-floor Presidential with private sauna to a Superior that is cosy on purpose.</p>
   </div>
+
+  <article class="room-frame" id="frame-presidential"
+           data-room-bg="#4F0014" data-room-ink="#EDE7DA" data-room-slug="presidential">
+    <aside class="room-panel">
+      <header>
+        <span class="panel-num"><span>I</span><span>01 / 06</span></span>
+        <h3 class="panel-title">Presidential <em>Suite</em></h3>
+        <p class="panel-deck">A two-floor sanctuary at the top of the house. King bedroom upstairs, living room and dining downstairs, with a private Jacuzzi and sauna tucked behind a hidden door.</p>
+      </header>
+      <nav class="room-list" aria-label="Jump to a room">
+        <a href="#frame-presidential" class="active">Presidential Suite</a>
+        <a href="#frame-king">King Suite &middot; Jacuzzi</a>
+        <a href="#frame-junior">Junior Suite</a>
+        <a href="#frame-deluxe">Deluxe</a>
+        <a href="#frame-deluxe-queen">Deluxe Queen</a>
+        <a href="#frame-superior">Superior</a>
+      </nav>
+      <a href="rooms.html#presidential" class="room-panel-cta">
+        Read the full story <span aria-hidden="true">&rarr;</span>
+      </a>
+    </aside>
+    <div class="room-gallery">
+      <img src="assets/photos/presidential-suite/01.jpg" alt="Presidential <em>Suite</em> &mdash; view 1" loading="lazy">
+      <img src="assets/photos/presidential-suite/02.jpg" alt="Presidential <em>Suite</em> &mdash; view 2" loading="lazy">
+      <img src="assets/photos/presidential-suite/03.jpg" alt="Presidential <em>Suite</em> &mdash; view 3" loading="lazy">
+    </div>
+  </article>
+  <article class="room-frame" id="frame-king"
+           data-room-bg="#3A3F44" data-room-ink="#EDE7DA" data-room-slug="king">
+    <aside class="room-panel">
+      <header>
+        <span class="panel-num"><span>II</span><span>02 / 06</span></span>
+        <h3 class="panel-title">King Suite <em>with Jacuzzi</em></h3>
+        <p class="panel-deck">A double-height suite with a real Jacuzzi, a sauna, and a green-wall rain shower. The kind of room that quietly tells you to stay in tonight.</p>
+      </header>
+      <nav class="room-list" aria-label="Jump to a room">
+        <a href="#frame-presidential">Presidential Suite</a>
+        <a href="#frame-king" class="active">King Suite &middot; Jacuzzi</a>
+        <a href="#frame-junior">Junior Suite</a>
+        <a href="#frame-deluxe">Deluxe</a>
+        <a href="#frame-deluxe-queen">Deluxe Queen</a>
+        <a href="#frame-superior">Superior</a>
+      </nav>
+      <a href="rooms.html#king" class="room-panel-cta">
+        Read the full story <span aria-hidden="true">&rarr;</span>
+      </a>
+    </aside>
+    <div class="room-gallery">
+      <img src="assets/photos/king-suite/01.jpg" alt="King Suite <em>with Jacuzzi</em> &mdash; view 1" loading="lazy">
+      <img src="assets/photos/king-suite/02.jpg" alt="King Suite <em>with Jacuzzi</em> &mdash; view 2" loading="lazy">
+      <img src="assets/photos/king-suite/03.jpg" alt="King Suite <em>with Jacuzzi</em> &mdash; view 3" loading="lazy">
+    </div>
+  </article>
+  <article class="room-frame" id="frame-junior"
+           data-room-bg="#2A5C45" data-room-ink="#EDE7DA" data-room-slug="junior">
+    <aside class="room-panel">
+      <header>
+        <span class="panel-num"><span>III</span><span>03 / 06</span></span>
+        <h3 class="panel-title">Junior <em>Suite</em></h3>
+        <p class="panel-deck">Living room, sleeping area, sofa-bed for a third. A whole apartment&rsquo;s worth of room, with art chosen for it specifically.</p>
+      </header>
+      <nav class="room-list" aria-label="Jump to a room">
+        <a href="#frame-presidential">Presidential Suite</a>
+        <a href="#frame-king">King Suite &middot; Jacuzzi</a>
+        <a href="#frame-junior" class="active">Junior Suite</a>
+        <a href="#frame-deluxe">Deluxe</a>
+        <a href="#frame-deluxe-queen">Deluxe Queen</a>
+        <a href="#frame-superior">Superior</a>
+      </nav>
+      <a href="rooms.html#junior" class="room-panel-cta">
+        Read the full story <span aria-hidden="true">&rarr;</span>
+      </a>
+    </aside>
+    <div class="room-gallery">
+      <img src="assets/photos/junior-suite/01.jpg" alt="Junior <em>Suite</em> &mdash; view 1" loading="lazy">
+      <img src="assets/photos/junior-suite/02.jpg" alt="Junior <em>Suite</em> &mdash; view 2" loading="lazy">
+      <img src="assets/photos/junior-suite/03.jpg" alt="Junior <em>Suite</em> &mdash; view 3" loading="lazy">
+    </div>
+  </article>
+  <article class="room-frame" id="frame-deluxe"
+           data-room-bg="#1E3A5F" data-room-ink="#EDE7DA" data-room-slug="deluxe">
+    <aside class="room-panel">
+      <header>
+        <span class="panel-num"><span>IV</span><span>04 / 06</span></span>
+        <h3 class="panel-title">Deluxe <em>Room</em></h3>
+        <p class="panel-deck">A king-bed room with a small living corner and original commissioned art. Generous on purpose &mdash; not a category to apologise for.</p>
+      </header>
+      <nav class="room-list" aria-label="Jump to a room">
+        <a href="#frame-presidential">Presidential Suite</a>
+        <a href="#frame-king">King Suite &middot; Jacuzzi</a>
+        <a href="#frame-junior">Junior Suite</a>
+        <a href="#frame-deluxe" class="active">Deluxe</a>
+        <a href="#frame-deluxe-queen">Deluxe Queen</a>
+        <a href="#frame-superior">Superior</a>
+      </nav>
+      <a href="rooms.html#deluxe" class="room-panel-cta">
+        Read the full story <span aria-hidden="true">&rarr;</span>
+      </a>
+    </aside>
+    <div class="room-gallery">
+      <img src="assets/photos/deluxe/01.jpg" alt="Deluxe <em>Room</em> &mdash; view 1" loading="lazy">
+      <img src="assets/photos/deluxe/02.jpg" alt="Deluxe <em>Room</em> &mdash; view 2" loading="lazy">
+      <img src="assets/photos/deluxe/03.jpg" alt="Deluxe <em>Room</em> &mdash; view 3" loading="lazy">
+    </div>
+  </article>
+  <article class="room-frame" id="frame-deluxe-queen"
+           data-room-bg="#EDE7DA" data-room-ink="#0B1410" data-room-slug="deluxe-queen">
+    <aside class="room-panel">
+      <header>
+        <span class="panel-num"><span>V</span><span>05 / 06</span></span>
+        <h3 class="panel-title">Deluxe <em>Queen</em></h3>
+        <p class="panel-deck">Queen bed, inner-courtyard windows, quiet. The room for travellers who plan to be out &mdash; and want sleep when they&rsquo;re back.</p>
+      </header>
+      <nav class="room-list" aria-label="Jump to a room">
+        <a href="#frame-presidential">Presidential Suite</a>
+        <a href="#frame-king">King Suite &middot; Jacuzzi</a>
+        <a href="#frame-junior">Junior Suite</a>
+        <a href="#frame-deluxe">Deluxe</a>
+        <a href="#frame-deluxe-queen" class="active">Deluxe Queen</a>
+        <a href="#frame-superior">Superior</a>
+      </nav>
+      <a href="rooms.html#deluxe-queen" class="room-panel-cta">
+        Read the full story <span aria-hidden="true">&rarr;</span>
+      </a>
+    </aside>
+    <div class="room-gallery">
+      <img src="assets/photos/deluxe-queen/01.jpg" alt="Deluxe <em>Queen</em> &mdash; view 1" loading="lazy">
+      <img src="assets/photos/deluxe-queen/02.jpg" alt="Deluxe <em>Queen</em> &mdash; view 2" loading="lazy">
+      <img src="assets/photos/deluxe-queen/03.jpg" alt="Deluxe <em>Queen</em> &mdash; view 3" loading="lazy">
+    </div>
+  </article>
+  <article class="room-frame" id="frame-superior"
+           data-room-bg="#D4B0B0" data-room-ink="#0B1410" data-room-slug="superior">
+    <aside class="room-panel">
+      <header>
+        <span class="panel-num"><span>VI</span><span>06 / 06</span></span>
+        <h3 class="panel-title">Superior <em>Room</em></h3>
+        <p class="panel-deck">Cosy on purpose. A queen bed, a working desk, a monochrome tile feature wall. Honest about what 17 m² can be when it&rsquo;s done with care.</p>
+      </header>
+      <nav class="room-list" aria-label="Jump to a room">
+        <a href="#frame-presidential">Presidential Suite</a>
+        <a href="#frame-king">King Suite &middot; Jacuzzi</a>
+        <a href="#frame-junior">Junior Suite</a>
+        <a href="#frame-deluxe">Deluxe</a>
+        <a href="#frame-deluxe-queen">Deluxe Queen</a>
+        <a href="#frame-superior" class="active">Superior</a>
+      </nav>
+      <a href="rooms.html#superior" class="room-panel-cta">
+        Read the full story <span aria-hidden="true">&rarr;</span>
+      </a>
+    </aside>
+    <div class="room-gallery">
+      <img src="assets/photos/superior/01.jpg" alt="Superior <em>Room</em> &mdash; view 1" loading="lazy">
+      <img src="assets/photos/superior/02.jpg" alt="Superior <em>Room</em> &mdash; view 2" loading="lazy">
+      <img src="assets/photos/superior/03.jpg" alt="Superior <em>Room</em> &mdash; view 3" loading="lazy">
+    </div>
+  </article>
+
 </section>
 
 <!-- PLEASURES PLATE + BODY -->
@@ -1045,7 +1335,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
   var rlText = document.getElementById('rl-text');
   var runlabel = document.getElementById('runlabel');
   var sections = document.querySelectorAll(
-    '.hero, .intro-strip, .plate, .body, .reserve-plate'
+    '.hero, .intro-strip, .rooms-cinema, .plate, .body, .reserve-plate'
   );
 
   var obs = new IntersectionObserver(function (entries) {
@@ -1073,6 +1363,37 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
   }, { threshold: [0.35, 0.6] });
 
   sections.forEach(function (s) { obs.observe(s); });
+
+  // ── Rooms cinema (M2 — alma-style split-pane) ─────────────────────────
+  // Toggle body.in-cinema while the carousel is in view (drives logo color
+  // tint), and write --room-bg/--room-ink onto body as each frame crosses
+  // 55% visibility so the whole stage breathes the selected room's color
+  // via the CSS transition declared on .rooms-cinema.
+  //
+  // The per-room nav list inside each panel is purely anchor-driven and
+  // hardcodes its own .active highlight in HTML — no JS needed for that.
+  var cinema = document.getElementById('roomsCinema');
+  if (cinema) {
+    var cinemaObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        body.classList.toggle('in-cinema', e.isIntersecting);
+      });
+    }, { threshold: 0 });
+    cinemaObs.observe(cinema);
+
+    var frameObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting || e.intersectionRatio < 0.55) return;
+        var bg = e.target.dataset.roomBg;
+        var ink = e.target.dataset.roomInk;
+        if (bg) body.style.setProperty('--room-bg', bg);
+        if (ink) body.style.setProperty('--room-ink', ink);
+      });
+    }, { threshold: [0.55, 0.7] });
+    cinema.querySelectorAll('.room-frame').forEach(function (f) {
+      frameObs.observe(f);
+    });
+  }
 }());
 </script>
 </body>
