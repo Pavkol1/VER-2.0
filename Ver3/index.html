@@ -6,7 +6,7 @@
 <title>Stories Budapest — A hotel of stories, quietly told.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..700;1,300..600&family=Lora:ital,wght@0,400..600;1,400..600&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..700;1,300..600&family=Lora:ital,wght@0,400..600;1,400..600&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --ink:     #0B1410;
@@ -223,6 +223,26 @@ body { --logo-accent: #320A18; }                       /* wine outline, all surf
   margin-top: -0.16em;
   text-indent: 0.06em;
 }
+
+.logo-mark .logo-svg {
+  display: block;
+  /* visible width scales with viewport; height auto preserves the 406:173 viewBox aspect */
+  width: clamp(300px, 50vw, 860px);
+  height: auto;
+}
+/* Brand colours of the 3-layer wordmark, all themable via CSS vars so the
+   light-bg variant below can flip them without redefining the SVG. */
+.logo-svg .layer-back   { fill: var(--logo-back,   #320A18); opacity: 0.86; }
+.logo-svg .layer-mid    { fill: var(--logo-mid,    #EDE7DA); }
+.logo-svg .layer-stroke { fill: none; stroke: var(--logo-stroke, #320A18); stroke-width: 1.35; }
+.logo-svg .logo-hotel   { fill: var(--logo-script, #320A18); }
+/* Over a cream/light surface (FAQ nav etc.) — flip the letterpress so the
+   visible letter face is wine, not paper, against the light background. */
+body.logo-on-light .logo-svg .layer-back   { fill: #EDE7DA; opacity: 0.5; }
+body.logo-on-light .logo-svg .layer-mid    { fill: #320A18; }
+body.logo-on-light .logo-svg .layer-stroke { stroke: #EDE7DA; }
+body.logo-on-light .logo-svg .logo-hotel   { fill: #320A18; }
+
 /* non-home pages: logo is born in its small nav-slot form */
 body:not(.page-home) { --logo-init-p: 1; }
 
@@ -925,8 +945,16 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 <div class="logo-stage" id="logoStage">
   <div class="logo-mover" id="logoMover">
     <a href="index.html" class="logo-mark" aria-label="Stories Hotel — Home">
-      <span class="logo-word">STORIES</span>
-      <span class="logo-sub">hotel</span>
+      <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 406 173" focusable="false" aria-hidden="true">
+        <g class="logo-stories" font-family="Optima, Didot, 'Tenor Sans', 'Times New Roman', serif" font-size="50" font-weight="500" letter-spacing="22">
+          <text class="layer-back"   x="55" y="78">STORIES</text>
+          <text class="layer-mid"    x="52" y="75">STORIES</text>
+          <text class="layer-stroke" x="53" y="76">STORIES</text>
+        </g>
+        <text class="logo-hotel" x="181" y="121"
+              font-family="'Snell Roundhand', 'Pinyon Script', 'Brush Script MT', cursive"
+              font-size="29" font-style="italic" letter-spacing="0.5">hotel</text>
+      </svg>
     </a>
   </div>
 </div>

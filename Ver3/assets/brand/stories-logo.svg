@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 406 173" role="img" aria-labelledby="logo-title">
+  <title id="logo-title">Stories Hotel</title>
+  <g class="logo-stories" font-family="Optima, Didot, 'Tenor Sans', 'Times New Roman', serif" font-size="50" font-weight="500" letter-spacing="22">
+    <text class="layer-back"   x="55" y="78">STORIES</text>
+    <text class="layer-mid"    x="52" y="75">STORIES</text>
+    <text class="layer-stroke" x="53" y="76">STORIES</text>
+  </g>
+  <text class="logo-hotel" x="181" y="121"
+        font-family="'Snell Roundhand', 'Pinyon Script', 'Brush Script MT', cursive"
+        font-size="29" font-style="italic" letter-spacing="0.5">hotel</text>
+</svg>
