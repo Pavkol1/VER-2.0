@@ -536,8 +536,8 @@ body:not(.page-home) { --logo-init-p: 1; }
   background: var(--room-bg, var(--paper));
   color: var(--room-ink, var(--ink));
   transition:
-    background-color 0.6s var(--ease),
-    color 0.6s var(--ease);
+    background-color 1.2s var(--ease),
+    color 1.2s var(--ease);
 }
 .rooms-cinema-intro {
   padding: clamp(72px, 9vw, 120px) clamp(40px, 6vw, 96px) clamp(32px, 4vw, 56px);
@@ -727,8 +727,8 @@ body:not(.page-home) { --logo-init-p: 1; }
   object-fit: cover;
 }
 
-/* Logo color sync — small logo over cinema uses --room-ink */
-body.in-cinema .logo-mark { color: var(--room-ink); }
+/* Logo stays cream over the cinema — navbar is dark when scrolled,
+   so we do NOT override .logo-mark color with --room-ink anymore. */
 
 @media (prefers-reduced-motion: reduce) {
   .rooms-cinema { transition: none; }
@@ -1354,7 +1354,9 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
     var scrollLockUntil = 0;
 
     function setActive(slug) {
-      if (stage.dataset.active === slug) return;
+      // Always applies — the same-slug guard lives in detectFromScroll
+      // so the initial prime call can paint body --room-bg even though
+      // stage[data-active] is already hardcoded to "presidential".
       var palette = ROOM_COLORS[slug];
       if (!palette) return;
       stage.dataset.active = slug;
@@ -1371,7 +1373,8 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
       for (var i = 0; i < galleries.length; i++) {
         var rect = galleries[i].getBoundingClientRect();
         if (rect.top <= line && rect.bottom > line) {
-          setActive(galleries[i].dataset.slug);
+          var slug = galleries[i].dataset.slug;
+          if (stage.dataset.active !== slug) setActive(slug);
           return;
         }
       }
