@@ -597,9 +597,14 @@ body:not(.page-home) { --logo-init-p: 1; }
 .panel-currents, .panel-ctas, .room-galleries { position: relative; }
 .panel-current { display: none; }
 .room-panel-cta { display: none; }
-.room-gallery { display: none; }
 
-/* Show only the slice matching .room-stage[data-active=...] */
+/* Galleries always render — they stack vertically and the user scrolls
+   through all 18 photos. data-active drives only the panel + CTA + body
+   palette; the gallery itself is the scroll source-of-truth. */
+.room-galleries { display: flex; flex-direction: column; }
+.room-gallery { display: flex; flex-direction: column; }
+
+/* Panel-current + CTA: only the data-active variant is shown */
 .room-stage[data-active="presidential"] .panel-current[data-slug="presidential"],
 .room-stage[data-active="king"]         .panel-current[data-slug="king"],
 .room-stage[data-active="junior"]       .panel-current[data-slug="junior"],
@@ -617,23 +622,9 @@ body:not(.page-home) { --logo-init-p: 1; }
 .room-stage[data-active="superior"]     .room-panel-cta[data-slug="superior"] {
   display: inline-flex;
 }
-.room-stage[data-active="presidential"] .room-gallery[data-slug="presidential"],
-.room-stage[data-active="king"]         .room-gallery[data-slug="king"],
-.room-stage[data-active="junior"]       .room-gallery[data-slug="junior"],
-.room-stage[data-active="deluxe"]       .room-gallery[data-slug="deluxe"],
-.room-stage[data-active="deluxe-queen"] .room-gallery[data-slug="deluxe-queen"],
-.room-stage[data-active="superior"]     .room-gallery[data-slug="superior"] {
-  display: flex;
-  flex-direction: column;
-  animation: rs-fade 0.5s var(--ease);
-}
 @keyframes rs-fade-up {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes rs-fade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
 }
 
 /* Panel-current piece (one of six) */
@@ -1335,12 +1326,18 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 
   sections.forEach(function (s) { obs.observe(s); });
 
-  // ── Rooms cinema (M2 — single static panel + click-driven tabs) ──────
-  // The panel stays sticky for the whole .rooms-cinema scroll. Clicking a
-  // room in <nav class="room-list"> swaps:
-  //   - .room-stage[data-active]  → CSS picks which panel-current/cta/gallery is shown
+  // ── Rooms cinema (M2 — static panel + scroll-driven gallery + click jumps)
+  // The panel is sticky for the whole cinema scroll. All 6 galleries (18
+  // photos) stack vertically on the right. As the user scrolls, whichever
+  // gallery's photos cross the viewport's 50% line is the "active room":
+  //   - .room-stage[data-active]  → CSS shows the matching panel-current + CTA
   //   - body --room-bg/--room-ink → cinema bg + ink animate via CSS transition
   //   - .room-list button.active  → highlight in the list
+  //
+  // Clicking a room button smooth-scrolls to that gallery's first photo
+  // AND eagerly sets active so the visual changes immediately. We
+  // suppress scroll-detection for ~700ms while the smooth-scroll plays
+  // out, so the panel doesn't flicker through intermediate rooms.
   var cinema = document.getElementById('roomsCinema');
   var stage  = document.getElementById('roomStage');
   if (cinema && stage) {
@@ -1353,8 +1350,11 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
       'superior':     { bg: '#D4B0B0', ink: '#0B1410' }
     };
     var listButtons = stage.querySelectorAll('.room-list button');
+    var galleries   = stage.querySelectorAll('.room-gallery');
+    var scrollLockUntil = 0;
 
     function setActive(slug) {
+      if (stage.dataset.active === slug) return;
       var palette = ROOM_COLORS[slug];
       if (!palette) return;
       stage.dataset.active = slug;
@@ -1365,17 +1365,45 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
       });
     }
 
-    // Prime initial palette from the active room hardcoded in HTML
+    function detectFromScroll() {
+      if (Date.now() < scrollLockUntil) return;
+      var line = window.innerHeight * 0.5;
+      for (var i = 0; i < galleries.length; i++) {
+        var rect = galleries[i].getBoundingClientRect();
+        if (rect.top <= line && rect.bottom > line) {
+          setActive(galleries[i].dataset.slug);
+          return;
+        }
+      }
+    }
+
+    var rafTicking = false;
+    window.addEventListener('scroll', function () {
+      if (!rafTicking) {
+        requestAnimationFrame(function () {
+          detectFromScroll();
+          rafTicking = false;
+        });
+        rafTicking = true;
+      }
+    }, { passive: true });
+
+    // Prime initial palette + active button highlight
     setActive(stage.dataset.active || 'presidential');
 
     listButtons.forEach(function (btn) {
       btn.addEventListener('click', function () {
-        setActive(btn.dataset.target);
+        var slug = btn.dataset.target;
+        setActive(slug);
+        scrollLockUntil = Date.now() + 750;
+        var target = stage.querySelector(
+          '.room-gallery[data-slug="' + slug + '"]'
+        );
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
 
-    // body.in-cinema toggle for logo color sync only — no per-frame scroll
-    // color changes now (color is fully tab-driven).
+    // body.in-cinema toggle for logo color sync
     var cinemaObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         body.classList.toggle('in-cinema', e.isIntersecting);
