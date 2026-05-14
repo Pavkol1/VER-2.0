@@ -163,6 +163,19 @@ body { --logo-accent: #320A18; }                       /* wine outline, all surf
   margin-top: -0.16em;
   text-indent: 0.06em;
 }
+
+.logo-mark .logo-svg {
+  display: block;
+  width: clamp(300px, 50vw, 860px);
+  height: auto;
+}
+/* Monochrome wordmark — paper on dark surfaces, ink on light ones. */
+.logo-svg .layer-back   { fill: none; opacity: 0; }
+.logo-svg .layer-stroke { fill: none; stroke: none; }
+.logo-svg .layer-mid    { fill: var(--logo-fill, #EDE7DA); }
+.logo-svg .logo-hotel   { fill: var(--logo-fill, #EDE7DA); }
+body.logo-on-light .logo-svg .layer-mid,
+body.logo-on-light .logo-svg .logo-hotel { fill: #0B1410; }
 body:not(.page-home) { --logo-init-p: 1; }
 .nav-brand-slot { display: block; }
 @media (prefers-reduced-motion: reduce) { .logo-mover { --p: 1; } }

@@ -230,18 +230,16 @@ body { --logo-accent: #320A18; }                       /* wine outline, all surf
   width: clamp(300px, 50vw, 860px);
   height: auto;
 }
-/* Brand colours of the 3-layer wordmark, all themable via CSS vars so the
-   light-bg variant below can flip them without redefining the SVG. */
-.logo-svg .layer-back   { fill: var(--logo-back,   #320A18); opacity: 0.86; }
-.logo-svg .layer-mid    { fill: var(--logo-mid,    #EDE7DA); }
-.logo-svg .layer-stroke { fill: none; stroke: var(--logo-stroke, #320A18); stroke-width: 1.35; }
-.logo-svg .logo-hotel   { fill: var(--logo-script, #320A18); }
-/* Over a cream/light surface (FAQ nav etc.) — flip the letterpress so the
-   visible letter face is wine, not paper, against the light background. */
-body.logo-on-light .logo-svg .layer-back   { fill: #EDE7DA; opacity: 0.5; }
-body.logo-on-light .logo-svg .layer-mid    { fill: #320A18; }
-body.logo-on-light .logo-svg .layer-stroke { stroke: #EDE7DA; }
-body.logo-on-light .logo-svg .logo-hotel   { fill: #320A18; }
+/* Monochrome wordmark — paper on dark surfaces, ink on light ones. The
+   back-offset and stroke layers from the 3-layer letterpress original
+   are hidden; only the middle face + "hotel" italic render. */
+.logo-svg .layer-back   { fill: none; opacity: 0; }
+.logo-svg .layer-stroke { fill: none; stroke: none; }
+.logo-svg .layer-mid    { fill: var(--logo-fill, #EDE7DA); }
+.logo-svg .logo-hotel   { fill: var(--logo-fill, #EDE7DA); }
+/* Over a cream/light surface (FAQ nav etc.) — flip to ink so it stays legible. */
+body.logo-on-light .logo-svg .layer-mid,
+body.logo-on-light .logo-svg .logo-hotel { fill: #0B1410; }
 
 /* non-home pages: logo is born in its small nav-slot form */
 body:not(.page-home) { --logo-init-p: 1; }
