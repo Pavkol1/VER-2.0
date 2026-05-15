@@ -605,6 +605,9 @@ body:not(.page-home) { --logo-init-p: 1; }
   top: 0;
   align-self: start;
   height: 100vh;
+  /* Promote to its own compositor layer so sticky behaviour does not
+     re-paint the cinema bg on every scroll frame. */
+  will-change: transform;
   padding: clamp(56px, 6vw, 96px) clamp(40px, 5vw, 80px);
   display: flex;
   flex-direction: column;
@@ -620,7 +623,14 @@ body:not(.page-home) { --logo-init-p: 1; }
    through all 18 photos. data-active drives only the panel + CTA + body
    palette; the gallery itself is the scroll source-of-truth. */
 .room-galleries { display: flex; flex-direction: column; }
-.room-gallery { display: flex; flex-direction: column; }
+.room-gallery {
+  display: flex;
+  flex-direction: column;
+  /* Off-screen galleries skip layout + paint entirely — browser only renders
+     the one currently near the viewport, which keeps scroll FPS high. */
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1620px;
+}
 
 /* Panel-current + CTA: only the data-active variant is shown */
 .room-stage[data-active="presidential"] .panel-current[data-slug="presidential"],
@@ -1393,29 +1403,22 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
       });
     }
 
-    function detectFromScroll() {
+    // Native IntersectionObserver on a horizontal centerline (50% viewport)
+    // — no scroll polling, no getBoundingClientRect on the critical path.
+    var galleryObs = new IntersectionObserver(function (entries) {
       if (Date.now() < scrollLockUntil) return;
-      var line = window.innerHeight * 0.5;
-      for (var i = 0; i < galleries.length; i++) {
-        var rect = galleries[i].getBoundingClientRect();
-        if (rect.top <= line && rect.bottom > line) {
-          var slug = galleries[i].dataset.slug;
-          if (stage.dataset.active !== slug) setActive(slug);
-          return;
-        }
+      // Pick the gallery that just crossed the line (isIntersecting=true).
+      // Fallback to the most-centered if multiple are entering.
+      var entering = null;
+      entries.forEach(function (e) {
+        if (e.isIntersecting) entering = e.target;
+      });
+      if (entering) {
+        var slug = entering.dataset.slug;
+        if (stage.dataset.active !== slug) setActive(slug);
       }
-    }
-
-    var rafTicking = false;
-    window.addEventListener('scroll', function () {
-      if (!rafTicking) {
-        requestAnimationFrame(function () {
-          detectFromScroll();
-          rafTicking = false;
-        });
-        rafTicking = true;
-      }
-    }, { passive: true });
+    }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+    galleries.forEach(function (g) { galleryObs.observe(g); });
 
     // Prime initial palette + active button highlight
     setActive(stage.dataset.active || 'presidential');
