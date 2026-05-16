@@ -277,6 +277,7 @@ body .nav-brand .logo-svg .logo-hotel { fill: var(--paper); }
    already animates background/border on .scrolled — now also opacity. */
 nav.top { transition: opacity 0.4s var(--ease), background 0.4s var(--ease), border-color 0.4s var(--ease); }
 body.page-home nav.top:not(.scrolled) { opacity: 0; pointer-events: none; }
+body.in-cinema nav.top                  { opacity: 0; pointer-events: none; }
 
 /* HERO + ANIMATED LOGO (Ver3 — Emerald Boutique) */
 .hero {
@@ -1397,7 +1398,6 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 
     <aside class="room-panel">
       <header class="panel-header">
-        <div class="overline"><span>II</span><span>·</span><span>Bed &amp; Breakfast</span></div>
         <p class="panel-intro">Our rooms are designed with the utmost attention to furnishings, colors and fabrics, all while respecting the comfort and privacy of our guests.</p>
       </header>
 
