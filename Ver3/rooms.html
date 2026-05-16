@@ -217,6 +217,59 @@ body:not(.page-home) { --logo-init-p: 1; }
 .nav-brand-slot { display: block; }
 @media (prefers-reduced-motion: reduce) { .logo-mover { --p: 1; } }
 
+
+/* C — Boutique cursor: gold dot + lagging ring + magnetic CTAs */
+.cursor {
+  position: fixed; top: 0; left: 0;
+  width: 0; height: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+.cursor-dot, .cursor-ring {
+  position: fixed; top: 0; left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+  transform: translate3d(50vw, 50vh, 0);
+}
+.cursor-dot {
+  width: 10px; height: 10px;
+  margin: -5px 0 0 -5px;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(185,144,78,0.7);
+  transition: opacity 0.2s var(--ease);
+}
+.cursor-ring {
+  width: 38px; height: 38px;
+  margin: -19px 0 0 -19px;
+  border: 1.5px solid rgba(185, 144, 78, 0.85);
+  background: transparent;
+  transition: width 0.25s var(--ease),
+              height 0.25s var(--ease),
+              border-color 0.25s var(--ease),
+              background 0.25s var(--ease),
+              margin 0.25s var(--ease);
+}
+.cursor.is-hover .cursor-ring {
+  width: 64px; height: 64px;
+  margin: -32px 0 0 -32px;
+  border-color: var(--accent);
+  background: rgba(185, 144, 78, 0.14);
+}
+.cursor.is-hover .cursor-dot { opacity: 0; }
+.magnet { will-change: transform; }
+@media (hover: hover) and (pointer: fine) {
+  html, body, *, *::before, *::after { cursor: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html, body, *, *::before, *::after { cursor: auto !important; }
+  .cursor { display: none !important; }
+  .magnet { transform: none !important; }
+}
+@media (hover: none), (pointer: coarse) {
+  .cursor { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -230,7 +283,7 @@ body:not(.page-home) { --logo-init-p: 1; }
     <a href="neighbourhood.html">Neighbourhood</a>
     <a href="contact.html">Contact</a>
   </div>
-  <a href="index.html#reserve" class="nav-cta">Reserve</a>
+  <a href="index.html#reserve" class="nav-cta magnet">Reserve</a>
 </nav>
 
 <div class="logo-stage">
@@ -435,6 +488,12 @@ body:not(.page-home) { --logo-init-p: 1; }
   </div>
 </footer>
 
+
+<div class="cursor" id="cursor" aria-hidden="true">
+  <span class="cursor-ring"></span>
+  <span class="cursor-dot"></span>
+</div>
+
 <script>
 (function () {
   var body = document.body;
@@ -468,5 +527,53 @@ body:not(.page-home) { --logo-init-p: 1; }
   sections.forEach(function (s) { obs.observe(s); });
 }());
 </script>
+<script>
+/* C — Boutique cursor + magnetic CTA pull (standalone, idempotent) */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cursor = document.getElementById('cursor');
+  var dot    = cursor && cursor.querySelector('.cursor-dot');
+  var ring   = cursor && cursor.querySelector('.cursor-ring');
+  if (!cursor || !dot || !ring) return;
+
+  var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+  var rx = mx, ry = my;
+  var hoverSel = 'a, button, .room-list button, [role="button"]';
+  var magnets  = Array.prototype.slice.call(document.querySelectorAll('.magnet'));
+
+  document.addEventListener('mousemove', function (e) {
+    mx = e.clientX; my = e.clientY;
+  }, { passive: true });
+  document.addEventListener('mouseover', function (e) {
+    if (e.target.closest && e.target.closest(hoverSel)) cursor.classList.add('is-hover');
+  });
+  document.addEventListener('mouseout', function (e) {
+    if (e.target.closest && e.target.closest(hoverSel)) cursor.classList.remove('is-hover');
+  });
+
+  function loop() {
+    dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)';
+    rx += (mx - rx) * 0.18;
+    ry += (my - ry) * 0.18;
+    ring.style.transform = 'translate3d(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,0)';
+    for (var i = 0; i < magnets.length; i++) {
+      var el = magnets[i];
+      var r  = el.getBoundingClientRect();
+      var ex = r.left + r.width / 2, ey = r.top + r.height / 2;
+      var dx = mx - ex, dy = my - ey;
+      var d  = Math.sqrt(dx * dx + dy * dy) || 1;
+      if (d < 100) {
+        var pull = (1 - d / 100) * 12;
+        el.style.transform = 'translate3d(' + ((dx / d) * pull).toFixed(1) + 'px,' + ((dy / d) * pull).toFixed(1) + 'px,0)';
+      } else if (el.style.transform) {
+        el.style.transform = '';
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+
 </body>
 </html>

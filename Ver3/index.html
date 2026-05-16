@@ -434,13 +434,72 @@ body:not(.page-home) { --logo-init-p: 1; }
   opacity: 0.45;
 }
 .intro-inner {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(auto, 720px) minmax(280px, 380px);
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
   gap: clamp(48px, 6vw, 96px);
   align-items: end;
 }
+.intro-text { min-width: 0; }
+
+/* Right column — portrait photo with subtle scroll parallax */
+.intro-photo {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  margin: 0;
+  overflow: hidden;
+  outline: 1px solid rgba(185, 144, 78, 0.28);
+  outline-offset: -1px;
+}
+.intro-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 110%;          /* a touch of head-room so parallax never reveals an edge */
+  object-fit: cover;
+  object-position: 72% center;   /* keep the brass STORIES wordmark in frame after the portrait crop */
+  transform: translate3d(0, calc(var(--parallax-y, 0) * 1px), 0);
+  will-change: transform;
+  filter: brightness(0.94) saturate(0.97);
+}
+.intro-photo::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    rgba(11,20,16,0) 60%,
+    rgba(11,20,16,0.35) 100%);
+  pointer-events: none;
+}
+
+/* Bottom credits strip — replaces the right-column meta column */
+.intro-meta {
+  max-width: 1280px;
+  margin: clamp(56px, 6vw, 96px) auto 0;
+  padding-top: 26px;
+  border-top: 1px solid rgba(237, 231, 218, 0.18);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 56px);
+}
+.intro-meta > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.intro-meta .l {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(237, 231, 218, 0.45);
+}
+.intro-meta .v {
+  font-family: 'Lora', serif;
+  font-size: 17px;
+  color: var(--paper);
+}
+.intro-meta .v em { font-style: italic; color: var(--accent); }
 .intro-strip .overline {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
@@ -470,35 +529,102 @@ body:not(.page-home) { --logo-init-p: 1; }
   color: rgba(237,231,218,0.8);
   max-width: 560px;
 }
-.intro-strip .meta {
-  display: grid;
-  gap: 20px;
-  border-top: 1px solid rgba(237,231,218,0.18);
-  padding-top: 26px;
-}
-.intro-strip .meta > div {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 16px;
-  align-items: baseline;
-}
-.intro-strip .meta .l {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: rgba(237,231,218,0.45);
-}
-.intro-strip .meta .v {
-  font-family: 'Lora', serif;
-  font-size: 18px;
-  color: var(--paper);
-}
-.intro-strip .meta .v em { font-style: italic; color: var(--accent); }
 @media (max-width: 880px) {
   .intro-inner { grid-template-columns: 1fr; }
-  .intro-strip .meta { margin-top: 12px; }
+  .intro-photo { aspect-ratio: 4 / 5; max-width: 520px; margin-left: auto; }
+  .intro-meta  { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 40px; padding-top: 22px; }
+  .intro-meta .v { font-size: 15px; }
 }
+
+/* B — Stagger word reveal on the intro headline */
+.intro-strip h1 { white-space: normal; }
+.intro-strip h1 .w {
+  display: inline-block;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(0.45em);
+  transition: opacity 0.6s var(--ease), transform 0.7s var(--ease);
+}
+.intro-strip.revealed h1 .w {
+  opacity: 1;
+  transform: translateY(0);
+}
+.intro-strip.revealed h1 .w.em-word::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 100%;
+  margin-top: -0.08em;
+  background: linear-gradient(90deg, var(--accent), rgba(185,144,78,0));
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: storiesUnderline 0.9s var(--ease) 0.7s forwards;
+}
+@keyframes storiesUnderline {
+  to { transform: scaleX(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-strip h1 .w { opacity: 1; transform: none; transition: none; }
+  .intro-strip.revealed h1 .w.em-word::after { animation: none; transform: scaleX(1); }
+}
+
+/* C — Custom boutique cursor: gold dot + lagging ring + magnetic CTAs */
+/* Visible by default; JS guards skip activation on touch-only and reduced-motion */
+.cursor {
+  position: fixed; top: 0; left: 0;
+  width: 0; height: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+.cursor-dot, .cursor-ring {
+  position: fixed; top: 0; left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+  /* Start at 50/50 of viewport — visible immediately even before first mousemove */
+  transform: translate3d(50vw, 50vh, 0);
+}
+.cursor-dot {
+  width: 10px; height: 10px;
+  margin: -5px 0 0 -5px;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(185,144,78,0.7);
+  transition: opacity 0.2s var(--ease);
+}
+.cursor-ring {
+  width: 38px; height: 38px;
+  margin: -19px 0 0 -19px;
+  border: 1.5px solid rgba(185, 144, 78, 0.85);
+  background: transparent;
+  transition: width 0.25s var(--ease),
+              height 0.25s var(--ease),
+              border-color 0.25s var(--ease),
+              background 0.25s var(--ease),
+              margin 0.25s var(--ease);
+}
+.cursor.is-hover .cursor-ring {
+  width: 64px; height: 64px;
+  margin: -32px 0 0 -32px;
+  border-color: var(--accent);
+  background: rgba(185, 144, 78, 0.14);
+}
+.cursor.is-hover .cursor-dot { opacity: 0; }
+.magnet { will-change: transform; }
+
+/* Only hide the native cursor on hover-capable, fine-pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  html, body, *, *::before, *::after { cursor: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html, body, *, *::before, *::after { cursor: auto !important; }
+  .cursor { display: none !important; }
+  .magnet { transform: none !important; }
+}
+@media (hover: none), (pointer: coarse) {
+  .cursor { display: none; }
+}
+
+
 
 /* PLATE */
 .plate {
@@ -1127,7 +1253,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
     <a href="neighbourhood.html">Neighbourhood</a>
     <a href="contact.html">Contact</a>
   </div>
-  <a href="#reserve" class="nav-cta">Reserve</a>
+  <a href="#reserve" class="nav-cta magnet">Reserve</a>
 </nav>
 
 <div class="runlabel" id="runlabel">
@@ -1148,7 +1274,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 
   <div class="stage-top-right">
     <span class="phone">+36 1 234 5678</span>
-    <a class="reserve" href="#reserve">Reserve &rarr;</a>
+    <a class="reserve magnet" href="#reserve">Reserve &rarr;</a>
   </div>
 
   <div class="stage-pitch">
@@ -1157,7 +1283,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
       <span>Six rooms · A hotel of stories, quietly told.</span>
       <span class="rule"></span>
     </div>
-    <a class="enter" href="#rooms">
+    <a class="enter magnet" href="#rooms">
       <span>Enter the house</span>
       <span class="arrow">&rarr;</span>
     </a>
@@ -1170,17 +1296,22 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 <!-- INTRO STRIP — editorial reveal as logo shrinks into nav -->
 <section class="intro-strip" data-label="01 / The House">
   <div class="intro-inner">
-    <div>
+    <div class="intro-text">
       <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VII · Király utca 26</span></div>
-      <h1>A hotel of <em>stories,</em><br>quietly told.</h1>
+      <h1><span class="w">A</span> <span class="w">hotel</span> <span class="w">of</span> <span class="w em-word">stories,</span><br><span class="w">quietly</span> <span class="w">told.</span></h1>
       <p class="deck">Six rooms, one Twenty Six building. A small house on Király utca, lived-in and attentive — the opposite of anonymous.</p>
     </div>
-    <div class="meta">
-      <div><span class="l">Form</span><span class="v">Boutique &middot; <em>6</em> suites</span></div>
-      <div><span class="l">Address</span><span class="v">Király utca 26</span></div>
-      <div><span class="l">Opened</span><span class="v">MMXXIV</span></div>
-      <div><span class="l">Reservations</span><span class="v">+36 1 234 5678</span></div>
-    </div>
+    <figure class="intro-photo">
+      <img src="assets/brand/intro-lounge.jpg"
+           alt="Stories Hotel — green velvet lounge with the brass STORIES wordmark on the wall"
+           decoding="async" loading="lazy">
+    </figure>
+  </div>
+  <div class="intro-meta">
+    <div><span class="l">Form</span><span class="v">Boutique &middot; <em>6</em> suites</span></div>
+    <div><span class="l">Address</span><span class="v">Király utca 26</span></div>
+    <div><span class="l">Opened</span><span class="v">MMXXIV</span></div>
+    <div><span class="l">Reservations</span><span class="v">+36 1 234 5678</span></div>
   </div>
 </section>
 
@@ -1489,10 +1620,117 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
   </div>
 </footer>
 
+<div class="cursor" id="cursor" aria-hidden="true">
+  <span class="cursor-ring"></span>
+  <span class="cursor-dot"></span>
+</div>
+
 <script>
 (function () {
   var body = document.body;
   var nav = document.getElementById('topnav');
+
+  // ── A: parallax on .intro-photo + B: word-stagger reveal on the headline ─
+  var introStrip  = document.querySelector('.intro-strip');
+  var introPhoto  = document.querySelector('.intro-photo img');
+  var introH1     = introStrip && introStrip.querySelector('h1');
+  var reduceMo    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Words are pre-split in HTML now; just stamp each .w with a stagger delay.
+  if (introH1 && !reduceMo) {
+    var ws = introH1.querySelectorAll('.w');
+    for (var i = 0; i < ws.length; i++) {
+      ws[i].style.transitionDelay = (i * 0.09).toFixed(2) + 's';
+    }
+  }
+
+  if (introStrip) {
+    // Reveal once when the section enters viewport
+    var introObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          introStrip.classList.add('revealed');
+          introObs.disconnect();
+        }
+      });
+    }, { threshold: 0.25 });
+    introObs.observe(introStrip);
+  }
+
+  if (introPhoto && introStrip && !reduceMo) {
+    var pTicking = false;
+    function parallax() {
+      var rect = introStrip.getBoundingClientRect();
+      var vh   = window.innerHeight;
+      var c    = rect.top + rect.height / 2 - vh / 2;
+      // -15% of distance-from-center, capped to a sane range
+      var y    = Math.max(-80, Math.min(80, c * -0.12));
+      introPhoto.style.setProperty('--parallax-y', y.toFixed(1));
+      pTicking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!pTicking) { requestAnimationFrame(parallax); pTicking = true; }
+    }, { passive: true });
+    parallax();
+  }
+
+  // ── C: gold dot+ring cursor with magnetic CTA pull ──────────────────────
+  (function () {
+    if (reduceMo) return;
+    var cursor = document.getElementById('cursor');
+    var dot    = cursor && cursor.querySelector('.cursor-dot');
+    var ring   = cursor && cursor.querySelector('.cursor-ring');
+    if (!cursor || !dot || !ring) {
+      console.warn('[Ver3 cursor] element missing — skipping cursor init');
+      return;
+    }
+    console.log('[Ver3 cursor] activated');
+
+    // Start in the center so the user sees the cursor even before the first mousemove
+    var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    var rx = mx, ry = my;
+    var hoverSel = 'a, button, .room-list button, [role="button"]';
+    var magnets  = Array.prototype.slice.call(document.querySelectorAll('.magnet'));
+
+    document.addEventListener('mousemove', function (e) {
+      mx = e.clientX; my = e.clientY;
+    }, { passive: true });
+
+    document.addEventListener('mouseover', function (e) {
+      if (e.target.closest && e.target.closest(hoverSel)) cursor.classList.add('is-hover');
+    });
+    document.addEventListener('mouseout', function (e) {
+      if (e.target.closest && e.target.closest(hoverSel)) cursor.classList.remove('is-hover');
+    });
+
+    function loop() {
+      // CSS handles the centre-offset via margin; here we just translate the
+      // element's top-left corner to the mouse position.
+      dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)';
+      rx += (mx - rx) * 0.18;
+      ry += (my - ry) * 0.18;
+      ring.style.transform = 'translate3d(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,0)';
+
+      // Magnetic pull on .magnet elements within 100px of the cursor
+      for (var i = 0; i < magnets.length; i++) {
+        var el = magnets[i];
+        var r  = el.getBoundingClientRect();
+        var ex = r.left + r.width / 2;
+        var ey = r.top + r.height / 2;
+        var dx = mx - ex, dy = my - ey;
+        var d  = Math.sqrt(dx * dx + dy * dy) || 1;
+        if (d < 100) {
+          var pull = (1 - d / 100) * 12;
+          el.style.transform = 'translate3d(' + ((dx / d) * pull).toFixed(1) + 'px,' + ((dy / d) * pull).toFixed(1) + 'px,0)';
+        } else if (el.style.transform) {
+          el.style.transform = '';
+        }
+      }
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
+
 
   // Toggle nav.scrolled past the first 40px of scroll — opacity/background
   // animation lives in CSS.
@@ -1635,5 +1873,6 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
   }
 }());
 </script>
+
 </body>
 </html>
