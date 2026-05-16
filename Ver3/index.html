@@ -279,13 +279,15 @@ nav.top { transition: opacity 0.4s var(--ease), background 0.4s var(--ease), bor
 /* Hero stage — nav hidden so the lobby photo reads clean */
 body.page-home nav.top:not(.scrolled) { opacity: 0; pointer-events: none; }
 
-/* Carousel — nav stays visible, but the dark blurred backdrop comes off.
-   Content colour follows --room-ink so it reads on both dark and light rooms. */
+/* Carousel — nav stays visible with a soft frosted glass instead of the
+   dark blur (which combined with the opacity transition was causing the
+   GPU jank). Content colour follows --room-ink so it reads on both dark
+   and light rooms. */
 body.in-cinema nav.top.scrolled {
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-bottom-color: transparent;
+  background: rgba(237, 231, 218, 0.14);
+  backdrop-filter: blur(6px) saturate(1.05);
+  -webkit-backdrop-filter: blur(6px) saturate(1.05);
+  border-bottom-color: rgba(237, 231, 218, 0.18);
 }
 body.in-cinema .nav-links a            { color: var(--room-ink); }
 body.in-cinema .nav-links a:hover      { color: var(--accent); border-bottom-color: var(--accent); }
