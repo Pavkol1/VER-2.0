@@ -906,7 +906,65 @@ body:not(.page-home) { --logo-init-p: 1; }
   padding: clamp(56px, 6vw, 96px) clamp(40px, 5vw, 80px);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;   /* header top, list middle, CTA bottom */
   gap: clamp(28px, 3vw, 48px);
+}
+
+/* Static panel header (overline + intro) — no per-room swapping anymore */
+.panel-header { max-width: 460px; }
+.panel-header .overline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.panel-header .overline::before {
+  content: ""; width: 36px; height: 1px; background: var(--accent);
+}
+.panel-header .panel-intro {
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+/* Defensive: the old per-room panel-currents + panel-ctas are removed from
+   DOM, but if any leftover descendant ever sneaks in, it stays invisible. */
+.panel-currents, .panel-ctas, .panel-current, .room-panel-cta { display: none !important; }
+
+/* Single panel CTA — href tracks the active room via JS */
+.panel-cta {
+  align-self: flex-start;
+  padding: 14px 26px;
+  border: 1px solid color-mix(in oklab, currentColor 35%, transparent);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  color: currentColor;
+  text-decoration: none;
+  transition:
+    background 0.3s var(--ease),
+    color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+.panel-cta:hover,
+.panel-cta:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+  outline: none;
 }
 
 /* The currents/CTAs/galleries are all in DOM; visibility is data-active driven */
@@ -917,12 +975,16 @@ body:not(.page-home) { --logo-init-p: 1; }
 /* Galleries always render — they stack vertically and the user scrolls
    through all 18 photos. data-active drives only the panel + CTA + body
    palette; the gallery itself is the scroll source-of-truth. */
-.room-galleries { display: flex; flex-direction: column; }
+.room-galleries {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(40px, 5vw, 80px) clamp(40px, 5vw, 80px) clamp(40px, 5vw, 80px) 0;
+  gap: clamp(40px, 5vw, 80px);
+}
 .room-gallery {
   display: flex;
   flex-direction: column;
-  /* Off-screen galleries skip layout + paint entirely — browser only renders
-     the one currently near the viewport, which keeps scroll FPS high. */
+  gap: clamp(20px, 2.5vw, 36px);
   content-visibility: auto;
   contain-intrinsic-size: 1px 1620px;
 }
@@ -1003,11 +1065,16 @@ body:not(.page-home) { --logo-init-p: 1; }
   letter-spacing: 0.22em;
   text-transform: uppercase;
   font-weight: 500;
-  padding: 16px 0;
+  padding: 18px 0;
   border-top: 1px solid color-mix(in oklab, currentColor 18%, transparent);
   opacity: 0.45;
-  transition: opacity 0.3s var(--ease), letter-spacing 0.3s var(--ease);
-  min-height: 44px;            /* a11y tap target */
+  transition:
+    opacity 0.55s var(--ease),
+    color 0.55s var(--ease),
+    font-weight 0.4s var(--ease),
+    letter-spacing 0.55s var(--ease),
+    padding 0.4s var(--ease);
+  min-height: 44px;
 }
 .room-list button:last-child {
   border-bottom: 1px solid color-mix(in oklab, currentColor 18%, transparent);
@@ -1066,6 +1133,8 @@ body:not(.page-home) { --logo-init-p: 1; }
     padding: 56px clamp(24px, 5vw, 40px);
     gap: 28px;
   }
+  .room-galleries { padding: 0 clamp(24px, 5vw, 40px) 40px; gap: 40px; }
+  .room-gallery { gap: 20px; }
 }
 
 /* PLEASURES */
@@ -1327,38 +1396,10 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
   <div class="room-stage" id="roomStage" data-active="presidential">
 
     <aside class="room-panel">
-      <div class="panel-currents">
-        <article class="panel-current" data-slug="presidential">
-          <span class="panel-num"><span>I</span><span>01 / 06</span></span>
-          <h3 class="panel-title">Presidential <em>Suite</em></h3>
-          <p class="panel-deck">A two-floor sanctuary at the top of the house. King bedroom upstairs, living room and dining downstairs, with a private Jacuzzi and sauna tucked behind a hidden door.</p>
-        </article>
-        <article class="panel-current" data-slug="king">
-          <span class="panel-num"><span>II</span><span>02 / 06</span></span>
-          <h3 class="panel-title">King <em>Suite</em></h3>
-          <p class="panel-deck">A double-height suite with a real Jacuzzi, a sauna, and a green-wall rain shower. The kind of room that quietly tells you to stay in tonight.</p>
-        </article>
-        <article class="panel-current" data-slug="junior">
-          <span class="panel-num"><span>III</span><span>03 / 06</span></span>
-          <h3 class="panel-title">Junior <em>Suite</em></h3>
-          <p class="panel-deck">Living room, sleeping area, sofa-bed for a third. A whole apartment&rsquo;s worth of room, with art chosen for it specifically.</p>
-        </article>
-        <article class="panel-current" data-slug="deluxe">
-          <span class="panel-num"><span>IV</span><span>04 / 06</span></span>
-          <h3 class="panel-title">Deluxe <em>Room</em></h3>
-          <p class="panel-deck">A king-bed room with a small living corner and original commissioned art. Generous on purpose &mdash; not a category to apologise for.</p>
-        </article>
-        <article class="panel-current" data-slug="deluxe-queen">
-          <span class="panel-num"><span>V</span><span>05 / 06</span></span>
-          <h3 class="panel-title">Deluxe <em>Queen</em></h3>
-          <p class="panel-deck">Queen bed, inner-courtyard windows, quiet. The room for travellers who plan to be out &mdash; and want sleep when they&rsquo;re back.</p>
-        </article>
-        <article class="panel-current" data-slug="superior">
-          <span class="panel-num"><span>VI</span><span>06 / 06</span></span>
-          <h3 class="panel-title">Superior <em>Room</em></h3>
-          <p class="panel-deck">Cosy on purpose. A queen bed, a working desk, a monochrome tile feature wall. Honest about what 17 m² can be when it&rsquo;s done with care.</p>
-        </article>
-      </div>
+      <header class="panel-header">
+        <div class="overline"><span>II</span><span>·</span><span>Bed &amp; Breakfast</span></div>
+        <p class="panel-intro">Our rooms are designed with the utmost attention to furnishings, colors and fabrics, all while respecting the comfort and privacy of our guests.</p>
+      </header>
 
       <nav class="room-list" aria-label="Choose a room">
         <button type="button" data-target="presidential" class="active">Presidential Suite</button>
@@ -1369,26 +1410,9 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
         <button type="button" data-target="superior">Superior</button>
       </nav>
 
-      <div class="panel-ctas">
-        <a href="rooms.html#presidential" class="room-panel-cta" data-slug="presidential">
-          Read the full story <span aria-hidden="true">&rarr;</span>
-        </a>
-        <a href="rooms.html#king" class="room-panel-cta" data-slug="king">
-          Read the full story <span aria-hidden="true">&rarr;</span>
-        </a>
-        <a href="rooms.html#junior" class="room-panel-cta" data-slug="junior">
-          Read the full story <span aria-hidden="true">&rarr;</span>
-        </a>
-        <a href="rooms.html#deluxe" class="room-panel-cta" data-slug="deluxe">
-          Read the full story <span aria-hidden="true">&rarr;</span>
-        </a>
-        <a href="rooms.html#deluxe-queen" class="room-panel-cta" data-slug="deluxe-queen">
-          Read the full story <span aria-hidden="true">&rarr;</span>
-        </a>
-        <a href="rooms.html#superior" class="room-panel-cta" data-slug="superior">
-          Read the full story <span aria-hidden="true">&rarr;</span>
-        </a>
-      </div>
+      <a class="panel-cta magnet" id="panelCta" href="rooms.html#presidential">
+        Explore the rooms <span aria-hidden="true">&rarr;</span>
+      </a>
     </aside>
 
     <div class="room-galleries">
