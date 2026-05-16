@@ -919,7 +919,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   /* Promote to its own compositor layer so sticky behaviour does not
      re-paint the cinema bg on every scroll frame. */
   will-change: transform;
-  padding: clamp(56px, 6vw, 96px) clamp(40px, 5vw, 80px);
+  padding: clamp(112px, 10vw, 140px) clamp(40px, 5vw, 80px) clamp(56px, 6vw, 96px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;   /* header top, list middle, CTA bottom */
@@ -994,7 +994,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .room-galleries {
   display: flex;
   flex-direction: column;
-  padding: clamp(40px, 5vw, 80px) clamp(40px, 5vw, 80px) clamp(40px, 5vw, 80px) 0;
+  padding: clamp(112px, 10vw, 140px) clamp(40px, 5vw, 80px) clamp(40px, 5vw, 80px) 0;
   gap: clamp(40px, 5vw, 80px);
 }
 .room-gallery {
@@ -1146,10 +1146,10 @@ body:not(.page-home) { --logo-init-p: 1; }
   .room-panel {
     position: static;
     height: auto;
-    padding: 56px clamp(24px, 5vw, 40px);
+    padding: 112px clamp(24px, 5vw, 40px) 56px;
     gap: 28px;
   }
-  .room-galleries { padding: 0 clamp(24px, 5vw, 40px) 40px; gap: 40px; }
+  .room-galleries { padding: 40px clamp(24px, 5vw, 40px); gap: 40px; }
   .room-gallery { gap: 20px; }
 }
 
