@@ -109,6 +109,160 @@ nav.top.scrolled {
 .runlabel.light { color: rgba(22,19,14,0.55); }
 .runlabel .sep { margin: 0 14px; color: var(--accent); }
 
+
+/* STAGE — Hero v3 single-screen landing (replaces the animated wordmark hero) */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+  background: var(--ink);
+}
+.stage .bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  filter: brightness(0.92) saturate(0.95);
+  transform: scale(1.03);
+  transition: transform 1.8s var(--ease), filter 1.8s var(--ease);
+}
+.stage.loaded .bg { transform: scale(1.0); }
+.stage::before {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(11,20,16,0.55) 0%,
+    rgba(11,20,16,0.05) 18%,
+    rgba(11,20,16,0.05) 70%,
+    rgba(11,20,16,0.75) 100%
+  );
+}
+.stage::after {
+  content: "";
+  position: absolute; inset: 0;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+}
+
+.stage-top-left, .stage-top-right, .stage-plate-left, .stage-plate-right {
+  position: absolute;
+  z-index: 5;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+}
+.stage-top-left {
+  top: 32px; left: clamp(24px, 4vw, 56px);
+  display: flex; align-items: center; gap: 12px;
+  font-size: 10px; letter-spacing: 0.32em;
+  color: rgba(255,255,255,0.85);
+}
+.stage-top-left .rule { width: 28px; height: 1px; background: rgba(255,255,255,0.55); }
+
+.stage-top-right {
+  top: 28px; right: clamp(24px, 4vw, 56px);
+  display: flex; align-items: center; gap: 22px;
+}
+.stage-top-right .phone {
+  font-size: 10px; letter-spacing: 0.32em;
+  color: rgba(255,255,255,0.85);
+}
+.stage-top-right .reserve {
+  font-size: 11px; letter-spacing: 0.24em;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.55);
+  padding: 11px 22px;
+  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+.stage-top-right .reserve:hover { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+
+.stage-pitch {
+  position: absolute;
+  bottom: 80px;
+  left: 0; right: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  text-align: center;
+  color: #fff;
+}
+.stage-pitch .tagline {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+}
+.stage-pitch .tagline .rule { width: 56px; height: 1px; background: rgba(255,255,255,0.45); }
+.stage-pitch .enter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.6);
+  padding: 16px 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(13,11,8,0.25);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  transition: background 0.4s var(--ease), border-color 0.4s var(--ease), gap 0.3s var(--ease), color 0.3s var(--ease);
+  min-height: 44px;
+}
+.stage-pitch .enter:hover {
+  background: rgba(185, 144, 78, 0.92);
+  border-color: var(--accent);
+  color: var(--ink);
+  gap: 22px;
+}
+.stage-pitch .enter .arrow { color: var(--accent); transition: color 0.3s var(--ease); }
+.stage-pitch .enter:hover .arrow { color: var(--ink); }
+
+.stage-plate-left, .stage-plate-right {
+  bottom: 28px;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: rgba(255,255,255,0.4);
+}
+.stage-plate-left  { left: clamp(24px, 4vw, 56px); }
+.stage-plate-right { right: clamp(24px, 4vw, 56px); }
+
+@media (max-width: 720px) {
+  .stage-top-left .rule, .stage-pitch .tagline .rule { display: none; }
+  .stage-top-left { font-size: 9px; letter-spacing: 0.24em; }
+  .stage-top-right { gap: 12px; }
+  .stage-top-right .phone { display: none; }
+  .stage-pitch { bottom: 56px; gap: 20px; padding: 0 24px; }
+  .stage-pitch .tagline { font-size: 9px; letter-spacing: 0.24em; }
+  .stage-pitch .tagline span:not(.rule) { line-height: 1.4; }
+  .stage-pitch .enter { padding: 14px 28px; font-size: 10px; letter-spacing: 0.24em; }
+  .stage-plate-left, .stage-plate-right { font-size: 8px; bottom: 18px; }
+  .stage-plate-left  { left: 24px; }
+  .stage-plate-right { right: 24px; }
+}
+
+/* Hide the global fixed nav while the stage hero is on screen. The nav
+   already animates background/border on .scrolled — now also opacity. */
+nav.top { transition: opacity 0.4s var(--ease), background 0.4s var(--ease), border-color 0.4s var(--ease); }
+body.page-home nav.top:not(.scrolled) { opacity: 0; pointer-events: none; }
+
 /* HERO + ANIMATED LOGO (Ver3 — Emerald Boutique) */
 .hero {
   position: relative;
@@ -950,33 +1104,42 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
   <a href="#reserve" class="nav-cta">Reserve</a>
 </nav>
 
-<div class="logo-stage" id="logoStage">
-  <div class="logo-mover" id="logoMover">
-    <a href="index.html" class="logo-mark" aria-label="Stories Hotel — Home">
-      <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 406 173" focusable="false" aria-hidden="true">
-        <g class="logo-stories" font-family="Optima, Didot, 'Tenor Sans', 'Times New Roman', serif" font-size="50" font-weight="500" letter-spacing="22">
-          <text class="layer-back"   x="55" y="78">STORIES</text>
-          <text class="layer-mid"    x="52" y="75">STORIES</text>
-          <text class="layer-stroke" x="53" y="76">STORIES</text>
-        </g>
-        <text class="logo-hotel" x="181" y="121"
-              font-family="'Snell Roundhand', 'Pinyon Script', 'Brush Script MT', cursive"
-              font-size="29" font-style="italic" letter-spacing="0.5">hotel</text>
-      </svg>
-    </a>
-  </div>
-</div>
-
 <div class="runlabel" id="runlabel">
   <span id="rl-num">01</span><span class="sep">◆</span><span id="rl-text">The House</span>
 </div>
 
-<!-- HERO — atmospheric plate behind the animated logo -->
-<header class="hero" id="hero" data-label="01 / The House">
-  <div class="hero-bg" style="background-image: url('assets/brand/hero-corridor.jpg');"></div>
-  <div class="hero-grain"></div>
-  <div class="hero-scrollcue"><span>Scroll</span><span class="line"></span></div>
-</header>
+<!-- HERO — single-screen landing. The brand mark lives inside the lobby
+     photo on the back wall, so there is no overlay wordmark. -->
+<section class="stage" id="stage" data-label="01 / The House">
+  <img class="bg" src="assets/brand/lobby-reception.jpg"
+       alt="Stories Hotel Budapest — reception lobby with the STORIES brass wordmark on the back wall"
+       decoding="async">
+
+  <div class="stage-top-left">
+    <span class="rule"></span>
+    <span>Király utca 26 · Budapest VI</span>
+  </div>
+
+  <div class="stage-top-right">
+    <span class="phone">+36 1 234 5678</span>
+    <a class="reserve" href="#reserve">Reserve &rarr;</a>
+  </div>
+
+  <div class="stage-pitch">
+    <div class="tagline">
+      <span class="rule"></span>
+      <span>Six rooms · A hotel of stories, quietly told.</span>
+      <span class="rule"></span>
+    </div>
+    <a class="enter" href="#rooms">
+      <span>Enter the house</span>
+      <span class="arrow">&rarr;</span>
+    </a>
+  </div>
+
+  <div class="stage-plate-left">Plate I &mdash; Reception</div>
+  <div class="stage-plate-right">MMXXIV</div>
+</section>
 
 <!-- INTRO STRIP — editorial reveal as logo shrinks into nav -->
 <section class="intro-strip" data-label="01 / The House">
@@ -1302,38 +1465,39 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 
 <script>
 (function () {
-  var root = document.documentElement;
   var body = document.body;
   var nav = document.getElementById('topnav');
-  var isHome = body.classList.contains('page-home');
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Scroll: nav.scrolled toggle + drive --logo-p across the first viewport.
-  var ticking = false;
+  // Toggle nav.scrolled past the first 40px of scroll — opacity/background
+  // animation lives in CSS.
+  var navTicking = false;
   function onScroll() {
-    var y = window.scrollY;
-    nav.classList.toggle('scrolled', y > 40);
-    if (isHome && !reduceMotion) {
-      var vh = window.innerHeight || 1;
-      // Smooth ramp 0 → 1 over the first ~88% of the hero so the logo is
-      // already in its small form before the intro headline is on screen.
-      var p = Math.min(1, Math.max(0, y / (vh * 0.88)));
-      root.style.setProperty('--logo-p', p.toFixed(4));
-    }
-    ticking = false;
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+    navTicking = false;
   }
   window.addEventListener('scroll', function () {
-    if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
+    if (!navTicking) { requestAnimationFrame(onScroll); navTicking = true; }
   }, { passive: true });
-  // Prime initial state in case the page loaded mid-scroll.
   onScroll();
+
+  // Stage hero: trigger the slow background zoom-in once the lobby photo
+  // has decoded.
+  var heroStage = document.getElementById('stage');
+  if (heroStage) {
+    var heroBg = heroStage.querySelector('img.bg');
+    function stageLoaded() { heroStage.classList.add('loaded'); }
+    if (heroBg) {
+      if (heroBg.complete) stageLoaded();
+      else heroBg.addEventListener('load', stageLoaded);
+    }
+  }
 
   // Section tracker: drives runlabel + body.logo-on-light for the small logo.
   var rlNum = document.getElementById('rl-num');
   var rlText = document.getElementById('rl-text');
   var runlabel = document.getElementById('runlabel');
   var sections = document.querySelectorAll(
-    '.hero, .intro-strip, .rooms-cinema, .plate, .body, .reserve-plate'
+    '.stage, .intro-strip, .rooms-cinema, .plate, .body, .reserve-plate'
   );
 
   var obs = new IntersectionObserver(function (entries) {
