@@ -155,6 +155,9 @@ nav.top.scrolled {
   background-size: 3px 3px, 5px 5px;
 }
 
+/* Nav now covers brand + Reserve, so hide the duplicated hero top chrome */
+body.page-home .stage-top-left,
+body.page-home .stage-top-right { display: none; }
 .stage-top-left, .stage-top-right, .stage-plate-left, .stage-plate-right {
   position: absolute;
   z-index: 5;
@@ -275,9 +278,14 @@ body .nav-brand .logo-svg .logo-hotel { fill: var(--paper); }
 
 /* Hide the global fixed nav while the stage hero is on screen. The nav
    already animates background/border on .scrolled — now also opacity. */
-nav.top { transition: opacity 0.4s var(--ease), background 0.4s var(--ease), border-color 0.4s var(--ease); }
-/* Hero stage — nav hidden so the lobby photo reads clean */
-body.page-home nav.top:not(.scrolled) { opacity: 0; pointer-events: none; }
+/* Nav is always visible. Opacity transition removed — Safari's repaint
+   of the blurred backdrop while opacity changed was the source of the
+   "disappear" glitch on scroll-up. Force a GPU layer so the nav
+   composites independently from the rest of the page. */
+nav.top {
+  transition: background 0.25s var(--ease), border-color 0.25s var(--ease);
+  transform: translate3d(0, 0, 0);
+}
 
 /* Carousel — nav stays visible with a soft frosted glass instead of the
    dark blur (which combined with the opacity transition was causing the
@@ -1723,11 +1731,30 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
     var mx = window.innerWidth / 2, my = window.innerHeight / 2;
     var rx = mx, ry = my;
     var hoverSel = 'a, button, .room-list button, [role="button"]';
-    var magnets  = Array.prototype.slice.call(document.querySelectorAll('.magnet'));
+    var magnets     = Array.prototype.slice.call(document.querySelectorAll('.magnet'));
+    var magnetCache = [];
+    var rectsTimer  = null;
+
+    function refreshRects() {
+      magnetCache = magnets.map(function (el) {
+        var r = el.getBoundingClientRect();
+        return { el: el, cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
+      });
+    }
+    refreshRects();
 
     document.addEventListener('mousemove', function (e) {
       mx = e.clientX; my = e.clientY;
     }, { passive: true });
+
+    // Re-cache magnet positions only after scroll/resize settles —
+    // getBoundingClientRect during heavy scroll is expensive, especially in Safari.
+    function scheduleRefresh() {
+      if (rectsTimer) clearTimeout(rectsTimer);
+      rectsTimer = setTimeout(refreshRects, 120);
+    }
+    window.addEventListener('scroll', scheduleRefresh, { passive: true });
+    window.addEventListener('resize', scheduleRefresh);
 
     document.addEventListener('mouseover', function (e) {
       if (e.target.closest && e.target.closest(hoverSel)) cursor.classList.add('is-hover');
@@ -1744,19 +1771,16 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
       ry += (my - ry) * 0.18;
       ring.style.transform = 'translate3d(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,0)';
 
-      // Magnetic pull on .magnet elements within 100px of the cursor
-      for (var i = 0; i < magnets.length; i++) {
-        var el = magnets[i];
-        var r  = el.getBoundingClientRect();
-        var ex = r.left + r.width / 2;
-        var ey = r.top + r.height / 2;
-        var dx = mx - ex, dy = my - ey;
+      // Magnetic pull from cached rects — no layout reads on the rAF path
+      for (var i = 0; i < magnetCache.length; i++) {
+        var m  = magnetCache[i];
+        var dx = mx - m.cx, dy = my - m.cy;
         var d  = Math.sqrt(dx * dx + dy * dy) || 1;
         if (d < 100) {
           var pull = (1 - d / 100) * 12;
-          el.style.transform = 'translate3d(' + ((dx / d) * pull).toFixed(1) + 'px,' + ((dy / d) * pull).toFixed(1) + 'px,0)';
-        } else if (el.style.transform) {
-          el.style.transform = '';
+          m.el.style.transform = 'translate3d(' + ((dx / d) * pull).toFixed(1) + 'px,' + ((dy / d) * pull).toFixed(1) + 'px,0)';
+        } else if (m.el.style.transform) {
+          m.el.style.transform = '';
         }
       }
       requestAnimationFrame(loop);
