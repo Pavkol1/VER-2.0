@@ -276,8 +276,21 @@ body .nav-brand .logo-svg .logo-hotel { fill: var(--paper); }
 /* Hide the global fixed nav while the stage hero is on screen. The nav
    already animates background/border on .scrolled — now also opacity. */
 nav.top { transition: opacity 0.4s var(--ease), background 0.4s var(--ease), border-color 0.4s var(--ease); }
+/* Hero stage — nav hidden so the lobby photo reads clean */
 body.page-home nav.top:not(.scrolled) { opacity: 0; pointer-events: none; }
-body.in-cinema nav.top                  { opacity: 0; pointer-events: none; }
+
+/* Carousel — nav stays visible, but the dark blurred backdrop comes off.
+   Content colour follows --room-ink so it reads on both dark and light rooms. */
+body.in-cinema nav.top.scrolled {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+body.in-cinema .nav-links a            { color: var(--room-ink); }
+body.in-cinema .nav-links a:hover      { color: var(--accent); border-bottom-color: var(--accent); }
+body.in-cinema .nav-brand .logo-svg .layer-mid,
+body.in-cinema .nav-brand .logo-svg .logo-hotel { fill: var(--room-ink); }
 
 /* HERO + ANIMATED LOGO (Ver3 — Emerald Boutique) */
 .hero {
