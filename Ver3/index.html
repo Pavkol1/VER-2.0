@@ -1461,7 +1461,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 </section>
 
 <!-- ROOMS CINEMA — single static panel + click-driven gallery (alma-style) -->
-<section class="rooms-cinema" id="roomsCinema" data-label="02 / The Rooms">
+<section class="rooms-cinema" id="roomsCinema">
 
   <div class="room-stage" id="roomStage" data-active="presidential">
 
@@ -1521,7 +1521,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 </section>
 
 <!-- PLEASURES PLATE + BODY -->
-<section class="plate" data-label="03 / Little Luxuries" id="pleasures">
+<section class="plate" data-label="02 / Little Luxuries" id="pleasures">
   <div class="bg" style="background-image: url('assets/brand/4T4B5708.JPG');"></div>
   <div class="plate-grain"></div>
   <div class="plate-content">
@@ -1534,7 +1534,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
   <div class="scrollcue"><span>Explore</span><span class="line"></span></div>
 </section>
 
-<section class="body dark" data-label="03 / Little Luxuries">
+<section class="body dark" data-label="02 / Little Luxuries">
   <div class="body-inner">
     <div class="pleasures-grid">
       <div class="pcard a">
@@ -1569,7 +1569,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 </section>
 
 <!-- BREAKFAST PLATE + BODY -->
-<section class="plate" data-label="04 / Breakfast" id="breakfast">
+<section class="plate" data-label="03 / Breakfast" id="breakfast">
   <div class="bg" style="background-image: url('assets/photos/breakfast/background breakfast.png');"></div>
   <div class="plate-grain"></div>
   <div class="plate-content">
@@ -1582,7 +1582,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
   <div class="scrollcue"><span>The menu</span><span class="line"></span></div>
 </section>
 
-<section class="body" data-label="04 / Breakfast">
+<section class="body" data-label="03 / Breakfast">
   <div class="body-inner">
     <div class="bk-grid">
       <div>
@@ -1603,7 +1603,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 </section>
 
 <!-- NEIGHBOURHOOD PLATE + BODY -->
-<section class="plate" data-label="05 / Neighbourhood" id="neigh">
+<section class="plate" data-label="04 / Neighbourhood" id="neigh">
   <div class="bg" style="background-image: url('assets/brand/DorS347-R1-11-12.JPG');"></div>
   <div class="plate-grain"></div>
   <div class="plate-content">
@@ -1616,7 +1616,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
   <div class="scrollcue"><span>The list</span><span class="line"></span></div>
 </section>
 
-<section class="body dark" data-label="05 / Neighbourhood">
+<section class="body dark" data-label="04 / Neighbourhood">
   <div class="body-inner">
     <div class="neigh-grid">
       <div class="ix">
@@ -1643,7 +1643,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 </section>
 
 <!-- RESERVE -->
-<section class="reserve-plate" id="reserve" data-label="06 / Reservations">
+<section class="reserve-plate" id="reserve" data-label="05 / Reservations">
   <div class="reserve-inner">
     <div class="reserve-over">06 / Reservations</div>
     <h2>Begin <em>your</em><br>Budapest chapter.</h2>
@@ -2018,18 +2018,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
     // body.in-cinema toggle for logo color sync
     var cinemaObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        body.classList.toggle('in-cinema', e.isIntersecting);
-        // The cinema is many viewports tall, so the main sections-observer
-        // (threshold 0.35) never fires for it — the runlabel jumped 01 → 03.
-        // Update it from here while any part of the cinema is on screen.
-        if (e.isIntersecting && rlNum && rlText) {
-          var lbl = e.target.dataset.label;
-          if (lbl) {
-            var parts = lbl.split('/');
-            rlNum.textContent  = parts[0].trim();
-            rlText.textContent = parts[1] ? parts[1].trim() : '';
-          }
-        }
+body.classList.toggle('in-cinema', e.isIntersecting);
       });
     }, { threshold: 0 });
     cinemaObs.observe(cinema);
