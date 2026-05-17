@@ -599,6 +599,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   color: rgba(237,231,218,0.86);
   max-width: 560px;
 }
+.intro-strip .deck + .deck { margin-top: 1.1em; }
 @media (max-width: 880px) {
   .intro-inner { grid-template-columns: 1fr; }
   .intro-photos { max-width: 520px; margin-left: auto; }
@@ -1438,19 +1439,15 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 <section class="intro-strip" data-label="01 / The House">
   <div class="intro-inner">
     <div class="intro-text">
-      <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VII · Király utca 26</span></div>
+      <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VI · Király utca 26</span></div>
       <h1><span class="w">A</span> <span class="w">hotel</span> <span class="w">of</span> <span class="w em-word">stories,</span><br><span class="w">quietly</span> <span class="w">told.</span></h1>
       <p class="deck" id="introDeck"><span class="rw">Forty-four</span> <span class="rw">rooms,</span> <span class="rw">six</span> <span class="rw">characters,</span> <span class="rw">one</span> <span class="rw">Twenty</span> <span class="rw">Six</span> <span class="rw">building.</span> <span class="rw">A</span> <span class="rw">small</span> <span class="rw">house</span> <span class="rw">on</span> <span class="rw">Király</span> <span class="rw">utca,</span> <span class="rw">lived-in</span> <span class="rw">and</span> <span class="rw">attentive</span> <span class="rw">—</span> <span class="rw">the</span> <span class="rw">opposite</span> <span class="rw">of</span> <span class="rw">anonymous.</span></p>
+      <p class="deck deck--secondary"><span class="rw">Discover</span> <span class="rw">the</span> <span class="rw">epitome</span> <span class="rw">of</span> <span class="rw">uniqueness</span> <span class="rw">at</span> <span class="rw">our</span> <span class="rw">boutique</span> <span class="rw">hotel,</span> <span class="rw">where</span> <span class="rw">every</span> <span class="rw">corner</span> <span class="rw">is</span> <span class="rw">infused</span> <span class="rw">with</span> <span class="rw">design</span> <span class="rw">and</span> <span class="rw">excitement.</span> <span class="rw">Your</span> <span class="rw">search</span> <span class="rw">for</span> <span class="rw">the</span> <span class="rw">perfect</span> <span class="rw">destination</span> <span class="rw">ends</span> <span class="rw">here.</span> <span class="rw">Welcome</span> <span class="rw">to</span> <span class="rw">a</span> <span class="rw">world</span> <span class="rw">where</span> <span class="rw">unforgettable</span> <span class="rw">experiences</span> <span class="rw">await</span> <span class="rw">at</span> <span class="rw">every</span> <span class="rw">turn.</span></p>
     </div>
     <div class="intro-photos">
       <figure class="intro-photo intro-photo--corridor">
         <img src="assets/brand/intro-corridor.jpg"
              alt="A guest walking the red-carpeted corridor between the green walls of Stories Hotel"
-             decoding="async" loading="lazy">
-      </figure>
-      <figure class="intro-photo intro-photo--shoes">
-        <img src="assets/brand/intro-shoes.jpg"
-             alt="Brown leather brogues on the red carpet beside a Stories Hotel keycard"
              decoding="async" loading="lazy">
       </figure>
     </div>
