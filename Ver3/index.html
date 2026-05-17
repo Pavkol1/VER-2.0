@@ -2019,6 +2019,17 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
     var cinemaObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         body.classList.toggle('in-cinema', e.isIntersecting);
+        // The cinema is many viewports tall, so the main sections-observer
+        // (threshold 0.35) never fires for it — the runlabel jumped 01 → 03.
+        // Update it from here while any part of the cinema is on screen.
+        if (e.isIntersecting && rlNum && rlText) {
+          var lbl = e.target.dataset.label;
+          if (lbl) {
+            var parts = lbl.split('/');
+            rlNum.textContent  = parts[0].trim();
+            rlText.textContent = parts[1] ? parts[1].trim() : '';
+          }
+        }
       });
     }, { threshold: 0 });
     cinemaObs.observe(cinema);
