@@ -467,33 +467,80 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .intro-text { min-width: 0; }
 
-/* Right column — portrait photo with subtle scroll parallax */
+/* Right column — diptych: corridor (portrait, hero) + shoes (landscape, supporting).
+   Both photos curtain-in from clipped-bottom state when .intro-strip.revealed fires. */
+.intro-photos {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 .intro-photo {
   position: relative;
-  aspect-ratio: 3 / 4;
   margin: 0;
   overflow: hidden;
   outline: 1px solid rgba(185, 144, 78, 0.28);
   outline-offset: -1px;
+  /* Initial state — clipped from bottom up + slight zoom-in */
+  clip-path: inset(0 0 100% 0);
+  transform: scale(1.06);
+  transition: clip-path 1.4s cubic-bezier(0.65, 0, 0.35, 1),
+              transform  1.4s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: clip-path, transform;
 }
+.intro-photo--corridor { aspect-ratio: 3 / 4; }
+.intro-photo--shoes    { aspect-ratio: 4 / 3; }
+
 .intro-photo img {
   position: absolute;
   inset: 0;
   width: 100%;
-  height: 110%;          /* a touch of head-room so parallax never reveals an edge */
+  height: 110%;
   object-fit: cover;
-  object-position: 72% center;   /* keep the brass STORIES wordmark in frame after the portrait crop */
+  object-position: center;
   transform: translate3d(0, calc(var(--parallax-y, 0) * 1px), 0);
   will-change: transform;
   filter: brightness(0.94) saturate(0.97);
 }
+/* Shoes drifts ~70% as much as corridor for a subtle depth effect */
+.intro-photo--shoes img {
+  transform: translate3d(0, calc(var(--parallax-y, 0) * 0.7px), 0);
+}
 .intro-photo::after {
   content: "";
   position: absolute; inset: 0;
-  background: linear-gradient(180deg,
-    rgba(11,20,16,0) 60%,
-    rgba(11,20,16,0.35) 100%);
+  background: linear-gradient(180deg, rgba(11,20,16,0) 65%, rgba(11,20,16,0.35) 100%);
   pointer-events: none;
+}
+
+/* Curtain reveal — fires from the section's IntersectionObserver-bound .revealed */
+.intro-strip.revealed .intro-photo--corridor {
+  clip-path: inset(0);
+  transform: scale(1);
+  transition-delay: 0.1s, 0.1s;
+}
+.intro-strip.revealed .intro-photo--shoes {
+  clip-path: inset(0);
+  transform: scale(1);
+  transition-delay: 0.45s, 0.45s;
+}
+
+/* Scroll-driven kinetic deck — each word's opacity follows distance from the
+   viewport's 55% focal line. JS writes --reveal per word on every scroll frame. */
+.intro-strip .deck { font-size: 18px; line-height: 1.55; }
+.intro-strip .rw {
+  display: inline;
+  opacity: var(--reveal, 0.3);
+  transition: opacity 0.18s linear;
+  will-change: opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-photo {
+    clip-path: inset(0) !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .intro-strip .rw { opacity: 1 !important; transition: none !important; }
 }
 
 /* Bottom credits strip — replaces the right-column meta column */
@@ -547,15 +594,16 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .intro-strip h1 em { font-style: italic; color: var(--accent); }
 .intro-strip .deck {
-  font-size: 18px;
   line-height: 1.55;
   font-weight: 300;
-  color: rgba(237,231,218,0.8);
+  color: rgba(237,231,218,0.86);
   max-width: 560px;
 }
 @media (max-width: 880px) {
   .intro-inner { grid-template-columns: 1fr; }
-  .intro-photo { aspect-ratio: 4 / 5; max-width: 520px; margin-left: auto; }
+  .intro-photos { max-width: 520px; margin-left: auto; }
+  .intro-photo--corridor { aspect-ratio: 3 / 4; }
+  .intro-photo--shoes    { aspect-ratio: 4 / 3; }
   .intro-meta  { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 40px; padding-top: 22px; }
   .intro-meta .v { font-size: 15px; }
 }
@@ -1373,7 +1421,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
   <div class="stage-pitch">
     <div class="tagline">
       <span class="rule"></span>
-      <span>Six rooms · A hotel of stories, quietly told.</span>
+      <span>Forty-four rooms, six characters · A hotel of stories, quietly told.</span>
       <span class="rule"></span>
     </div>
     <a class="enter magnet" href="#rooms">
@@ -1392,16 +1440,23 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
     <div class="intro-text">
       <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VII · Király utca 26</span></div>
       <h1><span class="w">A</span> <span class="w">hotel</span> <span class="w">of</span> <span class="w em-word">stories,</span><br><span class="w">quietly</span> <span class="w">told.</span></h1>
-      <p class="deck">Six rooms, one Twenty Six building. A small house on Király utca, lived-in and attentive — the opposite of anonymous.</p>
+      <p class="deck" id="introDeck"><span class="rw">Forty-four</span> <span class="rw">rooms,</span> <span class="rw">six</span> <span class="rw">characters,</span> <span class="rw">one</span> <span class="rw">Twenty</span> <span class="rw">Six</span> <span class="rw">building.</span> <span class="rw">A</span> <span class="rw">small</span> <span class="rw">house</span> <span class="rw">on</span> <span class="rw">Király</span> <span class="rw">utca,</span> <span class="rw">lived-in</span> <span class="rw">and</span> <span class="rw">attentive</span> <span class="rw">—</span> <span class="rw">the</span> <span class="rw">opposite</span> <span class="rw">of</span> <span class="rw">anonymous.</span></p>
     </div>
-    <figure class="intro-photo">
-      <img src="assets/brand/intro-lounge.jpg"
-           alt="Stories Hotel — green velvet lounge with the brass STORIES wordmark on the wall"
-           decoding="async" loading="lazy">
-    </figure>
+    <div class="intro-photos">
+      <figure class="intro-photo intro-photo--corridor">
+        <img src="assets/brand/intro-corridor.jpg"
+             alt="A guest walking the red-carpeted corridor between the green walls of Stories Hotel"
+             decoding="async" loading="lazy">
+      </figure>
+      <figure class="intro-photo intro-photo--shoes">
+        <img src="assets/brand/intro-shoes.jpg"
+             alt="Brown leather brogues on the red carpet beside a Stories Hotel keycard"
+             decoding="async" loading="lazy">
+      </figure>
+    </div>
   </div>
   <div class="intro-meta">
-    <div><span class="l">Form</span><span class="v">Boutique &middot; <em>6</em> suites</span></div>
+    <div><span class="l">Form</span><span class="v">Boutique &middot; <em>44</em> rooms</span></div>
     <div><span class="l">Address</span><span class="v">Király utca 26</span></div>
     <div><span class="l">Opened</span><span class="v">MMXXIV</span></div>
     <div><span class="l">Reservations</span><span class="v">+36 1 234 5678</span></div>
@@ -1698,21 +1753,64 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
     introObs.observe(introStrip);
   }
 
-  if (introPhoto && introStrip && !reduceMo) {
+  // Parallax — drives --parallax-y on the .intro-strip itself so both
+  // photos in the diptych can read from it (CSS picks different multipliers).
+  if (introStrip && !reduceMo) {
     var pTicking = false;
     function parallax() {
       var rect = introStrip.getBoundingClientRect();
       var vh   = window.innerHeight;
       var c    = rect.top + rect.height / 2 - vh / 2;
-      // -15% of distance-from-center, capped to a sane range
       var y    = Math.max(-80, Math.min(80, c * -0.12));
-      introPhoto.style.setProperty('--parallax-y', y.toFixed(1));
+      introStrip.style.setProperty('--parallax-y', y.toFixed(1));
       pTicking = false;
     }
     window.addEventListener('scroll', function () {
       if (!pTicking) { requestAnimationFrame(parallax); pTicking = true; }
     }, { passive: true });
     parallax();
+  }
+
+  // Scroll-driven deck — each .rw word's opacity follows distance from a focal
+  // line at 55% of the viewport. Per-word docY is cached up front and
+  // refreshed only when scroll/resize/fonts settle; the rAF loop just reads
+  // arithmetic, no per-frame layout. Same pattern as the cursor magnet cache.
+  var deckWords = document.querySelectorAll('.intro-strip .rw');
+  if (deckWords.length && !reduceMo) {
+    var deckCache = [];
+    var deckTimer = null;
+    function refreshDeckCache() {
+      deckCache = Array.prototype.map.call(deckWords, function (el) {
+        var r = el.getBoundingClientRect();
+        return { el: el, docY: r.top + window.scrollY + r.height / 2 };
+      });
+    }
+    function updateDeck() {
+      var focalY = window.scrollY + window.innerHeight * 0.55;
+      for (var i = 0; i < deckCache.length; i++) {
+        var w = deckCache[i];
+        var dist = Math.abs(w.docY - focalY);
+        var op   = Math.max(0.28, 1 - dist / 380);
+        w.el.style.setProperty('--reveal', op.toFixed(3));
+      }
+    }
+    refreshDeckCache();
+    updateDeck();
+    var deckTicking = false;
+    window.addEventListener('scroll', function () {
+      if (!deckTicking) {
+        requestAnimationFrame(function () { updateDeck(); deckTicking = false; });
+        deckTicking = true;
+      }
+    }, { passive: true });
+    function scheduleDeckRefresh() {
+      if (deckTimer) clearTimeout(deckTimer);
+      deckTimer = setTimeout(function () { refreshDeckCache(); updateDeck(); }, 120);
+    }
+    window.addEventListener('resize', scheduleDeckRefresh);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { refreshDeckCache(); updateDeck(); });
+    }
   }
 
   // ── C: gold dot+ring cursor with magnetic CTA pull ──────────────────────
