@@ -58,26 +58,95 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 @keyframes scrolldrop { 0%, 100% { opacity: 0.3; transform: translateY(-8px); } 50% { opacity: 1; transform: translateY(8px); } }
 
 /* ROOM ENTRIES */
+/* Top sticky room navigator — wonderbudapest-style horizontal list */
+.rooms-nav {
+  position: sticky;
+  top: 70px;            /* clears the fixed global nav */
+  z-index: 60;
+  background: rgba(11, 20, 16, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(237, 231, 218, 0.12);
+  border-top:    1px solid rgba(237, 231, 218, 0.08);
+  padding: 16px clamp(24px, 4vw, 56px);
+  transform: translate3d(0, 0, 0);   /* own GPU layer — avoids Safari paint jank */
+}
+.rooms-nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  gap: clamp(18px, 3vw, 36px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.rooms-nav-inner::-webkit-scrollbar { display: none; }
+.rooms-nav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: rgba(237, 231, 218, 0.5);
+  white-space: nowrap;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.rooms-nav a:hover { color: rgba(237, 231, 218, 0.9); }
+.rooms-nav a.active { color: var(--paper); border-bottom-color: var(--accent); }
+
+/* Each room is a split layout. Photos stack vertically on one side; info is
+   sticky on the other so it stays in view while the user scrolls the gallery. */
 .room-entry {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  min-height: 80vh;
+  align-items: start;
+  scroll-margin-top: 120px;           /* nav + rooms-nav offset for anchor jumps */
 }
-.room-entry:nth-child(even) { direction: rtl; }
-.room-entry:nth-child(even) > * { direction: ltr; }
-.room-photo {
-  position: relative;
-  overflow: hidden;
-  background: var(--ink-2);
+.room-entry:nth-child(even) .room-photos { order: 2; }
+.room-entry:nth-child(even) .room-info   { order: 1; }
+
+.room-photos {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 1.6vw, 28px);
+  padding: clamp(40px, 5vw, 80px) clamp(24px, 3vw, 40px);
+  background: var(--ink);
 }
-.room-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
-.room-entry:hover .room-photo img { transform: scale(1.04); }
+.room-shot { position: relative; margin: 0; overflow: hidden; }
+.room-shot img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform 1.2s var(--ease);
+}
+.room-shot:hover img { transform: scale(1.03); }
+.room-shot figcaption {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(11, 20, 16, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 6px 12px;
+}
+
 .room-info {
   background: var(--paper);
   padding: clamp(60px, 8vw, 100px) clamp(48px, 6vw, 80px);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  position: sticky;
+  top: 130px;             /* nav (70px) + rooms-nav (~50px) + gap */
+  height: fit-content;
+  min-height: calc(100vh - 130px);
 }
 .room-entry.dark-info .room-info { background: var(--ink-2); color: rgba(255,255,255,0.84); }
 .room-num {
@@ -91,7 +160,7 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
   align-items: center;
   gap: 12px;
 }
-.room-num::before { content: ""; width: 24px; height: 1px; background: var(--accent); }
+.room-num::before { content: ""; width: 28px; height: 1px; background: var(--room-accent, var(--accent)); }
 .room-info h2 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(32px, 4vw, 56px); line-height: 1.05; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 16px; }
 .room-entry.dark-info .room-info h2 { color: #fff; }
 .room-info h2 em { font-style: italic; color: var(--primary); }
@@ -318,13 +387,41 @@ body:not(.page-home) { --logo-init-p: 1; }
   <div class="scrollcue"><span>The rooms</span><span class="line"></span></div>
 </section>
 
-<!-- ROOM I: Presidential Suite -->
-<article class="room-entry" id="presidential">
-  <div class="room-photo">
-    <img decoding="async" src="assets/photos/presidential-suite/7893_Assaf-Pinchuk-photography.jpg" alt="Presidential Suite">
+<nav class="rooms-nav" id="roomsNav" aria-label="Jump to a room">
+  <div class="rooms-nav-inner">
+    <a href="#presidential" data-target="presidential">Presidential</a>
+    <a href="#king" data-target="king">King Suite</a>
+    <a href="#junior" data-target="junior">Junior Suite</a>
+    <a href="#deluxe" data-target="deluxe">Deluxe</a>
+    <a href="#deluxe-queen" data-target="deluxe-queen">Deluxe Queen</a>
+    <a href="#superior" data-target="superior">Superior</a>
+  </div>
+</nav>
+
+<!-- ROOM I: Presidential -->
+<article class="room-entry" id="presidential" style="--room-accent: #4F0014;">
+  <div class="room-photos">
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/presidential-suite/01.jpg" alt="Presidential — view 1">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/presidential-suite/02.jpg" alt="Presidential — view 2">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/presidential-suite/03.jpg" alt="Presidential — view 3">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/presidential-suite/04.jpg" alt="Presidential — view 4">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/presidential-suite/05.jpg" alt="Presidential — view 5">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/presidential-suite/06.jpg" alt="Presidential — view 6">
+      </figure>
   </div>
   <div class="room-info">
-    <div class="room-num">I · 01 / 06</div>
+    <div class="room-num"><span>I</span><span>·</span><span>01 / 06</span></div>
     <h2>Presidential <em>Suite</em></h2>
     <p class="room-desc">The largest room in the house — a two-floor suite with a private sauna, Jacuzzi, and a terrace that overlooks the inner courtyard of Twenty Six. For stays that call for more space, more quiet, more of everything.</p>
     <div class="room-specs">
@@ -335,18 +432,35 @@ body:not(.page-home) { --logo-init-p: 1; }
       <div class="spec-item"><div class="spec-label">Floors</div><div class="spec-val">Two-level</div></div>
       <div class="spec-item"><div class="spec-label">View</div><div class="spec-val">Courtyard terrace</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
 <!-- ROOM II: King Suite -->
-<article class="room-entry dark-info" id="king">
-  <div class="room-photo">
-    <img decoding="async" src="assets/photos/king-suite/Screenshot 2026-04-01 092237.png" alt="King Suite with Jacuzzi">
+<article class="room-entry" id="king" style="--room-accent: #B0CABA;">
+  <div class="room-photos">
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/king-suite/01.jpg" alt="King Suite — view 1">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/king-suite/02.jpg" alt="King Suite — view 2">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/king-suite/03.jpg" alt="King Suite — view 3">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/king-suite/04.jpg" alt="King Suite — view 4">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/king-suite/05.jpg" alt="King Suite — view 5">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/king-suite/06.jpg" alt="King Suite — view 6">
+      </figure>
   </div>
   <div class="room-info">
-    <div class="room-num">II · 02 / 06</div>
-    <h2>King Suite <em>— Jacuzzi</em></h2>
+    <div class="room-num"><span>II</span><span>·</span><span>02 / 06</span></div>
+    <h2>King <em>Suite</em></h2>
     <p class="room-desc">A generous suite built around the ritual of the bath. A full Jacuzzi tub, a living area, and a green-wall shower that brings the outside in. Eighty-five square metres of considered quiet.</p>
     <div class="room-specs">
       <div class="spec-item"><div class="spec-label">Size</div><div class="spec-val">85 m²</div></div>
@@ -356,59 +470,116 @@ body:not(.page-home) { --logo-init-p: 1; }
       <div class="spec-item"><div class="spec-label">Sauna</div><div class="spec-val">Private sauna</div></div>
       <div class="spec-item"><div class="spec-label">Living</div><div class="spec-val">Separate lounge</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
 <!-- ROOM III: Junior Suite -->
-<article class="room-entry" id="junior">
-  <div class="room-photo">
-    <img decoding="async" src="assets/photos/junior-suite/Stories Hotel_4.jpg" alt="Junior Suite">
+<article class="room-entry" id="junior" style="--room-accent: #B0B0AB;">
+  <div class="room-photos">
+      <figure class="room-shot" data-color="green">
+        <img decoding="async" loading="lazy" src="assets/photos/junior-suite/01.jpg" alt="Junior Suite — view 1">
+        <figcaption>Green Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="green">
+        <img decoding="async" loading="lazy" src="assets/photos/junior-suite/02.jpg" alt="Junior Suite — view 2">
+        <figcaption>Green Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="grey">
+        <img decoding="async" loading="lazy" src="assets/photos/junior-suite/03.jpg" alt="Junior Suite — view 3">
+        <figcaption>Grey Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="grey">
+        <img decoding="async" loading="lazy" src="assets/photos/junior-suite/04.jpg" alt="Junior Suite — view 4">
+        <figcaption>Grey Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="blue">
+        <img decoding="async" loading="lazy" src="assets/photos/junior-suite/05.jpg" alt="Junior Suite — view 5">
+        <figcaption>Blue Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="pink">
+        <img decoding="async" loading="lazy" src="assets/photos/junior-suite/06.jpg" alt="Junior Suite — view 6">
+        <figcaption>Pink Room</figcaption>
+      </figure>
   </div>
   <div class="room-info">
-    <div class="room-num">III · 03 / 06</div>
+    <div class="room-num"><span>III</span><span>·</span><span>03 / 06</span></div>
     <h2>Junior <em>Suite</em></h2>
-    <p class="room-desc">A suite designed for flexibility — a king bed in the sleeping area and a sofa-bed in the living room, separated by a thoughtful arrangement of space. The right room when you need more than a room.</p>
+    <p class="room-desc">A duplex suite — living area downstairs with a sofa-bed, sleeping mezzanine above with twin skylights. Four character variants on the floor: pink, blue, green, grey. Same footprint, different temperament.</p>
     <div class="room-specs">
       <div class="spec-item"><div class="spec-label">Size</div><div class="spec-val">65–75 m²</div></div>
       <div class="spec-item"><div class="spec-label">Bed</div><div class="spec-val">King + sofa-bed</div></div>
-      <div class="spec-item"><div class="spec-label">Living</div><div class="spec-val">Separate room</div></div>
+      <div class="spec-item"><div class="spec-label">Layout</div><div class="spec-val">Two-level mezzanine</div></div>
       <div class="spec-item"><div class="spec-label">Guests</div><div class="spec-val">Up to 3</div></div>
       <div class="spec-item"><div class="spec-label">Bath</div><div class="spec-val">1 full bathroom</div></div>
-      <div class="spec-item"><div class="spec-label">Desk</div><div class="spec-val">Writing desk</div></div>
+      <div class="spec-item"><div class="spec-label">Characters</div><div class="spec-val">4 colour rooms</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
-<!-- ROOM IV: Deluxe Room -->
-<article class="room-entry dark-info" id="deluxe">
-  <div class="room-photo">
-    <img decoding="async" src="assets/photos/deluxe/Deluxe1.jpg" alt="Deluxe Room">
+<!-- ROOM IV: Deluxe -->
+<article class="room-entry" id="deluxe" style="--room-accent: #A3BAC9;">
+  <div class="room-photos">
+      <figure class="room-shot" data-color="blue">
+        <img decoding="async" loading="lazy" src="assets/photos/deluxe/01.jpg" alt="Deluxe — view 1">
+        <figcaption>Blue Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="blue">
+        <img decoding="async" loading="lazy" src="assets/photos/deluxe/02.jpg" alt="Deluxe — view 2">
+        <figcaption>Blue Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="pink">
+        <img decoding="async" loading="lazy" src="assets/photos/deluxe/03.jpg" alt="Deluxe — view 3">
+        <figcaption>Pink Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="pink">
+        <img decoding="async" loading="lazy" src="assets/photos/deluxe/04.jpg" alt="Deluxe — view 4">
+        <figcaption>Pink Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="green">
+        <img decoding="async" loading="lazy" src="assets/photos/deluxe/05.jpg" alt="Deluxe — view 5">
+        <figcaption>Green Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="grey">
+        <img decoding="async" loading="lazy" src="assets/photos/deluxe/06.jpg" alt="Deluxe — view 6">
+        <figcaption>Grey Room</figcaption>
+      </figure>
   </div>
   <div class="room-info">
-    <div class="room-num">IV · 04 / 06</div>
+    <div class="room-num"><span>IV</span><span>·</span><span>04 / 06</span></div>
     <h2>Deluxe <em>Room</em></h2>
-    <p class="room-desc">A room with strong ideas about how a space should look and feel. Original art from Budapest artists on the walls, a king bed positioned toward the window, and enough square metres to feel unhurried.</p>
+    <p class="room-desc">A king-bed room with a sitting area, original Budapest art on the walls, and four character variants on the floor: blue, pink, green, grey. Same room, four moods — pick by colour.</p>
     <div class="room-specs">
       <div class="spec-item"><div class="spec-label">Size</div><div class="spec-val">34–45 m²</div></div>
       <div class="spec-item"><div class="spec-label">Bed</div><div class="spec-val">King bed</div></div>
       <div class="spec-item"><div class="spec-label">Art</div><div class="spec-val">Original works</div></div>
-      <div class="spec-item"><div class="spec-label">Living</div><div class="spec-val">Sitting area</div></div>
+      <div class="spec-item"><div class="spec-label">Characters</div><div class="spec-val">4 colour rooms</div></div>
       <div class="spec-item"><div class="spec-label">Bath</div><div class="spec-val">1 full bathroom</div></div>
       <div class="spec-item"><div class="spec-label">Floor</div><div class="spec-val">Upper floors</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
 <!-- ROOM V: Deluxe Queen -->
-<article class="room-entry" id="deluxe-queen">
-  <div class="room-photo">
-    <img decoding="async" src="assets/photos/deluxe-queen/Screenshot 2026-04-01 092456.png" alt="Deluxe Queen Room">
+<article class="room-entry" id="deluxe-queen" style="--room-accent: #D4B0B0;">
+  <div class="room-photos">
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/deluxe-queen/01.jpg" alt="Deluxe Queen — view 1">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/deluxe-queen/02.jpg" alt="Deluxe Queen — view 2">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/deluxe-queen/03.jpg" alt="Deluxe Queen — view 3">
+      </figure>
+      <figure class="room-shot">
+        <img decoding="async" loading="lazy" src="assets/photos/deluxe-queen/04.jpg" alt="Deluxe Queen — view 4">
+      </figure>
   </div>
   <div class="room-info">
-    <div class="room-num">V · 05 / 06</div>
+    <div class="room-num"><span>V</span><span>·</span><span>05 / 06</span></div>
     <h2>Deluxe <em>Queen</em></h2>
     <p class="room-desc">A queen-bed room that looks onto the inner courtyard — the quiet face of Twenty Six. Thirty square metres arranged with care. The courtyard view changes colour through the day, and the room is better for it.</p>
     <div class="room-specs">
@@ -419,30 +590,51 @@ body:not(.page-home) { --logo-init-p: 1; }
       <div class="spec-item"><div class="spec-label">Light</div><div class="spec-val">South-facing</div></div>
       <div class="spec-item"><div class="spec-label">Guests</div><div class="spec-val">Up to 2</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
-<!-- ROOM VI: Superior Room -->
-<article class="room-entry dark-info" id="superior">
-  <div class="room-photo">
-    <div class="room-photo-placeholder">
-      <span>Photography coming soon.</span>
-    </div>
+<!-- ROOM VI: Superior -->
+<article class="room-entry" id="superior" style="--room-accent: #EDE7DA;">
+  <div class="room-photos">
+      <figure class="room-shot" data-color="grey">
+        <img decoding="async" loading="lazy" src="assets/photos/superior/01.jpg" alt="Superior — view 1">
+        <figcaption>Grey Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="grey">
+        <img decoding="async" loading="lazy" src="assets/photos/superior/02.jpg" alt="Superior — view 2">
+        <figcaption>Grey Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="grey">
+        <img decoding="async" loading="lazy" src="assets/photos/superior/03.jpg" alt="Superior — view 3">
+        <figcaption>Grey Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="pink">
+        <img decoding="async" loading="lazy" src="assets/photos/superior/04.jpg" alt="Superior — view 4">
+        <figcaption>Pink Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="pink">
+        <img decoding="async" loading="lazy" src="assets/photos/superior/05.jpg" alt="Superior — view 5">
+        <figcaption>Pink Room</figcaption>
+      </figure>
+      <figure class="room-shot" data-color="pink">
+        <img decoding="async" loading="lazy" src="assets/photos/superior/06.jpg" alt="Superior — view 6">
+        <figcaption>Pink Room</figcaption>
+      </figure>
   </div>
   <div class="room-info">
-    <div class="room-num">VI · 06 / 06</div>
+    <div class="room-num"><span>VI</span><span>·</span><span>06 / 06</span></div>
     <h2>Superior <em>Room</em></h2>
-    <p class="room-desc">The smallest room in the house — deliberately so. Seventeen square metres shaped around a queen bed, designed on the premise that a hotel room is a place for sleeping, not for pacing. Cosy by intention.</p>
+    <p class="room-desc">The smallest character in the house — deliberately so. Seventeen square metres shaped around a queen bed. Two colour variants on the floor: grey and pink. Cosy by intention.</p>
     <div class="room-specs">
       <div class="spec-item"><div class="spec-label">Size</div><div class="spec-val">17 m²</div></div>
       <div class="spec-item"><div class="spec-label">Bed</div><div class="spec-val">Queen bed</div></div>
       <div class="spec-item"><div class="spec-label">Bath</div><div class="spec-val">1 bathroom</div></div>
-      <div class="spec-item"><div class="spec-label">Character</div><div class="spec-val">Intimate</div></div>
-      <div class="spec-item"><div class="spec-label">Photo</div><div class="spec-val">Coming soon</div></div>
-      <div class="spec-item"><div class="spec-label">Rate</div><div class="spec-val">From inquiry</div></div>
+      <div class="spec-item"><div class="spec-label">Characters</div><div class="spec-val">2 colour rooms</div></div>
+      <div class="spec-item"><div class="spec-label">Mood</div><div class="spec-val">Intimate · cosy</div></div>
+      <div class="spec-item"><div class="spec-label">Sleeps</div><div class="spec-val">Up to 2</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta">Reserve this room →</a>
+    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
@@ -525,6 +717,25 @@ body:not(.page-home) { --logo-init-p: 1; }
     });
   }, { threshold: [0.35, 0.6] });
   sections.forEach(function (s) { obs.observe(s); });
+
+  // 3) Top rooms-nav active-state: as each .room-entry crosses the viewport
+  //    centerline, highlight its link in the sticky nav. Same rootMargin
+  //    trick as on the homepage cinema — zero JS in the scroll critical path.
+  var navLinks = document.querySelectorAll('.rooms-nav a');
+  var roomEntries = document.querySelectorAll('.room-entry');
+  if (navLinks.length && roomEntries.length) {
+    var navMap = {};
+    navLinks.forEach(function (a) { navMap[a.dataset.target] = a; });
+    var roomObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          var slug = e.target.id;
+          navLinks.forEach(function (l) { l.classList.toggle('active', l === navMap[slug]); });
+        }
+      });
+    }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+    roomEntries.forEach(function (e) { roomObs.observe(e); });
+  }
 }());
 </script>
 <script>
