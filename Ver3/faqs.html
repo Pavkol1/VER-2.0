@@ -428,6 +428,30 @@ body:not(.page-home) { --logo-init-p: 1; }
   <span class="cursor-dot"></span>
 </div>
 
+<!-- Lenis smooth-scroll: more distance per wheel tick + buttery easing. Skipped under prefers-reduced-motion. -->
+<script src="assets/vendor/lenis.min.js" defer></script>
+<script>
+(function () {
+  function start () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.Lenis) return;
+    var lenis = new Lenis({
+      lerp: 0.085,                /* continuous, frame-by-frame interpolation — much smoother than duration-mode */
+      wheelMultiplier: 1.2,
+      touchMultiplier: 1.8,
+      smoothWheel: true,
+      autoResize: true,
+      anchors: true
+    });
+    function raf (time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    window.__lenis = lenis;
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+</script>
+
 <script>
 (function () {
   // Nav scroll state + logo color: FAQ page is light throughout.
