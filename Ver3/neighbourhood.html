@@ -67,14 +67,33 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 .ix .k { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 300; }
 .ix .d { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.1em; white-space: nowrap; }
 
-.neigh-map { background: #0F0D0A; border: 1px solid rgba(255,255,255,0.08); aspect-ratio: 4/5; position: relative; overflow: hidden; }
-.neigh-map::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(185,144,78,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(185,144,78,0.12) 1px, transparent 1px); background-size: 24px 24px; }
-.neigh-map-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); transform: translate(-50%, -50%); box-shadow: 0 0 0 4px rgba(185,144,78,0.2); }
-.neigh-map-dot.stories { width: 16px; height: 16px; background: #fff; box-shadow: 0 0 0 6px rgba(255,255,255,0.15); }
-.neigh-map-dot .lab { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.7); white-space: nowrap; }
-.neigh-map-dot.stories .lab { color: #fff; font-weight: 500; }
-.neigh-map-legend { position: absolute; bottom: 16px; left: 16px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
-.neigh-map-rose { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Lora', serif; font-style: italic; font-size: 14px; color: rgba(255,255,255,0.6); }
+.neigh-map { position: relative; background: #0F0D0A; border: 1px solid rgba(255,255,255,0.08); aspect-ratio: 4/5; overflow: hidden; }
+.neigh-svg { display: block; width: 100%; height: 100%; }
+.neigh-svg .street { stroke: rgba(237,231,218,0.12); stroke-width: 7; stroke-linecap: round; fill: none; }
+.neigh-svg .street.kirly { stroke: rgba(185,144,78,0.32); }
+.neigh-svg .compass-ring { fill: none; stroke: rgba(255,255,255,0.25); stroke-width: 1; }
+.neigh-svg .compass-tick { font: 500 9px 'JetBrains Mono', monospace; fill: rgba(255,255,255,0.5); text-anchor: middle; letter-spacing: 0.2em; }
+.neigh-svg .hub-dot   { fill: var(--accent); filter: drop-shadow(0 0 8px rgba(185,144,78,0.55)); animation: hubPulse 2.4s ease-in-out infinite; }
+.neigh-svg .hub-ring  { fill: none; stroke: var(--accent); stroke-width: 1; opacity: 0.5; }
+.neigh-svg .hub-lab   { font: 700 10px 'JetBrains Mono', monospace; fill: #fff; text-anchor: middle; letter-spacing: 0.24em; }
+@keyframes hubPulse   { 0%, 100% { r: 9; } 50% { r: 12; opacity: 0.85; } }
+.neigh-svg .pin { cursor: pointer; }
+.neigh-svg .pin circle { fill: rgba(237,231,218,0.55); transition: fill 0.25s var(--ease), r 0.25s var(--ease); }
+.neigh-svg .pin text   { font: 500 9px 'JetBrains Mono', monospace; fill: rgba(237,231,218,0.55); text-anchor: middle; letter-spacing: 0.16em; transition: fill 0.25s var(--ease); pointer-events: none; }
+.neigh-svg .pin:hover circle, .neigh-svg .pin.active circle { fill: var(--accent); r: 8; }
+.neigh-svg .pin:hover text, .neigh-svg .pin.active text     { fill: #fff; }
+.neigh-svg .legend { font: 400 8px 'JetBrains Mono', monospace; fill: rgba(255,255,255,0.42); letter-spacing: 0.22em; }
+.pin-popup { position: absolute; background: var(--paper); color: var(--ink); padding: 18px 20px 16px; width: 240px; max-width: 90%; pointer-events: none; opacity: 0; transform: translate(-50%, calc(-100% - 12px)) translateY(4px); transition: opacity 0.2s var(--ease), transform 0.25s var(--ease); z-index: 10; box-shadow: 0 14px 36px rgba(0,0,0,0.45); }
+.pin-popup.visible { opacity: 1; transform: translate(-50%, calc(-100% - 12px)); }
+.pin-popup .pp-tag  { font: 500 9px 'JetBrains Mono', monospace; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.pin-popup .pp-name { font: 500 18px 'Lora', serif; margin-bottom: 6px; letter-spacing: -0.005em; }
+.pin-popup .pp-desc { font: 400 13px 'Inter', sans-serif; line-height: 1.45; color: var(--text-2); margin-bottom: 12px; }
+.pin-popup .pp-walk { font: 500 11px 'JetBrains Mono', monospace; letter-spacing: 0.18em; color: var(--primary); display: inline-flex; align-items: center; gap: 10px; }
+.pin-popup .pp-walk::before { content: ""; width: 18px; height: 1px; background: var(--accent); }
+@media (max-width: 600px) {
+  .pin-popup { width: calc(100% - 24px); left: 12px !important; right: 12px; transform: none !important; bottom: 12px; top: auto !important; opacity: 0; transition: opacity 0.25s var(--ease); }
+  .pin-popup.visible { opacity: 1; transform: none !important; }
+}
 
 /* EXTENDED LIST */
 .section-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 32px; display: flex; align-items: center; gap: 16px; }
@@ -292,15 +311,73 @@ body:not(.page-home) { --logo-init-p: 1; }
         <span class="n">06</span><span class="pl">Dobrumba <em>—</em></span><span class="k">Levantine, Dob utca</span><span class="d">7 min</span>
         <span class="n">07</span><span class="pl">Mazel Tov <em>—</em></span><span class="k">Garden, Middle-Eastern</span><span class="d">4 min</span>
       </div>
-      <div class="neigh-map">
-        <div class="neigh-map-rose">N</div>
-        <div class="neigh-map-dot stories" style="top:52%;left:50%;"><span class="lab">Stories</span></div>
-        <div class="neigh-map-dot" style="top:30%;left:70%;"><span class="lab">Gerbeaud</span></div>
-        <div class="neigh-map-dot" style="top:38%;left:28%;"><span class="lab">Opera</span></div>
-        <div class="neigh-map-dot" style="top:66%;left:66%;"><span class="lab">Szimpla</span></div>
-        <div class="neigh-map-dot" style="top:46%;left:32%;"><span class="lab">Rumbach</span></div>
-        <div class="neigh-map-dot" style="top:60%;left:40%;"><span class="lab">Gozsdu</span></div>
-        <div class="neigh-map-legend">Király utca 26 · District VI · Scale ≈ 400m</div>
+      <div class="neigh-map" id="neighMap">
+        <svg class="neigh-svg" viewBox="0 0 800 1000" aria-hidden="true">
+          <defs>
+            <pattern id="neighGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M40 0 L0 0 L0 40" fill="none" stroke="rgba(185,144,78,0.08)" stroke-width="0.6"/>
+            </pattern>
+          </defs>
+          <rect width="800" height="1000" fill="url(#neighGrid)"/>
+
+          <!-- streets (rough geometry only) -->
+          <line class="street kirly"    x1="160" y1="780" x2="700" y2="320"/>
+          <line class="street andrassy" x1="200" y1="220" x2="540" y2="900"/>
+          <line class="street belv"     x1="700" y1="100" x2="700" y2="900"/>
+          <line class="street kornut"   x1="100" y1="660" x2="780" y2="660"/>
+
+          <!-- compass top-right -->
+          <g transform="translate(720, 80)">
+            <circle class="compass-ring" cx="0" cy="0" r="28"/>
+            <text class="compass-tick" x="0" y="-12">N</text>
+            <text class="compass-tick" x="16" y="4">E</text>
+            <text class="compass-tick" x="0" y="20">S</text>
+            <text class="compass-tick" x="-16" y="4">W</text>
+          </g>
+
+          <!-- Stories Hotel hub -->
+          <g transform="translate(400, 520)">
+            <circle class="hub-ring" r="22"/>
+            <circle class="hub-dot"  r="9"/>
+            <text class="hub-lab" y="-28">STORIES &middot; 26</text>
+          </g>
+
+          <!-- Pins (8 landmarks within walking distance) -->
+          <g class="pin" data-name="St. Stephen&rsquo;s Basilica" data-tag="Landmark"   data-walk="8 min" data-desc="Hungary&rsquo;s largest church &mdash; dome views over the rooftops of Pest." transform="translate(180, 460)">
+            <circle r="6"/><text y="22">A</text>
+          </g>
+          <g class="pin" data-name="Hungarian State Opera"        data-tag="Culture"    data-walk="6 min" data-desc="Andrássy út 22. Neo-Renaissance interior, fully restored 2022." transform="translate(260, 380)">
+            <circle r="6"/><text y="22">B</text>
+          </g>
+          <g class="pin" data-name="Gerbeaud"                      data-tag="Coffeehouse" data-walk="8 min" data-desc="Vörösmarty tér &middot; 1858. The grand café of the Pest side." transform="translate(220, 700)">
+            <circle r="6"/><text y="22">C</text>
+          </g>
+          <g class="pin" data-name="Rumbach Synagogue"             data-tag="Jewish Quarter" data-walk="3 min" data-desc="Moorish revival, restored 2021. The smaller of the three." transform="translate(360, 660)">
+            <circle r="6"/><text y="22">D</text>
+          </g>
+          <g class="pin" data-name="Gozsdu Udvar"                  data-tag="Courtyards" data-walk="5 min" data-desc="Seven connected courtyards between Király and Dob utca." transform="translate(330, 600)">
+            <circle r="6"/><text y="22">E</text>
+          </g>
+          <g class="pin" data-name="Szimpla Kert"                  data-tag="Ruin bar"   data-walk="4 min" data-desc="The original ruin bar. Kazinczy utca 14." transform="translate(520, 720)">
+            <circle r="6"/><text y="22">F</text>
+          </g>
+          <g class="pin" data-name="Dobrumba"                      data-tag="Levantine"  data-walk="7 min" data-desc="Levantine cooking, Dob utca 5. Book ahead on weekends." transform="translate(440, 760)">
+            <circle r="6"/><text y="22">G</text>
+          </g>
+          <g class="pin" data-name="Mazel Tov"                     data-tag="Garden bar" data-walk="4 min" data-desc="Akácfa utca 47. Middle-Eastern food, glass-roofed garden." transform="translate(540, 600)">
+            <circle r="6"/><text y="22">H</text>
+          </g>
+
+          <!-- legend -->
+          <text class="legend" x="20" y="980">KIRÁLY UTCA 26 · DISTRICT VI · APPROX. 250M GRID</text>
+        </svg>
+
+        <div class="pin-popup" id="pinPopup" role="status" aria-live="polite">
+          <div class="pp-tag"></div>
+          <h4 class="pp-name"></h4>
+          <p class="pp-desc"></p>
+          <div class="pp-walk"></div>
+        </div>
       </div>
     </div>
 
@@ -438,6 +515,55 @@ body:not(.page-home) { --logo-init-p: 1; }
     });
   }, { threshold: [0.35, 0.6] });
   sections.forEach(function (s) { obs.observe(s); });
+
+// Neighbourhood map — hover/focus a pin → popup card next to it.
+(function () {
+  var map   = document.getElementById('neighMap');
+  if (!map) return;
+  var popup = document.getElementById('pinPopup');
+  var pins  = map.querySelectorAll('.pin');
+  if (!popup || !pins.length) return;
+
+  var pTag  = popup.querySelector('.pp-tag');
+  var pName = popup.querySelector('.pp-name');
+  var pDesc = popup.querySelector('.pp-desc');
+  var pWalk = popup.querySelector('.pp-walk');
+
+  function show(pin) {
+    pins.forEach(function (p) { p.classList.toggle('active', p === pin); });
+    pTag.textContent  = pin.dataset.tag  || '';
+    pName.textContent = pin.dataset.name || '';
+    pDesc.textContent = pin.dataset.desc || '';
+    pWalk.textContent = (pin.dataset.walk || '') + ' walk';
+    // Position the popup centred above the pin (only on wider screens; mobile uses CSS bottom-sheet)
+    if (window.matchMedia('(min-width: 601px)').matches) {
+      var pinRect = pin.getBoundingClientRect();
+      var mapRect = map.getBoundingClientRect();
+      popup.style.left = (pinRect.left + pinRect.width / 2 - mapRect.left) + 'px';
+      popup.style.top  = (pinRect.top - mapRect.top) + 'px';
+    } else {
+      popup.style.left = ''; popup.style.top = '';
+    }
+    popup.classList.add('visible');
+  }
+  function hide() {
+    pins.forEach(function (p) { p.classList.remove('active'); });
+    popup.classList.remove('visible');
+  }
+
+  pins.forEach(function (pin) {
+    pin.setAttribute('tabindex', '0');
+    pin.addEventListener('mouseenter', function () { show(pin); });
+    pin.addEventListener('mouseleave', hide);
+    pin.addEventListener('focus',  function () { show(pin); });
+    pin.addEventListener('blur',   hide);
+    pin.addEventListener('click',  function (e) { e.preventDefault(); show(pin); });
+  });
+  // Click-outside to dismiss on touch
+  document.addEventListener('click', function (e) {
+    if (!map.contains(e.target)) hide();
+  });
+})();
 }());
 </script>
 <script>
