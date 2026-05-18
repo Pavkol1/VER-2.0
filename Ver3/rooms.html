@@ -75,6 +75,8 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
   max-width: 1280px;
   margin: 0 auto;
   display: flex;
+  justify-content: center;       /* centre the room list horizontally */
+  flex-wrap: wrap;
   gap: clamp(18px, 3vw, 36px);
   overflow-x: auto;
   scrollbar-width: none;
@@ -111,7 +113,7 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
   flex-direction: column;
   gap: clamp(16px, 1.6vw, 28px);
   padding: clamp(40px, 5vw, 80px) clamp(24px, 3vw, 40px);
-  background: var(--ink);
+  background: var(--paper);    /* paper gaps — photos float as islands on the cream */
 }
 .room-shot { position: relative; margin: 0; overflow: hidden; }
 .room-shot img {
