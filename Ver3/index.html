@@ -1296,6 +1296,104 @@ body:not(.page-home) { --logo-init-p: 1; }
 .neigh-map-rose { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Lora', serif; font-style: italic; font-size: 14px; color: rgba(255,255,255,0.6); }
 
 /* RESERVE */
+/* TRUST GRID — reasons to book direct, sits just before .reserve-plate */
+.trust-grid {
+  background: var(--paper);
+  padding: clamp(72px, 9vw, 120px) clamp(40px, 6vw, 96px) clamp(64px, 8vw, 100px);
+}
+.trust-inner { max-width: 1280px; margin: 0 auto; }
+.trust-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 5vw, 80px);
+  align-items: end;
+  margin-bottom: clamp(48px, 6vw, 72px);
+}
+.trust-head .overline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.trust-head .overline::before {
+  content: ""; width: 36px; height: 1px; background: var(--accent);
+}
+.trust-head h2 {
+  font-family: 'Lora', serif;
+  font-weight: 400;
+  font-size: clamp(34px, 4.4vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.trust-head h2 em { font-style: italic; color: var(--primary); }
+.trust-head p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-2);
+  font-weight: 400;
+  max-width: 440px;
+}
+.trust-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);     /* gaps between cards read as 1px rules */
+  border: 1px solid var(--rule);
+}
+.trust-card {
+  background: var(--paper);
+  padding: clamp(28px, 3vw, 44px) clamp(24px, 2.5vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: background 0.3s var(--ease);
+}
+.trust-card:hover { background: var(--paper-2); }
+.trust-card .tc-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.trust-card h3 {
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 1.25;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+.trust-card h3 em { font-style: italic; color: var(--primary); font-weight: 400; }
+.trust-card p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-2);
+  font-weight: 400;
+}
+.trust-card .tc-note {
+  margin-top: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+@media (max-width: 880px) {
+  .trust-head { grid-template-columns: 1fr; gap: 24px; }
+  .trust-cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .trust-cards { grid-template-columns: 1fr; }
+}
+
 .reserve-plate {
   position: relative;
   min-height: 80vh;
@@ -1638,6 +1736,63 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
         <div class="neigh-map-dot" style="top:60%;left:40%;"><span class="lab">Gozsdu</span></div>
         <div class="neigh-map-legend">Király utca 26 · District VI · Scale ≈ 400m</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST GRID — reasons to book direct, before the reservation plate -->
+<section class="trust-grid">
+  <div class="trust-inner">
+    <div class="trust-head">
+      <div>
+        <div class="overline"><span>VI</span><span>&middot;</span><span>Why book direct</span></div>
+        <h2>The <em>quiet</em><br>benefits.</h2>
+      </div>
+      <p>Six small reassurances before you reserve. Direct bookings get the lowest rate, the most flexibility, and a human on the other end of the line.</p>
+    </div>
+
+    <div class="trust-cards">
+      <article class="trust-card">
+        <span class="tc-label">Best rate</span>
+        <h3>Direct booking, <em>direct savings.</em></h3>
+        <p>Book with us and pay the lowest publicly available rate &mdash; no commission, no markup, no compromise on what we can offer back.</p>
+        <span class="tc-note">Lowest rate, guaranteed</span>
+      </article>
+
+      <article class="trust-card">
+        <span class="tc-label">Cancellation</span>
+        <h3>Free until 48 hours <em>before arrival.</em></h3>
+        <p>Plans change. Cancel up to 48 hours before check-in at no cost. After that we charge for the first night only.</p>
+        <span class="tc-note">No deposit required</span>
+      </article>
+
+      <article class="trust-card">
+        <span class="tc-label">Transfer</span>
+        <h3>Airport <em>on request.</em></h3>
+        <p>A private car from Liszt Ferenc to the door of Twenty Six. Pre-arranged at the time of booking, charged separately to the room.</p>
+        <span class="tc-note">From &euro;55 each way</span>
+      </article>
+
+      <article class="trust-card">
+        <span class="tc-label">Timing</span>
+        <h3>Check-in 3pm &middot; <em>check-out 11am.</em></h3>
+        <p>Early arrival or late departure can usually be arranged when the room is free &mdash; just ask the front desk on the day.</p>
+        <span class="tc-note">Flexible on request</span>
+      </article>
+
+      <article class="trust-card">
+        <span class="tc-label">Direct line</span>
+        <h3>Reach a person, <em>not a bot.</em></h3>
+        <p>WhatsApp, email, or a phone call &mdash; the same small team answers within the same day. No call centres, no escalation chains.</p>
+        <span class="tc-note">+36 1 234 5678</span>
+      </article>
+
+      <article class="trust-card">
+        <span class="tc-label">Reviews</span>
+        <h3>Four point eight, <em>quietly earned.</em></h3>
+        <p>Twelve hundred guests have stayed and written it down. We read every review and the team meets weekly to talk about them.</p>
+        <span class="tc-note">4.8 / 5 &middot; 1200+ stays</span>
+      </article>
     </div>
   </div>
 </section>
