@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stories Budapest — A hotel of stories, quietly told.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..700;1,300..600&family=Lora:ital,wght@0,400..600;1,400..600&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:     #0B1410;
+  --ink-2:   #1A1F1A;
+  --paper:   #EDE7DA;
+  --paper-2: #E5DECE;
+  --rule:    #C9C1B0;
+  --text:    #2A2A22;
+  --text-2:  #6A6A5C;
+  --text-3:  #9A9A8C;
+  --primary: #123524;
+  --accent:  #B9904E;
+  --ease:    cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  background: var(--ink);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+::selection { background: var(--accent); color: var(--ink); }
+
+/* NAV */
+nav.top {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 80;
+  padding: 22px clamp(24px, 4vw, 56px);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  transition: background 0.4s var(--ease), border-color 0.4s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+nav.top.scrolled {
+  background: rgba(13, 11, 8, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: rgba(255,255,255,0.08);
+}
+.brand {
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+.brand em { font-style: italic; color: var(--accent); font-weight: 400; }
+.nav-links { display: flex; gap: 32px; justify-self: center; }
+.nav-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.72);
+  padding: 8px 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.nav-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.nav-cta {
+  justify-self: end;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--accent);
+  padding: 11px 22px;
+  transition: background 0.3s var(--ease);
+}
+.nav-cta:hover { background: #fff; }
+
+/* RUNNING LABEL */
+.runlabel {
+  position: fixed;
+  top: 50%; left: 24px;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: left center;
+  z-index: 40;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  pointer-events: none;
+  white-space: nowrap;
+  transition: color 0.4s var(--ease);
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.runlabel.light { color: rgba(22,19,14,0.55); }
+.runlabel .sep { margin: 0 14px; color: var(--accent); }
+
+
+/* STAGE — Hero v3 single-screen landing (replaces the animated wordmark hero) */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+  background: var(--ink);
+}
+.stage .bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  filter: brightness(0.92) saturate(0.95);
+  transform: scale(1.03);
+  transition: transform 1.8s var(--ease), filter 1.8s var(--ease);
+}
+.stage.loaded .bg { transform: scale(1.0); }
+.stage::before {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(11,20,16,0.55) 0%,
+    rgba(11,20,16,0.05) 18%,
+    rgba(11,20,16,0.05) 70%,
+    rgba(11,20,16,0.75) 100%
+  );
+}
+.stage::after {
+  content: "";
+  position: absolute; inset: 0;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+}
+
+/* Nav now covers brand + Reserve, so hide the duplicated hero top chrome */
+body.page-home .stage-top-left,
+body.page-home .stage-top-right { display: none; }
+.stage-top-left, .stage-top-right, .stage-plate-left, .stage-plate-right {
+  position: absolute;
+  z-index: 5;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+}
+.stage-top-left {
+  top: 32px; left: clamp(24px, 4vw, 56px);
+  display: flex; align-items: center; gap: 12px;
+  font-size: 10px; letter-spacing: 0.32em;
+  color: rgba(255,255,255,0.85);
+}
+.stage-top-left .rule { width: 28px; height: 1px; background: rgba(255,255,255,0.55); }
+
+.stage-top-right {
+  top: 28px; right: clamp(24px, 4vw, 56px);
+  display: flex; align-items: center; gap: 22px;
+}
+.stage-top-right .phone {
+  font-size: 10px; letter-spacing: 0.32em;
+  color: rgba(255,255,255,0.85);
+}
+.stage-top-right .reserve {
+  font-size: 11px; letter-spacing: 0.24em;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.55);
+  padding: 11px 22px;
+  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+.stage-top-right .reserve:hover { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+
+.stage-pitch {
+  position: absolute;
+  bottom: 80px;
+  left: 0; right: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  text-align: center;
+  color: #fff;
+}
+.stage-pitch .tagline {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+}
+.stage-pitch .tagline .rule { width: 56px; height: 1px; background: rgba(255,255,255,0.45); }
+.stage-pitch .enter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.6);
+  padding: 16px 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(13,11,8,0.25);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  transition: background 0.4s var(--ease), border-color 0.4s var(--ease), gap 0.3s var(--ease), color 0.3s var(--ease);
+  min-height: 44px;
+}
+.stage-pitch .enter:hover {
+  background: rgba(185, 144, 78, 0.92);
+  border-color: var(--accent);
+  color: var(--ink);
+  gap: 22px;
+}
+.stage-pitch .enter .arrow { color: var(--accent); transition: color 0.3s var(--ease); }
+.stage-pitch .enter:hover .arrow { color: var(--ink); }
+
+.stage-plate-left, .stage-plate-right {
+  bottom: 28px;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: rgba(255,255,255,0.4);
+}
+.stage-plate-left  { left: clamp(24px, 4vw, 56px); }
+.stage-plate-right { right: clamp(24px, 4vw, 56px); }
+
+@media (max-width: 720px) {
+  .stage-top-left .rule, .stage-pitch .tagline .rule { display: none; }
+  .stage-top-left { font-size: 9px; letter-spacing: 0.24em; }
+  .stage-top-right { gap: 12px; }
+  .stage-top-right .phone { display: none; }
+  .stage-pitch { bottom: 56px; gap: 20px; padding: 0 24px; }
+  .stage-pitch .tagline { font-size: 9px; letter-spacing: 0.24em; }
+  .stage-pitch .tagline span:not(.rule) { line-height: 1.4; }
+  .stage-pitch .enter { padding: 14px 28px; font-size: 10px; letter-spacing: 0.24em; }
+  .stage-plate-left, .stage-plate-right { font-size: 8px; bottom: 18px; }
+  .stage-plate-left  { left: 24px; }
+  .stage-plate-right { right: 24px; }
+}
+
+/* Nav-brand — static STORIES wordmark in the left nav slot (no animation) */
+.nav-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  text-decoration: none;
+  padding: 4px 0;
+}
+.nav-brand .logo-svg { width: 110px; height: auto; display: block; }
+/* Force cream letters on the dark navbar regardless of body.logo-on-light;
+   the navbar always has a dark blurred background when scrolled. */
+body .nav-brand .logo-svg .layer-mid,
+body .nav-brand .logo-svg .logo-hotel { fill: var(--paper); }
+@media (max-width: 720px) { .nav-brand .logo-svg { width: 92px; } }
+
+/* Hide the global fixed nav while the stage hero is on screen. The nav
+   already animates background/border on .scrolled — now also opacity. */
+/* Nav is always visible. Opacity transition removed — Safari's repaint
+   of the blurred backdrop while opacity changed was the source of the
+   "disappear" glitch on scroll-up. Force a GPU layer so the nav
+   composites independently from the rest of the page. */
+nav.top {
+  transition: background 0.25s var(--ease), border-color 0.25s var(--ease);
+  transform: translate3d(0, 0, 0);
+}
+
+/* Carousel — nav stays visible with a soft frosted glass instead of the
+   dark blur (which combined with the opacity transition was causing the
+   GPU jank). Content colour follows --room-ink so it reads on both dark
+   and light rooms. */
+body.in-cinema nav.top.scrolled {
+  background: rgba(237, 231, 218, 0.14);
+  backdrop-filter: blur(6px) saturate(1.05);
+  -webkit-backdrop-filter: blur(6px) saturate(1.05);
+  border-bottom-color: rgba(237, 231, 218, 0.18);
+}
+body.in-cinema .nav-links a            { color: var(--room-ink); }
+body.in-cinema .nav-links a:hover      { color: var(--accent); border-bottom-color: var(--accent); }
+body.in-cinema .nav-brand .logo-svg .layer-mid,
+body.in-cinema .nav-brand .logo-svg .logo-hotel { fill: var(--room-ink); }
+
+/* HERO + ANIMATED LOGO (Ver3 — Emerald Boutique) */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+  background: var(--ink);
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.04);
+  animation: hero-breath 24s var(--ease) infinite alternate;
+}
+@keyframes hero-breath {
+  to { transform: scale(1.10); }
+}
+.hero-bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 65%, rgba(11,20,16,0) 0%, rgba(11,20,16,0.55) 65%, rgba(11,20,16,0.92) 100%),
+    linear-gradient(180deg, rgba(11,20,16,0.55) 0%, rgba(11,20,16,0.06) 36%, rgba(11,20,16,0.72) 100%);
+}
+.hero-grain {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  opacity: 0.10;
+  mix-blend-mode: overlay;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.45) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,0.45) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+}
+.hero-scrollcue {
+  position: absolute;
+  left: 50%; bottom: clamp(36px, 5vw, 64px);
+  transform: translateX(-50%);
+  color: rgba(237, 231, 218, 0.65);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 14px;
+  z-index: 3;
+  opacity: calc(1 - var(--logo-p, 0));
+  transition: opacity 0.3s var(--ease);
+}
+.hero-scrollcue .line {
+  width: 1px; height: 56px;
+  background: linear-gradient(180deg, transparent, rgba(237,231,218,0.7), transparent);
+  animation: scrolldrop 2.4s ease-in-out infinite;
+}
+
+/* ANIMATED LOGO — sits above everything, shrinks into nav slot on scroll */
+.logo-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+.logo-mover {
+  --p: var(--logo-p, var(--logo-init-p, 0));
+  --tx: calc(var(--p) * (clamp(80px, 8vw, 120px) - 50vw));
+  --ty: calc(var(--p) * (44px - 50vh));
+  --scale: calc(1 - 0.82 * var(--p));
+  transform: translate(var(--tx), var(--ty)) scale(var(--scale));
+  transform-origin: center center;
+  will-change: transform;
+  pointer-events: auto;
+}
+.logo-mark {
+  display: block;
+  text-align: center;
+  color: var(--paper);
+  text-decoration: none;
+  transition: color 0.6s var(--ease);
+}
+body { --logo-accent: #320A18; }                       /* wine outline, all surfaces */
+.logo-word {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: clamp(64px, 11vw, 196px);
+  line-height: 1;
+  letter-spacing: 0.20em;
+  /* 8-direction wine outline that stays ~1.4px visually at any --scale */
+  text-shadow:
+    calc(-1.4px / var(--scale)) 0                          0 var(--logo-accent),
+    calc( 1.4px / var(--scale)) 0                          0 var(--logo-accent),
+    0                           calc(-1.4px / var(--scale)) 0 var(--logo-accent),
+    0                           calc( 1.4px / var(--scale)) 0 var(--logo-accent),
+    calc(-1px   / var(--scale)) calc(-1px   / var(--scale)) 0 var(--logo-accent),
+    calc( 1px   / var(--scale)) calc(-1px   / var(--scale)) 0 var(--logo-accent),
+    calc(-1px   / var(--scale)) calc( 1px   / var(--scale)) 0 var(--logo-accent),
+    calc( 1px   / var(--scale)) calc( 1px   / var(--scale)) 0 var(--logo-accent);
+  white-space: nowrap;
+}
+.logo-sub {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.18em;
+  color: var(--logo-accent, #320A18);
+  letter-spacing: 0.06em;
+  margin-top: -0.16em;
+  text-indent: 0.06em;
+}
+
+.logo-mark .logo-svg {
+  display: block;
+  /* visible width scales with viewport; height auto preserves the 406:173 viewBox aspect */
+  width: clamp(300px, 50vw, 860px);
+  height: auto;
+}
+/* Monochrome wordmark — paper on dark surfaces, ink on light ones. The
+   back-offset and stroke layers from the 3-layer letterpress original
+   are hidden; only the middle face + "hotel" italic render. */
+.logo-svg .layer-back   { fill: none; opacity: 0; }
+.logo-svg .layer-stroke { fill: none; stroke: none; }
+.logo-svg .layer-mid    { fill: var(--logo-fill, #EDE7DA); }
+.logo-svg .logo-hotel   { fill: var(--logo-fill, #EDE7DA); }
+/* Over a cream/light surface (FAQ nav etc.) — flip to ink so it stays legible. */
+body.logo-on-light .logo-svg .layer-mid,
+body.logo-on-light .logo-svg .logo-hotel { fill: #0B1410; }
+
+/* non-home pages: logo is born in its small nav-slot form */
+body:not(.page-home) { --logo-init-p: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-mover { --p: 1; }
+  .hero-bg { animation: none; transform: none; }
+  .hero-scrollcue { opacity: 0; }
+}
+
+/* INTRO STRIP — editorial section that reveals as logo shrinks away */
+.intro-strip {
+  position: relative;
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(96px, 14vw, 200px) clamp(40px, 6vw, 96px) clamp(72px, 9vw, 120px);
+}
+.intro-strip::before {
+  content: "";
+  position: absolute; left: 0; right: 0; top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.45;
+}
+.intro-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(48px, 6vw, 96px);
+  align-items: end;
+}
+.intro-text { min-width: 0; }
+
+/* Right column — diptych: corridor (portrait, hero) + shoes (landscape, supporting).
+   Both photos curtain-in from clipped-bottom state when .intro-strip.revealed fires. */
+.intro-photos {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.intro-photo {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  outline: 1px solid rgba(185, 144, 78, 0.28);
+  outline-offset: -1px;
+  /* Initial state — clipped from bottom up + slight zoom-in */
+  clip-path: inset(0 0 100% 0);
+  transform: scale(1.06);
+  transition: clip-path 1.4s cubic-bezier(0.65, 0, 0.35, 1),
+              transform  1.4s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: clip-path, transform;
+}
+.intro-photo--corridor { aspect-ratio: 3 / 4; }
+.intro-photo--shoes    { aspect-ratio: 4 / 3; }
+
+.intro-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 110%;
+  object-fit: cover;
+  object-position: center;
+  transform: translate3d(0, calc(var(--parallax-y, 0) * 1px), 0);
+  will-change: transform;
+  filter: brightness(0.94) saturate(0.97);
+}
+/* Shoes drifts ~70% as much as corridor for a subtle depth effect */
+.intro-photo--shoes img {
+  transform: translate3d(0, calc(var(--parallax-y, 0) * 0.7px), 0);
+}
+.intro-photo::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(11,20,16,0) 65%, rgba(11,20,16,0.35) 100%);
+  pointer-events: none;
+}
+
+/* Curtain reveal — fires from the section's IntersectionObserver-bound .revealed */
+.intro-strip.revealed .intro-photo--corridor {
+  clip-path: inset(0);
+  transform: scale(1);
+  transition-delay: 0.1s, 0.1s;
+}
+.intro-strip.revealed .intro-photo--shoes {
+  clip-path: inset(0);
+  transform: scale(1);
+  transition-delay: 0.45s, 0.45s;
+}
+
+/* Scroll-driven kinetic deck — each word's opacity follows distance from the
+   viewport's 55% focal line. JS writes --reveal per word on every scroll frame. */
+.intro-strip .deck { font-size: 18px; line-height: 1.55; }
+.intro-strip .rw {
+  display: inline;
+  opacity: var(--reveal, 0.3);
+  transition: opacity 0.18s linear;
+  will-change: opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-photo {
+    clip-path: inset(0) !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .intro-strip .rw { opacity: 1 !important; transition: none !important; }
+}
+
+/* Bottom credits strip — replaces the right-column meta column */
+.intro-meta {
+  max-width: 1280px;
+  margin: clamp(56px, 6vw, 96px) auto 0;
+  padding-top: 26px;
+  border-top: 1px solid rgba(237, 231, 218, 0.18);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 56px);
+}
+.intro-meta > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.intro-meta .l {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(237, 231, 218, 0.45);
+}
+.intro-meta .v {
+  font-family: 'Lora', serif;
+  font-size: 17px;
+  color: var(--paper);
+}
+.intro-meta .v em { font-style: italic; color: var(--accent); }
+.intro-strip .overline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(237,231,218,0.6);
+  margin-bottom: 28px;
+  display: flex; align-items: center; gap: 14px;
+}
+.intro-strip .overline::before {
+  content: ""; width: 48px; height: 1px; background: var(--accent);
+}
+.intro-strip h1 {
+  font-family: 'Lora', serif;
+  font-weight: 400;
+  font-size: clamp(48px, 7.2vw, 124px);
+  line-height: 0.98;
+  letter-spacing: -0.018em;
+  margin: 0 0 32px;
+  text-wrap: balance;
+}
+.intro-strip h1 em { font-style: italic; color: var(--accent); }
+.intro-strip .deck {
+  line-height: 1.55;
+  font-weight: 300;
+  color: rgba(237,231,218,0.86);
+  max-width: 560px;
+}
+.intro-strip .deck + .deck { margin-top: 1.1em; }
+@media (max-width: 880px) {
+  .intro-inner { grid-template-columns: 1fr; }
+  .intro-photos { max-width: 520px; margin-left: auto; }
+  .intro-photo--corridor { aspect-ratio: 3 / 4; }
+  .intro-photo--shoes    { aspect-ratio: 4 / 3; }
+  .intro-meta  { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 40px; padding-top: 22px; }
+  .intro-meta .v { font-size: 15px; }
+}
+
+/* B — Stagger word reveal on the intro headline */
+.intro-strip h1 { white-space: normal; }
+.intro-strip h1 .w {
+  display: inline-block;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(0.45em);
+  transition: opacity 0.6s var(--ease), transform 0.7s var(--ease);
+}
+.intro-strip.revealed h1 .w {
+  opacity: 1;
+  transform: translateY(0);
+}
+.intro-strip.revealed h1 .w.em-word::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 100%;
+  margin-top: -0.08em;
+  background: linear-gradient(90deg, var(--accent), rgba(185,144,78,0));
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: storiesUnderline 0.9s var(--ease) 0.7s forwards;
+}
+@keyframes storiesUnderline {
+  to { transform: scaleX(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-strip h1 .w { opacity: 1; transform: none; transition: none; }
+  .intro-strip.revealed h1 .w.em-word::after { animation: none; transform: scaleX(1); }
+}
+
+/* C — Custom boutique cursor: gold dot + lagging ring + magnetic CTAs */
+/* Visible by default; JS guards skip activation on touch-only and reduced-motion */
+.cursor {
+  position: fixed; top: 0; left: 0;
+  width: 0; height: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+.cursor-dot, .cursor-ring {
+  position: fixed; top: 0; left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+  /* Start at 50/50 of viewport — visible immediately even before first mousemove */
+  transform: translate3d(50vw, 50vh, 0);
+}
+.cursor-dot {
+  width: 10px; height: 10px;
+  margin: -5px 0 0 -5px;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(185,144,78,0.7);
+  transition: opacity 0.2s var(--ease);
+}
+.cursor-ring {
+  width: 38px; height: 38px;
+  margin: -19px 0 0 -19px;
+  border: 1.5px solid rgba(185, 144, 78, 0.85);
+  background: transparent;
+  transition: width 0.25s var(--ease),
+              height 0.25s var(--ease),
+              border-color 0.25s var(--ease),
+              background 0.25s var(--ease),
+              margin 0.25s var(--ease);
+}
+.cursor.is-hover .cursor-ring {
+  width: 64px; height: 64px;
+  margin: -32px 0 0 -32px;
+  border-color: var(--accent);
+  background: rgba(185, 144, 78, 0.14);
+}
+.cursor.is-hover .cursor-dot { opacity: 0; }
+.magnet { will-change: transform; }
+
+/* Only hide the native cursor on hover-capable, fine-pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  html, body, *, *::before, *::after { cursor: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html, body, *, *::before, *::after { cursor: auto !important; }
+  .cursor { display: none !important; }
+  .magnet { transform: none !important; }
+}
+@media (hover: none), (pointer: coarse) {
+  .cursor { display: none; }
+}
+
+
+
+/* PLATE */
+.plate {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+  background: var(--ink);
+}
+.plate.tall { height: 110vh; }
+.plate .bg {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.06);
+  transition: transform 1.6s var(--ease);
+}
+.plate .bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(13,11,8,0.45) 0%, rgba(13,11,8,0.1) 30%, rgba(13,11,8,0.1) 55%, rgba(13,11,8,0.72) 100%);
+}
+.plate.visible .bg { transform: scale(1.0); }
+.plate-grain {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+}
+.plate-content {
+  position: relative; z-index: 2;
+  height: 100%;
+  padding: clamp(96px, 10vw, 140px) clamp(40px, 6vw, 96px) clamp(40px, 5vw, 72px);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  color: #fff;
+}
+.plate-id {
+  align-self: start;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.plate-id::before { content: ""; width: 40px; height: 1px; background: rgba(255,255,255,0.5); }
+.plate-id .n { color: var(--accent); }
+.plate-title-block { align-self: end; max-width: 1080px; }
+.plate-title-block h1, .plate-title-block h2 {
+  font-family: 'Lora', serif;
+  font-weight: 400;
+  font-size: clamp(52px, 8.5vw, 148px);
+  line-height: 0.96;
+  letter-spacing: -0.018em;
+  color: #fff;
+  margin-bottom: 24px;
+  text-wrap: balance;
+}
+.plate-title-block em { font-style: italic; color: var(--accent); font-weight: 400; }
+.plate-deck {
+  font-size: 17px;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.78);
+  max-width: 540px;
+  font-weight: 300;
+  margin-bottom: 28px;
+}
+.plate-meta-row {
+  display: flex;
+  gap: clamp(24px, 3vw, 56px);
+  flex-wrap: wrap;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+.plate-meta-row > div { display: flex; flex-direction: column; gap: 4px; }
+.plate-meta-row .l {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+}
+.plate-meta-row .v { font-family: 'Lora', serif; font-size: 19px; color: #fff; font-weight: 500; }
+.scrollcue {
+  position: absolute;
+  right: clamp(40px, 6vw, 96px);
+  bottom: clamp(40px, 5vw, 72px);
+  color: rgba(255,255,255,0.55);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 3;
+}
+.scrollcue .line {
+  width: 1px; height: 52px;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: scrolldrop 2.2s ease-in-out infinite;
+}
+@keyframes scrolldrop {
+  0%, 100% { opacity: 0.3; transform: translateY(-8px); }
+  50% { opacity: 1; transform: translateY(8px); }
+}
+
+/* BODY */
+.body {
+  background: var(--paper);
+  color: var(--text);
+  padding: clamp(80px, 10vw, 140px) clamp(40px, 6vw, 96px);
+}
+.body.dark { background: var(--ink-2); color: rgba(255,255,255,0.84); }
+.body-inner { max-width: 1200px; margin: 0 auto; }
+
+/* ROOMS */
+.rooms-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 4vw, 64px);
+  margin-bottom: clamp(48px, 6vw, 80px);
+  align-items: end;
+}
+.rooms-head h3 {
+  font-family: 'Lora', serif;
+  font-weight: 400;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.rooms-head h3 em { font-style: italic; color: var(--primary); }
+.rooms-head p { color: var(--text-2); max-width: 500px; font-weight: 300; font-size: 16px; line-height: 1.65; }
+.rooms-head .overline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 20px;
+}
+.rooms-head .overline .n { color: var(--primary); }
+.room-rail {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 4px 0 28px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-3) transparent;
+  margin: 0 calc(-1 * clamp(40px, 6vw, 96px));
+  padding-left: clamp(40px, 6vw, 96px);
+  padding-right: clamp(40px, 6vw, 96px);
+}
+.room-rail::-webkit-scrollbar { height: 4px; }
+.room-rail::-webkit-scrollbar-thumb { background: var(--text-3); }
+.room-card {
+  flex: 0 0 clamp(280px, 28vw, 400px);
+  scroll-snap-align: start;
+  position: relative;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  background: var(--paper-2);
+  cursor: pointer;
+  display: block;
+}
+.room-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
+.room-card:hover img { transform: scale(1.05); }
+.room-card::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(13,11,8,0) 40%, rgba(13,11,8,0.85) 100%);
+}
+.room-card .rc-inner { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 2; color: #fff; }
+.room-card .rc-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 10px;
+}
+.room-card .rc-top .idx { color: var(--accent); }
+.room-card h4 {
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.room-card h4 em { font-style: italic; color: var(--accent); font-weight: 400; }
+.room-card .rc-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: rgba(255,255,255,0.75); }
+.room-card.soon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-2);
+  background: var(--paper-2);
+  border: 1px dashed var(--rule);
+}
+.room-card.soon::after { display: none; }
+.room-card.soon .sp { font-family: 'Lora', serif; font-style: italic; font-size: 16px; color: var(--text-2); padding: 30px; line-height: 1.5; }
+.room-card.soon .sp b { font-family: 'Lora', serif; font-weight: 500; font-style: normal; color: var(--ink); font-size: 22px; display: block; margin-bottom: 6px; }
+
+/* ROOMS CINEMA (Ver3 M2 — alma-style click-driven tabs) */
+.rooms-cinema {
+  position: relative;
+  background: var(--room-bg, var(--paper));
+  color: var(--room-ink, var(--ink));
+  transition:
+    background-color 1.2s var(--ease),
+    color 1.2s var(--ease);
+}
+.rooms-cinema-intro {
+  padding: clamp(72px, 9vw, 120px) clamp(40px, 6vw, 96px) clamp(32px, 4vw, 56px);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.rooms-cinema-intro .overline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.rooms-cinema-intro .overline::before {
+  content: ""; width: 48px; height: 1px; background: var(--accent);
+}
+.rooms-cinema-intro h2 {
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  font-size: clamp(36px, 4.6vw, 76px);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+  max-width: 880px;
+}
+.rooms-cinema-intro h2 em {
+  font-style: italic; font-weight: 400; color: var(--accent);
+}
+.rooms-cinema-intro p {
+  font-size: 17px; line-height: 1.55; font-weight: 400;
+  max-width: 560px; opacity: 0.75; margin-top: 18px;
+}
+
+/* Single stage with sticky left panel + click-driven right gallery */
+.room-stage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;          /* sticky-in-grid requirement */
+  max-width: 1600px;
+  margin: 0 auto;
+}
+.room-panel {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  /* Promote to its own compositor layer so sticky behaviour does not
+     re-paint the cinema bg on every scroll frame. */
+  will-change: transform;
+  padding: clamp(112px, 10vw, 140px) clamp(40px, 5vw, 80px) clamp(56px, 6vw, 96px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;   /* header top, list middle, CTA bottom */
+  gap: clamp(28px, 3vw, 48px);
+}
+
+/* Static panel header (overline + intro) — no per-room swapping anymore */
+.panel-header { max-width: 460px; }
+.panel-header .overline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.panel-header .overline::before {
+  content: ""; width: 36px; height: 1px; background: var(--accent);
+}
+.panel-header .panel-intro {
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+/* Defensive: the old per-room panel-currents + panel-ctas are removed from
+   DOM, but if any leftover descendant ever sneaks in, it stays invisible. */
+.panel-currents, .panel-ctas, .panel-current, .room-panel-cta { display: none !important; }
+
+/* Single panel CTA — href tracks the active room via JS */
+.panel-cta {
+  align-self: flex-start;
+  padding: 14px 26px;
+  border: 1px solid color-mix(in oklab, currentColor 35%, transparent);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  color: currentColor;
+  text-decoration: none;
+  transition:
+    background 0.3s var(--ease),
+    color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+.panel-cta:hover,
+.panel-cta:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+  outline: none;
+}
+
+/* The currents/CTAs/galleries are all in DOM; visibility is data-active driven */
+.panel-currents, .panel-ctas, .room-galleries { position: relative; }
+.panel-current { display: none; }
+.room-panel-cta { display: none; }
+
+/* Galleries always render — they stack vertically and the user scrolls
+   through all 18 photos. data-active drives only the panel + CTA + body
+   palette; the gallery itself is the scroll source-of-truth. */
+.room-galleries {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(112px, 10vw, 140px) clamp(40px, 5vw, 80px) clamp(40px, 5vw, 80px) 0;
+  gap: clamp(40px, 5vw, 80px);
+}
+.room-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2.5vw, 36px);
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1620px;
+}
+
+/* Panel-current + CTA: only the data-active variant is shown */
+.room-stage[data-active="presidential"] .panel-current[data-slug="presidential"],
+.room-stage[data-active="king"]         .panel-current[data-slug="king"],
+.room-stage[data-active="junior"]       .panel-current[data-slug="junior"],
+.room-stage[data-active="deluxe"]       .panel-current[data-slug="deluxe"],
+.room-stage[data-active="deluxe-queen"] .panel-current[data-slug="deluxe-queen"],
+.room-stage[data-active="superior"]     .panel-current[data-slug="superior"] {
+  display: block;
+  animation: rs-fade-up 0.42s var(--ease);
+}
+.room-stage[data-active="presidential"] .room-panel-cta[data-slug="presidential"],
+.room-stage[data-active="king"]         .room-panel-cta[data-slug="king"],
+.room-stage[data-active="junior"]       .room-panel-cta[data-slug="junior"],
+.room-stage[data-active="deluxe"]       .room-panel-cta[data-slug="deluxe"],
+.room-stage[data-active="deluxe-queen"] .room-panel-cta[data-slug="deluxe-queen"],
+.room-stage[data-active="superior"]     .room-panel-cta[data-slug="superior"] {
+  display: inline-flex;
+}
+@keyframes rs-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Panel-current piece (one of six) */
+.panel-current .panel-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.panel-current .panel-num::before {
+  content: ""; width: 36px; height: 1px; background: var(--accent);
+}
+.panel-current .panel-title {
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  font-size: clamp(40px, 4.6vw, 76px);
+  line-height: 1.0;
+  letter-spacing: -0.018em;
+  margin-bottom: 18px;
+  text-wrap: balance;
+}
+.panel-current .panel-title em {
+  font-style: italic; font-weight: 400; color: var(--accent);
+}
+.panel-current .panel-deck {
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 400;
+  opacity: 0.82;
+  max-width: 460px;
+}
+
+/* Room list — <button> elements for proper a11y semantics */
+.room-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;            /* push to mid-panel */
+}
+.room-list button {
+  appearance: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 18px 0;
+  border-top: 1px solid color-mix(in oklab, currentColor 18%, transparent);
+  opacity: 0.45;
+  transition:
+    opacity 0.55s var(--ease),
+    color 0.55s var(--ease),
+    font-weight 0.4s var(--ease),
+    letter-spacing 0.55s var(--ease),
+    padding 0.4s var(--ease);
+  min-height: 44px;
+}
+.room-list button:last-child {
+  border-bottom: 1px solid color-mix(in oklab, currentColor 18%, transparent);
+}
+.room-list button:hover { opacity: 0.85; letter-spacing: 0.26em; }
+.room-list button:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
+.room-list button.active { opacity: 1; font-weight: 600; letter-spacing: 0.26em; }
+
+.room-panel-cta {
+  align-self: flex-start;
+  padding: 14px 26px;
+  border: 1px solid color-mix(in oklab, currentColor 35%, transparent);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  transition:
+    background 0.3s var(--ease),
+    color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+.room-panel-cta:hover,
+.room-panel-cta:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+  outline: none;
+}
+
+/* Galleries — 3 photos stacked vertically */
+.room-gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+/* Logo stays cream over the cinema — navbar is dark when scrolled,
+   so we do NOT override .logo-mark color with --room-ink anymore. */
+
+@media (prefers-reduced-motion: reduce) {
+  .rooms-cinema { transition: none; }
+  .panel-current, .room-gallery { animation: none; }
+}
+
+@media (max-width: 880px) {
+  .room-stage { grid-template-columns: 1fr; }
+  .room-panel {
+    position: static;
+    height: auto;
+    padding: 112px clamp(24px, 5vw, 40px) 56px;
+    gap: 28px;
+  }
+  .room-galleries { padding: 40px clamp(24px, 5vw, 40px); gap: 40px; }
+  .room-gallery { gap: 20px; }
+}
+
+/* PLEASURES */
+.pleasures-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(220px, auto);
+  gap: 16px;
+  margin-top: 40px;
+}
+.pcard { position: relative; overflow: hidden; background: #222; min-height: 380px; }
+.pcard.a { grid-column: 1 / 7; grid-row: span 2; }
+.pcard.b { grid-column: 7 / 13; }
+.pcard.c { grid-column: 7 / 13; }
+.pcard img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
+.pcard:hover img { transform: scale(1.05); }
+.pcard::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,11,8,0) 35%, rgba(13,11,8,0.85) 100%); }
+.pcard .inner { position: absolute; z-index: 2; left: clamp(20px, 2vw, 32px); right: clamp(20px, 2vw, 32px); bottom: clamp(20px, 2vw, 32px); color: #fff; }
+.pcard .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+.pcard h4 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(26px, 3vw, 42px); line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 10px; }
+.pcard h4 em { font-style: italic; color: var(--accent); }
+.pcard p { font-size: 14px; color: rgba(255,255,255,0.75); max-width: 440px; font-weight: 300; line-height: 1.55; }
+.pcard .more {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  padding-bottom: 3px;
+  transition: gap 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.pcard .more:hover { gap: 14px; color: var(--accent); border-bottom-color: var(--accent); }
+
+/* BREAKFAST */
+.bk-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(40px, 5vw, 80px); align-items: start; margin-top: 40px; }
+.bk-grid h3 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; color: var(--ink); margin-bottom: 20px; letter-spacing: -0.01em; }
+.bk-grid h3 em { font-style: italic; color: var(--primary); }
+.bk-grid p { font-size: 16px; line-height: 1.7; color: var(--text); margin-bottom: 14px; font-weight: 300; }
+.bk-right { padding-top: 4px; }
+.bk-fact { display: flex; justify-content: space-between; padding: 18px 0; border-top: 1px solid var(--rule); }
+.bk-fact:last-child { border-bottom: 1px solid var(--rule); }
+.bk-fact .l { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-2); }
+.bk-fact .v { font-family: 'Lora', serif; font-size: 18px; color: var(--ink); font-weight: 500; }
+.bk-fact .v em { font-style: italic; color: var(--primary); font-weight: 400; }
+.bk-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 3px;
+  transition: gap 0.3s var(--ease);
+}
+.bk-cta:hover { gap: 16px; }
+
+/* NEIGHBOURHOOD */
+.neigh-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 4vw, 64px); margin-top: 40px; }
+.neigh-grid .ix { display: grid; grid-template-columns: 40px 1fr 1fr auto; column-gap: 20px; }
+.neigh-grid .ix > * { padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.12); font-weight: 400; }
+.neigh-grid .ix .n { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: rgba(255,255,255,0.5); }
+.neigh-grid .ix .pl { font-family: 'Lora', serif; font-size: 19px; color: #fff; }
+.neigh-grid .ix .pl em { font-style: italic; color: var(--accent); font-weight: 400; }
+.neigh-grid .ix .k { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 300; }
+.neigh-grid .ix .d { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.1em; white-space: nowrap; }
+.neigh-map { position: relative; background: #0F0D0A; border: 1px solid rgba(255,255,255,0.08); aspect-ratio: 4/5; overflow: hidden; }
+.neigh-svg { display: block; width: 100%; height: 100%; }
+.neigh-svg .street { stroke: rgba(237,231,218,0.12); stroke-width: 7; stroke-linecap: round; fill: none; }
+.neigh-svg .street.kirly { stroke: rgba(185,144,78,0.32); }
+.neigh-svg .compass-ring { fill: none; stroke: rgba(255,255,255,0.25); stroke-width: 1; }
+.neigh-svg .compass-tick { font: 500 9px 'JetBrains Mono', monospace; fill: rgba(255,255,255,0.5); text-anchor: middle; letter-spacing: 0.2em; }
+.neigh-svg .hub-dot   { fill: var(--accent); filter: drop-shadow(0 0 8px rgba(185,144,78,0.55)); animation: hubPulse 2.4s ease-in-out infinite; }
+.neigh-svg .hub-ring  { fill: none; stroke: var(--accent); stroke-width: 1; opacity: 0.5; }
+.neigh-svg .hub-lab   { font: 700 10px 'JetBrains Mono', monospace; fill: #fff; text-anchor: middle; letter-spacing: 0.24em; }
+@keyframes hubPulse   { 0%, 100% { r: 9; } 50% { r: 12; opacity: 0.85; } }
+.neigh-svg .pin { cursor: pointer; }
+.neigh-svg .pin circle { fill: rgba(237,231,218,0.55); transition: fill 0.25s var(--ease), r 0.25s var(--ease); }
+.neigh-svg .pin text   { font: 500 9px 'JetBrains Mono', monospace; fill: rgba(237,231,218,0.55); text-anchor: middle; letter-spacing: 0.16em; transition: fill 0.25s var(--ease); pointer-events: none; }
+.neigh-svg .pin:hover circle, .neigh-svg .pin.active circle { fill: var(--accent); r: 8; }
+.neigh-svg .pin:hover text, .neigh-svg .pin.active text     { fill: #fff; }
+.neigh-svg .legend { font: 400 8px 'JetBrains Mono', monospace; fill: rgba(255,255,255,0.42); letter-spacing: 0.22em; }
+.pin-popup { position: absolute; background: var(--paper); color: var(--ink); padding: 18px 20px 16px; width: 240px; max-width: 90%; pointer-events: none; opacity: 0; transform: translate(-50%, calc(-100% - 12px)) translateY(4px); transition: opacity 0.2s var(--ease), transform 0.25s var(--ease); z-index: 10; box-shadow: 0 14px 36px rgba(0,0,0,0.45); }
+.pin-popup.visible { opacity: 1; transform: translate(-50%, calc(-100% - 12px)); }
+.pin-popup .pp-tag  { font: 500 9px 'JetBrains Mono', monospace; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.pin-popup .pp-name { font: 500 18px 'Lora', serif; margin-bottom: 6px; letter-spacing: -0.005em; }
+.pin-popup .pp-desc { font: 400 13px 'Inter', sans-serif; line-height: 1.45; color: var(--text-2); margin-bottom: 12px; }
+.pin-popup .pp-walk { font: 500 11px 'JetBrains Mono', monospace; letter-spacing: 0.18em; color: var(--primary); display: inline-flex; align-items: center; gap: 10px; }
+.pin-popup .pp-walk::before { content: ""; width: 18px; height: 1px; background: var(--accent); }
+@media (max-width: 600px) {
+  .pin-popup { width: calc(100% - 24px); left: 12px !important; right: 12px; transform: none !important; bottom: 12px; top: auto !important; opacity: 0; transition: opacity 0.25s var(--ease); }
+  .pin-popup.visible { opacity: 1; transform: none !important; }
+}
+
+/* RESERVE */
+/* TRUST GRID — reasons to book direct, sits just before .reserve-plate */
+.trust-grid {
+  background: var(--paper);
+  padding: clamp(72px, 9vw, 120px) clamp(40px, 6vw, 96px) clamp(64px, 8vw, 100px);
+}
+.trust-inner { max-width: 1280px; margin: 0 auto; }
+.trust-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 5vw, 80px);
+  align-items: end;
+  margin-bottom: clamp(48px, 6vw, 72px);
+}
+.trust-head .overline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.trust-head .overline::before {
+  content: ""; width: 36px; height: 1px; background: var(--accent);
+}
+.trust-head h2 {
+  font-family: 'Lora', serif;
+  font-weight: 400;
+  font-size: clamp(34px, 4.4vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.trust-head h2 em { font-style: italic; color: var(--primary); }
+.trust-head p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-2);
+  font-weight: 400;
+  max-width: 440px;
+}
+.trust-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);     /* gaps between cards read as 1px rules */
+  border: 1px solid var(--rule);
+}
+.trust-card {
+  background: var(--paper);
+  padding: clamp(28px, 3vw, 44px) clamp(24px, 2.5vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: background 0.3s var(--ease);
+}
+.trust-card:hover { background: var(--paper-2); }
+.trust-card .tc-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.trust-card h3 {
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 1.25;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+.trust-card h3 em { font-style: italic; color: var(--primary); font-weight: 400; }
+.trust-card p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-2);
+  font-weight: 400;
+}
+.trust-card .tc-note {
+  margin-top: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+@media (max-width: 880px) {
+  .trust-head { grid-template-columns: 1fr; gap: 24px; }
+  .trust-cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .trust-cards { grid-template-columns: 1fr; }
+}
+
+.reserve-plate {
+  position: relative;
+  min-height: 80vh;
+  padding: clamp(80px, 10vw, 140px) clamp(40px, 6vw, 96px);
+  background: var(--ink);
+  color: #fff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.reserve-plate::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: url('assets/brand/4T4B6940.jpg') center / cover no-repeat;
+  opacity: 0.24;
+  filter: grayscale(0.3) contrast(1.1);
+}
+.reserve-plate::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 0%, rgba(13,11,8,0.7) 100%); }
+.reserve-inner { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; text-align: center; width: 100%; }
+.reserve-over { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; display: inline-flex; align-items: center; gap: 12px; }
+.reserve-over::before, .reserve-over::after { content: ""; width: 32px; height: 1px; background: var(--accent); }
+.reserve-inner h2 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(44px, 6vw, 108px); line-height: 0.98; letter-spacing: -0.018em; margin-bottom: 28px; text-wrap: balance; }
+.reserve-inner h2 em { font-style: italic; color: var(--accent); }
+.reserve-inner > p { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.7); max-width: 560px; margin: 0 auto 44px; font-weight: 300; }
+.reserve-form {
+  max-width: 720px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.reserve-form .field { display: flex; flex-direction: column; padding: 16px 18px; text-align: left; border-right: 1px solid rgba(255,255,255,0.08); }
+.reserve-form .lab { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 6px; }
+.reserve-form input, .reserve-form select { background: transparent; border: none; color: #fff; font-family: 'Lora', serif; font-size: 16px; padding: 0; outline: none; cursor: pointer; }
+.reserve-form select option { color: var(--ink); background: var(--paper); }
+.reserve-form .go { background: var(--accent); border: none; color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; padding: 0 28px; cursor: pointer; font-weight: 500; transition: background 0.3s var(--ease); white-space: nowrap; }
+.reserve-form .go:hover { background: #fff; }
+
+/* FOOTER */
+footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px, 8vw, 96px) clamp(40px, 6vw, 96px) 28px; }
+.foot-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.foot-grid h3 { font-family: 'Lora', serif; font-size: 28px; color: #fff; font-weight: 500; }
+.foot-grid .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 8px 0 24px; }
+.foot-grid address { font-style: normal; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
+.foot-grid a.ph { font-size: 14px; color: rgba(255,255,255,0.88); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1px; display: inline-block; margin-bottom: 4px; }
+.foot-grid a.ph:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.foot-grid h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 18px; font-weight: 400; }
+.foot-grid ul { list-style: none; }
+.foot-grid li a { font-family: 'Lora', serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
+.foot-grid li a:hover { color: var(--accent); padding-left: 5px; }
+.foot-bar { max-width: 1280px; margin: 24px auto 0; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .nav-links { display: none; }
+  .runlabel { display: none; }
+  .rooms-head, .bk-grid, .neigh-grid { grid-template-columns: 1fr; }
+  .pleasures-grid { grid-template-columns: 1fr; }
+  .pcard.a, .pcard.b, .pcard.c { grid-column: 1 / -1; grid-row: span 1; min-height: 300px; }
+  .reserve-form { grid-template-columns: 1fr; }
+  .reserve-form .field { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .plate-title-block h1, .plate-title-block h2 { font-size: clamp(40px, 10vw, 56px); }
+  .foot-grid { grid-template-columns: 1fr; }
+  .plate-meta-row { gap: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .bg { transform: none !important; }
+}
+</style>
+</head>
+<body class="page-home">
+
+<nav class="top" id="topnav">
+  <a class="nav-brand" href="index.html" aria-label="Stories Hotel — Home">
+    <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 406 173" focusable="false" aria-hidden="true">
+      <g class="logo-stories" font-family="Optima, Didot, 'Tenor Sans', 'Times New Roman', serif" font-size="50" font-weight="500" letter-spacing="22">
+        <text class="layer-back"   x="55" y="78">STORIES</text>
+        <text class="layer-mid"    x="52" y="75">STORIES</text>
+        <text class="layer-stroke" x="53" y="76">STORIES</text>
+      </g>
+      <text class="logo-hotel" x="181" y="121"
+            font-family="'Snell Roundhand', 'Pinyon Script', 'Brush Script MT', cursive"
+            font-size="29" font-style="italic" letter-spacing="0.5">hotel</text>
+    </svg>
+  </a>
+  <div class="nav-links">
+    <a href="rooms.html">Rooms</a>
+    <a href="pleasures.html">Pleasures</a>
+    <a href="breakfast.html">Breakfast</a>
+    <a href="neighbourhood.html">Neighbourhood</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <a href="#reserve" class="nav-cta magnet">Reserve</a>
+</nav>
+
+<div class="runlabel" id="runlabel">
+  <span id="rl-num">01</span><span class="sep">◆</span><span id="rl-text">The House</span>
+</div>
+
+<!-- HERO — single-screen landing. The brand mark lives inside the lobby
+     photo on the back wall, so there is no overlay wordmark. -->
+<section class="stage" id="stage" data-label="01 / The House">
+  <img class="bg" src="assets/brand/lobby-reception.jpg"
+       alt="Stories Hotel Budapest — reception lobby with the STORIES brass wordmark on the back wall"
+       decoding="async">
+
+  <div class="stage-top-left">
+    <span class="rule"></span>
+    <span>Király utca 26 · Budapest VI</span>
+  </div>
+
+  <div class="stage-top-right">
+    <span class="phone">+36 1 234 5678</span>
+    <a class="reserve magnet" href="#reserve">Reserve &rarr;</a>
+  </div>
+
+  <div class="stage-pitch">
+    <div class="tagline">
+      <span class="rule"></span>
+      <span>Forty-four rooms, six characters · A hotel of stories, quietly told.</span>
+      <span class="rule"></span>
+    </div>
+    <a class="enter magnet" href="#intro">
+      <span>Enter the house</span>
+      <span class="arrow">&rarr;</span>
+    </a>
+  </div>
+
+  <div class="stage-plate-left">Plate I &mdash; Reception</div>
+  <div class="stage-plate-right">MMXXIV</div>
+</section>
+
+<!-- INTRO STRIP — editorial reveal as logo shrinks into nav -->
+<section class="intro-strip" id="intro" data-label="01 / The House">
+  <div class="intro-inner">
+    <div class="intro-text">
+      <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VI · Király utca 26</span></div>
+      <h1><span class="w">A</span> <span class="w">hotel</span> <span class="w">of</span> <span class="w em-word">stories,</span><br><span class="w">quietly</span> <span class="w">told.</span></h1>
+      <p class="deck" id="introDeck"><span class="rw">Forty-four</span> <span class="rw">rooms,</span> <span class="rw">six</span> <span class="rw">characters,</span> <span class="rw">one</span> <span class="rw">Twenty</span> <span class="rw">Six</span> <span class="rw">building.</span> <span class="rw">A</span> <span class="rw">small</span> <span class="rw">house</span> <span class="rw">on</span> <span class="rw">Király</span> <span class="rw">utca,</span> <span class="rw">lived-in</span> <span class="rw">and</span> <span class="rw">attentive</span> <span class="rw">—</span> <span class="rw">the</span> <span class="rw">opposite</span> <span class="rw">of</span> <span class="rw">anonymous.</span></p>
+      <p class="deck deck--secondary"><span class="rw">Discover</span> <span class="rw">the</span> <span class="rw">epitome</span> <span class="rw">of</span> <span class="rw">uniqueness</span> <span class="rw">at</span> <span class="rw">our</span> <span class="rw">boutique</span> <span class="rw">hotel,</span> <span class="rw">where</span> <span class="rw">every</span> <span class="rw">corner</span> <span class="rw">is</span> <span class="rw">infused</span> <span class="rw">with</span> <span class="rw">design</span> <span class="rw">and</span> <span class="rw">excitement.</span> <span class="rw">Your</span> <span class="rw">search</span> <span class="rw">for</span> <span class="rw">the</span> <span class="rw">perfect</span> <span class="rw">destination</span> <span class="rw">ends</span> <span class="rw">here.</span> <span class="rw">Welcome</span> <span class="rw">to</span> <span class="rw">a</span> <span class="rw">world</span> <span class="rw">where</span> <span class="rw">unforgettable</span> <span class="rw">experiences</span> <span class="rw">await</span> <span class="rw">at</span> <span class="rw">every</span> <span class="rw">turn.</span></p>
+    </div>
+    <div class="intro-photos">
+      <figure class="intro-photo intro-photo--corridor">
+        <img src="assets/brand/intro-corridor.jpg"
+             alt="A guest walking the red-carpeted corridor between the green walls of Stories Hotel"
+             decoding="async" loading="lazy">
+      </figure>
+    </div>
+  </div>
+  <div class="intro-meta">
+    <div><span class="l">Form</span><span class="v">Boutique &middot; <em>44</em> rooms</span></div>
+    <div><span class="l">Address</span><span class="v">Király utca 26</span></div>
+    <div><span class="l">Opened</span><span class="v">MMXXIV</span></div>
+    <div><span class="l">Reservations</span><span class="v">+36 1 234 5678</span></div>
+  </div>
+</section>
+
+<!-- ROOMS CINEMA — single static panel + click-driven gallery (alma-style) -->
+<section class="rooms-cinema" id="roomsCinema">
+
+  <div class="room-stage" id="roomStage" data-active="presidential">
+
+    <aside class="room-panel">
+      <header class="panel-header">
+        <p class="panel-intro">Our rooms are designed with the utmost attention to furnishings, colors and fabrics, all while respecting the comfort and privacy of our guests.</p>
+      </header>
+
+      <nav class="room-list" aria-label="Choose a room">
+        <button type="button" data-target="presidential" class="active">Presidential Suite</button>
+        <button type="button" data-target="king">King Suite</button>
+        <button type="button" data-target="junior">Junior Suite</button>
+        <button type="button" data-target="deluxe">Deluxe</button>
+        <button type="button" data-target="deluxe-queen">Deluxe Queen</button>
+        <button type="button" data-target="superior">Superior</button>
+      </nav>
+
+      <a class="panel-cta magnet" id="panelCta" href="rooms.html#presidential">
+        Explore the rooms <span aria-hidden="true">&rarr;</span>
+      </a>
+    </aside>
+
+    <div class="room-galleries">
+      <div class="room-gallery" data-slug="presidential" aria-hidden="false">
+        <img decoding="async" src="assets/photos/presidential-suite/01.jpg" alt="Presidential Suite &mdash; view 1" loading="lazy">
+        <img decoding="async" src="assets/photos/presidential-suite/02.jpg" alt="Presidential Suite &mdash; view 2" loading="lazy">
+        <img decoding="async" src="assets/photos/presidential-suite/03.jpg" alt="Presidential Suite &mdash; view 3" loading="lazy">
+      </div>
+      <div class="room-gallery" data-slug="king" aria-hidden="false">
+        <img decoding="async" src="assets/photos/king-suite/01.jpg" alt="King Suite &mdash; view 1" loading="lazy">
+        <img decoding="async" src="assets/photos/king-suite/02.jpg" alt="King Suite &mdash; view 2" loading="lazy">
+        <img decoding="async" src="assets/photos/king-suite/03.jpg" alt="King Suite &mdash; view 3" loading="lazy">
+      </div>
+      <div class="room-gallery" data-slug="junior" aria-hidden="false">
+        <img decoding="async" src="assets/photos/junior-suite/01.jpg" alt="Junior Suite &mdash; view 1" loading="lazy">
+        <img decoding="async" src="assets/photos/junior-suite/02.jpg" alt="Junior Suite &mdash; view 2" loading="lazy">
+        <img decoding="async" src="assets/photos/junior-suite/03.jpg" alt="Junior Suite &mdash; view 3" loading="lazy">
+      </div>
+      <div class="room-gallery" data-slug="deluxe" aria-hidden="false">
+        <img decoding="async" src="assets/photos/deluxe/01.jpg" alt="Deluxe &mdash; view 1" loading="lazy">
+        <img decoding="async" src="assets/photos/deluxe/02.jpg" alt="Deluxe &mdash; view 2" loading="lazy">
+        <img decoding="async" src="assets/photos/deluxe/03.jpg" alt="Deluxe &mdash; view 3" loading="lazy">
+      </div>
+      <div class="room-gallery" data-slug="deluxe-queen" aria-hidden="false">
+        <img decoding="async" src="assets/photos/deluxe-queen/01.jpg" alt="Deluxe Queen &mdash; view 1" loading="lazy">
+        <img decoding="async" src="assets/photos/deluxe-queen/02.jpg" alt="Deluxe Queen &mdash; view 2" loading="lazy">
+        <img decoding="async" src="assets/photos/deluxe-queen/03.jpg" alt="Deluxe Queen &mdash; view 3" loading="lazy">
+      </div>
+      <div class="room-gallery" data-slug="superior" aria-hidden="false">
+        <img decoding="async" src="assets/photos/superior/01.jpg" alt="Superior &mdash; view 1" loading="lazy">
+        <img decoding="async" src="assets/photos/superior/02.jpg" alt="Superior &mdash; view 2" loading="lazy">
+        <img decoding="async" src="assets/photos/superior/03.jpg" alt="Superior &mdash; view 3" loading="lazy">
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PLEASURES PLATE + BODY -->
+<section class="plate" data-label="02 / Little Luxuries" id="pleasures">
+  <div class="bg" style="background-image: url('assets/brand/4T4B5708.JPG');"></div>
+  <div class="plate-grain"></div>
+  <div class="plate-content">
+    <div class="plate-id"><span class="n">III</span><span>·</span><span>Rituals of the house</span></div>
+    <div class="plate-title-block">
+      <h2>Little <em>luxuries.</em></h2>
+      <p class="plate-deck">The small things that make a stay feel particular. A bar, a gym, a place to think — each with its own rhythm, each included.</p>
+    </div>
+  </div>
+  <div class="scrollcue"><span>Explore</span><span class="line"></span></div>
+</section>
+
+<section class="body dark" data-label="02 / Little Luxuries">
+  <div class="body-inner">
+    <div class="pleasures-grid">
+      <div class="pcard a">
+        <img decoding="async" src="assets/photos/restaurant/Screenshot 2026-04-01 093455.png" alt="Bar and lounge">
+        <div class="inner">
+          <div class="tag">III · 01 — Social</div>
+          <h4>Bar &amp; social <em>lounge</em></h4>
+          <p>Hungarian vermouths, natural wines from Tokaj, classics made slowly. A room that spills into the Twenty Six courtyard every evening after five.</p>
+          <a href="pleasures.html#bar" class="more">Read the bar chapter →</a>
+        </div>
+      </div>
+      <div class="pcard b">
+        <img decoding="async" src="assets/photos/GYM/GoActive-5-19.jpg" alt="Gym">
+        <div class="inner">
+          <div class="tag">III · 02 — Body</div>
+          <h4>Gym, with <em>GoActive</em></h4>
+          <p>Full access to our neighbour's studio — Technogym equipment and a sauna, complimentary with every stay.</p>
+          <a href="pleasures.html#gym" class="more">See schedule →</a>
+        </div>
+      </div>
+      <div class="pcard c">
+        <img decoding="async" src="assets/photos/Coworking/coworking26.jpg" alt="Create 26">
+        <div class="inner">
+          <div class="tag">III · 03 — Work</div>
+          <h4>Create 26 <em>coworking</em></h4>
+          <p>A quiet floor of private desks and meeting rooms, shared with the Twenty Six building. One desk per guest, at no charge.</p>
+          <a href="pleasures.html#coworking" class="more">Request a desk →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BREAKFAST PLATE + BODY -->
+<section class="plate" data-label="03 / Breakfast" id="breakfast">
+  <div class="bg" style="background-image: url('assets/photos/breakfast/background breakfast.png');"></div>
+  <div class="plate-grain"></div>
+  <div class="plate-content">
+    <div class="plate-id"><span class="n">IV</span><span>·</span><span>Breakfast at Twenty Six</span></div>
+    <div class="plate-title-block">
+      <h2>A table set<br>with <em>intention.</em></h2>
+      <p class="plate-deck">Not a buffet. You order, you sit, you talk. Local produce from Hunyadi tér, bread baked at dawn — a gentle ritual to start each day.</p>
+    </div>
+  </div>
+  <div class="scrollcue"><span>The menu</span><span class="line"></span></div>
+</section>
+
+<section class="body" data-label="03 / Breakfast">
+  <div class="body-inner">
+    <div class="bk-grid">
+      <div>
+        <h3>Ground floor of the <em>Twenty Six</em> building.</h3>
+        <p>Breakfast is served in the Twenty Six restaurant downstairs — a room that functions as a living room for District VI. Hungarian produce from the markets at Hunyadi tér, bread baked at dawn, a menu that shifts with the seasons.</p>
+        <p>We don't do buffets. You order, you sit, you talk. Eggs cooked by someone who cares.</p>
+        <a href="breakfast.html" class="bk-cta">See the full menu →</a>
+      </div>
+      <div class="bk-right">
+        <div class="bk-fact"><span class="l">Hours</span><span class="v">07:00 — 11:00</span></div>
+        <div class="bk-fact"><span class="l">Place</span><span class="v">Twenty Six, ground</span></div>
+        <div class="bk-fact"><span class="l">Style</span><span class="v"><em>À la carte</em></span></div>
+        <div class="bk-fact"><span class="l">Price</span><span class="v">€18 per person</span></div>
+        <div class="bk-fact"><span class="l">Sourcing</span><span class="v">Hunyadi tér market</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEIGHBOURHOOD PLATE + BODY -->
+<section class="plate" data-label="04 / Neighbourhood" id="neigh">
+  <div class="bg" style="background-image: url('assets/brand/DorS347-R1-11-12.JPG');"></div>
+  <div class="plate-grain"></div>
+  <div class="plate-content">
+    <div class="plate-id"><span class="n">V</span><span>·</span><span>District VI, on foot</span></div>
+    <div class="plate-title-block">
+      <h2>A quarter worth<br>the <em>walk.</em></h2>
+      <p class="plate-deck">Király utca runs through one of Budapest's most walkable districts. Seven short steps from the door — the places we send guests when they ask.</p>
+    </div>
+  </div>
+  <div class="scrollcue"><span>The list</span><span class="line"></span></div>
+</section>
+
+<section class="body dark" data-label="04 / Neighbourhood">
+  <div class="body-inner">
+    <div class="neigh-grid">
+      <div class="ix">
+        <span class="n">01</span><span class="pl">Gerbeaud <em>—</em></span><span class="k">1858 · Coffee &amp; confectionery</span><span class="d">8 min</span>
+        <span class="n">02</span><span class="pl">Opera House <em>—</em></span><span class="k">Andrássy út · Restored 2022</span><span class="d">6 min</span>
+        <span class="n">03</span><span class="pl">Szimpla Kert <em>—</em></span><span class="k">The original ruin bar</span><span class="d">4 min</span>
+        <span class="n">04</span><span class="pl">Rumbach Synagogue <em>—</em></span><span class="k">Jewish Quarter</span><span class="d">3 min</span>
+        <span class="n">05</span><span class="pl">Gozsdu Udvar <em>—</em></span><span class="k">Seven connected courtyards</span><span class="d">5 min</span>
+        <span class="n">06</span><span class="pl">Dobrumba <em>—</em></span><span class="k">Levantine, Dob utca</span><span class="d">7 min</span>
+        <span class="n">07</span><span class="pl">Mazel Tov <em>—</em></span><span class="k">Garden, Middle-Eastern</span><span class="d">4 min</span>
+      </div>
+      <div class="neigh-map" id="neighMap">
+        <svg class="neigh-svg" viewBox="0 0 800 1000" aria-hidden="true">
+          <defs>
+            <pattern id="neighGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M40 0 L0 0 L0 40" fill="none" stroke="rgba(185,144,78,0.08)" stroke-width="0.6"/>
+            </pattern>
+          </defs>
+          <rect width="800" height="1000" fill="url(#neighGrid)"/>
+
+          <!-- streets (rough geometry only) -->
+          <line class="street kirly"    x1="160" y1="780" x2="700" y2="320"/>
+          <line class="street andrassy" x1="200" y1="220" x2="540" y2="900"/>
+          <line class="street belv"     x1="700" y1="100" x2="700" y2="900"/>
+          <line class="street kornut"   x1="100" y1="660" x2="780" y2="660"/>
+
+          <!-- compass top-right -->
+          <g transform="translate(720, 80)">
+            <circle class="compass-ring" cx="0" cy="0" r="28"/>
+            <text class="compass-tick" x="0" y="-12">N</text>
+            <text class="compass-tick" x="16" y="4">E</text>
+            <text class="compass-tick" x="0" y="20">S</text>
+            <text class="compass-tick" x="-16" y="4">W</text>
+          </g>
+
+          <!-- Stories Hotel hub -->
+          <g transform="translate(400, 520)">
+            <circle class="hub-ring" r="22"/>
+            <circle class="hub-dot"  r="9"/>
+            <text class="hub-lab" y="-28">STORIES &middot; 26</text>
+          </g>
+
+          <!-- Pins (8 landmarks within walking distance) -->
+          <g class="pin" data-name="St. Stephen&rsquo;s Basilica" data-tag="Landmark"   data-walk="8 min" data-desc="Hungary&rsquo;s largest church &mdash; dome views over the rooftops of Pest." transform="translate(180, 460)">
+            <circle r="6"/><text y="22">A</text>
+          </g>
+          <g class="pin" data-name="Hungarian State Opera"        data-tag="Culture"    data-walk="6 min" data-desc="Andrássy út 22. Neo-Renaissance interior, fully restored 2022." transform="translate(260, 380)">
+            <circle r="6"/><text y="22">B</text>
+          </g>
+          <g class="pin" data-name="Gerbeaud"                      data-tag="Coffeehouse" data-walk="8 min" data-desc="Vörösmarty tér &middot; 1858. The grand café of the Pest side." transform="translate(220, 700)">
+            <circle r="6"/><text y="22">C</text>
+          </g>
+          <g class="pin" data-name="Rumbach Synagogue"             data-tag="Jewish Quarter" data-walk="3 min" data-desc="Moorish revival, restored 2021. The smaller of the three." transform="translate(360, 660)">
+            <circle r="6"/><text y="22">D</text>
+          </g>
+          <g class="pin" data-name="Gozsdu Udvar"                  data-tag="Courtyards" data-walk="5 min" data-desc="Seven connected courtyards between Király and Dob utca." transform="translate(330, 600)">
+            <circle r="6"/><text y="22">E</text>
+          </g>
+          <g class="pin" data-name="Szimpla Kert"                  data-tag="Ruin bar"   data-walk="4 min" data-desc="The original ruin bar. Kazinczy utca 14." transform="translate(520, 720)">
+            <circle r="6"/><text y="22">F</text>
+          </g>
+          <g class="pin" data-name="Dobrumba"                      data-tag="Levantine"  data-walk="7 min" data-desc="Levantine cooking, Dob utca 5. Book ahead on weekends." transform="translate(440, 760)">
+            <circle r="6"/><text y="22">G</text>
+          </g>
+          <g class="pin" data-name="Mazel Tov"                     data-tag="Garden bar" data-walk="4 min" data-desc="Akácfa utca 47. Middle-Eastern food, glass-roofed garden." transform="translate(540, 600)">
+            <circle r="6"/><text y="22">H</text>
+          </g>
+
+          <!-- legend -->
+          <text class="legend" x="20" y="980">KIRÁLY UTCA 26 · DISTRICT VI · APPROX. 250M GRID</text>
+        </svg>
+
+        <div class="pin-popup" id="pinPopup" role="status" aria-live="polite">
+          <div class="pp-tag"></div>
+          <h4 class="pp-name"></h4>
+          <p class="pp-desc"></p>
+          <div class="pp-walk"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST GRID — reasons to book direct, before the reservation plate -->
+<section class="trust-grid">
+  <div class="trust-inner">
+    <div class="trust-head">
+      <div>
+        <div class="overline"><span>VI</span><span>&middot;</span><span>Why book direct</span></div>
+        <h2>The <em>quiet</em><br>benefits.</h2>
+      </div>
+      <p>Six small reassurances before you reserve. Direct bookings get the lowest rate, the most flexibility, and a human on the other end of the line.</p>
+    </div>
+
+    <div class="trust-cards">
+      <article class="trust-card">
+        <span class="tc-label">Best rate</span>
+        <h3>Direct booking, <em>direct savings.</em></h3>
+        <p>Book with us and pay the lowest publicly available rate &mdash; no commission, no markup, no compromise on what we can offer back.</p>
+        <span class="tc-note">Lowest rate, guaranteed</span>
+      </article>
+
+      <article class="trust-card">
+        <span class="tc-label">Cancellation</span>
+        <h3>Free until 48 hours <em>before arrival.</em></h3>
+        <p>Plans change. Cancel up to 48 hours before check-in at no cost. After that we charge for the first night only.</p>
+        <span class="tc-note">No deposit required</span>
+      </article>
+
+      <article class="trust-card">
+        <span class="tc-label">Transfer</span>
+        <h3>Airport <em>on request.</em></h3>
+        <p>A private car from Liszt Ferenc to the door of Twenty Six. Pre-arranged at the time of booking, charged separately to the room.</p>
+        <span class="tc-note">From &euro;55 each way</span>
+      </article>
+
+      <article class="trust-card">
+        <span class="tc-label">Timing</span>
+        <h3>Check-in 3pm &middot; <em>check-out 11am.</em></h3>
+        <p>Early arrival or late departure can usually be arranged when the room is free &mdash; just ask the front desk on the day.</p>
+        <span class="tc-note">Flexible on request</span>
+      </article>
+
+      <article class="trust-card">
+        <span class="tc-label">Direct line</span>
+        <h3>Reach a person, <em>not a bot.</em></h3>
+        <p>WhatsApp, email, or a phone call &mdash; the same small team answers within the same day. No call centres, no escalation chains.</p>
+        <span class="tc-note">+36 1 234 5678</span>
+      </article>
+
+      <article class="trust-card">
+        <span class="tc-label">Reviews</span>
+        <h3>Four point eight, <em>quietly earned.</em></h3>
+        <p>Twelve hundred guests have stayed and written it down. We read every review and the team meets weekly to talk about them.</p>
+        <span class="tc-note">4.8 / 5 &middot; 1200+ stays</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVE -->
+<section class="reserve-plate" id="reserve" data-label="05 / Reservations">
+  <div class="reserve-inner">
+    <div class="reserve-over">06 / Reservations</div>
+    <h2>Begin <em>your</em><br>Budapest chapter.</h2>
+    <p>Direct bookings include a complimentary welcome drink at the bar and late checkout (subject to availability). We answer within the same day.</p>
+    <form class="reserve-form" onsubmit="event.preventDefault();">
+      <div class="field">
+        <span class="lab">Check-in</span>
+        <input type="date">
+      </div>
+      <div class="field">
+        <span class="lab">Check-out</span>
+        <input type="date">
+      </div>
+      <div class="field">
+        <span class="lab">Guests</span>
+        <select>
+          <option>1 guest</option>
+          <option selected>2 guests</option>
+          <option>3 guests</option>
+          <option>4 guests</option>
+        </select>
+      </div>
+      <button class="go" type="submit">Check availability →</button>
+    </form>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="foot-grid">
+    <div>
+      <h3>Stories</h3>
+      <div class="sub">Budapest · Király utca 26</div>
+      <address>Twenty Six Building<br>Király utca 26, 1061 Budapest<br>Hungary</address>
+      <a href="tel:+3612345678" class="ph">+36 1 234 5678</a><br>
+      <a href="mailto:hello@storiesbudapest.com" class="ph">hello@storiesbudapest.com</a>
+    </div>
+    <div>
+      <h4>House</h4>
+      <ul>
+        <li><a href="rooms.html">Rooms</a></li>
+        <li><a href="breakfast.html">Breakfast</a></li>
+        <li><a href="pleasures.html">Bar &amp; lounge</a></li>
+        <li><a href="pleasures.html#gym">Gym · GoActive</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Visiting</h4>
+      <ul>
+        <li><a href="neighbourhood.html">Neighbourhood</a></li>
+        <li><a href="contact.html">Directions</a></li>
+        <li><a href="faqs.html">FAQ</a></li>
+        <li><a href="contact.html">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Follow</h4>
+      <ul>
+        <li><a href="#">Instagram ↗</a></li>
+        <li><a href="#">Journal</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <span>© 2026 Stories Hotel Budapest</span>
+    <span>Photography · Assaf Pinchuk &amp; Dor Sharon</span>
+  </div>
+</footer>
+
+<div class="cursor" id="cursor" aria-hidden="true">
+  <span class="cursor-ring"></span>
+  <span class="cursor-dot"></span>
+</div>
+
+<!-- Lenis smooth-scroll: more distance per wheel tick + buttery easing. Skipped under prefers-reduced-motion. -->
+<script src="assets/vendor/lenis.min.js" defer></script>
+<script>
+(function () {
+  function start () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.Lenis) return;
+    var lenis = new Lenis({
+      lerp: 0.085,                /* continuous, frame-by-frame interpolation — much smoother than duration-mode */
+      wheelMultiplier: 1.2,
+      touchMultiplier: 1.8,
+      smoothWheel: true,
+      autoResize: true,
+      anchors: true
+    });
+    function raf (time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    window.__lenis = lenis;
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+</script>
+
+<script>
+(function () {
+  var body = document.body;
+  var nav = document.getElementById('topnav');
+
+  // ── A: parallax on .intro-photo + B: word-stagger reveal on the headline ─
+  var introStrip  = document.querySelector('.intro-strip');
+  var introPhoto  = document.querySelector('.intro-photo img');
+  var introH1     = introStrip && introStrip.querySelector('h1');
+  var reduceMo    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Words are pre-split in HTML now; just stamp each .w with a stagger delay.
+  if (introH1 && !reduceMo) {
+    var ws = introH1.querySelectorAll('.w');
+    for (var i = 0; i < ws.length; i++) {
+      ws[i].style.transitionDelay = (i * 0.09).toFixed(2) + 's';
+    }
+  }
+
+  if (introStrip) {
+    // Reveal once when the section enters viewport
+    var introObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          introStrip.classList.add('revealed');
+          introObs.disconnect();
+        }
+      });
+    }, { threshold: 0.25 });
+    introObs.observe(introStrip);
+  }
+
+  // Parallax — drives --parallax-y on the .intro-strip itself so both
+  // photos in the diptych can read from it (CSS picks different multipliers).
+  if (introStrip && !reduceMo) {
+    var pTicking = false;
+    function parallax() {
+      var rect = introStrip.getBoundingClientRect();
+      var vh   = window.innerHeight;
+      var c    = rect.top + rect.height / 2 - vh / 2;
+      var y    = Math.max(-80, Math.min(80, c * -0.12));
+      introStrip.style.setProperty('--parallax-y', y.toFixed(1));
+      pTicking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!pTicking) { requestAnimationFrame(parallax); pTicking = true; }
+    }, { passive: true });
+    parallax();
+  }
+
+  // Scroll-driven deck — each .rw word's opacity follows distance from a focal
+  // line at 55% of the viewport. Per-word docY is cached up front and
+  // refreshed only when scroll/resize/fonts settle; the rAF loop just reads
+  // arithmetic, no per-frame layout. Same pattern as the cursor magnet cache.
+  var deckWords = document.querySelectorAll('.intro-strip .rw');
+  if (deckWords.length && !reduceMo) {
+    var deckCache = [];
+    var deckTimer = null;
+    function refreshDeckCache() {
+      deckCache = Array.prototype.map.call(deckWords, function (el) {
+        var r = el.getBoundingClientRect();
+        return { el: el, docY: r.top + window.scrollY + r.height / 2 };
+      });
+    }
+    function updateDeck() {
+      var focalY = window.scrollY + window.innerHeight * 0.55;
+      for (var i = 0; i < deckCache.length; i++) {
+        var w = deckCache[i];
+        var dist = Math.abs(w.docY - focalY);
+        var op   = Math.max(0.28, 1 - dist / 380);
+        w.el.style.setProperty('--reveal', op.toFixed(3));
+      }
+    }
+    refreshDeckCache();
+    updateDeck();
+    var deckTicking = false;
+    window.addEventListener('scroll', function () {
+      if (!deckTicking) {
+        requestAnimationFrame(function () { updateDeck(); deckTicking = false; });
+        deckTicking = true;
+      }
+    }, { passive: true });
+    function scheduleDeckRefresh() {
+      if (deckTimer) clearTimeout(deckTimer);
+      deckTimer = setTimeout(function () { refreshDeckCache(); updateDeck(); }, 120);
+    }
+    window.addEventListener('resize', scheduleDeckRefresh);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { refreshDeckCache(); updateDeck(); });
+    }
+  }
+
+  // ── C: gold dot+ring cursor with magnetic CTA pull ──────────────────────
+  (function () {
+    if (reduceMo) return;
+    var cursor = document.getElementById('cursor');
+    var dot    = cursor && cursor.querySelector('.cursor-dot');
+    var ring   = cursor && cursor.querySelector('.cursor-ring');
+    if (!cursor || !dot || !ring) {
+      console.warn('[Ver3 cursor] element missing — skipping cursor init');
+      return;
+    }
+    console.log('[Ver3 cursor] activated');
+
+    // Start in the center so the user sees the cursor even before the first mousemove
+    var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    var rx = mx, ry = my;
+    var hoverSel = 'a, button, .room-list button, [role="button"]';
+    var magnets     = Array.prototype.slice.call(document.querySelectorAll('.magnet'));
+    var magnetCache = [];
+    var rectsTimer  = null;
+
+    function refreshRects() {
+      magnetCache = magnets.map(function (el) {
+        var r = el.getBoundingClientRect();
+        return { el: el, cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
+      });
+    }
+    refreshRects();
+
+    document.addEventListener('mousemove', function (e) {
+      mx = e.clientX; my = e.clientY;
+    }, { passive: true });
+
+    // Re-cache magnet positions only after scroll/resize settles —
+    // getBoundingClientRect during heavy scroll is expensive, especially in Safari.
+    function scheduleRefresh() {
+      if (rectsTimer) clearTimeout(rectsTimer);
+      rectsTimer = setTimeout(refreshRects, 120);
+    }
+    window.addEventListener('scroll', scheduleRefresh, { passive: true });
+    window.addEventListener('resize', scheduleRefresh);
+
+    document.addEventListener('mouseover', function (e) {
+      if (e.target.closest && e.target.closest(hoverSel)) cursor.classList.add('is-hover');
+    });
+    document.addEventListener('mouseout', function (e) {
+      if (e.target.closest && e.target.closest(hoverSel)) cursor.classList.remove('is-hover');
+    });
+
+    function loop() {
+      // CSS handles the centre-offset via margin; here we just translate the
+      // element's top-left corner to the mouse position.
+      dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)';
+      rx += (mx - rx) * 0.18;
+      ry += (my - ry) * 0.18;
+      ring.style.transform = 'translate3d(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,0)';
+
+      // Magnetic pull from cached rects — no layout reads on the rAF path
+      for (var i = 0; i < magnetCache.length; i++) {
+        var m  = magnetCache[i];
+        var dx = mx - m.cx, dy = my - m.cy;
+        var d  = Math.sqrt(dx * dx + dy * dy) || 1;
+        if (d < 100) {
+          var pull = (1 - d / 100) * 12;
+          m.el.style.transform = 'translate3d(' + ((dx / d) * pull).toFixed(1) + 'px,' + ((dy / d) * pull).toFixed(1) + 'px,0)';
+        } else if (m.el.style.transform) {
+          m.el.style.transform = '';
+        }
+      }
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
+
+
+  // Toggle nav.scrolled past the first 40px of scroll — opacity/background
+  // animation lives in CSS.
+  var navTicking = false;
+  function onScroll() {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+    navTicking = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!navTicking) { requestAnimationFrame(onScroll); navTicking = true; }
+  }, { passive: true });
+  onScroll();
+
+  // Stage hero: trigger the slow background zoom-in once the lobby photo
+  // has decoded.
+  var heroStage = document.getElementById('stage');
+  if (heroStage) {
+    var heroBg = heroStage.querySelector('img.bg');
+    function stageLoaded() { heroStage.classList.add('loaded'); }
+    if (heroBg) {
+      if (heroBg.complete) stageLoaded();
+      else heroBg.addEventListener('load', stageLoaded);
+    }
+  }
+
+  // Section tracker: drives runlabel + body.logo-on-light for the small logo.
+  var rlNum = document.getElementById('rl-num');
+  var rlText = document.getElementById('rl-text');
+  var runlabel = document.getElementById('runlabel');
+  var sections = document.querySelectorAll(
+    '.stage, .intro-strip, .rooms-cinema, .plate, .body, .reserve-plate'
+  );
+
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting || e.intersectionRatio < 0.35) return;
+
+      var label = e.target.dataset.label;
+      if (label) {
+        var parts = label.split('/');
+        rlNum.textContent = parts[0].trim();
+        rlText.textContent = parts[1] ? parts[1].trim() : '';
+      }
+
+      // .body without .dark is the only light surface; everything else (hero,
+      // intro-strip, .plate, .reserve-plate, .body.dark) is ink-toned.
+      var isLight = e.target.classList.contains('body') &&
+                    !e.target.classList.contains('dark');
+      runlabel.classList.toggle('light', isLight);
+      body.classList.toggle('logo-on-light', isLight);
+
+      if (e.target.classList.contains('plate')) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: [0.35, 0.6] });
+
+  sections.forEach(function (s) { obs.observe(s); });
+
+  // ── Rooms cinema (M2 — static panel + scroll-driven gallery + click jumps)
+  // The panel is sticky for the whole cinema scroll. All 6 galleries (18
+  // photos) stack vertically on the right. As the user scrolls, whichever
+  // gallery's photos cross the viewport's 50% line is the "active room":
+  //   - .room-stage[data-active]  → CSS shows the matching panel-current + CTA
+  //   - body --room-bg/--room-ink → cinema bg + ink animate via CSS transition
+  //   - .room-list button.active  → highlight in the list
+  //
+  // Clicking a room button smooth-scrolls to that gallery's first photo
+  // AND eagerly sets active so the visual changes immediately. We
+  // suppress scroll-detection for ~700ms while the smooth-scroll plays
+  // out, so the panel doesn't flicker through intermediate rooms.
+  var cinema = document.getElementById('roomsCinema');
+  var stage  = document.getElementById('roomStage');
+  if (cinema && stage) {
+    var ROOM_COLORS = {
+      'presidential': { bg: '#4F0014', ink: '#EDE7DA' },
+      'king':         { bg: '#B0CABA', ink: '#0B1410' },   // pastel sage green, ink letters
+      'junior':       { bg: '#B0B0AB', ink: '#0B1410' },   // warm pastel grey, ink letters
+      'deluxe':       { bg: '#A3BAC9', ink: '#0B1410' },   // pastel slate blue, ink letters
+      'deluxe-queen': { bg: '#D4B0B0', ink: '#0B1410' },   // dusty rose, ink letters
+      'superior':     { bg: '#EDE7DA', ink: '#0B1410' }    // paper / site background, ink letters
+    };
+    var listButtons = stage.querySelectorAll('.room-list button');
+    var galleries   = stage.querySelectorAll('.room-gallery');
+    var scrollLockUntil = 0;
+
+    function setActive(slug) {
+      // Always applies — the same-slug guard lives in detectFromScroll
+      // so the initial prime call can paint body --room-bg even though
+      // stage[data-active] is already hardcoded to "presidential".
+      var palette = ROOM_COLORS[slug];
+      if (!palette) return;
+      stage.dataset.active = slug;
+      body.style.setProperty('--room-bg', palette.bg);
+      body.style.setProperty('--room-ink', palette.ink);
+      listButtons.forEach(function (btn) {
+        btn.classList.toggle('active', btn.dataset.target === slug);
+      });
+    }
+
+    // Native IntersectionObserver on a horizontal centerline (50% viewport)
+    // — no scroll polling, no getBoundingClientRect on the critical path.
+    var galleryObs = new IntersectionObserver(function (entries) {
+      if (Date.now() < scrollLockUntil) return;
+      // Pick the gallery that just crossed the line (isIntersecting=true).
+      // Fallback to the most-centered if multiple are entering.
+      var entering = null;
+      entries.forEach(function (e) {
+        if (e.isIntersecting) entering = e.target;
+      });
+      if (entering) {
+        var slug = entering.dataset.slug;
+        if (stage.dataset.active !== slug) setActive(slug);
+      }
+    }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+    galleries.forEach(function (g) { galleryObs.observe(g); });
+
+    // Prime initial palette + active button highlight
+    setActive(stage.dataset.active || 'presidential');
+
+    listButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var slug = btn.dataset.target;
+        setActive(slug);
+        scrollLockUntil = Date.now() + 750;
+        var target = stage.querySelector(
+          '.room-gallery[data-slug="' + slug + '"]'
+        );
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // body.in-cinema toggle for logo color sync
+    var cinemaObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+body.classList.toggle('in-cinema', e.isIntersecting);
+      });
+    }, { threshold: 0 });
+    cinemaObs.observe(cinema);
+  }
+
+// Neighbourhood map — hover/focus a pin → popup card next to it.
+(function () {
+  var map   = document.getElementById('neighMap');
+  if (!map) return;
+  var popup = document.getElementById('pinPopup');
+  var pins  = map.querySelectorAll('.pin');
+  if (!popup || !pins.length) return;
+
+  var pTag  = popup.querySelector('.pp-tag');
+  var pName = popup.querySelector('.pp-name');
+  var pDesc = popup.querySelector('.pp-desc');
+  var pWalk = popup.querySelector('.pp-walk');
+
+  function show(pin) {
+    pins.forEach(function (p) { p.classList.toggle('active', p === pin); });
+    pTag.textContent  = pin.dataset.tag  || '';
+    pName.textContent = pin.dataset.name || '';
+    pDesc.textContent = pin.dataset.desc || '';
+    pWalk.textContent = (pin.dataset.walk || '') + ' walk';
+    // Position the popup centred above the pin (only on wider screens; mobile uses CSS bottom-sheet)
+    if (window.matchMedia('(min-width: 601px)').matches) {
+      var pinRect = pin.getBoundingClientRect();
+      var mapRect = map.getBoundingClientRect();
+      popup.style.left = (pinRect.left + pinRect.width / 2 - mapRect.left) + 'px';
+      popup.style.top  = (pinRect.top - mapRect.top) + 'px';
+    } else {
+      popup.style.left = ''; popup.style.top = '';
+    }
+    popup.classList.add('visible');
+  }
+  function hide() {
+    pins.forEach(function (p) { p.classList.remove('active'); });
+    popup.classList.remove('visible');
+  }
+
+  pins.forEach(function (pin) {
+    pin.setAttribute('tabindex', '0');
+    pin.addEventListener('mouseenter', function () { show(pin); });
+    pin.addEventListener('mouseleave', hide);
+    pin.addEventListener('focus',  function () { show(pin); });
+    pin.addEventListener('blur',   hide);
+    pin.addEventListener('click',  function (e) { e.preventDefault(); show(pin); });
+  });
+  // Click-outside to dismiss on touch
+  document.addEventListener('click', function (e) {
+    if (!map.contains(e.target)) hide();
+  });
+})();
+}());
+</script>
+
+</body>
+</html>
