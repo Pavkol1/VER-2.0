@@ -6,6 +6,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
+## Current Status — Handoff (last updated 2026-05-26)
+
+**The live site is now Ver3.** The active, deployable site root is **`Ver3/`** (not `Ver2/`). `netlify.toml` publishes `Ver3`. `Ver2/` is kept as legacy/reference only — do not edit it.
+
+**Where we are:**
+- Ver3 is a full redesign of the whole site. Recently completed milestones (see `git log`): M2.2 rooms rebuild, M3.1 interactive SVG neighbourhood map (homepage + neighbourhood), M3.2 booking-trust block, site-wide Lenis smooth-scroll, and a contact/faqs pass (60vh contact hero + breakfast wording fix).
+- All pages (`index, rooms, pleasures, breakfast, neighbourhood, contact, faqs`) exist in `Ver3/` and are on the Ver3 design language.
+- **Production = `main` branch.** It currently points at the same commit as the working branch. A push to `main` is a live deploy to https://secrethotel.netlify.app/ — **always ask first.**
+
+**Branches:**
+- `main` — production (Netlify deploys this).
+- `claude/wonderful-mclaren-d67b3f` — working/feature branch (current work happens here).
+
+**Open / not-yet-done (deferred during the contact/faqs pass):**
+- contact: optional left-edge runlabel + a mini SVG map inset (rhymes with M3.1).
+- faqs: accessibility upgrade — turn `.faq-q` `<div>`s into `<button>` with `aria-expanded`, add smooth open/close animation, make the sticky category nav real `<a href="#id">` links.
+
+**To resume on a fresh machine / account:** `git clone https://github.com/Pavkol1/VER-2.0.git`, `git checkout claude/wonderful-mclaren-d67b3f`, then `python3 -m http.server 8000` → http://localhost:8000/Ver3/. Note: chat history and Claude memory do NOT transfer between accounts — only the code (and this file) travels via git.
+
+---
+
 ## Project
 
 **Stories Hotel Budapest** — a static multi-page boutique hotel website. No build step, no framework, no package manager. Each page is a self-contained HTML file with all CSS and JS inlined; the `<script>` block lives at the bottom of every page.
@@ -16,7 +37,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 python3 -m http.server 8000
-# then open http://localhost:8000/Ver2/
+# then open http://localhost:8000/Ver3/   (Ver3 is the live site; Ver2 is legacy)
 ```
 
 Per user preference, ask Claude to start the server rather than running it yourself.
@@ -27,43 +48,61 @@ Per user preference, ask Claude to start the server rather than running it yours
 
 ```
 .
-├── netlify.toml          publish = "Ver2"  (the only config — no build command)
-└── Ver2/                 the deployable site root
-    ├── index.html        Homepage: hero plate + rooms rail + pleasures + breakfast + neighbourhood + reserve
-    ├── rooms.html        6 rooms in alternating dark/light split layout
-    ├── pleasures.html    Bar & Lounge, Gym (GoActive), Coworking as full-width feature sections
-    ├── breakfast.html    Plate + intro grid + 3-column menu + sourcing block
-    ├── neighbourhood.html  Plate + neighbourhood list with CSS grid map
-    ├── contact.html      Plate + 2-column contact info/form
-    ├── faqs.html         Ivory bg (no plate), sticky nav sidebar, accordion FAQ
-    └── assets/
-        ├── brand/        Hero/plate backgrounds (4T4B5708.JPG, 4T4B6940.jpg, DorS347…, DorSharon341…)
-        └── photos/       Per-room and amenity galleries (presidential-suite, king-suite, junior-suite, deluxe, deluxe-queen, breakfast, restaurant, GYM, Coworking)
+├── netlify.toml          publish = "Ver3"  (the only config — no build command)
+├── Ver3/                 ← ACTIVE, deployable site root (edit here)
+│   ├── index.html        Homepage: cinematic hero + intro-strip + rooms rail + pleasures + breakfast + neighbourhood + reserve
+│   ├── rooms.html        6 rooms, top-nav + sticky info, 5–6 photos per room
+│   ├── pleasures.html    Bar & Lounge, Gym (GoActive), Coworking as full-width feature sections
+│   ├── breakfast.html    Plate + intro grid + 3-column menu + sourcing block
+│   ├── neighbourhood.html  Plate + neighbourhood list + interactive SVG map (M3.1)
+│   ├── contact.html      60vh hero + 2-column contact info/form
+│   ├── faqs.html         Paper bg (no plate), sticky nav sidebar, accordion FAQ
+│   └── assets/
+│       ├── brand/        Hero/plate backgrounds (4T4B5708.JPG, 4T4B6940.jpg, DorS347…, DorSharon341…)
+│       ├── photos/       Per-room and amenity galleries
+│       └── vendor/       lenis.min.js (smooth-scroll library)
+└── Ver2/                 legacy / reference only — do NOT edit
 ```
 
-Asset URLs in the HTML use `assets/...` (relative from `Ver2/`). When adding photos, place them inside `Ver2/assets/`.
+Asset URLs in the HTML use `assets/...` (relative from `Ver3/`). When adding photos, place them inside `Ver3/assets/`.
 
 ---
 
-## Design System (Ver2)
+## Design System (Ver3 — Emerald Boutique) — CURRENT
 
-**Cinematic "plate + body" architecture** — every page section opens with a `100vh` full-bleed photo plate (`.plate`), followed by a content body (`.body`). Exception: `faqs.html` has no plate.
+**Cinematic "plate + body" architecture** — most pages open with a full-bleed photo plate (`.plate`), followed by a content body. `contact.html` uses a shorter 60vh hero; `faqs.html` has no plate (paper background throughout).
 
-**Design tokens** (defined as CSS variables on `:root` in every page):
+**Design tokens** (CSS variables on `:root` in every Ver3 page):
 ```css
---ivory:  #F2EDE4
---ink:    #0D0B08
---ink-2:  #1A1712
---gold:   #B9904E
---green:  #2A5C45
---ease:   cubic-bezier(0.22, 0.61, 0.36, 1)
+--ink:     #0B1410   /* near-black green-tinted */
+--ink-2:   #1A1F1A
+--paper:   #EDE7DA   /* warm off-white base */
+--paper-2: #E5DECE
+--rule:    #C9C1B0   /* hairline borders */
+--text:    #2A2A22
+--text-2:  #6A6A5C
+--text-3:  #9A9A8C   /* mono labels */
+--primary: #123524   /* deep emerald */
+--accent:  #B9904E   /* gold */
+--ease:    cubic-bezier(0.22, 0.61, 0.36, 1)
 ```
 
-**Typography** (all Google Fonts, loaded via the same `<link>` tag on every page):
-- Headings: `Playfair Display`
+**Typography** (Google Fonts, same `<link>` on every page):
+- Headings: `Lora` (serif), often with italic `em` in `--primary` or `--accent`
 - Body/UI: `Inter`
-- Labels/mono: `JetBrains Mono`
-- Section overlines/meta labels: 11px, `letter-spacing: 0.2em–0.28em`, `text-transform: uppercase`
+- Labels/overlines/mono: `JetBrains Mono`, 10–11px, `letter-spacing: 0.18em–0.28em`, uppercase
+- `Playfair Display` + `Pinyon Script` are used by the hero logo wordmark system
+
+**Ver3-specific systems** (present in every page, near-identical CSS/JS blocks):
+- **Logo stage** (`.logo-stage` / `.logo-mover`) — wordmark that scales/moves into the nav slot; flips ink⇄paper via `body.logo-on-light` as you cross light/dark sections.
+- **Boutique cursor** (`.cursor` — gold dot + lagging ring + magnetic `.magnet` CTAs). Disabled on touch + reduced-motion.
+- **Lenis smooth-scroll** — `assets/vendor/lenis.min.js`, `lerp: 0.085`; skipped under `prefers-reduced-motion`.
+- **Nav** — `.scrolled` state once `scrollY > 40`.
+- Shared dark `<footer>` grid across all pages.
+
+### Design System (Ver2) — LEGACY (do not use for new work)
+
+Old tokens were `--ivory #F2EDE4 / --ink #0D0B08 / --gold #B9904E / --green #2A5C45`, headings in `Playfair Display`. This applies only to the frozen `Ver2/` folder.
 
 **Animations**
 - Plate bg zoom: `scale(1.06)` → `scale(1.0)` when section gains `.visible` (1.6s `--ease`)
@@ -95,14 +134,14 @@ Asset URLs in the HTML use `assets/...` (relative from `Ver2/`). When adding pho
 
 **Breakfast pricing**: €18 per person, à la carte. Not included in any room rate. Do not reintroduce "included" wording.
 
-**DOM safety**: always use `textContent`, never `innerHTML`. This is a hard rule across all inline JS in Ver2 and is currently enforced (grep finds zero occurrences).
+**DOM safety**: always use `textContent`, never `innerHTML`. This is a hard rule across all inline JS (Ver2 and Ver3) and is currently enforced (grep finds zero occurrences).
 
 ---
 
 ## Deployment
 
 - **GitHub remote**: `Pavkol1/VER-2.0` (origin)
-- **Netlify**: `netlify.toml` sets `publish = "Ver2"`. There is no build command — Netlify just serves the directory. Builds finish in seconds.
+- **Netlify**: `netlify.toml` sets `publish = "Ver3"`. There is no build command — Netlify just serves the directory. Builds finish in seconds.
 - **Production branch is `main`.** Any push to `main` goes **live** on the public hotel site within seconds — there is no staging step. Treat `git push origin main` as a production deploy and ask before pushing.
 - For work-in-progress, use a feature branch and open a PR — Netlify auto-generates a deploy preview at a separate URL, leaving production untouched.
 - To roll back: `git revert <bad-sha>` on `main` and push; Netlify redeploys the reverted state.
