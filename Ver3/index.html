@@ -963,10 +963,9 @@ body:not(.page-home) { --logo-init-p: 1; }
 /* Single stage with sticky left panel + click-driven right gallery */
 .room-stage {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(280px, 38%) 1fr;
   align-items: start;          /* sticky-in-grid requirement */
-  max-width: 1600px;
-  margin: 0 auto;
+  /* No max-width — photos fill the full right edge of the viewport */
 }
 .room-panel {
   position: sticky;
@@ -1051,15 +1050,14 @@ body:not(.page-home) { --logo-init-p: 1; }
 .room-galleries {
   display: flex;
   flex-direction: column;
-  padding: clamp(112px, 10vw, 140px) clamp(40px, 5vw, 80px) clamp(40px, 5vw, 80px) 0;
-  gap: clamp(40px, 5vw, 80px);
+  padding: clamp(100px, 9vw, 130px) 0 clamp(40px, 5vw, 80px) 0;
+  gap: clamp(48px, 6vw, 96px);
 }
 .room-gallery {
   display: flex;
   flex-direction: column;
-  gap: clamp(20px, 2.5vw, 36px);
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 1620px;
+  gap: 6px;
+  /* content-visibility: auto removed — it blocks IntersectionObserver on child .rf elements */
 }
 
 /* Panel-current + CTA: only the data-active variant is shown */
@@ -1182,12 +1180,89 @@ body:not(.page-home) { --logo-init-p: 1; }
   outline: none;
 }
 
-/* Galleries — 3 photos stacked vertically */
-.room-gallery img {
-  display: block;
+/* ── Room gallery photo frames — cinematic reveal on scroll ── */
+.rf {
+  position: relative;
+  overflow: hidden;
+  outline: 1px solid rgba(185,144,78,0.14);
+  outline-offset: -1px;
+  /* Hidden state: invisible */
+  opacity: 0;
+  transition:
+    opacity 1.0s cubic-bezier(0.22, 0.61, 0.36, 1),
+    outline-color 0.45s var(--ease);
+  will-change: opacity;
+}
+/* Stagger: 2nd and 3rd photo enter slightly later */
+.rf:nth-child(2) { transition-delay: 0.15s; }
+.rf:nth-child(3) { transition-delay: 0.30s; }
+/* Revealed state */
+.rf.in-view { opacity: 1; }
+.rf:hover   { outline-color: rgba(185,144,78,0.50); }
+/* Hidden photos don't capture pointer events */
+.rf:not(.in-view) { pointer-events: none; }
+
+/* Editorial aspect-ratio rhythm: wide · tall portrait · wide */
+.rf:nth-child(1) { aspect-ratio: 3 / 2; }
+.rf:nth-child(2) { aspect-ratio: 2 / 3; }
+.rf:nth-child(3) { aspect-ratio: 3 / 2; }
+/* On narrow viewports, portrait is capped */
+@media (max-width: 640px) {
+  .rf:nth-child(2) { aspect-ratio: 3 / 4; }
+}
+
+/* The image inside: starts zoomed, settles as the frame uncovers */
+.rf img {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
+  /* Starts very slightly zoomed */
+  transform: scale(1.06);
+  transition: transform 1.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+.rf:nth-child(2) img { transition-delay: 0.15s; }
+.rf:nth-child(3) img { transition-delay: 0.30s; }
+.rf.in-view img      { transform: scale(1.0); }
+/* Hover: subtle zoom */
+.rf:hover img        { transform: scale(1.04); transition-duration: 0.8s; }
+
+/* Hover vignette — a soft gradient that darkens the edges */
+.rf::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(
+    ellipse 130% 110% at 50% 65%,
+    transparent 32%,
+    rgba(11,20,16,0.32) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.7s var(--ease);
+  pointer-events: none;
+  z-index: 1;
+}
+.rf:hover::after { opacity: 1; }
+
+/* Reduced motion: показываем сразу, без анимации */
+@media (prefers-reduced-motion: reduce) {
+  .rf,
+  .rf:nth-child(2),
+  .rf:nth-child(3) {
+    opacity: 1 !important;
+    transition: none !important;
+    transition-delay: 0s !important;
+  }
+  .rf img,
+  .rf:nth-child(2) img,
+  .rf:nth-child(3) img {
+    transform: none !important;
+    transition: none !important;
+    transition-delay: 0s !important;
+  }
 }
 
 /* Logo stays cream over the cinema — navbar is dark when scrolled,
@@ -1206,8 +1281,8 @@ body:not(.page-home) { --logo-init-p: 1; }
     padding: 112px clamp(24px, 5vw, 40px) 56px;
     gap: 28px;
   }
-  .room-galleries { padding: 40px clamp(24px, 5vw, 40px); gap: 40px; }
-  .room-gallery { gap: 20px; }
+  .room-galleries { padding: 40px 0; gap: 48px; }
+  .room-gallery { gap: 6px; }
 }
 
 /* PLEASURES */
@@ -1598,34 +1673,70 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 
     <div class="room-galleries">
       <div class="room-gallery" data-slug="presidential" aria-hidden="false">
-        <img decoding="async" src="assets/photos/presidential-suite/01.jpg" alt="Presidential Suite &mdash; view 1" loading="lazy">
-        <img decoding="async" src="assets/photos/presidential-suite/02.jpg" alt="Presidential Suite &mdash; view 2" loading="lazy">
-        <img decoding="async" src="assets/photos/presidential-suite/03.jpg" alt="Presidential Suite &mdash; view 3" loading="lazy">
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/presidential-suite/01.jpg" alt="Presidential Suite &mdash; view 1" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/presidential-suite/02.jpg" alt="Presidential Suite &mdash; view 2" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/presidential-suite/03.jpg" alt="Presidential Suite &mdash; view 3" loading="lazy">
+        </figure>
       </div>
       <div class="room-gallery" data-slug="king" aria-hidden="false">
-        <img decoding="async" src="assets/photos/king-suite/01.jpg" alt="King Suite &mdash; view 1" loading="lazy">
-        <img decoding="async" src="assets/photos/king-suite/02.jpg" alt="King Suite &mdash; view 2" loading="lazy">
-        <img decoding="async" src="assets/photos/king-suite/03.jpg" alt="King Suite &mdash; view 3" loading="lazy">
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/king-suite/01.jpg" alt="King Suite &mdash; view 1" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/king-suite/02.jpg" alt="King Suite &mdash; view 2" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/king-suite/03.jpg" alt="King Suite &mdash; view 3" loading="lazy">
+        </figure>
       </div>
       <div class="room-gallery" data-slug="junior" aria-hidden="false">
-        <img decoding="async" src="assets/photos/junior-suite/01.jpg" alt="Junior Suite &mdash; view 1" loading="lazy">
-        <img decoding="async" src="assets/photos/junior-suite/02.jpg" alt="Junior Suite &mdash; view 2" loading="lazy">
-        <img decoding="async" src="assets/photos/junior-suite/03.jpg" alt="Junior Suite &mdash; view 3" loading="lazy">
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/junior-suite/01.jpg" alt="Junior Suite &mdash; view 1" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/junior-suite/02.jpg" alt="Junior Suite &mdash; view 2" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/junior-suite/03.jpg" alt="Junior Suite &mdash; view 3" loading="lazy">
+        </figure>
       </div>
       <div class="room-gallery" data-slug="deluxe" aria-hidden="false">
-        <img decoding="async" src="assets/photos/deluxe/01.jpg" alt="Deluxe &mdash; view 1" loading="lazy">
-        <img decoding="async" src="assets/photos/deluxe/02.jpg" alt="Deluxe &mdash; view 2" loading="lazy">
-        <img decoding="async" src="assets/photos/deluxe/03.jpg" alt="Deluxe &mdash; view 3" loading="lazy">
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/deluxe/01.jpg" alt="Deluxe &mdash; view 1" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/deluxe/02.jpg" alt="Deluxe &mdash; view 2" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/deluxe/03.jpg" alt="Deluxe &mdash; view 3" loading="lazy">
+        </figure>
       </div>
       <div class="room-gallery" data-slug="deluxe-queen" aria-hidden="false">
-        <img decoding="async" src="assets/photos/deluxe-queen/01.jpg" alt="Deluxe Queen &mdash; view 1" loading="lazy">
-        <img decoding="async" src="assets/photos/deluxe-queen/02.jpg" alt="Deluxe Queen &mdash; view 2" loading="lazy">
-        <img decoding="async" src="assets/photos/deluxe-queen/03.jpg" alt="Deluxe Queen &mdash; view 3" loading="lazy">
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/deluxe-queen/01.jpg" alt="Deluxe Queen &mdash; view 1" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/deluxe-queen/02.jpg" alt="Deluxe Queen &mdash; view 2" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/deluxe-queen/03.jpg" alt="Deluxe Queen &mdash; view 3" loading="lazy">
+        </figure>
       </div>
       <div class="room-gallery" data-slug="superior" aria-hidden="false">
-        <img decoding="async" src="assets/photos/superior/01.jpg" alt="Superior &mdash; view 1" loading="lazy">
-        <img decoding="async" src="assets/photos/superior/02.jpg" alt="Superior &mdash; view 2" loading="lazy">
-        <img decoding="async" src="assets/photos/superior/03.jpg" alt="Superior &mdash; view 3" loading="lazy">
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/superior/01.jpg" alt="Superior &mdash; view 1" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/superior/02.jpg" alt="Superior &mdash; view 2" loading="lazy">
+        </figure>
+        <figure class="rf">
+          <img decoding="async" src="assets/photos/superior/03.jpg" alt="Superior &mdash; view 3" loading="lazy">
+        </figure>
       </div>
     </div>
 
@@ -2274,6 +2385,29 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     }, { threshold: 0 });
     cinemaObs.observe(cinema);
   }
+
+  // ── Room photo frames: cinematic scroll-reveal ────────────────────────────
+  // Each .rf starts with clip-path: inset(0 0 100% 0) — fully hidden.
+  // When it crosses the viewport, .in-view is added → CSS transitions
+  // the clip-path open (curtain) and the inner img settles from scale(1.07).
+  (function () {
+    var rfEls = document.querySelectorAll('.rf');
+    if (!rfEls.length) return;
+    // Reduced motion: skip animation, reveal everything at once
+    if (reduceMo) {
+      rfEls.forEach(function (rf) { rf.classList.add('in-view'); });
+      return;
+    }
+    var rfObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in-view');
+          rfObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0 });
+    rfEls.forEach(function (rf) { rfObs.observe(rf); });
+  })();
 
 // Neighbourhood map — hover/focus a pin → popup card next to it.
 (function () {
