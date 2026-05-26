@@ -39,17 +39,17 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 .nav-cta:hover { background: #fff; }
 
 /* PLATE */
-.plate { position: relative; width: 100%; height: 100vh; min-height: 640px; overflow: hidden; background: var(--ink); }
+.plate { position: relative; width: 100%; height: 60vh; min-height: 480px; overflow: hidden; background: var(--ink); }
 .plate .bg { position: absolute; inset: 0; background-size: cover; background-position: center; transform: scale(1.06); transition: transform 1.6s var(--ease); }
 .plate .bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,11,8,0.45) 0%, rgba(13,11,8,0.1) 30%, rgba(13,11,8,0.1) 55%, rgba(13,11,8,0.72) 100%); }
 .plate.visible .bg { transform: scale(1.0); }
 .plate-grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.12; mix-blend-mode: overlay; background-image: radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1px); background-size: 3px 3px, 5px 5px; }
-.plate-content { position: relative; z-index: 2; height: 100%; padding: clamp(96px, 10vw, 140px) clamp(40px, 6vw, 96px) clamp(40px, 5vw, 72px); display: grid; grid-template-rows: 1fr auto; color: #fff; }
+.plate-content { position: relative; z-index: 2; height: 100%; padding: clamp(96px, 9vw, 116px) clamp(40px, 6vw, 96px) clamp(36px, 4vw, 56px); display: grid; grid-template-rows: 1fr auto; color: #fff; }
 .plate-id { align-self: start; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.65); display: flex; align-items: center; gap: 14px; }
 .plate-id::before { content: ""; width: 40px; height: 1px; background: rgba(255,255,255,0.5); }
 .plate-id .n { color: var(--accent); }
 .plate-title-block { align-self: end; max-width: 1080px; }
-.plate-title-block h1 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(52px, 8.5vw, 148px); line-height: 0.96; letter-spacing: -0.018em; color: #fff; margin-bottom: 24px; text-wrap: balance; }
+.plate-title-block h1 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(44px, 6.4vw, 96px); line-height: 0.98; letter-spacing: -0.018em; color: #fff; margin-bottom: 20px; text-wrap: balance; }
 .plate-title-block em { font-style: italic; color: var(--accent); font-weight: 400; }
 .plate-deck { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.78); max-width: 540px; font-weight: 300; }
 
