@@ -1202,14 +1202,10 @@ body:not(.page-home) { --logo-init-p: 1; }
 /* Hidden photos don't capture pointer events */
 .rf:not(.in-view) { pointer-events: none; }
 
-/* Editorial aspect-ratio rhythm: wide · tall portrait · wide */
-.rf:nth-child(1) { aspect-ratio: 3 / 2; }
-.rf:nth-child(2) { aspect-ratio: 2 / 3; }
+/* All frames landscape 3/2 — no aggressive crop on wide shots */
+.rf:nth-child(1),
+.rf:nth-child(2),
 .rf:nth-child(3) { aspect-ratio: 3 / 2; }
-/* On narrow viewports, portrait is capped */
-@media (max-width: 640px) {
-  .rf:nth-child(2) { aspect-ratio: 3 / 4; }
-}
 
 /* The image inside: starts zoomed, settles as the frame uncovers */
 .rf img {
