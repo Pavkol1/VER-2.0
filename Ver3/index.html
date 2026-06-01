@@ -1492,11 +1492,11 @@ body:not(.page-home) { --logo-init-p: 1; }
 .reserve-plate::before {
   content: "";
   position: absolute; inset: 0;
-  background: url('assets/brand/4T4B6940.jpg') center / cover no-repeat;
-  opacity: 0.24;
-  filter: grayscale(0.3) contrast(1.1);
+  background: url('assets/brand/A__4T4B8254.JPG') center / cover no-repeat;
+  opacity: 0.45;
+  filter: grayscale(0.18) contrast(1.05);
 }
-.reserve-plate::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 0%, rgba(13,11,8,0.7) 100%); }
+.reserve-plate::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 0%, rgba(13,11,8,0.5) 100%); }
 .reserve-inner { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; text-align: center; width: 100%; }
 .reserve-over { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; display: inline-flex; align-items: center; gap: 12px; }
 .reserve-over::before, .reserve-over::after { content: ""; width: 32px; height: 1px; background: var(--accent); }
@@ -1521,8 +1521,10 @@ body:not(.page-home) { --logo-init-p: 1; }
 .reserve-form .go:hover { background: #fff; }
 
 /* FOOTER */
-footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px, 8vw, 96px) clamp(40px, 6vw, 96px) 28px; }
-.foot-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+footer { position: relative; background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px, 8vw, 96px) clamp(40px, 6vw, 96px) 28px; overflow: hidden; isolation: isolate; }
+footer::before { content: ""; position: absolute; inset: 0; background: url('assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.jpg') center / cover no-repeat; opacity: 0.28; filter: grayscale(0.45) contrast(1.05); z-index: -2; }
+footer::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,6,10,0.55) 0%, rgba(7,6,10,0.85) 100%); z-index: -1; }
+.foot-grid { position: relative; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .foot-grid h3 { font-family: 'Lora', serif; font-size: 28px; color: #fff; font-weight: 500; }
 .foot-grid .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 8px 0 24px; }
 .foot-grid address { font-style: normal; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
@@ -1741,7 +1743,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 
 <!-- PLEASURES PLATE + BODY -->
 <section class="plate" data-label="02 / Little Luxuries" id="pleasures">
-  <div class="bg" style="background-image: url('assets/brand/4T4B5708.JPG');"></div>
+  <div class="bg" style="background-image: url('assets/brand/A__4T4B7716.JPG');"></div>
   <div class="plate-grain"></div>
   <div class="plate-content">
     <div class="plate-id"><span class="n">III</span><span>·</span><span>Rituals of the house</span></div>
@@ -1789,7 +1791,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 
 <!-- BREAKFAST PLATE + BODY -->
 <section class="plate" data-label="03 / Breakfast" id="breakfast">
-  <div class="bg" style="background-image: url('assets/photos/breakfast/background breakfast.png');"></div>
+  <div class="bg" style="background-image: url('assets/brand/BreakfastMain___J5A0736.jpg');"></div>
   <div class="plate-grain"></div>
   <div class="plate-content">
     <div class="plate-id"><span class="n">IV</span><span>·</span><span>Breakfast at Twenty Six</span></div>
@@ -1823,7 +1825,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 
 <!-- NEIGHBOURHOOD PLATE + BODY -->
 <section class="plate" data-label="04 / Neighbourhood" id="neigh">
-  <div class="bg" style="background-image: url('assets/brand/DorS347-R1-11-12.JPG');"></div>
+  <div class="bg" style="background-image: url('assets/brand/thomas-winkler-Rxq6wvbPuJI-unsplash.jpg');"></div>
   <div class="plate-grain"></div>
   <div class="plate-content">
     <div class="plate-id"><span class="n">V</span><span>·</span><span>District VI, on foot</span></div>
