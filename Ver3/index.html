@@ -7,10 +7,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..700;1,300..600&family=Lora:ital,wght@0,400..600;1,400..600&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Leaflet (interactive neighbourhood map) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
 :root {
   --ink:     #0B1410;
-  --ink-2:   #1A1F1A;
+  --ink-2:   #0E2017;
+  --ink-3:   #081A12;
   --paper:   #EDE7DA;
   --paper-2: #E5DECE;
   --rule:    #C9C1B0;
@@ -45,9 +48,16 @@ nav.top {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  transition: background 0.4s var(--ease), border-color 0.4s var(--ease);
+  transition: background 0.4s var(--ease), border-color 0.4s var(--ease),
+              transform 0.55s var(--ease), opacity 0.45s var(--ease);
   border-bottom: 1px solid transparent;
+  will-change: transform;
 }
+/* Hide on scroll-down, reveal on scroll-up (direction tracked in JS).
+   Toggled on <body> so the docked logo-stage can ride up with the nav.
+   Pure transform slide (-110% clears the border); no opacity — the blurred
+   backdrop + opacity repaint glitches on Safari. */
+body.nav-hidden nav.top { transform: translate3d(0, -110%, 0); }
 nav.top.scrolled {
   background: rgba(13, 11, 8, 0.85);
   backdrop-filter: blur(14px);
@@ -283,7 +293,8 @@ body .nav-brand .logo-svg .logo-hotel { fill: var(--paper); }
    "disappear" glitch on scroll-up. Force a GPU layer so the nav
    composites independently from the rest of the page. */
 nav.top {
-  transition: background 0.25s var(--ease), border-color 0.25s var(--ease);
+  transition: background 0.25s var(--ease), border-color 0.25s var(--ease),
+              transform 0.55s var(--ease);
   transform: translate3d(0, 0, 0);
 }
 
@@ -367,7 +378,11 @@ body.in-cinema .nav-brand .logo-svg .logo-hotel { fill: var(--room-ink); }
   pointer-events: none;
   display: grid;
   place-items: center;
+  transition: transform 0.5s var(--ease), opacity 0.45s var(--ease);
 }
+/* When the nav retracts (scroll-down), the docked wordmark rides up with it. */
+body.nav-hidden .logo-stage { transform: translate3d(0, -96px, 0); opacity: 0; }
+body.nav-hidden .logo-mover { pointer-events: none; }
 .logo-mover {
   --p: var(--logo-p, var(--logo-init-p, 0));
   --tx: calc(var(--p) * (clamp(80px, 8vw, 120px) - 50vw));
@@ -1038,6 +1053,29 @@ body:not(.page-home) { --logo-init-p: 1; }
   color: var(--ink);
   outline: none;
 }
+/* Actions row: primary "Explore" + secondary "Next chapter" skip link */
+.panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+.panel-cta.ghost {
+  background: transparent;
+  border-color: color-mix(in oklab, currentColor 22%, transparent);
+  opacity: 0.78;
+  cursor: pointer;
+}
+.panel-cta.ghost:hover,
+.panel-cta.ghost:focus-visible {
+  background: transparent;
+  border-color: var(--accent);
+  color: var(--accent);
+  opacity: 1;
+}
+.panel-cta.ghost span { transition: transform 0.3s var(--ease); }
+.panel-cta.ghost:hover span,
+.panel-cta.ghost:focus-visible span { transform: translateY(3px); }
 
 /* The currents/CTAs/galleries are all in DOM; visibility is data-active driven */
 .panel-currents, .panel-ctas, .room-galleries { position: relative; }
@@ -1352,33 +1390,64 @@ body:not(.page-home) { --logo-init-p: 1; }
 .neigh-grid .ix .pl em { font-style: italic; color: var(--accent); font-weight: 400; }
 .neigh-grid .ix .k { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 300; }
 .neigh-grid .ix .d { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.1em; white-space: nowrap; }
-.neigh-map { position: relative; background: #0F0D0A; border: 1px solid rgba(255,255,255,0.08); aspect-ratio: 4/5; overflow: hidden; }
-.neigh-svg { display: block; width: 100%; height: 100%; }
-.neigh-svg .street { stroke: rgba(237,231,218,0.12); stroke-width: 7; stroke-linecap: round; fill: none; }
-.neigh-svg .street.kirly { stroke: rgba(185,144,78,0.32); }
-.neigh-svg .compass-ring { fill: none; stroke: rgba(255,255,255,0.25); stroke-width: 1; }
-.neigh-svg .compass-tick { font: 500 9px 'JetBrains Mono', monospace; fill: rgba(255,255,255,0.5); text-anchor: middle; letter-spacing: 0.2em; }
-.neigh-svg .hub-dot   { fill: var(--accent); filter: drop-shadow(0 0 8px rgba(185,144,78,0.55)); animation: hubPulse 2.4s ease-in-out infinite; }
-.neigh-svg .hub-ring  { fill: none; stroke: var(--accent); stroke-width: 1; opacity: 0.5; }
-.neigh-svg .hub-lab   { font: 700 10px 'JetBrains Mono', monospace; fill: #fff; text-anchor: middle; letter-spacing: 0.24em; }
-@keyframes hubPulse   { 0%, 100% { r: 9; } 50% { r: 12; opacity: 0.85; } }
-.neigh-svg .pin { cursor: pointer; }
-.neigh-svg .pin circle { fill: rgba(237,231,218,0.55); transition: fill 0.25s var(--ease), r 0.25s var(--ease); }
-.neigh-svg .pin text   { font: 500 9px 'JetBrains Mono', monospace; fill: rgba(237,231,218,0.55); text-anchor: middle; letter-spacing: 0.16em; transition: fill 0.25s var(--ease); pointer-events: none; }
-.neigh-svg .pin:hover circle, .neigh-svg .pin.active circle { fill: var(--accent); r: 8; }
-.neigh-svg .pin:hover text, .neigh-svg .pin.active text     { fill: #fff; }
-.neigh-svg .legend { font: 400 8px 'JetBrains Mono', monospace; fill: rgba(255,255,255,0.42); letter-spacing: 0.22em; }
-.pin-popup { position: absolute; background: var(--paper); color: var(--ink); padding: 18px 20px 16px; width: 240px; max-width: 90%; pointer-events: none; opacity: 0; transform: translate(-50%, calc(-100% - 12px)) translateY(4px); transition: opacity 0.2s var(--ease), transform 0.25s var(--ease); z-index: 10; box-shadow: 0 14px 36px rgba(0,0,0,0.45); }
-.pin-popup.visible { opacity: 1; transform: translate(-50%, calc(-100% - 12px)); }
-.pin-popup .pp-tag  { font: 500 9px 'JetBrains Mono', monospace; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-.pin-popup .pp-name { font: 500 18px 'Lora', serif; margin-bottom: 6px; letter-spacing: -0.005em; }
-.pin-popup .pp-desc { font: 400 13px 'Inter', sans-serif; line-height: 1.45; color: var(--text-2); margin-bottom: 12px; }
-.pin-popup .pp-walk { font: 500 11px 'JetBrains Mono', monospace; letter-spacing: 0.18em; color: var(--primary); display: inline-flex; align-items: center; gap: 10px; }
-.pin-popup .pp-walk::before { content: ""; width: 18px; height: 1px; background: var(--accent); }
-@media (max-width: 600px) {
-  .pin-popup { width: calc(100% - 24px); left: 12px !important; right: 12px; transform: none !important; bottom: 12px; top: auto !important; opacity: 0; transition: opacity 0.25s var(--ease); }
-  .pin-popup.visible { opacity: 1; transform: none !important; }
+/* isolation:isolate traps Leaflet's internal z-index (panes/controls reach
+   ~1000) inside this box so it can never paint over the fixed nav (z 80). */
+.neigh-map { position: relative; isolation: isolate; z-index: 0; background: var(--ink-3); border: 1px solid rgba(255,255,255,0.08); aspect-ratio: 4/5; overflow: hidden; }
+.neigh-leaflet { position: absolute; inset: 0; width: 100%; height: 100%; background: var(--ink-3); }
+/* Pull the dark CARTO basemap toward the warm emerald palette + calm contrast */
+.neigh-leaflet .leaflet-tile-pane { filter: saturate(0.5) brightness(0.92) contrast(1.04) sepia(0.12) hue-rotate(85deg); }
+.neigh-leaflet.leaflet-container { background: var(--ink-3); font-family: 'Inter', sans-serif; outline: none; }
+/* Zoom control restyled to the boutique system */
+.neigh-leaflet .leaflet-control-zoom { border: none; margin: 14px; box-shadow: none; }
+.neigh-leaflet .leaflet-control-zoom a {
+  background: rgba(11,20,16,0.82); color: var(--paper);
+  border: 1px solid rgba(237,231,218,0.18);
+  width: 32px; height: 32px; line-height: 32px; font-size: 16px;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: background 0.25s var(--ease), color 0.25s var(--ease);
 }
+.neigh-leaflet .leaflet-control-zoom a:first-child { border-radius: 4px 4px 0 0; }
+.neigh-leaflet .leaflet-control-zoom a:last-child { border-radius: 0 0 4px 4px; border-top: none; }
+.neigh-leaflet .leaflet-control-zoom a:hover { background: var(--accent); color: var(--ink); }
+.neigh-leaflet .leaflet-control-attribution {
+  background: rgba(8,16,12,0.66); color: rgba(237,231,218,0.5);
+  font: 400 9px/1.5 'JetBrains Mono', monospace; padding: 2px 8px;
+}
+.neigh-leaflet .leaflet-control-attribution a { color: rgba(237,231,218,0.72); }
+
+/* Custom divIcon markers — gold hotel hub + cream landmark dots */
+.nmark { position: relative; }
+.nmark .dot {
+  display: block; width: 12px; height: 12px; border-radius: 50%;
+  background: rgba(237,231,218,0.72); border: 1.5px solid rgba(11,20,16,0.55);
+  box-shadow: 0 1px 5px rgba(0,0,0,0.5);
+  transition: transform 0.2s var(--ease), background 0.2s var(--ease);
+}
+.nmark.is-hotel .dot {
+  width: 16px; height: 16px; background: var(--accent); border-color: rgba(11,20,16,0.4);
+  box-shadow: 0 0 0 5px rgba(185,144,78,0.22), 0 0 14px rgba(185,144,78,0.6);
+}
+.nmark:hover .dot { transform: scale(1.35); background: var(--accent); }
+.nmark .lab {
+  position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%);
+  font: 600 9px 'JetBrains Mono', monospace; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--paper); white-space: nowrap; pointer-events: none;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.85); opacity: 0; transition: opacity 0.2s var(--ease);
+}
+.nmark.is-hotel .lab { opacity: 1; color: var(--accent); }
+.nmark:hover .lab { opacity: 1; }
+
+/* Popup styled as the boutique card */
+.neigh-leaflet .leaflet-popup-content-wrapper { background: var(--paper); color: var(--ink); border-radius: 2px; box-shadow: 0 14px 36px rgba(0,0,0,0.45); }
+.neigh-leaflet .leaflet-popup-content { margin: 16px 20px; width: 220px !important; }
+.neigh-leaflet .leaflet-popup-tip { background: var(--paper); }
+.neigh-leaflet .leaflet-popup-close-button { color: var(--text-3); padding: 6px 8px 0 0; }
+.neigh-leaflet .leaflet-popup-close-button:hover { color: var(--ink); }
+.np-tag  { font: 500 9px 'JetBrains Mono', monospace; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 7px; }
+.np-name { font: 500 18px 'Lora', serif; margin-bottom: 5px; letter-spacing: -0.005em; color: var(--ink); }
+.np-desc { font: 400 13px 'Inter', sans-serif; line-height: 1.45; color: var(--text-2); margin-bottom: 10px; }
+.np-walk { font: 500 11px 'JetBrains Mono', monospace; letter-spacing: 0.18em; color: var(--primary); display: inline-flex; align-items: center; gap: 10px; }
+.np-walk::before { content: ""; width: 18px; height: 1px; background: var(--accent); }
 
 /* RESERVE */
 /* TRUST GRID — reasons to book direct, sits just before .reserve-plate */
@@ -1482,7 +1551,8 @@ body:not(.page-home) { --logo-init-p: 1; }
 .reserve-plate {
   position: relative;
   min-height: 80vh;
-  padding: clamp(80px, 10vw, 140px) clamp(40px, 6vw, 96px);
+  /* extra bottom padding leaves room for the footer that lifts up over it */
+  padding: clamp(80px, 10vw, 140px) clamp(40px, 6vw, 96px) clamp(200px, 18vw, 280px);
   background: var(--ink);
   color: #fff;
   overflow: hidden;
@@ -1520,11 +1590,33 @@ body:not(.page-home) { --logo-init-p: 1; }
 .reserve-form .go { background: var(--accent); border: none; color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; padding: 0 28px; cursor: pointer; font-weight: 500; transition: background 0.3s var(--ease); white-space: nowrap; }
 .reserve-form .go:hover { background: #fff; }
 
-/* FOOTER */
-footer { position: relative; background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px, 8vw, 96px) clamp(40px, 6vw, 96px) 28px; overflow: hidden; isolation: isolate; }
-footer::before { content: ""; position: absolute; inset: 0; background: url('assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.jpg') center / cover no-repeat; opacity: 0.28; filter: grayscale(0.45) contrast(1.05); z-index: -2; }
-footer::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,6,10,0.55) 0%, rgba(7,6,10,0.85) 100%); z-index: -1; }
-.foot-grid { position: relative; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+/* FOOTER — oversized (~75vh), rounded top, emerald-toned, lifts over the
+   reserve photo section above (negative margin) so the rounded corners reveal
+   that photo instead of an empty wedge. Slides up on reveal. */
+footer {
+  position: relative;
+  z-index: 3;
+  background: #0A0D0B;
+  color: rgba(255,255,255,0.66);
+  min-height: 75vh;
+  padding: clamp(76px, 9vw, 132px) clamp(40px, 6vw, 96px) 34px;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(48px, 7vw, 100px);
+  border-top-left-radius: clamp(28px, 4.5vw, 64px);
+  border-top-right-radius: clamp(28px, 4.5vw, 64px);
+  margin-top: clamp(-200px, -12vw, -96px);
+  transition: transform 0.9s var(--ease), opacity 0.8s var(--ease);
+}
+/* Reveal is JS-armed so a no-JS load keeps the footer fully visible. */
+footer.foot-armed { transform: translate3d(0, 84px, 0); opacity: 0; }
+footer.foot-armed.foot-revealed { transform: none; opacity: 1; }
+footer::before { content: ""; position: absolute; inset: 0; background: url('assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.jpg') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
+footer::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9,11,10,0.4) 0%, rgba(8,10,9,0.84) 100%); z-index: -1; }
+.foot-grid { position: relative; width: 100%; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .foot-grid h3 { font-family: 'Lora', serif; font-size: 28px; color: #fff; font-weight: 500; }
 .foot-grid .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 8px 0 24px; }
 .foot-grid address { font-style: normal; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
@@ -1534,7 +1626,7 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
 .foot-grid ul { list-style: none; }
 .foot-grid li a { font-family: 'Lora', serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
 .foot-grid li a:hover { color: var(--accent); padding-left: 5px; }
-.foot-bar { max-width: 1280px; margin: 24px auto 0; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+.foot-bar { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
 
 /* RESPONSIVE */
 @media (max-width: 1024px) {
@@ -1664,9 +1756,14 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
         <button type="button" data-target="superior">Superior</button>
       </nav>
 
-      <a class="panel-cta magnet" id="panelCta" href="rooms.html#presidential">
-        Explore the rooms <span aria-hidden="true">&rarr;</span>
-      </a>
+      <div class="panel-actions">
+        <a class="panel-cta magnet" id="panelCta" href="rooms.html#presidential">
+          Explore the rooms <span aria-hidden="true">&rarr;</span>
+        </a>
+        <button type="button" class="panel-cta ghost" id="nextChapter" aria-label="Skip to the next section">
+          Next chapter <span aria-hidden="true">&darr;</span>
+        </button>
+      </div>
     </aside>
 
     <div class="room-galleries">
@@ -1849,73 +1946,9 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
         <span class="n">06</span><span class="pl">Dobrumba <em>—</em></span><span class="k">Levantine, Dob utca</span><span class="d">7 min</span>
         <span class="n">07</span><span class="pl">Mazel Tov <em>—</em></span><span class="k">Garden, Middle-Eastern</span><span class="d">4 min</span>
       </div>
-      <div class="neigh-map" id="neighMap">
-        <svg class="neigh-svg" viewBox="0 0 800 1000" aria-hidden="true">
-          <defs>
-            <pattern id="neighGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M40 0 L0 0 L0 40" fill="none" stroke="rgba(185,144,78,0.08)" stroke-width="0.6"/>
-            </pattern>
-          </defs>
-          <rect width="800" height="1000" fill="url(#neighGrid)"/>
-
-          <!-- streets (rough geometry only) -->
-          <line class="street kirly"    x1="160" y1="780" x2="700" y2="320"/>
-          <line class="street andrassy" x1="200" y1="220" x2="540" y2="900"/>
-          <line class="street belv"     x1="700" y1="100" x2="700" y2="900"/>
-          <line class="street kornut"   x1="100" y1="660" x2="780" y2="660"/>
-
-          <!-- compass top-right -->
-          <g transform="translate(720, 80)">
-            <circle class="compass-ring" cx="0" cy="0" r="28"/>
-            <text class="compass-tick" x="0" y="-12">N</text>
-            <text class="compass-tick" x="16" y="4">E</text>
-            <text class="compass-tick" x="0" y="20">S</text>
-            <text class="compass-tick" x="-16" y="4">W</text>
-          </g>
-
-          <!-- Stories Hotel hub -->
-          <g transform="translate(400, 520)">
-            <circle class="hub-ring" r="22"/>
-            <circle class="hub-dot"  r="9"/>
-            <text class="hub-lab" y="-28">STORIES &middot; 26</text>
-          </g>
-
-          <!-- Pins (8 landmarks within walking distance) -->
-          <g class="pin" data-name="St. Stephen&rsquo;s Basilica" data-tag="Landmark"   data-walk="8 min" data-desc="Hungary&rsquo;s largest church &mdash; dome views over the rooftops of Pest." transform="translate(180, 460)">
-            <circle r="6"/><text y="22">A</text>
-          </g>
-          <g class="pin" data-name="Hungarian State Opera"        data-tag="Culture"    data-walk="6 min" data-desc="Andrássy út 22. Neo-Renaissance interior, fully restored 2022." transform="translate(260, 380)">
-            <circle r="6"/><text y="22">B</text>
-          </g>
-          <g class="pin" data-name="Gerbeaud"                      data-tag="Coffeehouse" data-walk="8 min" data-desc="Vörösmarty tér &middot; 1858. The grand café of the Pest side." transform="translate(220, 700)">
-            <circle r="6"/><text y="22">C</text>
-          </g>
-          <g class="pin" data-name="Rumbach Synagogue"             data-tag="Jewish Quarter" data-walk="3 min" data-desc="Moorish revival, restored 2021. The smaller of the three." transform="translate(360, 660)">
-            <circle r="6"/><text y="22">D</text>
-          </g>
-          <g class="pin" data-name="Gozsdu Udvar"                  data-tag="Courtyards" data-walk="5 min" data-desc="Seven connected courtyards between Király and Dob utca." transform="translate(330, 600)">
-            <circle r="6"/><text y="22">E</text>
-          </g>
-          <g class="pin" data-name="Szimpla Kert"                  data-tag="Ruin bar"   data-walk="4 min" data-desc="The original ruin bar. Kazinczy utca 14." transform="translate(520, 720)">
-            <circle r="6"/><text y="22">F</text>
-          </g>
-          <g class="pin" data-name="Dobrumba"                      data-tag="Levantine"  data-walk="7 min" data-desc="Levantine cooking, Dob utca 5. Book ahead on weekends." transform="translate(440, 760)">
-            <circle r="6"/><text y="22">G</text>
-          </g>
-          <g class="pin" data-name="Mazel Tov"                     data-tag="Garden bar" data-walk="4 min" data-desc="Akácfa utca 47. Middle-Eastern food, glass-roofed garden." transform="translate(540, 600)">
-            <circle r="6"/><text y="22">H</text>
-          </g>
-
-          <!-- legend -->
-          <text class="legend" x="20" y="980">KIRÁLY UTCA 26 · DISTRICT VI · APPROX. 250M GRID</text>
-        </svg>
-
-        <div class="pin-popup" id="pinPopup" role="status" aria-live="polite">
-          <div class="pp-tag"></div>
-          <h4 class="pp-name"></h4>
-          <p class="pp-desc"></p>
-          <div class="pp-walk"></div>
-        </div>
+      <div class="neigh-map">
+        <div id="neighMap" class="neigh-leaflet" role="img"
+             aria-label="Map of Budapest District VI — Stories Hotel on Király utca 26 and nearby landmarks"></div>
       </div>
     </div>
   </div>
@@ -2075,6 +2108,9 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
   else start();
 })();
 </script>
+
+<!-- Leaflet library — must load before the init IIFE below uses global L. -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
 (function () {
@@ -2245,14 +2281,57 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
   // Toggle nav.scrolled past the first 40px of scroll — opacity/background
   // animation lives in CSS.
   var navTicking = false;
+  var lastNavY   = window.scrollY;
   function onScroll() {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
+    var y = window.scrollY;
+    nav.classList.toggle('scrolled', y > 40);
+    // Hide on scroll-down, reveal on scroll-up. Stay visible through the
+    // first screen so the hero wordmark can finish docking into the nav.
+    var delta    = y - lastNavY;
+    var heroBand = window.innerHeight * 0.9;
+    if (y < heroBand) {
+      body.classList.remove('nav-hidden');
+    } else if (delta > 6) {
+      body.classList.add('nav-hidden');
+    } else if (delta < -6) {
+      body.classList.remove('nav-hidden');
+    }
+    lastNavY = y;
     navTicking = false;
   }
   window.addEventListener('scroll', function () {
     if (!navTicking) { requestAnimationFrame(onScroll); navTicking = true; }
   }, { passive: true });
   onScroll();
+
+  // "Next chapter" — skip the rooms carousel, glide to the Pleasures block.
+  var nextChapter = document.getElementById('nextChapter');
+  if (nextChapter) {
+    nextChapter.addEventListener('click', function () {
+      var target = document.getElementById('pleasures');
+      if (!target) return;
+      if (window.__lenis && typeof window.__lenis.scrollTo === 'function') {
+        window.__lenis.scrollTo(target, { offset: 0, duration: 1.1 });
+      } else {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
+  // Footer slide-up reveal — armed only when motion is allowed.
+  var footerEl = document.querySelector('footer');
+  if (footerEl && !reduceMo) {
+    footerEl.classList.add('foot-armed');
+    var footObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          footerEl.classList.add('foot-revealed');
+          footObs.disconnect();
+        }
+      });
+    }, { threshold: 0.12 });
+    footObs.observe(footerEl);
+  }
 
   // Stage hero: trigger the slow background zoom-in once the lobby photo
   // has decoded.
@@ -2405,53 +2484,76 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     rfEls.forEach(function (rf) { rfObs.observe(rf); });
   })();
 
-// Neighbourhood map — hover/focus a pin → popup card next to it.
+// Neighbourhood map — real Leaflet map of District VI with custom markers.
+// Tile provider is CARTO Dark Matter (no key) for now; swap the tile URL for
+// a keyed Stadia/Mapbox layer before a high-traffic commercial launch.
 (function () {
-  var map   = document.getElementById('neighMap');
-  if (!map) return;
-  var popup = document.getElementById('pinPopup');
-  var pins  = map.querySelectorAll('.pin');
-  if (!popup || !pins.length) return;
+  var el = document.getElementById('neighMap');
+  if (!el || typeof L === 'undefined') return;
 
-  var pTag  = popup.querySelector('.pp-tag');
-  var pName = popup.querySelector('.pp-name');
-  var pDesc = popup.querySelector('.pp-desc');
-  var pWalk = popup.querySelector('.pp-walk');
+  var HOTEL = [47.4988, 19.0598];
+  var places = [
+    { name: 'Stories Hotel',         tag: 'Király utca 26',  walk: 'You are here', hotel: true, ll: HOTEL,             desc: 'The Twenty Six building — your base in District VI.' },
+    { name: 'Gerbeaud',              tag: 'Coffeehouse',     walk: '8 min walk',   ll: [47.4965, 19.0508], desc: 'Vörösmarty tér · 1858. The grand café of the Pest side.' },
+    { name: 'Hungarian State Opera', tag: 'Culture',         walk: '6 min walk',   ll: [47.5025, 19.0577], desc: 'Andrássy út 22. Neo-Renaissance interior, restored 2022.' },
+    { name: 'Szimpla Kert',          tag: 'Ruin bar',        walk: '4 min walk',   ll: [47.4972, 19.0640], desc: 'The original ruin bar. Kazinczy utca 14.' },
+    { name: 'Rumbach Synagogue',     tag: 'Jewish Quarter',  walk: '3 min walk',   ll: [47.4975, 19.0583], desc: 'Moorish revival, restored 2021 — the smaller of the three.' },
+    { name: 'Gozsdu Udvar',          tag: 'Courtyards',      walk: '5 min walk',   ll: [47.4974, 19.0601], desc: 'Seven connected courtyards between Király and Dob utca.' },
+    { name: 'Dobrumba',              tag: 'Levantine',       walk: '7 min walk',   ll: [47.4968, 19.0579], desc: 'Levantine cooking, Dob utca 5. Book ahead on weekends.' },
+    { name: 'Mazel Tov',             tag: 'Garden bar',      walk: '4 min walk',   ll: [47.5000, 19.0670], desc: 'Akácfa utca 47. Middle-Eastern food, glass-roofed garden.' }
+  ];
 
-  function show(pin) {
-    pins.forEach(function (p) { p.classList.toggle('active', p === pin); });
-    pTag.textContent  = pin.dataset.tag  || '';
-    pName.textContent = pin.dataset.name || '';
-    pDesc.textContent = pin.dataset.desc || '';
-    pWalk.textContent = (pin.dataset.walk || '') + ' walk';
-    // Position the popup centred above the pin (only on wider screens; mobile uses CSS bottom-sheet)
-    if (window.matchMedia('(min-width: 601px)').matches) {
-      var pinRect = pin.getBoundingClientRect();
-      var mapRect = map.getBoundingClientRect();
-      popup.style.left = (pinRect.left + pinRect.width / 2 - mapRect.left) + 'px';
-      popup.style.top  = (pinRect.top - mapRect.top) + 'px';
-    } else {
-      popup.style.left = ''; popup.style.top = '';
-    }
-    popup.classList.add('visible');
-  }
-  function hide() {
-    pins.forEach(function (p) { p.classList.remove('active'); });
-    popup.classList.remove('visible');
-  }
-
-  pins.forEach(function (pin) {
-    pin.setAttribute('tabindex', '0');
-    pin.addEventListener('mouseenter', function () { show(pin); });
-    pin.addEventListener('mouseleave', hide);
-    pin.addEventListener('focus',  function () { show(pin); });
-    pin.addEventListener('blur',   hide);
-    pin.addEventListener('click',  function (e) { e.preventDefault(); show(pin); });
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var map = L.map(el, {
+    center: HOTEL, zoom: 15,
+    scrollWheelZoom: false,        // never hijack page scroll
+    fadeAnimation: !reduce, zoomAnimation: !reduce
   });
-  // Click-outside to dismiss on touch
-  document.addEventListener('click', function (e) {
-    if (!map.contains(e.target)) hide();
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd', maxZoom: 19,
+    attribution: '&copy; OpenStreetMap &middot; CARTO'
+  }).addTo(map);
+
+  // Popup body built with DOM nodes + textContent (project rule: no raw markup).
+  function popupEl(p) {
+    var w = document.createElement('div');
+    [['np-tag', p.tag], ['np-name', p.name], ['np-desc', p.desc], ['np-walk', p.walk]]
+      .forEach(function (row) {
+        var d = document.createElement('div');
+        d.className = row[0];
+        d.textContent = row[1];
+        w.appendChild(d);
+      });
+    return w;
+  }
+
+  var bounds = [];
+  places.forEach(function (p) {
+    var lab = (p.hotel ? 'Stories · 26' : p.name)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    var icon = L.divIcon({
+      className: '',
+      html: '<div class="nmark' + (p.hotel ? ' is-hotel' : '') + '">' +
+            '<span class="lab">' + lab + '</span><span class="dot"></span></div>',
+      iconSize: [14, 14], iconAnchor: [7, 7], popupAnchor: [0, -12]
+    });
+    L.marker(p.ll, { icon: icon, title: p.name, riseOnHover: true })
+      .addTo(map)
+      .bindPopup(popupEl(p), { closeButton: true, offset: [0, -2] });
+    bounds.push(p.ll);
   });
+
+  map.fitBounds(bounds, { padding: [42, 42] });
+  if (map.getZoom() > 16) map.setZoom(16);
+
+  // Leaflet mis-sizes if it inits while off-screen / in a transformed ancestor;
+  // re-measure when the section first scrolls into view.
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { map.invalidateSize(); io.disconnect(); }
+    });
+  }, { threshold: 0.1 });
+  io.observe(el);
 })();
 }());
 </script>
