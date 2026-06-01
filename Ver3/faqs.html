@@ -78,8 +78,25 @@ nav.top { position: sticky; top: 0; left: 0; right: 0; z-index: 80; padding: 22p
 .faq-cta a { display: inline-flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); background: var(--accent); padding: 14px 28px; transition: background 0.3s var(--ease); }
 .faq-cta a:hover { background: #fff; }
 
-footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px, 8vw, 96px) clamp(40px, 6vw, 96px) 28px; }
-.foot-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+/* FOOTER — oversized (~75vh), rounded top, photo + dark scrim, slide-up reveal. Shared site-wide. */
+footer {
+  position: relative; z-index: 3;
+  background: #0A0D0B; color: rgba(255,255,255,0.66);
+  min-height: 75vh;
+  padding: clamp(76px, 9vw, 132px) clamp(40px, 6vw, 96px) 34px;
+  overflow: hidden; isolation: isolate;
+  display: flex; flex-direction: column; justify-content: space-between;
+  gap: clamp(48px, 7vw, 100px);
+  border-top-left-radius: clamp(28px, 4.5vw, 64px);
+  border-top-right-radius: clamp(28px, 4.5vw, 64px);
+  margin-top: -1px;
+  transition: transform 0.9s var(--ease), opacity 0.8s var(--ease);
+}
+footer.foot-armed { transform: translate3d(0, 84px, 0); opacity: 0; }
+footer.foot-armed.foot-revealed { transform: none; opacity: 1; }
+footer::before { content: ""; position: absolute; inset: 0; background: url('assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.jpg') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
+footer::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9,11,10,0.4) 0%, rgba(8,10,9,0.84) 100%); z-index: -1; }
+.foot-grid { position: relative; width: 100%; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .foot-grid h3 { font-family: 'Lora', serif; font-size: 28px; color: #fff; font-weight: 500; }
 .foot-grid .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 8px 0 24px; }
 .foot-grid address { font-style: normal; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
@@ -89,7 +106,7 @@ footer { background: #07060A; color: rgba(255,255,255,0.66); padding: clamp(56px
 .foot-grid ul { list-style: none; }
 .foot-grid li a { font-family: 'Lora', serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
 .foot-grid li a:hover { color: var(--accent); padding-left: 5px; }
-.foot-bar { max-width: 1280px; margin: 24px auto 0; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+.foot-bar { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
 
 @media (max-width: 1024px) {
   .nav-links { display: none; }
@@ -551,5 +568,20 @@ body:not(.page-home) { --logo-init-p: 1; }
 })();
 </script>
 
+<script>
+/* Footer slide-up reveal — armed only when motion is allowed; no-JS keeps it visible. */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var f = document.querySelector('footer');
+  if (!f) return;
+  f.classList.add('foot-armed');
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { f.classList.add('foot-revealed'); io.disconnect(); }
+    });
+  }, { threshold: 0.12 });
+  io.observe(f);
+}());
+</script>
 </body>
 </html>
