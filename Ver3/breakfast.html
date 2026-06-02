@@ -584,35 +584,5 @@ body:not(.page-home) { --logo-init-p: 1; }
   io.observe(f);
 }());
 </script>
-<script>
-(function () {
-  if (!window.gsap || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var style = document.createElement('style');
-  style.textContent = '.page-wipe{position:fixed;inset:0;z-index:9999;pointer-events:none;background:#080908;color:#F2EDE4;display:grid;place-items:center;opacity:0;transform:translateY(100%)}.page-wipe .wipe-mark{font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:rgba(242,237,228,.72);display:inline-flex;align-items:center;gap:16px}.page-wipe .wipe-mark:before,.page-wipe .wipe-mark:after{content:"";width:42px;height:1px;background:#B9904E}';
-  document.head.appendChild(style);
-  var wipe = document.createElement('div');
-  wipe.className = 'page-wipe';
-  wipe.setAttribute('aria-hidden', 'true');
-  var mark = document.createElement('div');
-  mark.className = 'wipe-mark';
-  mark.textContent = 'Stories · Budapest';
-  wipe.appendChild(mark);
-  document.body.appendChild(wipe);
-  document.addEventListener('click', function (e) {
-    var link = e.target.closest && e.target.closest('a[href]');
-    if (!link || e.defaultPrevented) return;
-    var href = link.getAttribute('href');
-    if (!href || href.charAt(0) === '#' || href.indexOf('mailto:') === 0 || href.indexOf('tel:') === 0 || link.target || link.hasAttribute('download')) return;
-    var url = new URL(href, window.location.href);
-    if (url.origin !== window.location.origin) return;
-    e.preventDefault();
-    mark.textContent = (link.textContent || 'Stories').trim().replace(/\s+/g, ' ').slice(0, 36) || 'Stories · Budapest';
-    gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: function () { window.location.href = url.href; } })
-      .set(wipe, { pointerEvents: 'auto' })
-      .fromTo(wipe, { yPercent: 100, opacity: 1 }, { yPercent: 0, duration: 0.42 })
-      .fromTo(mark, { y: 18, opacity: 0, filter: 'blur(8px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.28 }, '-=0.16');
-  });
-}());
-</script>
 </body>
 </html>
