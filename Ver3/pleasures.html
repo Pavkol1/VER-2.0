@@ -520,6 +520,41 @@ body:not(.page-home) { --logo-init-p: 1; }
 })();
 </script>
 
+<!-- GSAP + ScrollTrigger (vendored, free for commercial use) -->
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script>
+/* Shared GSAP reveals — heading rise + block fade-up, Lenis-synced, motion-safe.
+   Hard-skips every zone the site already animates so nothing double-fires. */
+(function () {
+  function init () {
+    if (!window.gsap || !window.ScrollTrigger) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    gsap.registerPlugin(ScrollTrigger);
+    if (window.__lenis && window.__lenis.on) window.__lenis.on('scroll', ScrollTrigger.update);
+
+    var SKIP = '.stage, .intro-strip, .rooms-cinema, .plate, .reserve-plate, .logo-stage, .runlabel, footer, .neigh-map, .cursor, nav';
+    function pick (sel) { return gsap.utils.toArray(sel).filter(function (el) { return !el.closest(SKIP); }); }
+
+    pick('h1, h2, h3').forEach(function (el) {
+      gsap.from(el, { scrollTrigger: { trigger: el, start: 'top 86%', once: true }, yPercent: 16, opacity: 0, duration: 0.9, ease: 'power3.out' });
+    });
+
+    var blocks = pick('.pcard, .trust-card, .faq-item, .bk-fact, .detail-row, .room-info, .room-specs, .directions, .contact-details, .contact-form-wrap, .neigh-grid .ix, figure');
+    if (blocks.length) {
+      gsap.set(blocks, { opacity: 0, y: 26 });
+      ScrollTrigger.batch(blocks, {
+        start: 'top 90%',
+        onEnter: function (b) { gsap.to(b, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', stagger: 0.09, overwrite: true }); }
+      });
+    }
+    window.addEventListener('load', function () { ScrollTrigger.refresh(); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+}());
+</script>
+
 <script>
 /* Footer slide-up reveal — armed only when motion is allowed; no-JS keeps it visible. */
 (function () {
