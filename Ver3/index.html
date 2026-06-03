@@ -121,156 +121,75 @@ nav.top.scrolled {
 .runlabel .sep { margin: 0 14px; color: var(--accent); }
 
 
-/* STAGE — Hero v3 single-screen landing (replaces the animated wordmark hero) */
-.stage {
+/* SPOTLIGHT HERO — cursor-reveal landing (Variant 2 · Spotlight) */
+.spotlight-hero {
   position: relative;
   width: 100%;
-  height: 100vh;
-  min-height: 640px;
+  height: 100svh;
+  min-height: 660px;
   overflow: hidden;
-  background: var(--ink);
+  background: #06100b;
+  cursor: none;
 }
-.stage .bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-  filter: brightness(0.92) saturate(0.95);
-  transform: scale(1.03);
-  transition: transform 1.8s var(--ease), filter 1.8s var(--ease);
+.sp-img { position: absolute; inset: 0; background: url('assets/brand/hero.jpg') center 38% / cover; }
+.sp-img.base { filter: brightness(0.24) grayscale(0.55) saturate(0.7) contrast(1.05); }
+.sp-img.lit {
+  filter: brightness(0.98) saturate(1.08);
+  -webkit-mask: radial-gradient(circle var(--r, 320px) at var(--mx, 52%) var(--my, 42%), #000 0%, rgba(0,0,0,0.85) 46%, transparent 72%);
+          mask: radial-gradient(circle var(--r, 320px) at var(--mx, 52%) var(--my, 42%), #000 0%, rgba(0,0,0,0.85) 46%, transparent 72%);
 }
-.stage.loaded .bg { transform: scale(1.0); }
-.stage::before {
-  content: "";
-  position: absolute; inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg,
-    rgba(11,20,16,0.55) 0%,
-    rgba(11,20,16,0.05) 18%,
-    rgba(11,20,16,0.05) 70%,
-    rgba(11,20,16,0.75) 100%
-  );
+.sp-grad { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(5,10,8,0.5), transparent 34%, transparent 56%, rgba(5,10,8,0.9)); }
+.sp-ring {
+  position: fixed; z-index: 9998; width: 36px; height: 36px;
+  border: 1.5px solid rgba(185,144,78,0.85); border-radius: 50%;
+  transform: translate(-50%,-50%); pointer-events: none;
+  left: 52%; top: 42%; mix-blend-mode: screen; opacity: 0; transition: opacity 0.3s var(--ease);
 }
-.stage::after {
-  content: "";
-  position: absolute; inset: 0;
-  opacity: 0.09;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  background-image:
-    radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
-    radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1px);
-  background-size: 3px 3px, 5px 5px;
+/* the hero owns the cursor; hide the site's boutique cursor while over it */
+body.in-hero #cursor { opacity: 0 !important; }
+
+.sp-body { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 24px; pointer-events: none; }
+.sp-kicker { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(237,231,218,0.82); display: inline-flex; align-items: center; gap: 14px; margin-bottom: 30px; transition: opacity 1.1s var(--ease) 0.2s, transform 1.1s var(--ease) 0.2s; }
+.sp-kicker .rule { width: 40px; height: 1px; background: var(--accent); }
+.sp-ttl { position: relative; font-family: 'Lora', serif; font-weight: 400; font-size: clamp(46px, 8.6vw, 146px); line-height: 0.92; letter-spacing: -0.024em; }
+.sp-ttl em { font-style: italic; color: var(--accent); }
+.sp-out { color: transparent; -webkit-text-stroke: 1px rgba(237,231,218,0.42); }
+.sp-fill { position: absolute; inset: 0; color: var(--paper); clip-path: inset(0 0 0 0); transition: clip-path 1.6s var(--ease) 0.4s; }
+.sp-fill em { color: var(--accent); }
+.sp-sub { margin-top: 26px; font-size: 17px; font-weight: 300; color: rgba(237,231,218,0.82); max-width: 44ch; transition: opacity 1.1s var(--ease) 1.1s, transform 1.1s var(--ease) 1.1s; }
+.sp-acts { margin-top: 38px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; pointer-events: auto; transition: opacity 1.1s var(--ease) 1.4s, transform 1.1s var(--ease) 1.4s; }
+.sp-btn-solid, .sp-btn-ghost { display: inline-flex; align-items: center; gap: 14px; min-height: 44px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; padding: 16px 30px; transition: 0.3s var(--ease); }
+.sp-btn-solid { background: var(--accent); color: #0B1410; }
+.sp-btn-solid:hover { background: #fff; gap: 20px; }
+.sp-btn-ghost { border: 1px solid rgba(237,231,218,0.55); color: #fff; }
+.sp-btn-ghost:hover { border-color: var(--accent); color: var(--accent); gap: 20px; }
+.sp-hint { position: absolute; left: 50%; bottom: calc(54px + 6vh); transform: translateX(-50%); z-index: 10; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: rgba(237,231,218,0.5); animation: spPulse 2.6s ease-in-out infinite 1.8s; }
+@keyframes spPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.85; } }
+.sp-marq { position: absolute; left: 0; right: 0; bottom: 0; z-index: 11; border-top: 1px solid rgba(237,231,218,0.16); background: rgba(5,10,8,0.42); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); overflow: hidden; transition: opacity 1.1s var(--ease) 1.6s, transform 1.1s var(--ease) 1.6s; }
+.sp-track { display: flex; width: max-content; animation: spScroll 26s linear infinite; }
+.sp-track span { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(237,231,218,0.72); padding: 16px clamp(20px, 3vw, 42px); display: inline-flex; align-items: center; gap: clamp(20px, 3vw, 42px); white-space: nowrap; }
+.sp-track span::after { content: '◆'; color: var(--accent); font-size: 8px; }
+@keyframes spScroll { to { transform: translateX(-50%); } }
+.spotlight-hero:hover .sp-track { animation-play-state: paused; }
+/* Entrance: visible by default; hidden only during prep:not(.go) so a paused tab never freezes invisible. */
+.spotlight-hero.prep:not(.go) .sp-kicker { opacity: 0; transform: translateY(16px); transition: none; }
+.spotlight-hero.prep:not(.go) .sp-fill { clip-path: inset(0 100% 0 0); transition: none; }
+.spotlight-hero.prep:not(.go) .sp-sub { opacity: 0; transform: translateY(14px); transition: none; }
+.spotlight-hero.prep:not(.go) .sp-acts { opacity: 0; transform: translateY(14px); transition: none; }
+.spotlight-hero.prep:not(.go) .sp-marq { opacity: 0; transform: translateY(16px); transition: none; }
+@media (hover: none) {
+  .spotlight-hero { cursor: auto; }
+  .sp-ring { display: none; }
+  .sp-img.lit { -webkit-mask: radial-gradient(circle 70% at 52% 42%, #000 30%, transparent 80%); mask: radial-gradient(circle 70% at 52% 42%, #000 30%, transparent 80%); }
+  .sp-hint { display: none; }
 }
 
-/* Nav now covers brand + Reserve, so hide the duplicated hero top chrome */
-body.page-home .stage-top-left,
-body.page-home .stage-top-right { display: none; }
-.stage-top-left, .stage-top-right, .stage-plate-left, .stage-plate-right {
-  position: absolute;
-  z-index: 5;
-  font-family: 'JetBrains Mono', monospace;
-  text-transform: uppercase;
-}
-.stage-top-left {
-  top: 32px; left: clamp(24px, 4vw, 56px);
-  display: flex; align-items: center; gap: 12px;
-  font-size: 10px; letter-spacing: 0.32em;
-  color: rgba(255,255,255,0.85);
-}
-.stage-top-left .rule { width: 28px; height: 1px; background: rgba(255,255,255,0.55); }
-
-.stage-top-right {
-  top: 28px; right: clamp(24px, 4vw, 56px);
-  display: flex; align-items: center; gap: 22px;
-}
-.stage-top-right .phone {
-  font-size: 10px; letter-spacing: 0.32em;
-  color: rgba(255,255,255,0.85);
-}
-.stage-top-right .reserve {
-  font-size: 11px; letter-spacing: 0.24em;
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.55);
-  padding: 11px 22px;
-  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
-  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
-}
-.stage-top-right .reserve:hover { background: var(--accent); border-color: var(--accent); color: var(--ink); }
-
-.stage-pitch {
-  position: absolute;
-  bottom: 80px;
-  left: 0; right: 0;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 28px;
-  text-align: center;
-  color: #fff;
-}
-.stage-pitch .tagline {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.75);
-}
-.stage-pitch .tagline .rule { width: 56px; height: 1px; background: rgba(255,255,255,0.45); }
-.stage-pitch .enter {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.6);
-  padding: 16px 42px;
-  display: inline-flex;
-  align-items: center;
-  gap: 16px;
-  background: rgba(13,11,8,0.25);
-  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
-  transition: background 0.4s var(--ease), border-color 0.4s var(--ease), gap 0.3s var(--ease), color 0.3s var(--ease);
-  min-height: 44px;
-}
-.stage-pitch .enter:hover {
-  background: rgba(185, 144, 78, 0.92);
-  border-color: var(--accent);
-  color: var(--ink);
-  gap: 22px;
-}
-.stage-pitch .enter .arrow { color: var(--accent); transition: color 0.3s var(--ease); }
-.stage-pitch .enter:hover .arrow { color: var(--ink); }
-
-.stage-plate-left, .stage-plate-right {
-  bottom: 28px;
-  font-size: 9px;
-  letter-spacing: 0.28em;
-  color: rgba(255,255,255,0.4);
-}
-.stage-plate-left  { left: clamp(24px, 4vw, 56px); }
-.stage-plate-right { right: clamp(24px, 4vw, 56px); }
-
-@media (max-width: 720px) {
-  .stage-top-left .rule, .stage-pitch .tagline .rule { display: none; }
-  .stage-top-left { font-size: 9px; letter-spacing: 0.24em; }
-  .stage-top-right { gap: 12px; }
-  .stage-top-right .phone { display: none; }
-  .stage-pitch { bottom: 56px; gap: 20px; padding: 0 24px; }
-  .stage-pitch .tagline { font-size: 9px; letter-spacing: 0.24em; }
-  .stage-pitch .tagline span:not(.rule) { line-height: 1.4; }
-  .stage-pitch .enter { padding: 14px 28px; font-size: 10px; letter-spacing: 0.24em; }
-  .stage-plate-left, .stage-plate-right { font-size: 8px; bottom: 18px; }
-  .stage-plate-left  { left: 24px; }
-  .stage-plate-right { right: 24px; }
-}
+/* NAV — language toggle pill (homepage hero) */
+.nav-right { justify-self: end; display: inline-flex; align-items: center; gap: 16px; }
+.lang-toggle { display: inline-flex; border: 1px solid rgba(237,231,218,0.28); border-radius: 999px; overflow: hidden; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; }
+.lang-toggle button { appearance: none; background: none; border: 0; cursor: pointer; color: rgba(237,231,218,0.6); font: inherit; padding: 7px 12px; min-height: 34px; transition: 0.25s var(--ease); }
+.lang-toggle button.active { background: var(--accent); color: #0B1410; }
+@media (max-width: 560px) { .lang-toggle { display: none; } }
 
 /* Nav-brand — static STORIES wordmark in the left nav slot (no animation) */
 .nav-brand {
@@ -1814,44 +1733,41 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
     <a href="neighbourhood.html">Neighbourhood</a>
     <a href="contact.html">Contact</a>
   </div>
-  <a href="#reserve" class="nav-cta magnet">Reserve</a>
+  <div class="nav-right">
+    <div class="lang-toggle"><button type="button" class="active">EN</button><button type="button">HU</button></div>
+    <a href="#reserve" class="nav-cta magnet">Reserve</a>
+  </div>
 </nav>
 
 <div class="runlabel" id="runlabel">
   <span id="rl-num">01</span><span class="sep">◆</span><span id="rl-text">The House</span>
 </div>
 
-<!-- HERO — single-screen landing. The brand mark lives inside the lobby
-     photo on the back wall, so there is no overlay wordmark. -->
-<section class="stage" id="stage" data-label="01 / The House">
-  <img class="bg" src="assets/brand/lobby-reception.jpg"
-       alt="Stories Hotel Budapest — reception lobby with the STORIES brass wordmark on the back wall"
-       decoding="async">
+<!-- HERO — Spotlight: cursor-reveal landing (base + lit image layers). -->
+<section class="stage spotlight-hero" id="stage" data-label="01 / The House">
+  <div class="sp-img base"></div>
+  <div class="sp-img lit" id="spLit"></div>
+  <div class="sp-grad"></div>
+  <div class="sp-ring" id="spRing" aria-hidden="true"></div>
 
-  <div class="stage-top-left">
-    <span class="rule"></span>
-    <span>Király utca 26 · Budapest VI</span>
-  </div>
-
-  <div class="stage-top-right">
-    <span class="phone">+36 1 234 5678</span>
-    <a class="reserve magnet" href="#reserve">Reserve &rarr;</a>
-  </div>
-
-  <div class="stage-pitch">
-    <div class="tagline">
-      <span class="rule"></span>
-      <span>Forty-four rooms, six characters · A hotel of stories, quietly told.</span>
-      <span class="rule"></span>
+  <div class="sp-body">
+    <div class="sp-kicker"><span class="rule"></span>Budapest VI · Est. 2024<span class="rule"></span></div>
+    <h1 class="sp-ttl"><span class="sp-out">A hotel of <em>stories,</em><br>quietly told.</span><span class="sp-fill" aria-hidden="true">A hotel of <em>stories,</em><br>quietly told.</span></h1>
+    <p class="sp-sub">Move the light. Forty-four rooms, six characters — a small house on Király utca.</p>
+    <div class="sp-acts">
+      <a class="sp-btn-solid" href="#reserve">Book a stay <span aria-hidden="true">&rarr;</span></a>
+      <a class="sp-btn-ghost" href="rooms.html">Explore rooms <span aria-hidden="true">&rarr;</span></a>
     </div>
-    <a class="enter magnet" href="#intro">
-      <span>Enter the house</span>
-      <span class="arrow">&rarr;</span>
-    </a>
   </div>
 
-  <div class="stage-plate-left">Plate I &mdash; Reception</div>
-  <div class="stage-plate-right">MMXXIV</div>
+  <div class="sp-hint">Move your cursor to reveal</div>
+
+  <div class="sp-marq" aria-hidden="true">
+    <div class="sp-track">
+      <span>Forty-four rooms</span><span>Breakfast at Twenty Six</span><span>Bar &amp; lounge</span><span>Garden atrium</span><span>GoActive gym</span><span>District VI · Király utca</span>
+      <span>Forty-four rooms</span><span>Breakfast at Twenty Six</span><span>Bar &amp; lounge</span><span>Garden atrium</span><span>GoActive gym</span><span>District VI · Király utca</span>
+    </div>
+  </div>
 </section>
 
 <!-- INTRO STRIP — editorial reveal as logo shrinks into nav -->
@@ -2927,5 +2843,49 @@ body.classList.toggle('in-cinema', e.isIntersecting);
 }());
 </script>
 
+<script>
+/* SPOTLIGHT HERO — entrance (prep→reflow→go), language toggle, cursor-reveal + idle orbit. */
+(function () {
+  var hero = document.getElementById('stage');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Entrance: visible by default; hide-then-reveal only once mounted (paused-tab safe).
+  if (hero && !reduce) { hero.classList.add('prep'); void hero.offsetWidth; hero.classList.add('go'); }
+
+  // Language toggle — visual only for now (wire to real i18n when HU copy exists).
+  document.querySelectorAll('.lang-toggle button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.lang-toggle button').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active');
+    });
+  });
+
+  // Cursor spotlight: ease a radial mask toward the pointer; idle-orbit when not active.
+  var lit = document.getElementById('spLit'), ring = document.getElementById('spRing');
+  if (!hero || !lit) return;
+  if (reduce) { lit.style.webkitMask = 'none'; lit.style.mask = 'none'; if (ring) ring.style.display = 'none'; return; }
+  if (matchMedia('(hover: none)').matches) return;
+  var w = innerWidth, ht = innerHeight, mx = w * 0.52, my = ht * 0.42, cx = mx, cy = my, active = false;
+  addEventListener('resize', function () { w = innerWidth; ht = innerHeight; }, { passive: true });
+  hero.addEventListener('mousemove', function (e) {
+    mx = e.clientX; my = e.clientY; active = true;
+    if (ring) ring.style.opacity = '1';
+    document.body.classList.add('in-hero');   // hand the cursor to the hero ring
+  }, { passive: true });
+  hero.addEventListener('mouseleave', function () {
+    active = false;
+    if (ring) ring.style.opacity = '0';
+    document.body.classList.remove('in-hero'); // give it back to the boutique cursor
+  });
+  var t = 0;
+  (function loop () {
+    if (!active) { t += 0.006; mx = w * (0.5 + Math.cos(t) * 0.26); my = ht * (0.42 + Math.sin(t * 1.3) * 0.16); }
+    cx += (mx - cx) * 0.14; cy += (my - cy) * 0.14;
+    lit.style.setProperty('--mx', cx + 'px'); lit.style.setProperty('--my', cy + 'px');
+    if (ring) { ring.style.left = cx + 'px'; ring.style.top = cy + 'px'; }
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
 </body>
 </html>
