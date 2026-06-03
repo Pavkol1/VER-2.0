@@ -170,7 +170,8 @@ body.in-hero #cursor { opacity: 0 !important; }
 .sp-track span { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(237,231,218,0.72); padding: 16px clamp(20px, 3vw, 42px); display: inline-flex; align-items: center; gap: clamp(20px, 3vw, 42px); white-space: nowrap; }
 .sp-track span::after { content: '◆'; color: var(--accent); font-size: 8px; }
 @keyframes spScroll { to { transform: translateX(-50%); } }
-.spotlight-hero:hover .sp-track { animation-play-state: paused; }
+/* Marquee runs continuously — no hover-pause (the spotlight covers the whole
+   hero, so a hero-level :hover would freeze it whenever you move the light). */
 /* Entrance: visible by default; hidden only during prep:not(.go) so a paused tab never freezes invisible. */
 .spotlight-hero.prep:not(.go) .sp-kicker { opacity: 0; transform: translateY(16px); transition: none; }
 .spotlight-hero.prep:not(.go) .sp-fill { clip-path: inset(0 100% 0 0); transition: none; }
