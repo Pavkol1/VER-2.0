@@ -132,7 +132,7 @@ Old tokens were `--ivory #F2EDE4 / --ink #0D0B08 / --gold #B9904E / --green #2A5
 
 **Index rooms rail**: native horizontal scroll + `scroll-snap-type: x mandatory`.
 
-**Breakfast pricing**: €18 per person, à la carte. Not included in any room rate. Do not reintroduce "included" wording.
+**Breakfast pricing**: à la carte, **not included** in any room rate — never reintroduce "included" wording. Price wording differs by page: the **homepage** (`index.html`) breakfast facts now read **"Ask reception"** (per the coffee-noir redesign); `breakfast.html` and `faqs.html` still state **"€18 per person"**. If syncing later, decide on one wording across all three. Homepage breakfast **Hours** are **07:30 — 11:00**.
 
 **DOM safety**: always use `textContent`, never `innerHTML`. This is a hard rule across all inline JS (Ver2 and Ver3) and is currently enforced (grep finds zero occurrences).
 
