@@ -6,14 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
-## Current Status — Handoff (last updated 2026-05-26)
+## Current Status — Handoff (last updated 2026-06-11)
 
 **The live site is now Ver3.** The active, deployable site root is **`Ver3/`** (not `Ver2/`). `netlify.toml` publishes `Ver3`. `Ver2/` is kept as legacy/reference only — do not edit it.
 
 **Where we are:**
-- Ver3 is a full redesign of the whole site. Recently completed milestones (see `git log`): M2.2 rooms rebuild, M3.1 interactive SVG neighbourhood map (homepage + neighbourhood), M3.2 booking-trust block, site-wide Lenis smooth-scroll, and a contact/faqs pass (60vh contact hero + breakfast wording fix).
+- Ver3 is a full redesign of the whole site. Recently completed milestones (see `git log`): M2.2 rooms rebuild, M3.1 interactive SVG neighbourhood map (homepage + neighbourhood), M3.2 booking-trust block, site-wide Lenis smooth-scroll, contact/faqs pass, GSAP scroll-reveal pass across all pages, homepage luxuries/rooms reorder + always-scrolling hero marquee, and the breakfast coffee-noir sequence (scroll-scrubbed 69-frame canvas animation).
 - All pages (`index, rooms, pleasures, breakfast, neighbourhood, contact, faqs`) exist in `Ver3/` and are on the Ver3 design language.
-- **Production = `main` branch.** It currently points at the same commit as the working branch. A push to `main` is a live deploy to https://secrethotel.netlify.app/ — **always ask first.**
+- **Production = `main` branch.** A push to `main` is a live deploy to https://secrethotel.netlify.app/ — **always ask first.**
 
 **Branches:**
 - `main` — production (Netlify deploys this).
@@ -50,7 +50,7 @@ Per user preference, ask Claude to start the server rather than running it yours
 .
 ├── netlify.toml          publish = "Ver3"  (the only config — no build command)
 ├── Ver3/                 ← ACTIVE, deployable site root (edit here)
-│   ├── index.html        Homepage: cinematic hero + intro-strip + rooms rail + pleasures + breakfast + neighbourhood + reserve
+│   ├── index.html        Homepage: cinematic hero + intro-strip + luxuries + rooms rail + coffee sequence + neighbourhood + reserve
 │   ├── rooms.html        6 rooms, top-nav + sticky info, 5–6 photos per room
 │   ├── pleasures.html    Bar & Lounge, Gym (GoActive), Coworking as full-width feature sections
 │   ├── breakfast.html    Plate + intro grid + 3-column menu + sourcing block
@@ -58,13 +58,29 @@ Per user preference, ask Claude to start the server rather than running it yours
 │   ├── contact.html      60vh hero + 2-column contact info/form
 │   ├── faqs.html         Paper bg (no plate), sticky nav sidebar, accordion FAQ
 │   └── assets/
-│       ├── brand/        Hero/plate backgrounds (4T4B5708.JPG, 4T4B6940.jpg, DorS347…, DorSharon341…)
-│       ├── photos/       Per-room and amenity galleries
-│       └── vendor/       lenis.min.js (smooth-scroll library)
+│       ├── brand/        Hero/plate backgrounds + logos (hero.jpg, breakfast-new.jpg, luxuries-*.jpg, stories-logo.svg, …)
+│       ├── coffee/       frame_001.jpg … frame_069.jpg + coffee-final.jpg — homepage coffee scroll sequence
+│       ├── photos/       Per-room and amenity galleries (presidential-suite/, king-suite/, …)
+│       └── vendor/       lenis.min.js · gsap.min.js · ScrollTrigger.min.js
 └── Ver2/                 legacy / reference only — do NOT edit
 ```
 
 Asset URLs in the HTML use `assets/...` (relative from `Ver3/`). When adding photos, place them inside `Ver3/assets/`.
+
+Favicon is suppressed with `<link rel="icon" href="data:,">` on every page (no favicon file exists — this silences the 404).
+
+---
+
+## Third-Party Libraries
+
+| Library | Source | Used on |
+|---|---|---|
+| **Lenis** (smooth-scroll) | `assets/vendor/lenis.min.js` | All pages |
+| **GSAP** (scroll reveals, timeline animations) | `assets/vendor/gsap.min.js` | All pages |
+| **ScrollTrigger** (GSAP plugin) | `assets/vendor/ScrollTrigger.min.js` | All pages |
+| **Leaflet** (interactive map) | CDN (unpkg, no key) | `index.html`, `neighbourhood.html` only |
+
+GSAP + ScrollTrigger load as `<script>` tags just before the inline `<script>` block on every page; Lenis is initialised inside the inline script.
 
 ---
 
@@ -75,7 +91,7 @@ Asset URLs in the HTML use `assets/...` (relative from `Ver3/`). When adding pho
 **Design tokens** (CSS variables on `:root` in every Ver3 page):
 ```css
 --ink:     #0B1410   /* near-black green-tinted */
---ink-2:   #1A1F1A
+--ink-2:   #1A1F1A   /* dark section bg (index uses greener #0E2017 + --ink-3: #081A12) */
 --paper:   #EDE7DA   /* warm off-white base */
 --paper-2: #E5DECE
 --rule:    #C9C1B0   /* hairline borders */
@@ -97,18 +113,19 @@ Asset URLs in the HTML use `assets/...` (relative from `Ver3/`). When adding pho
 - **Logo stage** (`.logo-stage` / `.logo-mover`) — wordmark that scales/moves into the nav slot; flips ink⇄paper via `body.logo-on-light` as you cross light/dark sections.
 - **Boutique cursor** (`.cursor` — gold dot + lagging ring + magnetic `.magnet` CTAs). Disabled on touch + reduced-motion.
 - **Lenis smooth-scroll** — `assets/vendor/lenis.min.js`, `lerp: 0.085`; skipped under `prefers-reduced-motion`.
-- **Nav** — `.scrolled` state once `scrollY > 40`.
+- **Nav** — `.scrolled` state once `scrollY > 40`. On `index.html` only, a direction-tracking scroll handler toggles `body.nav-hidden`, which hides the nav via `translate3d(0, -110%, 0)` (a pure transform slide — no `opacity`, because the blurred backdrop + opacity repaints glitch on Safari).
 - Shared dark `<footer>` grid across all pages.
+
+**Animations**
+- Plate bg zoom: `scale(1.06)` → `scale(1.0)` when section gains `.visible` (1.6s `--ease`)
+- GSAP scroll reveals: `gsap.from()` + ScrollTrigger entries for staggered text, image curtains, and section reveals; structural sections (stage, cinema, coffee scene, plates, footer…) are listed in a `SKIP` selector and excluded from the generic reveal pass.
+- IntersectionObserver still used for: running-label updates (`data-label`), `.in-view` on `.rf` photo frames, and Leaflet `invalidateSize` timing.
+- Running label (`.runlabel`): rotated −90° on the left edge; section name/number updated via IntersectionObserver reading `data-label` attributes.
+- `prefers-reduced-motion` is respected everywhere — scripts check `matchMedia('(prefers-reduced-motion: reduce)')` before registering ScrollTriggers; animate only `transform` and `opacity`.
 
 ### Design System (Ver2) — LEGACY (do not use for new work)
 
 Old tokens were `--ivory #F2EDE4 / --ink #0D0B08 / --gold #B9904E / --green #2A5C45`, headings in `Playfair Display`. This applies only to the frozen `Ver2/` folder.
-
-**Animations**
-- Plate bg zoom: `scale(1.06)` → `scale(1.0)` when section gains `.visible` (1.6s `--ease`)
-- Scroll reveals: `IntersectionObserver` with `threshold: [0.35, 0.6]`, adds `.visible` class
-- Running label (`.runlabel`): rotated −90° on the left edge; section name/number is updated via the same `IntersectionObserver` reading `data-label` attributes
-- `prefers-reduced-motion` is respected — animate only `transform` and `opacity`
 
 ---
 
@@ -130,7 +147,11 @@ Old tokens were `--ivory #F2EDE4 / --ink #0D0B08 / --gold #B9904E / --green #2A5
 
 **Pleasures layout** (`pleasures.html`): `.pleasure-feature` sections with `.reverse` modifier for alternating image sides.
 
-**Index rooms rail**: native horizontal scroll + `scroll-snap-type: x mandatory`.
+**Index rooms rail**: native horizontal scroll + `scroll-snap-type: x mandatory`. An IntersectionObserver with `rootMargin: '-50% 0px -50% 0px'` tracks which room gallery is centered and swaps `--room-bg` / `--room-ink` CSS variables on `body` to repaint the surrounding section per room (`ROOM_COLORS` palette map; active slug lives in `stage.dataset.active`). A 750ms `scrollLockUntil` debounce stops the observer from fighting programmatic `scrollIntoView`.
+
+**Homepage coffee sequence** (`.bk-coffee-scene`, `index.html`): a tall (~185vh+) scroll-scrubbed scene driven by one `ScrollTrigger` (`scrub: true`). Progress maps to CSS variables (`--bk-hero-opacity`, `--bk-canvas-opacity`, `--bk-final-opacity`, …) via `setSceneProgress(p)`, and to a `<canvas>` drawing `assets/coffee/frame_001–069.jpg` with object-fit-cover math. Frames are lazily preloaded; canvas is capped at `devicePixelRatio ≤ 2`. On reduced-motion or ≤860px the script calls `setSceneProgress(1)` and shows the static `coffee-final.jpg` instead.
+
+**Leaflet map** (index + neighbourhood): tile provider is CARTO Dark Matter (no API key; swap for a keyed Stadia/Mapbox layer before a high-traffic commercial launch). Popup content is built with DOM nodes + `textContent` — never template strings — honoring the project-wide rule. `map.invalidateSize()` fires via IntersectionObserver because Leaflet mismeasures when initialised off-screen.
 
 **Breakfast pricing**: à la carte, **not included** in any room rate — never reintroduce "included" wording. Price wording differs by page: the **homepage** (`index.html`) breakfast facts now read **"Ask reception"** (per the coffee-noir redesign); `breakfast.html` and `faqs.html` still state **"€18 per person"**. If syncing later, decide on one wording across all three. Homepage breakfast **Hours** are **07:30 — 11:00**.
 
