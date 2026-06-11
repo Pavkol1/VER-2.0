@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stories Budapest — A hotel of stories, quietly told.</title>
 <link rel="icon" href="data:,">
+<script>
+/* Page-transition entry: if the previous page set the flag, start veiled
+   (html.pt-in) so the first paint is the brand dark, then fade open. */
+(function () { try { if (sessionStorage.getItem('pt') === '1') { sessionStorage.removeItem('pt'); document.documentElement.classList.add('pt-in'); } } catch (e) {} })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..700;1,300..600&family=Lora:ital,wght@0,400..600;1,400..600&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1418,7 +1423,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 /* BREAKFAST */
 .bk-coffee-scene {
   position: relative;
-  min-height: 220vh;
+  min-height: 430vh;
   background: #0B0907;
   color: var(--paper);
 }
@@ -1433,7 +1438,8 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .bk-photo-bg,
 .bk-coffee-canvas,
-.bk-coffee-final {
+.dn-photo,
+.bk-scene-veil {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1446,29 +1452,30 @@ body:not(.page-home) { --logo-init-p: 1; }
   filter: brightness(var(--bk-photo-brightness, 0.82)) saturate(0.92);
   opacity: var(--bk-photo-opacity, 1);
 }
-.bk-photo-bg::after,
-.bk-coffee-final::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(95% 80% at 50% 42%, rgba(11,9,7,0.04) 0%, rgba(11,9,7,0.58) 72%, rgba(11,9,7,0.86) 100%),
-    linear-gradient(180deg, rgba(11,9,7,0.18) 0%, rgba(11,9,7,0.36) 58%, rgba(11,9,7,0.82) 100%);
-}
 .bk-coffee-canvas {
   z-index: 1;
   display: block;
   opacity: var(--bk-canvas-opacity, 0);
 }
-.bk-coffee-final {
-  z-index: 0;
-  background: url('assets/coffee/coffee-final.jpg') center / cover no-repeat;
-  opacity: var(--bk-final-opacity, 0);
+.dn-photo {
+  z-index: 2;
+  background: url('assets/brand/danube-budapest.jpg') center / cover no-repeat;
+  opacity: var(--dn-photo-opacity, 0);
+}
+/* One constant veil above every media layer — photo, canvas and Danube final
+   all sit under the same vignette, so there is no brightness/edge jump when
+   one layer crossfades into the next. */
+.bk-scene-veil {
+  z-index: 3;
+  pointer-events: none;
+  background:
+    radial-gradient(95% 80% at 50% 42%, rgba(11,9,7,0.04) 0%, rgba(11,9,7,0.5) 74%, rgba(11,9,7,0.8) 100%),
+    linear-gradient(180deg, rgba(11,9,7,0.22) 0%, rgba(11,9,7,0.28) 58%, rgba(11,9,7,0.78) 100%);
 }
 .bk-scene-grain {
   position: absolute;
   inset: 0;
-  z-index: 3;
+  z-index: 4;
   pointer-events: none;
   opacity: 0.14;
   mix-blend-mode: soft-light;
@@ -1480,10 +1487,49 @@ body:not(.page-home) { --logo-init-p: 1; }
 .bk-hero-copy,
 .bk-coffee-content {
   position: absolute;
-  z-index: 4;
+  z-index: 5;
   left: clamp(24px, 6vw, 96px);
   right: clamp(24px, 6vw, 96px);
   color: var(--paper);
+}
+.dn-content {
+  position: absolute;
+  z-index: 5;
+  left: clamp(24px, 6vw, 96px);
+  right: clamp(24px, 6vw, 96px);
+  bottom: clamp(48px, 7vh, 96px);
+  color: #fff;
+  opacity: var(--dn-content-opacity, 0);
+  transform: translateY(var(--dn-content-y, 28px));
+  pointer-events: none;
+}
+.dn-content .plate-id { margin-bottom: 24px; }
+/* Static fallback (touch / narrow / reduced-motion): the cinematic stage
+   collapses into two stacked editorial blocks with real backgrounds. */
+body.bk-static .bk-coffee-scene { min-height: 0; }
+body.bk-static .bk-coffee-stage { position: relative; height: auto; min-height: 0; }
+body.bk-static .bk-photo-bg,
+body.bk-static .bk-coffee-canvas,
+body.bk-static .dn-photo,
+body.bk-static .bk-scene-veil,
+body.bk-static .bk-hero-copy { display: none; }
+body.bk-static .bk-coffee-content {
+  position: relative;
+  inset: auto;
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+  padding: clamp(80px, 14vw, 130px) clamp(24px, 6vw, 96px);
+  background: linear-gradient(rgba(11,9,7,0.78), rgba(11,9,7,0.9)), url('assets/coffee/coffee-final.webp') center / cover no-repeat;
+}
+body.bk-static .dn-content {
+  position: relative;
+  inset: auto;
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+  padding: clamp(110px, 22vw, 180px) clamp(24px, 6vw, 96px) clamp(48px, 8vw, 80px);
+  background: linear-gradient(180deg, rgba(11,9,7,0.42), rgba(11,9,7,0.72)), url('assets/brand/danube-budapest.jpg') center / cover no-repeat;
 }
 .bk-hero-copy {
   bottom: clamp(92px, 12vh, 148px);
@@ -1793,6 +1839,66 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
 .foot-grid li a:hover { color: var(--accent); padding-left: 5px; }
 .foot-bar { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
 
+/* SITE LOADER — living green wall, homepage only */
+.loader {
+  position: fixed; inset: 0; z-index: 200;
+  overflow: hidden;
+  background: var(--ink);
+  display: grid; place-items: center;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.loader.done { clip-path: inset(0 0 100% 0); pointer-events: none; }
+.loader video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.52) saturate(0.94);
+  transform: scale(1.05);
+}
+.loader::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(90% 70% at 50% 50%, rgba(11,20,16,0.1) 0%, rgba(11,20,16,0.7) 100%);
+}
+.loader-core { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--paper); }
+.loader-core .lw { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(36px, 5vw, 58px); letter-spacing: 0.04em; animation: loaderUp 1.1s var(--ease) both; }
+.loader-core .lw em { font-style: italic; color: var(--accent); }
+.loader-core .ls { margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(237,231,218,0.62); animation: loaderUp 1.1s 0.15s var(--ease) both; }
+.loader-line { width: min(220px, 40vw); height: 1px; background: rgba(237,231,218,0.18); margin-top: 32px; overflow: hidden; }
+.loader-line span { display: block; height: 100%; background: var(--accent); transform: translateX(-101%); animation: loaderBar 1.7s 0.25s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
+@keyframes loaderUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes loaderBar { to { transform: translateX(0); } }
+body.is-loading { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .loader { display: none; } }
+
+/* PAGE TRANSITIONS — fade-through-dark */
+.page-fade { position: fixed; inset: 0; z-index: 190; background: var(--ink); opacity: 0; pointer-events: none; transition: opacity 0.45s var(--ease); }
+body.page-leaving .page-fade { opacity: 1; pointer-events: auto; }
+html.pt-in .page-fade { opacity: 1; transition: none; }
+html.pt-in.pt-go .page-fade { opacity: 0; transition: opacity 0.6s var(--ease); }
+@media (prefers-reduced-motion: reduce) { .page-fade { display: none; } }
+
+/* PREMIUM POLISH — grain, blur-up, focus & hover states */
+.site-grain {
+  position: fixed; inset: 0; z-index: 150; pointer-events: none;
+  opacity: 0.045; mix-blend-mode: overlay;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,0.5) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+  background-position: 0 0, 1px 2px;
+}
+img.lz { opacity: 0.001; filter: blur(16px) saturate(1.05); transform: scale(1.015); transition: opacity 0.7s var(--ease), filter 0.9s var(--ease), transform 0.9s var(--ease); }
+img.lz.ld { opacity: 1; filter: none; transform: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.nav-cta { transition: background 0.3s var(--ease), transform 0.3s var(--ease), box-shadow 0.3s var(--ease); }
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(185,144,78,0.35); }
+.nav-cta:active { transform: translateY(0) scale(0.985); box-shadow: none; }
+.plate-deck, .deck, .bk-grid p, .trust-card p { text-wrap: pretty; }
+@media (prefers-reduced-motion: reduce) {
+  img.lz { opacity: 1; filter: none; transform: none; transition: none; }
+}
+
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .nav-links { display: none; }
@@ -1806,11 +1912,7 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
 }
 @media (max-width: 640px) {
   .plate-title-block h1, .plate-title-block h2 { font-size: clamp(40px, 10vw, 56px); }
-  .bk-coffee-scene { min-height: 185vh; }
-  .bk-coffee-stage { min-height: 600px; }
-  .bk-hero-copy { bottom: 86px; }
   .bk-hero-copy h2 { font-size: clamp(42px, 13vw, 64px); }
-  .bk-coffee-content { top: 52%; }
   .bk-fact { flex-direction: column; align-items: flex-start; gap: 6px; }
   .foot-grid { grid-template-columns: 1fr; }
   .plate-meta-row { gap: 20px; }
@@ -1818,15 +1920,32 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   .bg { transform: none !important; }
-  .bk-photo-bg { opacity: 0; }
-  .bk-coffee-final { opacity: 1; }
-  .bk-coffee-canvas { display: none; }
-  .bk-hero-copy { opacity: 0; }
-  .bk-coffee-content { opacity: 1; transform: translateY(-50%); }
 }
 </style>
 </head>
 <body class="page-home">
+
+<!-- SITE LOADER — plays the living green wall while the page settles -->
+<div class="loader" id="siteLoader" aria-hidden="true">
+  <video autoplay muted playsinline loop preload="auto" poster="assets/brand/loader-wall-poster.jpg">
+    <source src="assets/brand/loader-wall.mp4" type="video/mp4">
+  </video>
+  <div class="loader-core">
+    <span class="lw">Stories <em>hotel</em></span>
+    <span class="ls">Budapest · Király utca 26</span>
+    <span class="loader-line"><span></span></span>
+  </div>
+</div>
+<script>
+/* Lock scroll immediately; release in the loader controller below. */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.body.classList.add('is-loading');
+})();
+</script>
+
+<div class="page-fade" aria-hidden="true"></div>
+<div class="site-grain" aria-hidden="true"></div>
 
 <nav class="top" id="topnav">
   <a class="nav-brand" href="index.html" aria-label="Stories Hotel — Home">
@@ -2068,12 +2187,15 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
   </div>
 </section>
 
-<!-- BREAKFAST COFFEE SEQUENCE -->
+<!-- BREAKFAST COFFEE → DANUBE SEQUENCE — one continuous cinematic scene:
+     breakfast photo → coffee spill (120f) → breakfast facts → coffee swirl
+     morphs into the Danube (60f) → Budapest photo → neighbourhood titles. -->
 <section class="bk-coffee-scene" data-label="03 / Breakfast" id="breakfast">
   <div class="bk-coffee-stage">
-    <div class="bk-coffee-final" aria-hidden="true"></div>
     <div class="bk-photo-bg" aria-hidden="true"></div>
     <canvas class="bk-coffee-canvas" id="bkCoffeeCanvas" aria-hidden="true"></canvas>
+    <div class="dn-photo" aria-hidden="true"></div>
+    <div class="bk-scene-veil" aria-hidden="true"></div>
     <div class="bk-scene-grain" aria-hidden="true"></div>
 
     <div class="bk-hero-copy">
@@ -2099,21 +2221,15 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- NEIGHBOURHOOD PLATE + BODY -->
-<section class="plate" data-label="04 / Neighbourhood" id="neigh">
-  <div class="bg" style="background-image: url('assets/brand/thomas-winkler-Rxq6wvbPuJI-unsplash.jpg');"></div>
-  <div class="plate-grain"></div>
-  <div class="plate-content">
-    <div class="plate-id"><span class="n">V</span><span>·</span><span>District VI, on foot</span></div>
-    <div class="plate-title-block">
-      <h2>A quarter worth<br>the <em>walk.</em></h2>
-      <p class="plate-deck">Király utca runs through one of Budapest's most walkable districts. Seven short steps from the door — the places we send guests when they ask.</p>
+    <div class="dn-content" id="neigh">
+      <div class="plate-id"><span class="n">V</span><span>·</span><span>District VI, on foot</span></div>
+      <div class="plate-title-block">
+        <h2>A quarter worth<br>the <em>walk.</em></h2>
+        <p class="plate-deck">Király utca runs through one of Budapest's most walkable districts. Seven short steps from the door — the places we send guests when they ask.</p>
+      </div>
     </div>
   </div>
-  <div class="scrollcue"><span>The list</span><span class="line"></span></div>
 </section>
 
 <section class="body dark" data-label="04 / Neighbourhood">
@@ -3003,62 +3119,134 @@ body.classList.toggle('in-cinema', e.isIntersecting);
 })();
 </script>
 <script>
-/* BREAKFAST coffee sequence — one continuous photo-to-frame scene. */
+/* BREAKFAST → DANUBE sequence — one continuous sticky scene.
+   Two webp frame sets share one canvas; fractional frame indices are
+   blended (drawImage × globalAlpha) so the scrub never visibly "steps",
+   and ScrollTrigger's scrub easing adds the Apple-style inertia. */
 (function () {
   var scene = document.querySelector('.bk-coffee-scene');
   var stage = scene && scene.querySelector('.bk-coffee-stage');
   var canvas = document.getElementById('bkCoffeeCanvas');
   var content = scene && scene.querySelector('.bk-coffee-content');
+  var dnContent = scene && scene.querySelector('.dn-content');
   if (!scene || !stage || !canvas) return;
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var narrow = window.matchMedia('(max-width: 860px)').matches;
   var hasMotion = window.gsap && window.ScrollTrigger && !reduce && !narrow;
 
-  function setSceneProgress(p) {
-    var heroOut = Math.min(1, Math.max(0, p / 0.24));
-    var sequenceIn = Math.min(1, Math.max(0, (p - 0.18) / 0.18));
-    var finalIn = Math.min(1, Math.max(0, (p - 0.76) / 0.18));
-    var contentIn = Math.min(1, Math.max(0, (p - 0.68) / 0.22));
-
-    stage.style.setProperty('--bk-hero-opacity', (1 - heroOut).toFixed(3));
-    stage.style.setProperty('--bk-hero-y', (-heroOut * 26).toFixed(1) + 'px');
-    stage.style.setProperty('--bk-hero-blur', (heroOut * 10).toFixed(1) + 'px');
-    stage.style.setProperty('--bk-photo-opacity', (1 - sequenceIn * 0.82).toFixed(3));
-    stage.style.setProperty('--bk-photo-brightness', (0.82 - sequenceIn * 0.32).toFixed(3));
-    stage.style.setProperty('--bk-canvas-opacity', sequenceIn.toFixed(3));
-    stage.style.setProperty('--bk-final-opacity', finalIn.toFixed(3));
-    stage.style.setProperty('--bk-content-opacity', contentIn.toFixed(3));
-    stage.style.setProperty('--bk-content-y', ((1 - contentIn) * 24).toFixed(1) + 'px');
-    if (content) content.style.pointerEvents = contentIn > 0.75 ? 'auto' : 'none';
-  }
-
   if (!hasMotion) {
-    setSceneProgress(1);
+    document.body.classList.add('bk-static');
     return;
   }
 
   gsap.registerPlugin(ScrollTrigger);
 
-  var N = 69, BASE = 'assets/coffee/frame_';
-  var imgs = new Array(N), loaded = 0, cur = 0, preloadStarted = false;
+  var SETS = {
+    coffee: { n: 120, base: 'assets/coffee/frame_', imgs: [], started: false, loaded: 0 },
+    danube: { n: 60,  base: 'assets/danube/frame_', imgs: [], started: false, loaded: 0 }
+  };
   var ctx = canvas.getContext('2d', { alpha: false });
   var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var last = { set: SETS.coffee, f: 0 };
+  var painted = false;                 // canvas is opaque black until first draw
+  var rlNum = document.getElementById('rl-num');
+  var rlText = document.getElementById('rl-text');
 
   function pad (n) { return ('00' + n).slice(-3); }
+  function ok (img) { return img && img.complete && img.naturalWidth; }
+  function cover (img) {
+    var cw = canvas.width, ch = canvas.height, iw = img.naturalWidth, ih = img.naturalHeight;
+    var s = Math.max(cw / iw, ch / ih), w = iw * s, h = ih * s;
+    ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+  }
+  // Fractional-index draw: floor frame at full alpha, ceil frame blended on
+  // top — eliminates the per-frame "stepping" of the previous version.
+  function drawBlend (set, f) {
+    f = Math.max(0, Math.min(set.n - 1, f));
+    var i0 = Math.floor(f), i1 = Math.min(set.n - 1, i0 + 1), t = f - i0;
+    var a = set.imgs[i0];
+    if (!ok(a)) {                       // not loaded yet → nearest loaded below
+      for (var k = i0; k >= 0; k--) if (ok(set.imgs[k])) { a = set.imgs[k]; break; }
+      if (!ok(a)) return;
+      cover(a); painted = true; last = { set: set, f: f };
+      return;
+    }
+    cover(a);
+    var b = set.imgs[i1];
+    if (i1 !== i0 && t > 0.02 && ok(b)) {
+      ctx.globalAlpha = t;
+      cover(b);
+      ctx.globalAlpha = 1;
+    }
+    painted = true;
+    last = { set: set, f: f };
+  }
   function resize () {
     var r = canvas.getBoundingClientRect();
     canvas.width  = Math.max(1, Math.round(r.width  * dpr));
     canvas.height = Math.max(1, Math.round(r.height * dpr));
-    draw(cur);
+    drawBlend(last.set, last.f);
   }
-  function draw (i) {
-    var img = imgs[i];
-    if (!img || !img.complete || !img.naturalWidth) return;
-    cur = i;
-    var cw = canvas.width, ch = canvas.height, iw = img.naturalWidth, ih = img.naturalHeight;
-    var s = Math.max(cw / iw, ch / ih), w = iw * s, h = ih * s;   // object-fit: cover
-    ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+
+  function preload (set, done) {
+    if (set.started) return;
+    set.started = true;
+    for (var k = 0; k < set.n; k++) (function (k) {
+      var im = new Image();
+      im.onload = im.onerror = function () {
+        set.loaded++;
+        if (k === 0 && set === SETS.coffee) drawBlend(set, 0);
+        if (set.loaded === set.n && done) done();
+      };
+      im.src = set.base + pad(k + 1) + '.webp';
+      set.imgs[k] = im;
+    })(k);
+  }
+
+  function clamp01 (v) { return Math.min(1, Math.max(0, v)); }
+
+  /* Scene timeline (p = 0..1 across ~330vh of scrub):
+     0.00–0.10  breakfast hero copy blurs away
+     0.06–0.40  coffee spill, frames 1→120 (photo crossfades into canvas)
+     0.42–0.62  breakfast facts plateau (in → hold → out)
+     0.60–0.86  coffee swirl morphs into the Danube, frames 1→60
+     0.84–0.93  Danube photo (gabriel-miklos) crossfades over the last frames
+     0.90–1.00  neighbourhood titles rise over the Danube photo            */
+  function setSceneProgress (p) {
+    var heroOut   = clamp01(p / 0.10);
+    var canvasIn  = clamp01((p - 0.05) / 0.10);
+    var bkIn      = clamp01((p - 0.42) / 0.07);
+    var bkOut     = clamp01((p - 0.56) / 0.06);
+    var bkVis     = bkIn * (1 - bkOut);
+    var dnPhotoIn = clamp01((p - 0.84) / 0.09);
+    var dnIn      = clamp01((p - 0.90) / 0.08);
+
+    stage.style.setProperty('--bk-hero-opacity', (1 - heroOut).toFixed(3));
+    stage.style.setProperty('--bk-hero-y', (-heroOut * 26).toFixed(1) + 'px');
+    stage.style.setProperty('--bk-hero-blur', (heroOut * 10).toFixed(1) + 'px');
+    if (!painted) canvasIn = 0;        // never reveal an unpainted (black) canvas
+    stage.style.setProperty('--bk-photo-opacity', (1 - canvasIn).toFixed(3));
+    stage.style.setProperty('--bk-photo-brightness', (0.82 - canvasIn * 0.32).toFixed(3));
+    stage.style.setProperty('--bk-canvas-opacity', canvasIn.toFixed(3));
+    stage.style.setProperty('--bk-content-opacity', bkVis.toFixed(3));
+    stage.style.setProperty('--bk-content-y', ((1 - bkIn) * 24).toFixed(1) + 'px');
+    stage.style.setProperty('--dn-photo-opacity', dnPhotoIn.toFixed(3));
+    stage.style.setProperty('--dn-content-opacity', dnIn.toFixed(3));
+    stage.style.setProperty('--dn-content-y', ((1 - dnIn) * 28).toFixed(1) + 'px');
+    if (content) content.style.pointerEvents = bkVis > 0.75 ? 'auto' : 'none';
+    if (dnContent) dnContent.style.pointerEvents = dnIn > 0.75 ? 'auto' : 'none';
+
+    // Running label hands over from Breakfast to Neighbourhood mid-scene.
+    if (rlNum && rlText) {
+      if (p >= 0.62 && rlNum.textContent !== '04') {
+        rlNum.textContent = '04';
+        rlText.textContent = 'Neighbourhood';
+      } else if (p < 0.62 && rlNum.textContent !== '03') {
+        rlNum.textContent = '03';
+        rlText.textContent = 'Breakfast';
+      }
+    }
   }
 
   resize();
@@ -3069,27 +3257,113 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     trigger: scene,
     start: 'top top',
     end: 'bottom bottom',
-    scrub: true,
+    scrub: 0.85,                       // inertial catch-up — no hard lock
     onUpdate: function (self) {
       var p = self.progress;
-      var sequenceProgress = Math.min(1, Math.max(0, (p - 0.24) / 0.76));
-      draw(Math.round(sequenceProgress * (N - 1)));
+      var pd = (p - 0.60) / 0.26;      // Danube window
+      if (pd > 0) {
+        if (!SETS.danube.started) preload(SETS.danube);
+        drawBlend(SETS.danube, clamp01(pd) * (SETS.danube.n - 1));
+      } else {
+        var pc = clamp01((p - 0.06) / 0.34);
+        drawBlend(SETS.coffee, pc * (SETS.coffee.n - 1));
+      }
       setSceneProgress(p);
     }
   });
 
-  function preload () {
-    if (preloadStarted) return;
-    preloadStarted = true;
-    for (var k = 0; k < N; k++) (function (k) {
-      var im = new Image();
-      im.onload  = function () { loaded++; if (k === 0) draw(0); if (loaded === N) ScrollTrigger.refresh(); };
-      im.onerror = function () { loaded++; if (loaded === N) ScrollTrigger.refresh(); };
-      im.src = BASE + pad(k + 1) + '.jpg';
-      imgs[k] = im;
-    })(k);
+  // Coffee frames load as soon as the scene is within ~1.5 viewports;
+  // the Danube set follows automatically once coffee is in.
+  var warm = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      preload(SETS.coffee, function () { preload(SETS.danube); });
+      warm.disconnect();
+    });
+  }, { rootMargin: '300% 0px' });
+  warm.observe(scene);
+})();
+</script>
+
+<script>
+/* PREMIUM SHARED LAYER — loader controller, fade-through-dark page
+   transitions, blur-up image loading. Mirrored on every Ver3 page. */
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+
+  // ── Loader: hold ≥1.9s so the wall breathes, release on load, cap at 4.5s
+  (function () {
+    var loader = document.getElementById('siteLoader');
+    if (!loader) return;
+    if (reduce) { loader.remove(); document.body.classList.remove('is-loading'); return; }
+    var t0 = performance.now(), MIN = 1900, MAX = 4500, fired = false;
+    function finish () {
+      if (fired) return;
+      fired = true;
+      loader.classList.add('done');
+      document.body.classList.remove('is-loading');
+      setTimeout(function () { loader.remove(); }, 1000);
+    }
+    window.addEventListener('load', function () {
+      setTimeout(finish, Math.max(0, MIN - (performance.now() - t0)));
+    });
+    setTimeout(finish, MAX);
+  })();
+
+  // ── Page-transition entry reveal (html.pt-in was set in <head>)
+  if (root.classList.contains('pt-in')) {
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      root.classList.add('pt-go');
+      setTimeout(function () { root.classList.remove('pt-in', 'pt-go'); }, 700);
+    }); });
   }
-  preload();
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) {
+      document.body.classList.remove('page-leaving');
+      root.classList.remove('pt-in', 'pt-go');
+    }
+  });
+
+  // ── Page-transition exit: internal links fade through the brand dark
+  function transitable (a) {
+    if (a.target && a.target !== '_self') return false;
+    if (a.hasAttribute('download')) return false;
+    var href = a.getAttribute('href') || '';
+    if (!href || href.charAt(0) === '#') return false;
+    if (/^(mailto|tel|javascript):/i.test(href)) return false;
+    if (/^https?:/i.test(href) && a.origin !== location.origin) return false;
+    if (a.pathname === location.pathname && a.hash) return false;
+    return true;
+  }
+  if (!reduce) {
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (!a || !transitable(a)) return;
+      e.preventDefault();
+      try { sessionStorage.setItem('pt', '1'); } catch (err) {}
+      var href = a.href;
+      document.body.classList.add('page-leaving');
+      setTimeout(function () { location.href = href; }, 460);
+    });
+  }
+
+  // ── Blur-up: photos settle in from a soft blur instead of popping
+  function blurUp () {
+    document.querySelectorAll('img').forEach(function (img) {
+      if (img.closest('.rf, .neigh-map, .loader, nav, .logo-stage, .cursor')) return;
+      if (img.complete && img.naturalWidth) return;   // cached — show instantly
+      img.classList.add('lz');
+      function done () { img.classList.add('ld'); }
+      img.addEventListener('load', done);
+      img.addEventListener('error', done);
+    });
+  }
+  if (!reduce) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', blurUp);
+    else blurUp();
+  }
 })();
 </script>
 </body>

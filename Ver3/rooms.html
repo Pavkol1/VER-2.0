@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rooms — Stories Budapest</title>
+<script>
+/* Page-transition entry: if the previous page set the flag, start veiled
+   (html.pt-in) so the first paint is the brand dark, then fade open. */
+(function () { try { if (sessionStorage.getItem('pt') === '1') { sessionStorage.removeItem('pt'); document.documentElement.classList.add('pt-in'); } } catch (e) {} })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..700;1,300..600&family=Lora:ital,wght@0,400..600;1,400..600&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -358,9 +363,40 @@ body:not(.page-home) { --logo-init-p: 1; }
   .cursor { display: none; }
 }
 
+
+/* PAGE TRANSITIONS — fade-through-dark */
+.page-fade { position: fixed; inset: 0; z-index: 190; background: var(--ink); opacity: 0; pointer-events: none; transition: opacity 0.45s var(--ease); }
+body.page-leaving .page-fade { opacity: 1; pointer-events: auto; }
+html.pt-in .page-fade { opacity: 1; transition: none; }
+html.pt-in.pt-go .page-fade { opacity: 0; transition: opacity 0.6s var(--ease); }
+@media (prefers-reduced-motion: reduce) { .page-fade { display: none; } }
+
+/* PREMIUM POLISH — grain, blur-up, focus & hover states */
+.site-grain {
+  position: fixed; inset: 0; z-index: 150; pointer-events: none;
+  opacity: 0.045; mix-blend-mode: overlay;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,0.5) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+  background-position: 0 0, 1px 2px;
+}
+img.lz { opacity: 0.001; filter: blur(16px) saturate(1.05); transform: scale(1.015); transition: opacity 0.7s var(--ease), filter 0.9s var(--ease), transform 0.9s var(--ease); }
+img.lz.ld { opacity: 1; filter: none; transform: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.nav-cta { transition: background 0.3s var(--ease), transform 0.3s var(--ease), box-shadow 0.3s var(--ease); }
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(185,144,78,0.35); }
+.nav-cta:active { transform: translateY(0) scale(0.985); box-shadow: none; }
+.plate-deck, .deck { text-wrap: pretty; }
+@media (prefers-reduced-motion: reduce) {
+  img.lz { opacity: 1; filter: none; transform: none; transition: none; }
+}
 </style>
 </head>
 <body>
+<div class="page-fade" aria-hidden="true"></div>
+<div class="site-grain" aria-hidden="true"></div>
+
 
 <nav class="top" id="topnav">
   <span class="nav-brand-slot" aria-hidden="true"></span>
@@ -894,6 +930,65 @@ body:not(.page-home) { --logo-init-p: 1; }
   }, { threshold: 0.12 });
   io.observe(f);
 }());
+</script>
+<script>
+/* PREMIUM SHARED LAYER — fade-through-dark page transitions + blur-up
+   image loading. Mirrored on every Ver3 page (loader lives on index only). */
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+
+  if (root.classList.contains('pt-in')) {
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      root.classList.add('pt-go');
+      setTimeout(function () { root.classList.remove('pt-in', 'pt-go'); }, 700);
+    }); });
+  }
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) {
+      document.body.classList.remove('page-leaving');
+      root.classList.remove('pt-in', 'pt-go');
+    }
+  });
+
+  function transitable (a) {
+    if (a.target && a.target !== '_self') return false;
+    if (a.hasAttribute('download')) return false;
+    var href = a.getAttribute('href') || '';
+    if (!href || href.charAt(0) === '#') return false;
+    if (/^(mailto|tel|javascript):/i.test(href)) return false;
+    if (/^https?:/i.test(href) && a.origin !== location.origin) return false;
+    if (a.pathname === location.pathname && a.hash) return false;
+    return true;
+  }
+  if (!reduce) {
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (!a || !transitable(a)) return;
+      e.preventDefault();
+      try { sessionStorage.setItem('pt', '1'); } catch (err) {}
+      var href = a.href;
+      document.body.classList.add('page-leaving');
+      setTimeout(function () { location.href = href; }, 460);
+    });
+  }
+
+  function blurUp () {
+    document.querySelectorAll('img').forEach(function (img) {
+      if (img.closest('.rf, .neigh-map, .loader, nav, .logo-stage, .cursor')) return;
+      if (img.complete && img.naturalWidth) return;
+      img.classList.add('lz');
+      function done () { img.classList.add('ld'); }
+      img.addEventListener('load', done);
+      img.addEventListener('error', done);
+    });
+  }
+  if (!reduce) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', blurUp);
+    else blurUp();
+  }
+})();
 </script>
 </body>
 </html>

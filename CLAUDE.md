@@ -50,7 +50,7 @@ Per user preference, ask Claude to start the server rather than running it yours
 .
 ├── netlify.toml          publish = "Ver3"  (the only config — no build command)
 ├── Ver3/                 ← ACTIVE, deployable site root (edit here)
-│   ├── index.html        Homepage: cinematic hero + intro-strip + luxuries + rooms rail + coffee sequence + neighbourhood + reserve
+│   ├── index.html        Homepage: loader + hero + intro-strip + luxuries + rooms rail + coffee→Danube scene + neighbourhood + reserve
 │   ├── rooms.html        6 rooms, top-nav + sticky info, 5–6 photos per room
 │   ├── pleasures.html    Bar & Lounge, Gym (GoActive), Coworking as full-width feature sections
 │   ├── breakfast.html    Plate + intro grid + 3-column menu + sourcing block
@@ -58,8 +58,9 @@ Per user preference, ask Claude to start the server rather than running it yours
 │   ├── contact.html      60vh hero + 2-column contact info/form
 │   ├── faqs.html         Paper bg (no plate), sticky nav sidebar, accordion FAQ
 │   └── assets/
-│       ├── brand/        Hero/plate backgrounds + logos (hero.jpg, breakfast-new.jpg, luxuries-*.jpg, stories-logo.svg, …)
-│       ├── coffee/       frame_001.jpg … frame_069.jpg + coffee-final.jpg — homepage coffee scroll sequence
+│       ├── brand/        Hero/plate backgrounds + logos (hero.jpg, breakfast-new.jpg, danube-budapest.jpg, loader-wall.mp4/-poster.jpg, …)
+│       ├── coffee/       frame_001…120.webp + coffee-final.webp — coffee spill scroll sequence (cropped to 3:2, no bars)
+│       ├── danube/       frame_001…060.webp — coffee→Danube morph sequence (ends crossfading into danube-budapest.jpg)
 │       ├── photos/       Per-room and amenity galleries (presidential-suite/, king-suite/, …)
 │       └── vendor/       lenis.min.js · gsap.min.js · ScrollTrigger.min.js
 └── Ver2/                 legacy / reference only — do NOT edit
@@ -114,6 +115,9 @@ GSAP + ScrollTrigger load as `<script>` tags just before the inline `<script>` b
 - **Boutique cursor** (`.cursor` — gold dot + lagging ring + magnetic `.magnet` CTAs). Disabled on touch + reduced-motion.
 - **Lenis smooth-scroll** — `assets/vendor/lenis.min.js`, `lerp: 0.085`; skipped under `prefers-reduced-motion`.
 - **Nav** — `.scrolled` state once `scrollY > 40`. On `index.html` only, a direction-tracking scroll handler toggles `body.nav-hidden`, which hides the nav via `translate3d(0, -110%, 0)` (a pure transform slide — no `opacity`, because the blurred backdrop + opacity repaints glitch on Safari).
+- **Page transitions** — fade-through-dark on every internal link: click sets `body.page-leaving` (`.page-fade` overlay fades to `--ink`, ~0.45s) then navigates; the next page reads a `sessionStorage('pt')` flag in a `<head>` script and starts veiled (`html.pt-in`), fading open after first paint. bfcache handled via `pageshow`.
+- **Premium shared layer** (bottom `<script>` on every page) — page transitions + blur-up image loading (`img.lz` → `.ld` on decode); `.site-grain` fixed film-grain overlay; `:focus-visible` gold outlines.
+- **Site loader** (`index.html` only, every visit) — fullscreen green-wall video (`loader-wall.mp4`, 470KB) with wordmark + gold progress line; min 1.9s, max 4.5s, exits with an upward `clip-path` wipe. Skipped under reduced-motion.
 - Shared dark `<footer>` grid across all pages.
 
 **Animations**
@@ -149,7 +153,7 @@ Old tokens were `--ivory #F2EDE4 / --ink #0D0B08 / --gold #B9904E / --green #2A5
 
 **Index rooms rail**: native horizontal scroll + `scroll-snap-type: x mandatory`. An IntersectionObserver with `rootMargin: '-50% 0px -50% 0px'` tracks which room gallery is centered and swaps `--room-bg` / `--room-ink` CSS variables on `body` to repaint the surrounding section per room (`ROOM_COLORS` palette map; active slug lives in `stage.dataset.active`). A 750ms `scrollLockUntil` debounce stops the observer from fighting programmatic `scrollIntoView`.
 
-**Homepage coffee sequence** (`.bk-coffee-scene`, `index.html`): a tall (~185vh+) scroll-scrubbed scene driven by one `ScrollTrigger` (`scrub: true`). Progress maps to CSS variables (`--bk-hero-opacity`, `--bk-canvas-opacity`, `--bk-final-opacity`, …) via `setSceneProgress(p)`, and to a `<canvas>` drawing `assets/coffee/frame_001–069.jpg` with object-fit-cover math. Frames are lazily preloaded; canvas is capped at `devicePixelRatio ≤ 2`. On reduced-motion or ≤860px the script calls `setSceneProgress(1)` and shows the static `coffee-final.jpg` instead.
+**Homepage coffee→Danube scene** (`.bk-coffee-scene`, `index.html`): one 430vh sticky scene, one `ScrollTrigger` with `scrub: 0.85` (inertial catch-up). Timeline: breakfast photo → coffee spill (120 webp frames) → breakfast-facts plateau → coffee swirl morphs into the Danube (60 webp frames) → crossfade into `danube-budapest.jpg` (real photo replaces the AI-looking last frames) → neighbourhood titles (`.dn-content`, holds `id="neigh"`). Both frame sets share one `<canvas>`; fractional frame indices are blended via `globalAlpha` so the scrub never steps. A single `.bk-scene-veil` vignette sits above all media layers (no brightness jump between photo/canvas/final). Frames preload via IO at `rootMargin: 300%`; a `painted` flag stops the (black, `alpha:false`) canvas from being revealed before its first draw. On reduced-motion or ≤860px, `body.bk-static` collapses the scene into two static blocks. The running label flips 03→04 mid-scene from `setSceneProgress`.
 
 **Leaflet map** (index + neighbourhood): tile provider is CARTO Dark Matter (no API key; swap for a keyed Stadia/Mapbox layer before a high-traffic commercial launch). Popup content is built with DOM nodes + `textContent` — never template strings — honoring the project-wide rule. `map.invalidateSize()` fires via IntersectionObserver because Leaflet mismeasures when initialised off-screen.
 
