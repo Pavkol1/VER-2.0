@@ -100,31 +100,31 @@ GSAP + ScrollTrigger load as `<script>` tags just before the inline `<script>` b
 --text-2:  #6A6A5C
 --text-3:  #9A9A8C   /* mono labels */
 --primary: #123524   /* deep emerald */
---accent:  #B9904E   /* gold */
+--accent:  #B9904E   /* gold (briefly dark emerald on 2026-06-12, reverted same day per client) */
 --ease:    cubic-bezier(0.22, 0.61, 0.36, 1)
 ```
 
 **Typography** (Google Fonts, same `<link>` on every page):
-- Headings: `Lora` (serif), often with italic `em` in `--primary` or `--accent`
-- Body/UI: `Inter`
+- Headings: `Libre Caslon Text` (serif), often with italic `em` in `--primary` or `--accent` — free stand-in for the commercial **Gangster** the client referenced
+- Body/UI: `Schibsted Grotesk` — free stand-in for **ABC Monument Grotesk**; if the client buys licences, swap to self-hosted originals
 - Labels/overlines/mono: `JetBrains Mono`, 10–11px, `letter-spacing: 0.18em–0.28em`, uppercase
 - `Playfair Display` + `Pinyon Script` are used by the hero logo wordmark system
 
 **Ver3-specific systems** (present in every page, near-identical CSS/JS blocks):
 - **Logo stage** (`.logo-stage` / `.logo-mover`) — wordmark that scales/moves into the nav slot; flips ink⇄paper via `body.logo-on-light` as you cross light/dark sections.
-- **Boutique cursor** (`.cursor` — gold dot + lagging ring + magnetic `.magnet` CTAs). Disabled on touch + reduced-motion.
+- **No custom cursor** — the boutique dot+ring cursor was removed site-wide (2026-06-12); native cursor only. Inert `.magnet` classes remain in markup.
 - **Lenis smooth-scroll** — `assets/vendor/lenis.min.js`, `lerp: 0.085`; skipped under `prefers-reduced-motion`.
 - **Nav** — `.scrolled` state once `scrollY > 40`. On `index.html` only, a direction-tracking scroll handler toggles `body.nav-hidden`, which hides the nav via `translate3d(0, -110%, 0)` (a pure transform slide — no `opacity`, because the blurred backdrop + opacity repaints glitch on Safari).
-- **Page transitions** — fade-through-dark on every internal link: click sets `body.page-leaving` (`.page-fade` overlay fades to `--ink`, ~0.45s) then navigates; the next page reads a `sessionStorage('pt')` flag in a `<head>` script and starts veiled (`html.pt-in`), fading open after first paint. bfcache handled via `pageshow`.
-- **Premium shared layer** (bottom `<script>` on every page) — page transitions + blur-up image loading (`img.lz` → `.ld` on decode); `.site-grain` fixed film-grain overlay; `:focus-visible` gold outlines.
-- **Site loader** (`index.html` only, every visit) — fullscreen green-wall video (`loader-wall.mp4`, 470KB) with wordmark + gold progress line; min 1.9s, max 4.5s, exits with an upward `clip-path` wipe. Skipped under reduced-motion.
+- **Page transitions** — ink **panel sweep** (swipe): click on an internal link slides a full-screen `--ink` panel in from the right (`body.page-leaving .page-sweep`, 0.52s, gold hairline edges), then navigates; the next page reads a `sessionStorage('pt')` flag in a `<head>` script, starts covered (`html.pt-in`) and the panel exits to the left (0.68s). bfcache via `pageshow`. (A pure-CSS View Transitions version was tried 2026-06-12 and reverted — it didn't fire reliably in the client's Chrome.) Disabled under reduced motion.
+- **Premium shared layer** (bottom `<script>` on every page) — blur-up image loading (`img.lz` → `.ld` on decode); `.site-grain` fixed film-grain overlay; `:focus-visible` accent outlines. (The loader controller lives here on index only.)
+- **Site loader** (`index.html` only, every visit) — fullscreen green-wall video (`loader-wall.mp4`, 470KB) with wordmark + accent progress line; min 1.9s, max 4.5s, exits by **evaporating** (opacity + `blur(18px)` + slight scale/upward drift, 1.15s). Skipped under reduced-motion.
+- **Chapter rail** (`index.html` only, `.chapter-rail`) — right-edge segmented scroll timeline (lukebaffait.fr-style): 6 chapters, segment heights ∝ chapter scroll span (pow-0.78 damped), per-segment fill, static vertical spine label (`writing-mode: vertical-rl`, centred beside the bar — only the fill animates; a riding label was tried and reverted), click scrolls to the chapter via Lenis. Dims to 22% when idle, hidden ≤1024px. The 04→05 boundary sits at the coffee scene's internal p=0.62 handover. Colors flip via `body.logo-on-light` and follow `--room-ink` inside the rooms cinema (`body.in-cinema`). Replaced the old rotated `.runlabel` (subpages still have runlabels).
 - Shared dark `<footer>` grid across all pages.
 
 **Animations**
 - Plate bg zoom: `scale(1.06)` → `scale(1.0)` when section gains `.visible` (1.6s `--ease`)
 - GSAP scroll reveals: `gsap.from()` + ScrollTrigger entries for staggered text, image curtains, and section reveals; structural sections (stage, cinema, coffee scene, plates, footer…) are listed in a `SKIP` selector and excluded from the generic reveal pass.
-- IntersectionObserver still used for: running-label updates (`data-label`), `.in-view` on `.rf` photo frames, and Leaflet `invalidateSize` timing.
-- Running label (`.runlabel`): rotated −90° on the left edge; section name/number updated via IntersectionObserver reading `data-label` attributes.
+- IntersectionObserver still used for: `body.logo-on-light` flips, `.in-view` on `.rf` photo frames, and Leaflet `invalidateSize` timing.
 - `prefers-reduced-motion` is respected everywhere — scripts check `matchMedia('(prefers-reduced-motion: reduce)')` before registering ScrollTriggers; animate only `transform` and `opacity`.
 
 ### Design System (Ver2) — LEGACY (do not use for new work)

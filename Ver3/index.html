@@ -6,13 +6,13 @@
 <title>Stories Budapest — A hotel of stories, quietly told.</title>
 <link rel="icon" href="data:,">
 <script>
-/* Page-transition entry: if the previous page set the flag, start veiled
-   (html.pt-in) so the first paint is the brand dark, then fade open. */
+/* Page-transition entry: if the previous page set the flag, start covered
+   (html.pt-in) so the sweep panel can exit over the first paint. */
 (function () { try { if (sessionStorage.getItem('pt') === '1') { sessionStorage.removeItem('pt'); document.documentElement.classList.add('pt-in'); } } catch (e) {} })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..700;1,300..600&family=Lora:ital,wght@0,400..600;1,400..600&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <!-- Leaflet (interactive neighbourhood map) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
@@ -33,7 +33,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Schibsted Grotesk', sans-serif;
   font-weight: 400;
   background: var(--ink);
   color: var(--text);
@@ -71,7 +71,7 @@ nav.top.scrolled {
   border-bottom-color: rgba(255,255,255,0.08);
 }
 .brand {
-  font-family: 'Lora', serif;
+  font-family: 'Libre Caslon Text', serif;
   font-weight: 500;
   font-size: 22px;
   letter-spacing: 0.02em;
@@ -103,27 +103,74 @@ nav.top.scrolled {
 }
 .nav-cta:hover { background: #fff; }
 
-/* RUNNING LABEL */
-.runlabel {
+/* CHAPTER RAIL — left-edge segmented scroll timeline. One segment per
+   chapter (height ∝ chapter scroll span), fill tracks progress, the label
+   rides the fill tip. Dims when idle, wakes on scroll/hover. */
+.chapter-rail {
   position: fixed;
-  top: 50%; left: 24px;
-  transform: translateY(-50%) rotate(-90deg);
-  transform-origin: left center;
+  top: 50%; right: 22px;
+  height: 58vh;
+  transform: translateY(-50%);
   z-index: 40;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.6);
+  opacity: 0;
   pointer-events: none;
-  white-space: nowrap;
-  transition: color 0.4s var(--ease);
-  display: flex;
-  align-items: center;
-  gap: 0;
+  transition: opacity 0.6s var(--ease);
 }
-.runlabel.light { color: rgba(22,19,14,0.55); }
-.runlabel .sep { margin: 0 14px; color: var(--accent); }
+.chapter-rail.on { opacity: 1; pointer-events: auto; }
+.chapter-rail.on.idle:not(:hover):not(:focus-within) { opacity: 0.22; }
+.cr-bar { display: flex; flex-direction: column; gap: 7px; height: 100%; width: 20px; }
+.cr-seg {
+  position: relative; flex: 1 1 auto; min-height: 24px;
+  width: 20px; padding: 0; margin: 0;
+  background: none; border: 0; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+.cr-seg::before {                                   /* track */
+  content: ''; position: absolute; top: 0; bottom: 0; left: 9px; width: 2px;
+  background: rgba(237,231,218,0.18);
+  transition: background 0.35s var(--ease), opacity 0.35s var(--ease);
+}
+.cr-seg:hover::before, .cr-seg:focus-visible::before { background: rgba(237,231,218,0.38); }
+.cr-seg:active::before { background: var(--accent); }
+.cr-fill {                                          /* progress */
+  position: absolute; top: 0; left: 9px; width: 2px;
+  height: calc(var(--p, 0) * 100%);
+  background: var(--paper);
+  transition: background 0.35s var(--ease);
+}
+.cr-label, .cr-hint {
+  position: absolute; right: 24px;
+  writing-mode: vertical-rl;                /* spine text — hugs the bar, no overlap */
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; line-height: 1; letter-spacing: 0.22em; text-transform: uppercase;
+  white-space: nowrap; color: rgba(237,231,218,0.78);
+}
+.cr-label {
+  top: 50%; transform: translateY(-50%);          /* static, centred beside the bar */
+  transition: color 0.35s var(--ease), opacity 0.3s var(--ease);
+}
+.chapter-rail:hover .cr-label, .chapter-rail:focus-within .cr-label { opacity: 0; }
+.cr-hint {
+  top: 50%; transform: translateY(-50%);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s var(--ease), color 0.35s var(--ease);
+}
+.cr-seg:hover .cr-hint, .cr-seg:focus-visible .cr-hint { opacity: 1; }
+.cr-label .cr-sep, .cr-hint .cr-sep { margin: 9px 0; color: var(--accent); }
+/* Flip to ink on light sections (same trigger as the logo). */
+body.logo-on-light .cr-seg::before { background: rgba(11,20,16,0.16); }
+body.logo-on-light .cr-seg:hover::before,
+body.logo-on-light .cr-seg:focus-visible::before { background: rgba(11,20,16,0.34); }
+body.logo-on-light .cr-fill { background: var(--ink); }
+body.logo-on-light .cr-label, body.logo-on-light .cr-hint { color: rgba(11,20,16,0.66); }
+/* Inside the rooms cinema follow the active room's ink (same pattern as the
+   nav links) so the rail stays readable on light room palettes. */
+body.in-cinema .cr-seg::before { background: var(--room-ink); opacity: 0.18; }
+body.in-cinema .cr-seg:hover::before,
+body.in-cinema .cr-seg:focus-visible::before { opacity: 0.4; }
+body.in-cinema .cr-seg:active::before { background: var(--accent); opacity: 1; }
+body.in-cinema .cr-fill { background: var(--room-ink); }
+body.in-cinema .cr-label, body.in-cinema .cr-hint { color: var(--room-ink); }
 
 
 /* SPOTLIGHT HERO — cursor-reveal landing (Variant 2 · Spotlight) */
@@ -150,16 +197,16 @@ nav.top.scrolled {
   transform: translate(-50%,-50%); pointer-events: none;
   left: 52%; top: 42%; mix-blend-mode: screen; opacity: 0; transition: opacity 0.3s var(--ease);
 }
-/* the hero owns the cursor; hide the site's boutique cursor while over it */
-body.in-hero #cursor { opacity: 0 !important; }
 
 .sp-body { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 24px; pointer-events: none; }
 .sp-kicker { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(237,231,218,0.82); display: inline-flex; align-items: center; gap: 14px; margin-bottom: 30px; transition: opacity 1.1s var(--ease) 0.2s, transform 1.1s var(--ease) 0.2s; }
 .sp-kicker .rule { width: 40px; height: 1px; background: var(--accent); }
-.sp-ttl { position: relative; font-family: 'Lora', serif; font-weight: 400; font-size: clamp(46px, 8.6vw, 146px); line-height: 0.92; letter-spacing: -0.024em; }
+.sp-ttl { position: relative; font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(46px, 8.6vw, 146px); line-height: 0.92; letter-spacing: -0.024em; }
 .sp-ttl em { font-style: italic; color: var(--accent); }
 .sp-out { color: transparent; -webkit-text-stroke: 1px rgba(237,231,218,0.42); }
-.sp-fill { position: absolute; inset: 0; color: var(--paper); clip-path: inset(0 0 0 0); transition: clip-path 1.6s var(--ease) 0.4s; }
+/* Negative insets keep q/y descenders inside the clip — line-height 0.92 lets
+   them overflow the box and Libre Caslon's descenders are longer than Lora's. */
+.sp-fill { position: absolute; inset: 0; color: var(--paper); clip-path: inset(-0.3em -0.3em -0.35em -0.3em); transition: clip-path 1.6s var(--ease) 0.4s; }
 .sp-fill em { color: var(--accent); }
 .sp-sub { margin-top: 26px; font-size: 17px; font-weight: 300; color: rgba(237,231,218,0.82); max-width: 44ch; transition: opacity 1.1s var(--ease) 1.1s, transform 1.1s var(--ease) 1.1s; }
 .sp-acts { margin-top: 38px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; pointer-events: auto; transition: opacity 1.1s var(--ease) 1.4s, transform 1.1s var(--ease) 1.4s; }
@@ -179,7 +226,7 @@ body.in-hero #cursor { opacity: 0 !important; }
    hero, so a hero-level :hover would freeze it whenever you move the light). */
 /* Entrance: visible by default; hidden only during prep:not(.go) so a paused tab never freezes invisible. */
 .spotlight-hero.prep:not(.go) .sp-kicker { opacity: 0; transform: translateY(16px); transition: none; }
-.spotlight-hero.prep:not(.go) .sp-fill { clip-path: inset(0 100% 0 0); transition: none; }
+.spotlight-hero.prep:not(.go) .sp-fill { clip-path: inset(-0.3em 100% -0.35em -0.3em); transition: none; }
 .spotlight-hero.prep:not(.go) .sp-sub { opacity: 0; transform: translateY(14px); transition: none; }
 .spotlight-hero.prep:not(.go) .sp-acts { opacity: 0; transform: translateY(14px); transition: none; }
 .spotlight-hero.prep:not(.go) .sp-marq { opacity: 0; transform: translateY(16px); transition: none; }
@@ -509,7 +556,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   color: rgba(237, 231, 218, 0.45);
 }
 .intro-meta .v {
-  font-family: 'Lora', serif;
+  font-family: 'Libre Caslon Text', serif;
   font-size: 17px;
   color: var(--paper);
 }
@@ -527,7 +574,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   content: ""; width: 48px; height: 1px; background: var(--accent);
 }
 .intro-strip h1 {
-  font-family: 'Lora', serif;
+  font-family: 'Libre Caslon Text', serif;
   font-weight: 400;
   font-size: clamp(48px, 7.2vw, 124px);
   line-height: 0.98;
@@ -584,62 +631,6 @@ body:not(.page-home) { --logo-init-p: 1; }
   .intro-strip.revealed h1 .w.em-word::after { animation: none; transform: scaleX(1); }
 }
 
-/* C — Custom boutique cursor: gold dot + lagging ring + magnetic CTAs */
-/* Visible by default; JS guards skip activation on touch-only and reduced-motion */
-.cursor {
-  position: fixed; top: 0; left: 0;
-  width: 0; height: 0;
-  pointer-events: none;
-  z-index: 9999;
-}
-.cursor-dot, .cursor-ring {
-  position: fixed; top: 0; left: 0;
-  border-radius: 50%;
-  pointer-events: none;
-  will-change: transform;
-  /* Start at 50/50 of viewport — visible immediately even before first mousemove */
-  transform: translate3d(50vw, 50vh, 0);
-}
-.cursor-dot {
-  width: 10px; height: 10px;
-  margin: -5px 0 0 -5px;
-  background: var(--accent);
-  box-shadow: 0 0 8px rgba(185,144,78,0.7);
-  transition: opacity 0.2s var(--ease);
-}
-.cursor-ring {
-  width: 38px; height: 38px;
-  margin: -19px 0 0 -19px;
-  border: 1.5px solid rgba(185, 144, 78, 0.85);
-  background: transparent;
-  transition: width 0.25s var(--ease),
-              height 0.25s var(--ease),
-              border-color 0.25s var(--ease),
-              background 0.25s var(--ease),
-              margin 0.25s var(--ease);
-}
-.cursor.is-hover .cursor-ring {
-  width: 64px; height: 64px;
-  margin: -32px 0 0 -32px;
-  border-color: var(--accent);
-  background: rgba(185, 144, 78, 0.14);
-}
-.cursor.is-hover .cursor-dot { opacity: 0; }
-.magnet { will-change: transform; }
-
-
-/* Only hide the native cursor on hover-capable, fine-pointer devices */
-@media (hover: hover) and (pointer: fine) {
-  html, body, *, *::before, *::after { cursor: none !important; }
-}
-@media (prefers-reduced-motion: reduce) {
-  html, body, *, *::before, *::after { cursor: auto !important; }
-  .cursor { display: none !important; }
-  .magnet { transform: none !important; }
-}
-@media (hover: none), (pointer: coarse) {
-  .cursor { display: none; }
-}
 
 
 
@@ -700,7 +691,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .plate-id .n { color: var(--accent); }
 .plate-title-block { align-self: end; max-width: 1080px; }
 .plate-title-block h1, .plate-title-block h2 {
-  font-family: 'Lora', serif;
+  font-family: 'Libre Caslon Text', serif;
   font-weight: 400;
   font-size: clamp(52px, 8.5vw, 148px);
   line-height: 0.96;
@@ -733,7 +724,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   text-transform: uppercase;
   color: rgba(255,255,255,0.5);
 }
-.plate-meta-row .v { font-family: 'Lora', serif; font-size: 19px; color: #fff; font-weight: 500; }
+.plate-meta-row .v { font-family: 'Libre Caslon Text', serif; font-size: 19px; color: #fff; font-weight: 500; }
 .scrollcue {
   position: absolute;
   right: clamp(40px, 6vw, 96px);
@@ -776,7 +767,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   align-items: end;
 }
 .rooms-head h3 {
-  font-family: 'Lora', serif;
+  font-family: 'Libre Caslon Text', serif;
   font-weight: 400;
   font-size: clamp(32px, 4vw, 56px);
   line-height: 1.05;
@@ -840,7 +831,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .room-card .rc-top .idx { color: var(--accent); }
 .room-card h4 {
-  font-family: 'Lora', serif;
+  font-family: 'Libre Caslon Text', serif;
   font-weight: 500;
   font-size: clamp(22px, 2vw, 28px);
   line-height: 1.1;
@@ -858,8 +849,8 @@ body:not(.page-home) { --logo-init-p: 1; }
   border: 1px dashed var(--rule);
 }
 .room-card.soon::after { display: none; }
-.room-card.soon .sp { font-family: 'Lora', serif; font-style: italic; font-size: 16px; color: var(--text-2); padding: 30px; line-height: 1.5; }
-.room-card.soon .sp b { font-family: 'Lora', serif; font-weight: 500; font-style: normal; color: var(--ink); font-size: 22px; display: block; margin-bottom: 6px; }
+.room-card.soon .sp { font-family: 'Libre Caslon Text', serif; font-style: italic; font-size: 16px; color: var(--text-2); padding: 30px; line-height: 1.5; }
+.room-card.soon .sp b { font-family: 'Libre Caslon Text', serif; font-weight: 500; font-style: normal; color: var(--ink); font-size: 22px; display: block; margin-bottom: 6px; }
 
 /* ROOMS CINEMA (Ver3 M2 — alma-style click-driven tabs) */
 .rooms-cinema {
@@ -891,7 +882,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   content: ""; width: 48px; height: 1px; background: var(--accent);
 }
 .rooms-cinema-intro h2 {
-  font-family: 'Lora', serif;
+  font-family: 'Libre Caslon Text', serif;
   font-weight: 500;
   font-size: clamp(36px, 4.6vw, 76px);
   line-height: 1.05;
@@ -1068,7 +1059,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   content: ""; width: 36px; height: 1px; background: var(--accent);
 }
 .panel-current .panel-title {
-  font-family: 'Lora', serif;
+  font-family: 'Libre Caslon Text', serif;
   font-weight: 500;
   font-size: clamp(40px, 4.6vw, 76px);
   line-height: 1.0;
@@ -1402,7 +1393,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .pcard::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,11,8,0) 35%, rgba(13,11,8,0.85) 100%); }
 .pcard .inner { position: absolute; z-index: 2; left: clamp(20px, 2vw, 32px); right: clamp(20px, 2vw, 32px); bottom: clamp(20px, 2vw, 32px); color: #fff; }
 .pcard .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-.pcard h4 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(26px, 3vw, 42px); line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 10px; }
+.pcard h4 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(26px, 3vw, 42px); line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 10px; }
 .pcard h4 em { font-style: italic; color: var(--accent); }
 .pcard p { font-size: 14px; color: rgba(255,255,255,0.75); max-width: 440px; font-weight: 300; line-height: 1.55; }
 .pcard .more {
@@ -1543,7 +1534,7 @@ body.bk-static .dn-content {
   margin-bottom: 26px;
 }
 .bk-hero-copy h2 {
-  font-family: 'Lora', serif;
+  font-family: 'Libre Caslon Text', serif;
   font-weight: 400;
   font-size: clamp(48px, 8vw, 118px);
   line-height: 0.92;
@@ -1565,14 +1556,14 @@ body.bk-static .dn-content {
   pointer-events: none;
 }
 .bk-grid { display: grid; grid-template-columns: 1.12fr 0.88fr; gap: clamp(40px, 6vw, 96px); align-items: end; max-width: 1180px; }
-.bk-grid h3 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(30px, 4.2vw, 60px); line-height: 1.05; color: #fff; margin-bottom: 22px; letter-spacing: -0.014em; }
+.bk-grid h3 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(30px, 4.2vw, 60px); line-height: 1.05; color: #fff; margin-bottom: 22px; letter-spacing: -0.014em; }
 .bk-grid h3 em { font-style: italic; color: var(--accent); }
 .bk-grid p { font-size: 16px; line-height: 1.7; color: rgba(237,231,218,0.78); margin-bottom: 14px; font-weight: 300; max-width: 48ch; }
 .bk-right { padding-top: 4px; }
 .bk-fact { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 16px 0; border-top: 1px solid rgba(237,231,218,0.16); }
 .bk-fact:last-child { border-bottom: 1px solid rgba(237,231,218,0.16); }
 .bk-fact .l { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(237,231,218,0.5); }
-.bk-fact .v { font-family: 'Lora', serif; font-size: 18px; color: #fff; font-weight: 500; }
+.bk-fact .v { font-family: 'Libre Caslon Text', serif; font-size: 18px; color: #fff; font-weight: 500; }
 .bk-fact .v em { font-style: italic; color: var(--accent); font-weight: 400; }
 .bk-cta {
   display: inline-flex;
@@ -1596,7 +1587,7 @@ body.bk-static .dn-content {
 .neigh-grid .ix { display: grid; grid-template-columns: 40px 1fr 1fr auto; column-gap: 20px; }
 .neigh-grid .ix > * { padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.12); font-weight: 400; }
 .neigh-grid .ix .n { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: rgba(255,255,255,0.5); }
-.neigh-grid .ix .pl { font-family: 'Lora', serif; font-size: 19px; color: #fff; }
+.neigh-grid .ix .pl { font-family: 'Libre Caslon Text', serif; font-size: 19px; color: #fff; }
 .neigh-grid .ix .pl em { font-style: italic; color: var(--accent); font-weight: 400; }
 .neigh-grid .ix .k { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 300; }
 .neigh-grid .ix .d { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.1em; white-space: nowrap; }
@@ -1606,7 +1597,7 @@ body.bk-static .dn-content {
 .neigh-leaflet { position: absolute; inset: 0; width: 100%; height: 100%; background: var(--ink-3); }
 /* Pull the dark CARTO basemap toward the warm emerald palette + calm contrast */
 .neigh-leaflet .leaflet-tile-pane { filter: saturate(0.5) brightness(0.92) contrast(1.04) sepia(0.12) hue-rotate(85deg); }
-.neigh-leaflet.leaflet-container { background: var(--ink-3); font-family: 'Inter', sans-serif; outline: none; }
+.neigh-leaflet.leaflet-container { background: var(--ink-3); font-family: 'Schibsted Grotesk', sans-serif; outline: none; }
 /* Zoom control restyled to the boutique system */
 .neigh-leaflet .leaflet-control-zoom { border: none; margin: 14px; box-shadow: none; }
 .neigh-leaflet .leaflet-control-zoom a {
@@ -1654,8 +1645,8 @@ body.bk-static .dn-content {
 .neigh-leaflet .leaflet-popup-close-button { color: var(--text-3); padding: 6px 8px 0 0; }
 .neigh-leaflet .leaflet-popup-close-button:hover { color: var(--ink); }
 .np-tag  { font: 500 9px 'JetBrains Mono', monospace; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 7px; }
-.np-name { font: 500 18px 'Lora', serif; margin-bottom: 5px; letter-spacing: -0.005em; color: var(--ink); }
-.np-desc { font: 400 13px 'Inter', sans-serif; line-height: 1.45; color: var(--text-2); margin-bottom: 10px; }
+.np-name { font: 500 18px 'Libre Caslon Text', serif; margin-bottom: 5px; letter-spacing: -0.005em; color: var(--ink); }
+.np-desc { font: 400 13px 'Schibsted Grotesk', sans-serif; line-height: 1.45; color: var(--text-2); margin-bottom: 10px; }
 .np-walk { font: 500 11px 'JetBrains Mono', monospace; letter-spacing: 0.18em; color: var(--primary); display: inline-flex; align-items: center; gap: 10px; }
 .np-walk::before { content: ""; width: 18px; height: 1px; background: var(--accent); }
 
@@ -1688,7 +1679,7 @@ body.bk-static .dn-content {
   content: ""; width: 36px; height: 1px; background: var(--accent);
 }
 .trust-head h2 {
-  font-family: 'Lora', serif;
+  font-family: 'Libre Caslon Text', serif;
   font-weight: 400;
   font-size: clamp(34px, 4.4vw, 64px);
   line-height: 1.05;
@@ -1728,7 +1719,7 @@ body.bk-static .dn-content {
   color: var(--accent);
 }
 .trust-card h3 {
-  font-family: 'Lora', serif;
+  font-family: 'Libre Caslon Text', serif;
   font-weight: 500;
   font-size: 19px;
   line-height: 1.25;
@@ -1780,7 +1771,7 @@ body.bk-static .dn-content {
 .reserve-inner { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; text-align: center; width: 100%; }
 .reserve-over { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; display: inline-flex; align-items: center; gap: 12px; }
 .reserve-over::before, .reserve-over::after { content: ""; width: 32px; height: 1px; background: var(--accent); }
-.reserve-inner h2 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(44px, 6vw, 108px); line-height: 0.98; letter-spacing: -0.018em; margin-bottom: 28px; text-wrap: balance; }
+.reserve-inner h2 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(44px, 6vw, 108px); line-height: 0.98; letter-spacing: -0.018em; margin-bottom: 28px; text-wrap: balance; }
 .reserve-inner h2 em { font-style: italic; color: var(--accent); }
 .reserve-word { display: inline-block; will-change: transform, opacity, filter; }
 .reserve-inner > p { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.7); max-width: 560px; margin: 0 auto 44px; font-weight: 300; }
@@ -1796,7 +1787,7 @@ body.bk-static .dn-content {
 }
 .reserve-form .field { display: flex; flex-direction: column; padding: 16px 18px; text-align: left; border-right: 1px solid rgba(255,255,255,0.08); }
 .reserve-form .lab { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 6px; }
-.reserve-form input, .reserve-form select { background: transparent; border: none; color: #fff; font-family: 'Lora', serif; font-size: 16px; padding: 0; outline: none; cursor: pointer; }
+.reserve-form input, .reserve-form select { background: transparent; border: none; color: #fff; font-family: 'Libre Caslon Text', serif; font-size: 16px; padding: 0; outline: none; cursor: pointer; }
 .reserve-form select option { color: var(--ink); background: var(--paper); }
 .reserve-form .go { background: var(--accent); border: none; color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; padding: 0 28px; cursor: pointer; font-weight: 500; transition: background 0.3s var(--ease); white-space: nowrap; }
 .reserve-form .go:hover { background: #fff; }
@@ -1828,14 +1819,14 @@ footer.foot-armed.foot-revealed { transform: none; opacity: 1; }
 footer::before { content: ""; position: absolute; inset: 0; background: url('assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.jpg') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
 footer::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9,11,10,0.4) 0%, rgba(8,10,9,0.84) 100%); z-index: -1; }
 .foot-grid { position: relative; width: 100%; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.foot-grid h3 { font-family: 'Lora', serif; font-size: 28px; color: #fff; font-weight: 500; }
+.foot-grid h3 { font-family: 'Libre Caslon Text', serif; font-size: 28px; color: #fff; font-weight: 500; }
 .foot-grid .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 8px 0 24px; }
 .foot-grid address { font-style: normal; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
 .foot-grid a.ph { font-size: 14px; color: rgba(255,255,255,0.88); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1px; display: inline-block; margin-bottom: 4px; }
 .foot-grid a.ph:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .foot-grid h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 18px; font-weight: 400; }
 .foot-grid ul { list-style: none; }
-.foot-grid li a { font-family: 'Lora', serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
+.foot-grid li a { font-family: 'Libre Caslon Text', serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
 .foot-grid li a:hover { color: var(--accent); padding-left: 5px; }
 .foot-bar { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
 
@@ -1845,10 +1836,9 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
   overflow: hidden;
   background: var(--ink);
   display: grid; place-items: center;
-  clip-path: inset(0 0 0 0);
-  transition: clip-path 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+  transition: opacity 1.15s var(--ease), filter 1.15s var(--ease), transform 1.15s var(--ease);
 }
-.loader.done { clip-path: inset(0 0 100% 0); pointer-events: none; }
+.loader.done { opacity: 0; filter: blur(18px) brightness(1.12); transform: scale(1.045) translateY(-1.5%); pointer-events: none; }
 .loader video {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover;
@@ -1861,7 +1851,7 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
   background: radial-gradient(90% 70% at 50% 50%, rgba(11,20,16,0.1) 0%, rgba(11,20,16,0.7) 100%);
 }
 .loader-core { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--paper); }
-.loader-core .lw { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(36px, 5vw, 58px); letter-spacing: 0.04em; animation: loaderUp 1.1s var(--ease) both; }
+.loader-core .lw { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(36px, 5vw, 58px); letter-spacing: 0.04em; animation: loaderUp 1.1s var(--ease) both; }
 .loader-core .lw em { font-style: italic; color: var(--accent); }
 .loader-core .ls { margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(237,231,218,0.62); animation: loaderUp 1.1s 0.15s var(--ease) both; }
 .loader-line { width: min(220px, 40vw); height: 1px; background: rgba(237,231,218,0.18); margin-top: 32px; overflow: hidden; }
@@ -1871,12 +1861,17 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
 body.is-loading { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .loader { display: none; } }
 
-/* PAGE TRANSITIONS — fade-through-dark */
-.page-fade { position: fixed; inset: 0; z-index: 190; background: var(--ink); opacity: 0; pointer-events: none; transition: opacity 0.45s var(--ease); }
-body.page-leaving .page-fade { opacity: 1; pointer-events: auto; }
-html.pt-in .page-fade { opacity: 1; transition: none; }
-html.pt-in.pt-go .page-fade { opacity: 0; transition: opacity 0.6s var(--ease); }
-@media (prefers-reduced-motion: reduce) { .page-fade { display: none; } }
+/* PAGE TRANSITIONS — ink panel sweep (swipe). On exit the panel slides in
+   from the right covering the page, then we navigate; the next page starts
+   covered (html.pt-in, set in <head>) and the panel exits to the left. */
+.page-sweep { position: fixed; inset: 0; z-index: 190; background: var(--ink); transform: translateX(102%); pointer-events: none; will-change: transform; }
+.page-sweep::before, .page-sweep::after { content: ''; position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); opacity: 0.85; }
+.page-sweep::before { left: 0; }
+.page-sweep::after  { right: 0; }
+body.page-leaving .page-sweep { transform: translateX(0); transition: transform 0.52s cubic-bezier(0.76, 0, 0.24, 1); pointer-events: auto; }
+html.pt-in .page-sweep { transform: translateX(0); transition: none; }
+html.pt-in.pt-go .page-sweep { transform: translateX(-103%); transition: transform 0.68s cubic-bezier(0.76, 0, 0.24, 1) 0.06s; }
+@media (prefers-reduced-motion: reduce) { .page-sweep { display: none; } }
 
 /* PREMIUM POLISH — grain, blur-up, focus & hover states */
 .site-grain {
@@ -1902,7 +1897,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .nav-links { display: none; }
-  .runlabel { display: none; }
+  .chapter-rail { display: none; }
   .rooms-head, .bk-grid, .neigh-grid { grid-template-columns: 1fr; }
   .pleasures-grid { grid-template-columns: 1fr; }
   .pcard.a, .pcard.b, .pcard.c { grid-column: 1 / -1; grid-row: span 1; min-height: 300px; }
@@ -1944,7 +1939,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 })();
 </script>
 
-<div class="page-fade" aria-hidden="true"></div>
+<div class="page-sweep" aria-hidden="true"></div>
 <div class="site-grain" aria-hidden="true"></div>
 
 <nav class="top" id="topnav">
@@ -1973,9 +1968,17 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   </div>
 </nav>
 
-<div class="runlabel" id="runlabel">
-  <span id="rl-num">01</span><span class="sep">◆</span><span id="rl-text">The House</span>
-</div>
+<nav class="chapter-rail" id="chapterRail" aria-label="Chapters">
+  <div class="cr-bar" id="crBar">
+    <button class="cr-seg" type="button" aria-label="01 — The House"><span class="cr-fill"></span><span class="cr-hint">01<span class="cr-sep">◆</span>The House</span></button>
+    <button class="cr-seg" type="button" aria-label="02 — Little Luxuries"><span class="cr-fill"></span><span class="cr-hint">02<span class="cr-sep">◆</span>Little Luxuries</span></button>
+    <button class="cr-seg" type="button" aria-label="03 — Rooms"><span class="cr-fill"></span><span class="cr-hint">03<span class="cr-sep">◆</span>Rooms</span></button>
+    <button class="cr-seg" type="button" aria-label="04 — Breakfast"><span class="cr-fill"></span><span class="cr-hint">04<span class="cr-sep">◆</span>Breakfast</span></button>
+    <button class="cr-seg" type="button" aria-label="05 — Neighbourhood"><span class="cr-fill"></span><span class="cr-hint">05<span class="cr-sep">◆</span>Neighbourhood</span></button>
+    <button class="cr-seg" type="button" aria-label="06 — Reservations"><span class="cr-fill"></span><span class="cr-hint">06<span class="cr-sep">◆</span>Reservations</span></button>
+  </div>
+  <span class="cr-label" id="crLabel" aria-hidden="true"><span id="crNum">01</span><span class="cr-sep">◆</span><span id="crName">The House</span></span>
+</nav>
 
 <!-- HERO — Spotlight: cursor-reveal landing (base + lit image layers). -->
 <section class="stage spotlight-hero" id="stage" data-label="01 / The House">
@@ -1987,7 +1990,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   <div class="sp-body">
     <div class="sp-kicker"><span class="rule"></span>Budapest VI · Est. 2024<span class="rule"></span></div>
     <h1 class="sp-ttl"><span class="sp-out">A hotel of <em>stories,</em><br>quietly told.</span><span class="sp-fill" aria-hidden="true">A hotel of <em>stories,</em><br>quietly told.</span></h1>
-    <p class="sp-sub">Move the light. Forty-four rooms, six characters — a small house on Király utca.</p>
+    <p class="sp-sub">Forty-four rooms, six characters — a small house on Király utca.</p>
     <div class="sp-acts">
       <a class="sp-btn-solid" href="#reserve">Book a stay <span aria-hidden="true">&rarr;</span></a>
       <a class="sp-btn-ghost" href="rooms.html">Explore rooms <span aria-hidden="true">&rarr;</span></a>
@@ -2378,10 +2381,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   </div>
 </footer>
 
-<div class="cursor" id="cursor" aria-hidden="true">
-  <span class="cursor-ring"></span>
-  <span class="cursor-dot"></span>
-</div>
 
 <!-- Lenis smooth-scroll: more distance per wheel tick + buttery easing. Skipped under prefers-reduced-motion. -->
 <script src="assets/vendor/lenis.min.js" defer></script>
@@ -2424,7 +2423,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
     // Keep ScrollTrigger in sync with Lenis WITHOUT double-driving its rAF loop.
     if (window.__lenis && window.__lenis.on) window.__lenis.on('scroll', ScrollTrigger.update);
 
-    var SKIP = '.stage, .intro-strip, .rooms-cinema, .bk-coffee-scene, .plate, .reserve-plate, .logo-stage, .runlabel, footer, .neigh-map, .cursor, nav';
+    var SKIP = '.stage, .intro-strip, .rooms-cinema, .bk-coffee-scene, .plate, .reserve-plate, .logo-stage, .chapter-rail, footer, .neigh-map, .cursor, nav';
     function pick (sel) { return gsap.utils.toArray(sel).filter(function (el) { return !el.closest(SKIP); }); }
 
     // Text — headings rise + fade as they enter.
@@ -2719,79 +2718,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
     }
   }
 
-  // ── C: gold dot+ring cursor with magnetic CTA pull ──────────────────────
-  (function () {
-    if (reduceMo) return;
-    var cursor = document.getElementById('cursor');
-    var dot    = cursor && cursor.querySelector('.cursor-dot');
-    var ring   = cursor && cursor.querySelector('.cursor-ring');
-    if (!cursor || !dot || !ring) {
-      console.warn('[Ver3 cursor] element missing — skipping cursor init');
-      return;
-    }
-    console.log('[Ver3 cursor] activated');
-
-    // Start in the center so the user sees the cursor even before the first mousemove
-    var mx = window.innerWidth / 2, my = window.innerHeight / 2;
-    var rx = mx, ry = my;
-    var hoverSel = 'a, button, .room-list button, [role="button"]';
-    var magnets     = Array.prototype.slice.call(document.querySelectorAll('.magnet'));
-    var magnetCache = [];
-    var rectsTimer  = null;
-
-    function refreshRects() {
-      magnetCache = magnets.map(function (el) {
-        var r = el.getBoundingClientRect();
-        return { el: el, cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
-      });
-    }
-    refreshRects();
-
-    document.addEventListener('mousemove', function (e) {
-      mx = e.clientX; my = e.clientY;
-    }, { passive: true });
-
-    // Re-cache magnet positions only after scroll/resize settles —
-    // getBoundingClientRect during heavy scroll is expensive, especially in Safari.
-    function scheduleRefresh() {
-      if (rectsTimer) clearTimeout(rectsTimer);
-      rectsTimer = setTimeout(refreshRects, 120);
-    }
-    window.addEventListener('scroll', scheduleRefresh, { passive: true });
-    window.addEventListener('resize', scheduleRefresh);
-
-    document.addEventListener('mouseover', function (e) {
-      if (e.target.closest && e.target.closest(hoverSel)) cursor.classList.add('is-hover');
-    });
-    document.addEventListener('mouseout', function (e) {
-      if (e.target.closest && e.target.closest(hoverSel)) cursor.classList.remove('is-hover');
-    });
-
-    function loop() {
-      // CSS handles the centre-offset via margin; here we just translate the
-      // element's top-left corner to the mouse position.
-      dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)';
-      rx += (mx - rx) * 0.18;
-      ry += (my - ry) * 0.18;
-      ring.style.transform = 'translate3d(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,0)';
-
-      // Magnetic pull from cached rects — no layout reads on the rAF path
-      for (var i = 0; i < magnetCache.length; i++) {
-        var m  = magnetCache[i];
-        var dx = mx - m.cx, dy = my - m.cy;
-        var d  = Math.sqrt(dx * dx + dy * dy) || 1;
-        if (d < 100) {
-          var pull = (1 - d / 100) * 12;
-          m.el.style.transform = 'translate3d(' + ((dx / d) * pull).toFixed(1) + 'px,' + ((dy / d) * pull).toFixed(1) + 'px,0)';
-        } else if (m.el.style.transform) {
-          m.el.style.transform = '';
-        }
-      }
-      requestAnimationFrame(loop);
-    }
-    requestAnimationFrame(loop);
-  })();
-
 
   // Toggle nav.scrolled past the first 40px of scroll — opacity/background
   // animation lives in CSS.
@@ -2861,10 +2787,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
     }
   }
 
-  // Section tracker: drives runlabel + body.logo-on-light for the small logo.
-  var rlNum = document.getElementById('rl-num');
-  var rlText = document.getElementById('rl-text');
-  var runlabel = document.getElementById('runlabel');
+  // Section tracker: drives body.logo-on-light (logo + chapter-rail ink flip)
+  // and the plate zoom reveals. The chapter rail itself reads scroll position.
   var sections = document.querySelectorAll(
     '.stage, .intro-strip, .rooms-cinema, .spotlight-bridge, .bk-coffee-scene, .plate, .body, .reserve-plate'
   );
@@ -2873,18 +2797,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
     entries.forEach(function (e) {
       if (!e.isIntersecting || e.intersectionRatio < 0.35) return;
 
-      var label = e.target.dataset.label;
-      if (label) {
-        var parts = label.split('/');
-        rlNum.textContent = parts[0].trim();
-        rlText.textContent = parts[1] ? parts[1].trim() : '';
-      }
-
       // .body without .dark is the only light surface; everything else (hero,
       // intro-strip, .plate, .reserve-plate, .body.dark) is ink-toned.
       var isLight = e.target.classList.contains('body') &&
                     !e.target.classList.contains('dark');
-      runlabel.classList.toggle('light', isLight);
       body.classList.toggle('logo-on-light', isLight);
 
       if (e.target.classList.contains('plate')) {
@@ -3101,12 +3017,12 @@ body.classList.toggle('in-cinema', e.isIntersecting);
   hero.addEventListener('mousemove', function (e) {
     mx = e.clientX; my = e.clientY; active = true;
     if (ring) ring.style.opacity = '1';
-    document.body.classList.add('in-hero');   // hand the cursor to the hero ring
+    document.body.classList.add('in-hero');
   }, { passive: true });
   hero.addEventListener('mouseleave', function () {
     active = false;
     if (ring) ring.style.opacity = '0';
-    document.body.classList.remove('in-hero'); // give it back to the boutique cursor
+    document.body.classList.remove('in-hero');
   });
   var t = 0;
   (function loop () {
@@ -3150,8 +3066,6 @@ body.classList.toggle('in-cinema', e.isIntersecting);
   var dpr = Math.min(window.devicePixelRatio || 1, 2);
   var last = { set: SETS.coffee, f: 0 };
   var painted = false;                 // canvas is opaque black until first draw
-  var rlNum = document.getElementById('rl-num');
-  var rlText = document.getElementById('rl-text');
 
   function pad (n) { return ('00' + n).slice(-3); }
   function ok (img) { return img && img.complete && img.naturalWidth; }
@@ -3237,16 +3151,6 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     if (content) content.style.pointerEvents = bkVis > 0.75 ? 'auto' : 'none';
     if (dnContent) dnContent.style.pointerEvents = dnIn > 0.75 ? 'auto' : 'none';
 
-    // Running label hands over from Breakfast to Neighbourhood mid-scene.
-    if (rlNum && rlText) {
-      if (p >= 0.62 && rlNum.textContent !== '04') {
-        rlNum.textContent = '04';
-        rlText.textContent = 'Neighbourhood';
-      } else if (p < 0.62 && rlNum.textContent !== '03') {
-        rlNum.textContent = '03';
-        rlText.textContent = 'Breakfast';
-      }
-    }
   }
 
   resize();
@@ -3286,36 +3190,134 @@ body.classList.toggle('in-cinema', e.isIntersecting);
 </script>
 
 <script>
+/* CHAPTER RAIL — left-edge segmented scroll timeline. Six chapters; segment
+   heights mirror each chapter's real scroll span, the fill tracks progress
+   and the label rides the fill tip. Chapter 04→05 splits inside the coffee
+   scene at the same p=0.62 handover the canvas timeline uses. */
+(function () {
+  var rail = document.getElementById('chapterRail');
+  if (!rail) return;
+  var segs = Array.prototype.slice.call(rail.querySelectorAll('.cr-seg'));
+  var labelEl = document.getElementById('crLabel');
+  var numEl = document.getElementById('crNum');
+  var nameEl = document.getElementById('crName');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var CH = [
+    { num: '01', name: 'The House' },
+    { num: '02', name: 'Little Luxuries' },
+    { num: '03', name: 'Rooms' },
+    { num: '04', name: 'Breakfast' },
+    { num: '05', name: 'Neighbourhood' },
+    { num: '06', name: 'Reservations' }
+  ];
+  var bounds = [];    // chapter starts in probe space (probe = scrollY + vh/2)
+  var endP = 1;       // probe value at the very bottom
+  var targets = [];   // scrollY destinations for clicks
+  var ready = false;
+
+  function measure () {
+    var vh = window.innerHeight;
+    var stage = document.getElementById('stage');
+    var rituals = document.getElementById('ritualsSpotlight');
+    var cinema = document.getElementById('roomsCinema');
+    var bk = document.getElementById('breakfast');
+    var reserve = document.getElementById('reserve');
+    if (!stage || !rituals || !cinema || !bk || !reserve) return;
+    var bkSpan = Math.max(1, bk.offsetHeight - vh);
+    var split = bk.offsetTop + 0.62 * bkSpan;      // canvas Breakfast→Neighbourhood handover
+    bounds = [
+      0,
+      rituals.offsetTop,
+      cinema.offsetTop,
+      bk.offsetTop,
+      split + vh * 0.5,
+      reserve.offsetTop
+    ];
+    endP = document.documentElement.scrollHeight - vh * 0.5;
+    targets = [
+      0,
+      rituals.offsetTop,
+      cinema.offsetTop,
+      bk.offsetTop,
+      bk.offsetTop + bkSpan,                       // scene end: Danube photo + titles
+      reserve.offsetTop
+    ];
+    for (var i = 0; i < segs.length; i++) {
+      var next = (i + 1 < bounds.length) ? bounds[i + 1] : endP;
+      // pow-damped so the huge rooms chapter doesn't swallow the whole bar
+      segs[i].style.flexGrow = Math.pow(Math.max(1, next - bounds[i]), 0.78).toFixed(2);
+    }
+    ready = true;
+  }
+
+  var idleTimer = null;
+  function update () {
+    if (!ready) return;
+    var vh = window.innerHeight;
+    // endP live: the footer reveal shifts document height after measure()
+    endP = document.documentElement.scrollHeight - vh * 0.5;
+    var p = Math.min(endP, window.scrollY + vh * 0.5);
+    var active = 0;
+    for (var i = 0; i < bounds.length; i++) {
+      var next = (i + 1 < bounds.length) ? bounds[i + 1] : endP;
+      var f = Math.min(1, Math.max(0, (p - bounds[i]) / Math.max(1, next - bounds[i])));
+      segs[i].style.setProperty('--p', f.toFixed(4));
+      if (p >= bounds[i]) active = i;
+    }
+    if (numEl.textContent !== CH[active].num) {
+      numEl.textContent = CH[active].num;
+      nameEl.textContent = CH[active].name;
+    }
+    rail.classList.toggle('on', window.scrollY > vh * 0.55);
+    rail.classList.remove('idle');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () { rail.classList.add('idle'); }, 1700);
+  }
+
+  var raf = false;
+  function onScroll () {
+    if (raf) return;
+    raf = true;
+    requestAnimationFrame(function () { raf = false; update(); });
+  }
+
+  segs.forEach(function (seg, i) {
+    seg.addEventListener('click', function () {
+      if (!ready) return;
+      var t = targets[i];
+      if (window.__lenis && typeof window.__lenis.scrollTo === 'function') {
+        window.__lenis.scrollTo(t, { duration: 1.25 });
+      } else {
+        window.scrollTo({ top: t, behavior: reduce ? 'auto' : 'smooth' });
+      }
+    });
+  });
+
+  measure();
+  update();
+  if (window.__lenis && window.__lenis.on) window.__lenis.on('scroll', onScroll);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () { measure(); update(); }, { passive: true });
+  window.addEventListener('load', function () {
+    measure(); update();
+    setTimeout(function () { measure(); update(); }, 1200);  // late layout (fonts, frames)
+  });
+})();
+</script>
+
+<script>
 /* PREMIUM SHARED LAYER — loader controller, fade-through-dark page
    transitions, blur-up image loading. Mirrored on every Ver3 page. */
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var root = document.documentElement;
 
-  // ── Loader: hold ≥1.9s so the wall breathes, release on load, cap at 4.5s
-  (function () {
-    var loader = document.getElementById('siteLoader');
-    if (!loader) return;
-    if (reduce) { loader.remove(); document.body.classList.remove('is-loading'); return; }
-    var t0 = performance.now(), MIN = 1900, MAX = 4500, fired = false;
-    function finish () {
-      if (fired) return;
-      fired = true;
-      loader.classList.add('done');
-      document.body.classList.remove('is-loading');
-      setTimeout(function () { loader.remove(); }, 1000);
-    }
-    window.addEventListener('load', function () {
-      setTimeout(finish, Math.max(0, MIN - (performance.now() - t0)));
-    });
-    setTimeout(finish, MAX);
-  })();
-
-  // ── Page-transition entry reveal (html.pt-in was set in <head>)
+  // ── Page sweep: exit panel, entry reveal, bfcache cleanup
   if (root.classList.contains('pt-in')) {
     requestAnimationFrame(function () { requestAnimationFrame(function () {
       root.classList.add('pt-go');
-      setTimeout(function () { root.classList.remove('pt-in', 'pt-go'); }, 700);
+      setTimeout(function () { root.classList.remove('pt-in', 'pt-go'); }, 950);
     }); });
   }
   window.addEventListener('pageshow', function (e) {
@@ -3324,8 +3326,6 @@ body.classList.toggle('in-cinema', e.isIntersecting);
       root.classList.remove('pt-in', 'pt-go');
     }
   });
-
-  // ── Page-transition exit: internal links fade through the brand dark
   function transitable (a) {
     if (a.target && a.target !== '_self') return false;
     if (a.hasAttribute('download')) return false;
@@ -3345,9 +3345,29 @@ body.classList.toggle('in-cinema', e.isIntersecting);
       try { sessionStorage.setItem('pt', '1'); } catch (err) {}
       var href = a.href;
       document.body.classList.add('page-leaving');
-      setTimeout(function () { location.href = href; }, 460);
+      setTimeout(function () { location.href = href; }, 540);
     });
   }
+
+  // ── Loader: hold ≥1.9s so the wall breathes, release on load, cap at 4.5s
+  (function () {
+    var loader = document.getElementById('siteLoader');
+    if (!loader) return;
+    if (reduce) { loader.remove(); document.body.classList.remove('is-loading'); return; }
+    var t0 = performance.now(), MIN = 1900, MAX = 4500, fired = false;
+    function finish () {
+      if (fired) return;
+      fired = true;
+      loader.classList.add('done');
+      document.body.classList.remove('is-loading');
+      setTimeout(function () { loader.remove(); }, 1250);
+    }
+    window.addEventListener('load', function () {
+      setTimeout(finish, Math.max(0, MIN - (performance.now() - t0)));
+    });
+    setTimeout(finish, MAX);
+  })();
+
 
   // ── Blur-up: photos settle in from a soft blur instead of popping
   function blurUp () {

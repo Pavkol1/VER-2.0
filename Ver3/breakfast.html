@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Breakfast — Stories Budapest</title>
 <script>
-/* Page-transition entry: if the previous page set the flag, start veiled
-   (html.pt-in) so the first paint is the brand dark, then fade open. */
+/* Page-transition entry: if the previous page set the flag, start covered
+   (html.pt-in) so the sweep panel can exit over the first paint. */
 (function () { try { if (sessionStorage.getItem('pt') === '1') { sessionStorage.removeItem('pt'); document.documentElement.classList.add('pt-in'); } } catch (e) {} })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..700;1,300..600&family=Lora:ital,wght@0,400..600;1,400..600&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --ink:     #0B1410;
@@ -28,14 +28,14 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { font-family: 'Inter', sans-serif; font-weight: 400; background: var(--ink); color: var(--text); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body { font-family: 'Schibsted Grotesk', sans-serif; font-weight: 400; background: var(--ink); color: var(--text); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 ::selection { background: var(--accent); color: var(--ink); }
 
 nav.top { position: fixed; top: 0; left: 0; right: 0; z-index: 80; padding: 22px clamp(24px, 4vw, 56px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; transition: background 0.25s var(--ease), border-color 0.25s var(--ease); border-bottom: 1px solid transparent; transform: translate3d(0, 0, 0); }
 nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom-color: rgba(255,255,255,0.08); }
-.brand { font-family: 'Lora', serif; font-weight: 500; font-size: 22px; letter-spacing: 0.02em; color: #fff; }
+.brand { font-family: 'Libre Caslon Text', serif; font-weight: 500; font-size: 22px; letter-spacing: 0.02em; color: #fff; }
 .brand em { font-style: italic; color: var(--accent); font-weight: 400; }
 .nav-links { display: flex; gap: 32px; justify-self: center; }
 .nav-links a { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.72); padding: 8px 0; border-bottom: 1px solid transparent; transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
@@ -53,7 +53,7 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 .plate-id::before { content: ""; width: 40px; height: 1px; background: rgba(255,255,255,0.5); }
 .plate-id .n { color: var(--accent); }
 .plate-title-block { align-self: end; max-width: 1080px; }
-.plate-title-block h1 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(52px, 8.5vw, 148px); line-height: 0.96; letter-spacing: -0.018em; color: #fff; margin-bottom: 24px; text-wrap: balance; }
+.plate-title-block h1 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(52px, 8.5vw, 148px); line-height: 0.96; letter-spacing: -0.018em; color: #fff; margin-bottom: 24px; text-wrap: balance; }
 .plate-title-block em { font-style: italic; color: var(--accent); font-weight: 400; }
 .plate-deck { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.78); max-width: 540px; font-weight: 300; }
 .scrollcue { position: absolute; right: clamp(40px, 6vw, 96px); bottom: clamp(40px, 5vw, 72px); color: rgba(255,255,255,0.55); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; display: flex; align-items: center; gap: 12px; z-index: 3; }
@@ -65,14 +65,14 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 .body-inner { max-width: 1200px; margin: 0 auto; }
 
 .bk-intro { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(40px, 5vw, 80px); align-items: start; margin-bottom: clamp(64px, 8vw, 96px); }
-.bk-intro h2 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; color: var(--ink); margin-bottom: 20px; letter-spacing: -0.01em; }
+.bk-intro h2 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; color: var(--ink); margin-bottom: 20px; letter-spacing: -0.01em; }
 .bk-intro h2 em { font-style: italic; color: var(--primary); }
 .bk-intro p { font-size: 16px; line-height: 1.7; color: var(--text); margin-bottom: 14px; font-weight: 300; }
 .bk-right { padding-top: 4px; }
 .bk-fact { display: flex; justify-content: space-between; padding: 18px 0; border-top: 1px solid var(--rule); }
 .bk-fact:last-child { border-bottom: 1px solid var(--rule); }
 .bk-fact .l { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-2); }
-.bk-fact .v { font-family: 'Lora', serif; font-size: 18px; color: var(--ink); font-weight: 500; }
+.bk-fact .v { font-family: 'Libre Caslon Text', serif; font-size: 18px; color: var(--ink); font-weight: 500; }
 .bk-fact .v em { font-style: italic; color: var(--primary); font-weight: 400; }
 
 /* MENU SECTION */
@@ -80,7 +80,7 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 .section-label::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
 .menu-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-bottom: clamp(64px, 8vw, 96px); }
 .menu-cat { background: var(--paper-2); padding: 32px; }
-.menu-cat h3 { font-family: 'Lora', serif; font-weight: 400; font-size: 22px; color: var(--ink); margin-bottom: 20px; letter-spacing: -0.005em; }
+.menu-cat h3 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: 22px; color: var(--ink); margin-bottom: 20px; letter-spacing: -0.005em; }
 .menu-cat h3 em { font-style: italic; color: var(--primary); }
 .menu-item { padding: 10px 0; border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
 .menu-item:last-child { border-bottom: none; }
@@ -91,14 +91,14 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 
 /* SOURCING */
 .sourcing-block { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 5vw, 80px); align-items: center; padding: clamp(60px, 8vw, 96px) clamp(40px, 6vw, 96px); background: var(--ink-2); }
-.sourcing-block h2 { font-family: 'Lora', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; color: #fff; margin-bottom: 20px; letter-spacing: -0.01em; }
+.sourcing-block h2 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; color: #fff; margin-bottom: 20px; letter-spacing: -0.01em; }
 .sourcing-block h2 em { font-style: italic; color: var(--accent); }
 .sourcing-block p { font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.65); font-weight: 300; margin-bottom: 14px; }
 .sourcing-list { list-style: none; }
 .sourcing-list li { padding: 14px 0; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 20px; }
 .sourcing-list li:last-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
 .sourcing-list .sn { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 0.2em; min-width: 24px; }
-.sourcing-list .sp { font-family: 'Lora', serif; font-size: 17px; color: #fff; }
+.sourcing-list .sp { font-family: 'Libre Caslon Text', serif; font-size: 17px; color: #fff; }
 .sourcing-list .sd { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 300; margin-top: 2px; }
 
 /* FOOTER — oversized (~75vh), rounded top, photo + dark scrim, slide-up reveal. Shared site-wide. */
@@ -120,14 +120,14 @@ footer.foot-armed.foot-revealed { transform: none; opacity: 1; }
 footer::before { content: ""; position: absolute; inset: 0; background: url('assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.jpg') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
 footer::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9,11,10,0.4) 0%, rgba(8,10,9,0.84) 100%); z-index: -1; }
 .foot-grid { position: relative; width: 100%; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.foot-grid h3 { font-family: 'Lora', serif; font-size: 28px; color: #fff; font-weight: 500; }
+.foot-grid h3 { font-family: 'Libre Caslon Text', serif; font-size: 28px; color: #fff; font-weight: 500; }
 .foot-grid .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 8px 0 24px; }
 .foot-grid address { font-style: normal; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
 .foot-grid a.ph { font-size: 14px; color: rgba(255,255,255,0.88); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1px; display: inline-block; margin-bottom: 4px; }
 .foot-grid a.ph:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .foot-grid h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 18px; font-weight: 400; }
 .foot-grid ul { list-style: none; }
-.foot-grid li a { font-family: 'Lora', serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
+.foot-grid li a { font-family: 'Libre Caslon Text', serif; font-size: 15px; color: rgba(255,255,255,0.8); padding: 5px 0; display: inline-block; transition: color 0.3s var(--ease), padding-left 0.3s var(--ease); }
 .foot-grid li a:hover { color: var(--accent); padding-left: 5px; }
 .foot-bar { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
 
@@ -209,65 +209,19 @@ body:not(.page-home) { --logo-init-p: 1; }
 @media (prefers-reduced-motion: reduce) { .logo-mover { --p: 1; } }
 
 
-/* C — Boutique cursor: gold dot + lagging ring + magnetic CTAs */
-.cursor {
-  position: fixed; top: 0; left: 0;
-  width: 0; height: 0;
-  pointer-events: none;
-  z-index: 9999;
-}
-.cursor-dot, .cursor-ring {
-  position: fixed; top: 0; left: 0;
-  border-radius: 50%;
-  pointer-events: none;
-  will-change: transform;
-  transform: translate3d(50vw, 50vh, 0);
-}
-.cursor-dot {
-  width: 10px; height: 10px;
-  margin: -5px 0 0 -5px;
-  background: var(--accent);
-  box-shadow: 0 0 8px rgba(185,144,78,0.7);
-  transition: opacity 0.2s var(--ease);
-}
-.cursor-ring {
-  width: 38px; height: 38px;
-  margin: -19px 0 0 -19px;
-  border: 1.5px solid rgba(185, 144, 78, 0.85);
-  background: transparent;
-  transition: width 0.25s var(--ease),
-              height 0.25s var(--ease),
-              border-color 0.25s var(--ease),
-              background 0.25s var(--ease),
-              margin 0.25s var(--ease);
-}
-.cursor.is-hover .cursor-ring {
-  width: 64px; height: 64px;
-  margin: -32px 0 0 -32px;
-  border-color: var(--accent);
-  background: rgba(185, 144, 78, 0.14);
-}
-.cursor.is-hover .cursor-dot { opacity: 0; }
-.magnet { will-change: transform; }
-@media (hover: hover) and (pointer: fine) {
-  html, body, *, *::before, *::after { cursor: none !important; }
-}
-@media (prefers-reduced-motion: reduce) {
-  html, body, *, *::before, *::after { cursor: auto !important; }
-  .cursor { display: none !important; }
-  .magnet { transform: none !important; }
-}
-@media (hover: none), (pointer: coarse) {
-  .cursor { display: none; }
-}
 
 
-/* PAGE TRANSITIONS — fade-through-dark */
-.page-fade { position: fixed; inset: 0; z-index: 190; background: var(--ink); opacity: 0; pointer-events: none; transition: opacity 0.45s var(--ease); }
-body.page-leaving .page-fade { opacity: 1; pointer-events: auto; }
-html.pt-in .page-fade { opacity: 1; transition: none; }
-html.pt-in.pt-go .page-fade { opacity: 0; transition: opacity 0.6s var(--ease); }
-@media (prefers-reduced-motion: reduce) { .page-fade { display: none; } }
+/* PAGE TRANSITIONS — ink panel sweep (swipe). On exit the panel slides in
+   from the right covering the page, then we navigate; the next page starts
+   covered (html.pt-in, set in <head>) and the panel exits to the left. */
+.page-sweep { position: fixed; inset: 0; z-index: 190; background: var(--ink); transform: translateX(102%); pointer-events: none; will-change: transform; }
+.page-sweep::before, .page-sweep::after { content: ''; position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); opacity: 0.85; }
+.page-sweep::before { left: 0; }
+.page-sweep::after  { right: 0; }
+body.page-leaving .page-sweep { transform: translateX(0); transition: transform 0.52s cubic-bezier(0.76, 0, 0.24, 1); pointer-events: auto; }
+html.pt-in .page-sweep { transform: translateX(0); transition: none; }
+html.pt-in.pt-go .page-sweep { transform: translateX(-103%); transition: transform 0.68s cubic-bezier(0.76, 0, 0.24, 1) 0.06s; }
+@media (prefers-reduced-motion: reduce) { .page-sweep { display: none; } }
 
 /* PREMIUM POLISH — grain, blur-up, focus & hover states */
 .site-grain {
@@ -292,7 +246,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 </style>
 </head>
 <body>
-<div class="page-fade" aria-hidden="true"></div>
+<div class="page-sweep" aria-hidden="true"></div>
 <div class="site-grain" aria-hidden="true"></div>
 
 
@@ -444,10 +398,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 </footer>
 
 
-<div class="cursor" id="cursor" aria-hidden="true">
-  <span class="cursor-ring"></span>
-  <span class="cursor-dot"></span>
-</div>
 
 <!-- Lenis smooth-scroll: more distance per wheel tick + buttery easing. Skipped under prefers-reduced-motion. -->
 <script src="assets/vendor/lenis.min.js" defer></script>
@@ -506,69 +456,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   sections.forEach(function (s) { obs.observe(s); });
 }());
 </script>
-<script>
-/* C — Boutique cursor + magnetic CTA pull (standalone, idempotent) */
-(function () {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var cursor = document.getElementById('cursor');
-  var dot    = cursor && cursor.querySelector('.cursor-dot');
-  var ring   = cursor && cursor.querySelector('.cursor-ring');
-  if (!cursor || !dot || !ring) return;
-
-  var mx = window.innerWidth / 2, my = window.innerHeight / 2;
-  var rx = mx, ry = my;
-  var hoverSel    = 'a, button, .room-list button, [role="button"]';
-  var magnets     = Array.prototype.slice.call(document.querySelectorAll('.magnet'));
-  var magnetCache = [];
-  var rectsTimer  = null;
-
-  function refreshRects() {
-    magnetCache = magnets.map(function (el) {
-      var r = el.getBoundingClientRect();
-      return { el: el, cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
-    });
-  }
-  refreshRects();
-
-  document.addEventListener('mousemove', function (e) {
-    mx = e.clientX; my = e.clientY;
-  }, { passive: true });
-
-  function scheduleRefresh() {
-    if (rectsTimer) clearTimeout(rectsTimer);
-    rectsTimer = setTimeout(refreshRects, 120);
-  }
-  window.addEventListener('scroll', scheduleRefresh, { passive: true });
-  window.addEventListener('resize', scheduleRefresh);
-
-  document.addEventListener('mouseover', function (e) {
-    if (e.target.closest && e.target.closest(hoverSel)) cursor.classList.add('is-hover');
-  });
-  document.addEventListener('mouseout', function (e) {
-    if (e.target.closest && e.target.closest(hoverSel)) cursor.classList.remove('is-hover');
-  });
-
-  function loop() {
-    dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)';
-    rx += (mx - rx) * 0.18;
-    ry += (my - ry) * 0.18;
-    ring.style.transform = 'translate3d(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,0)';
-    for (var i = 0; i < magnetCache.length; i++) {
-      var m  = magnetCache[i];
-      var dx = mx - m.cx, dy = my - m.cy;
-      var d  = Math.sqrt(dx * dx + dy * dy) || 1;
-      if (d < 100) {
-        var pull = (1 - d / 100) * 12;
-        m.el.style.transform = 'translate3d(' + ((dx / d) * pull).toFixed(1) + 'px,' + ((dy / d) * pull).toFixed(1) + 'px,0)';
-      } else if (m.el.style.transform) {
-        m.el.style.transform = '';
-      }
-    }
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
-})();
-</script>
 
 <!-- GSAP + ScrollTrigger (vendored, free for commercial use) -->
 <script src="assets/vendor/gsap.min.js"></script>
@@ -621,16 +508,17 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 }());
 </script>
 <script>
-/* PREMIUM SHARED LAYER — fade-through-dark page transitions + blur-up
+/* PREMIUM SHARED LAYER — page-sweep transitions + blur-up
    image loading. Mirrored on every Ver3 page (loader lives on index only). */
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var root = document.documentElement;
 
+  // ── Page sweep: exit panel, entry reveal, bfcache cleanup
   if (root.classList.contains('pt-in')) {
     requestAnimationFrame(function () { requestAnimationFrame(function () {
       root.classList.add('pt-go');
-      setTimeout(function () { root.classList.remove('pt-in', 'pt-go'); }, 700);
+      setTimeout(function () { root.classList.remove('pt-in', 'pt-go'); }, 950);
     }); });
   }
   window.addEventListener('pageshow', function (e) {
@@ -639,7 +527,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
       root.classList.remove('pt-in', 'pt-go');
     }
   });
-
   function transitable (a) {
     if (a.target && a.target !== '_self') return false;
     if (a.hasAttribute('download')) return false;
@@ -659,9 +546,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
       try { sessionStorage.setItem('pt', '1'); } catch (err) {}
       var href = a.href;
       document.body.classList.add('page-leaving');
-      setTimeout(function () { location.href = href; }, 460);
+      setTimeout(function () { location.href = href; }, 540);
     });
   }
+
 
   function blurUp () {
     document.querySelectorAll('img').forEach(function (img) {
