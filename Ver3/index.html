@@ -1245,15 +1245,76 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 
 @media (max-width: 880px) {
-  .room-stage { grid-template-columns: 1fr; }
-  .room-panel {
-    position: static;
-    height: auto;
-    padding: 112px clamp(24px, 5vw, 40px) 56px;
-    gap: 28px;
+  /* alma-style: dissolve the side panel (display:contents) so the room
+     selector can become a sticky horizontal pill bar riding the top of the
+     whole cinema, while the intro sits above it and the galleries scroll
+     beneath. The CTA row drops to the very bottom. Reuses all the existing
+     active-room JS — only the layout changes. */
+  /* align-items:stretch overrides the desktop `start` (a sticky-in-grid
+     requirement) so the galleries fill the width — without it the .rf
+     figures, whose imgs are position:absolute, collapse to zero width. */
+  .room-stage { display: flex; flex-direction: column; align-items: stretch; }
+  .room-panel { display: contents; }
+
+  .panel-header {
+    order: 1;
+    max-width: none;
+    padding: clamp(96px, 18vw, 128px) clamp(24px, 5vw, 40px) 18px;
   }
-  .room-galleries { padding: 40px 0; gap: 48px; }
+
+  .room-list {
+    order: 2;
+    position: sticky;
+    /* Sits just under the fixed nav (≈92px). When the nav auto-hides on
+       scroll-down it rides up to the very top, synced with the nav slide. */
+    top: 86px;
+    z-index: 6;
+    margin: 0;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 12px clamp(16px, 4vw, 24px);
+    background: color-mix(in srgb, var(--room-bg, #1A1F1A) 92%, transparent);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid color-mix(in srgb, var(--room-ink, #EDE7DA) 14%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--room-ink, #EDE7DA) 14%, transparent);
+    transition: top 0.5s var(--ease), background 1.2s var(--ease);
+  }
+  body.nav-hidden .room-list { top: 0; }
+  .room-list::-webkit-scrollbar { display: none; }
+  .room-list button {
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+    border: 1px solid color-mix(in oklab, currentColor 28%, transparent);
+    border-radius: 999px;
+    padding: 9px 15px;
+    min-height: 40px;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    opacity: 0.66;
+  }
+  .room-list button:last-child {
+    border-bottom: 1px solid color-mix(in oklab, currentColor 28%, transparent);
+  }
+  .room-list button::after { display: none; }   /* drop the desktop underline */
+  .room-list button:hover { letter-spacing: 0.16em; }
+  .room-list button.active {
+    opacity: 1;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--room-bg, #0B1410);
+    background: var(--room-ink, #EDE7DA);
+    border-color: var(--room-ink, #EDE7DA);
+  }
+
+  .room-galleries { order: 3; padding: 18px 0 36px; gap: 40px; }
   .room-gallery { gap: 6px; }
+  .panel-actions { order: 4; padding: 4px clamp(24px, 5vw, 40px) 56px; }
 }
 
 /* PLEASURES */
@@ -2847,9 +2908,23 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
       stage.dataset.active = slug;
       body.style.setProperty('--room-bg', palette.bg);
       body.style.setProperty('--room-ink', palette.ink);
+      var activeBtn = null;
       listButtons.forEach(function (btn) {
-        btn.classList.toggle('active', btn.dataset.target === slug);
+        var on = btn.dataset.target === slug;
+        btn.classList.toggle('active', on);
+        if (on) activeBtn = btn;
       });
+      // Mobile pill bar: keep the active room centred in the sticky selector
+      // (horizontal scroll only — never nudges the page).
+      if (activeBtn && window.matchMedia('(max-width: 880px)').matches) {
+        var bar = activeBtn.parentElement;
+        if (bar && bar.scrollWidth > bar.clientWidth + 4) {
+          bar.scrollTo({
+            left: activeBtn.offsetLeft - bar.clientWidth / 2 + activeBtn.offsetWidth / 2,
+            behavior: 'smooth'
+          });
+        }
+      }
     }
 
     // Native IntersectionObserver on a horizontal centerline (50% viewport)
@@ -2880,7 +2955,18 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
         var target = stage.querySelector(
           '.room-gallery[data-slug="' + slug + '"]'
         );
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (!target) return;
+        // On mobile the selector is a sticky bar under the nav — offset the
+        // jump so the first photo lands just below both, not behind them.
+        var bar = stage.querySelector('.room-list');
+        var isMobile = window.matchMedia('(max-width: 880px)').matches;
+        var navH = body.classList.contains('nav-hidden') ? 0 : 92;
+        var off = (bar && isMobile) ? -(navH + bar.offsetHeight + 8) : 0;
+        if (window.__lenis && typeof window.__lenis.scrollTo === 'function') {
+          window.__lenis.scrollTo(target, { offset: off, duration: 1.0 });
+        } else {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     });
 
