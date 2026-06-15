@@ -2732,16 +2732,19 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
       gsap.set(fillWords, { opacity: 0.16 });
       gsap.to(fillWords, {
         opacity: 1,
-        ease: 'none',
-        stagger: 0.4,                       // sequential, mild overlap
+        // Soft per-word fade + heavy overlap (duration ≫ stagger) so the fill
+        // front is a gentle gradient of several words, not a hard edge.
+        ease: 'sine.inOut',
+        duration: 1.4,
+        stagger: 0.32,
         scrollTrigger: {
           trigger: introStrip.querySelector('.intro-text'),
-          start: 'top 82%',
-          end: 'bottom 62%',
-          scrub: 0.6,
+          start: 'top 96%',                 // begins earlier, as the block enters
+          end: 'bottom 60%',
+          scrub: 1.1,                       // more inertia → smoother catch-up
           // Light the gold underline on "stories," once the title is mostly lit.
           onUpdate: function (self) {
-            if (emWord) emWord.style.setProperty('--underline', self.progress > 0.34 ? 1 : 0);
+            if (emWord) emWord.style.setProperty('--underline', self.progress > 0.3 ? 1 : 0);
           }
         }
       });
