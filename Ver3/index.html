@@ -514,13 +514,12 @@ body:not(.page-home) { --logo-init-p: 1; }
   transition-delay: 0.45s, 0.45s;
 }
 
-/* Scroll-driven kinetic deck — each word's opacity follows distance from the
-   viewport's 55% focal line. JS writes --reveal per word on every scroll frame. */
+/* Scroll-fill deck — words start dim and fill to full as the block scrolls
+   through the viewport (tresmarescapital-style). GSAP scrubs per-word opacity;
+   base stays opacity:1 so the text is readable with no JS / reduced motion. */
 .intro-strip .deck { font-size: 18px; line-height: 1.55; }
 .intro-strip .rw {
   display: inline;
-  opacity: var(--reveal, 0.3);
-  transition: opacity 0.18s linear;
   will-change: opacity;
 }
 
@@ -530,7 +529,7 @@ body:not(.page-home) { --logo-init-p: 1; }
     transform: none !important;
     transition: none !important;
   }
-  .intro-strip .rw { opacity: 1 !important; transition: none !important; }
+  .intro-strip .rw { opacity: 1 !important; }
 }
 
 /* Bottom credits strip — replaces the right-column meta column */
@@ -599,20 +598,15 @@ body:not(.page-home) { --logo-init-p: 1; }
   .intro-meta .v { font-size: 15px; }
 }
 
-/* B — Stagger word reveal on the intro headline */
+/* Headline words ride the same scroll-fill as the deck (GSAP scrubs opacity).
+   Base opacity:1 so the title is readable with no JS / reduced motion. */
 .intro-strip h1 { white-space: normal; }
 .intro-strip h1 .w {
   display: inline-block;
   white-space: nowrap;
-  opacity: 0;
-  transform: translateY(0.45em);
-  transition: opacity 0.6s var(--ease), transform 0.7s var(--ease);
+  will-change: opacity;
 }
-.intro-strip.revealed h1 .w {
-  opacity: 1;
-  transform: translateY(0);
-}
-.intro-strip.revealed h1 .w.em-word::after {
+.intro-strip h1 .w.em-word::after {
   content: "";
   display: block;
   height: 2px;
@@ -620,15 +614,12 @@ body:not(.page-home) { --logo-init-p: 1; }
   margin-top: -0.08em;
   background: linear-gradient(90deg, var(--accent), rgba(185,144,78,0));
   transform-origin: left center;
-  transform: scaleX(0);
-  animation: storiesUnderline 0.9s var(--ease) 0.7s forwards;
-}
-@keyframes storiesUnderline {
-  to { transform: scaleX(1); }
+  transform: scaleX(var(--underline, 0));
+  transition: transform 0.6s var(--ease);
 }
 @media (prefers-reduced-motion: reduce) {
-  .intro-strip h1 .w { opacity: 1; transform: none; transition: none; }
-  .intro-strip.revealed h1 .w.em-word::after { animation: none; transform: scaleX(1); }
+  .intro-strip h1 .w { opacity: 1 !important; }
+  .intro-strip h1 .w.em-word::after { transform: scaleX(1); }
 }
 
 
@@ -2692,19 +2683,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   var body = document.body;
   var nav = document.getElementById('topnav');
 
-  // ── A: parallax on .intro-photo + B: word-stagger reveal on the headline ─
+  // ── A: parallax on .intro-photo + B: scroll-fill reveal on headline + deck ─
   var introStrip  = document.querySelector('.intro-strip');
   var introPhoto  = document.querySelector('.intro-photo img');
-  var introH1     = introStrip && introStrip.querySelector('h1');
   var reduceMo    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // Words are pre-split in HTML now; just stamp each .w with a stagger delay.
-  if (introH1 && !reduceMo) {
-    var ws = introH1.querySelectorAll('.w');
-    for (var i = 0; i < ws.length; i++) {
-      ws[i].style.transitionDelay = (i * 0.09).toFixed(2) + 's';
-    }
-  }
 
   if (introStrip) {
     // Reveal once when the section enters viewport
@@ -2737,45 +2719,32 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
     parallax();
   }
 
-  // Scroll-driven deck — each .rw word's opacity follows distance from a focal
-  // line at 55% of the viewport. Per-word docY is cached up front and
-  // refreshed only when scroll/resize/fonts settle; the rAF loop just reads
-  // arithmetic, no per-frame layout. Same pattern as the cursor magnet cache.
-  var deckWords = document.querySelectorAll('.intro-strip .rw');
-  if (deckWords.length && !reduceMo) {
-    var deckCache = [];
-    var deckTimer = null;
-    function refreshDeckCache() {
-      deckCache = Array.prototype.map.call(deckWords, function (el) {
-        var r = el.getBoundingClientRect();
-        return { el: el, docY: r.top + window.scrollY + r.height / 2 };
+  // Scroll-fill (tresmarescapital-style): the headline + both deck paragraphs
+  // start dim and fill to full, word by word, scrubbed to the block's scroll
+  // progress — and stay filled once passed. One ordered sequence: title words
+  // first, then the two decks. GSAP owns opacity; CSS base stays 1 so the text
+  // is fully readable with no JS / reduced motion.
+  if (introStrip && window.gsap && window.ScrollTrigger && !reduceMo) {
+    gsap.registerPlugin(ScrollTrigger);
+    var fillWords = introStrip.querySelectorAll('h1 .w, .deck .rw');
+    var emWord    = introStrip.querySelector('h1 .w.em-word');
+    if (fillWords.length) {
+      gsap.set(fillWords, { opacity: 0.16 });
+      gsap.to(fillWords, {
+        opacity: 1,
+        ease: 'none',
+        stagger: 0.4,                       // sequential, mild overlap
+        scrollTrigger: {
+          trigger: introStrip.querySelector('.intro-text'),
+          start: 'top 82%',
+          end: 'bottom 62%',
+          scrub: 0.6,
+          // Light the gold underline on "stories," once the title is mostly lit.
+          onUpdate: function (self) {
+            if (emWord) emWord.style.setProperty('--underline', self.progress > 0.34 ? 1 : 0);
+          }
+        }
       });
-    }
-    function updateDeck() {
-      var focalY = window.scrollY + window.innerHeight * 0.55;
-      for (var i = 0; i < deckCache.length; i++) {
-        var w = deckCache[i];
-        var dist = Math.abs(w.docY - focalY);
-        var op   = Math.max(0.28, 1 - dist / 380);
-        w.el.style.setProperty('--reveal', op.toFixed(3));
-      }
-    }
-    refreshDeckCache();
-    updateDeck();
-    var deckTicking = false;
-    window.addEventListener('scroll', function () {
-      if (!deckTicking) {
-        requestAnimationFrame(function () { updateDeck(); deckTicking = false; });
-        deckTicking = true;
-      }
-    }, { passive: true });
-    function scheduleDeckRefresh() {
-      if (deckTimer) clearTimeout(deckTimer);
-      deckTimer = setTimeout(function () { refreshDeckCache(); updateDeck(); }, 120);
-    }
-    window.addEventListener('resize', scheduleDeckRefresh);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () { refreshDeckCache(); updateDeck(); });
     }
   }
 
