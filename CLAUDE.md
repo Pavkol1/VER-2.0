@@ -6,22 +6,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
-## Current Status — Handoff (last updated 2026-06-11)
+## Current Status — Handoff (last updated 2026-07-20)
 
 **The live site is now Ver3.** The active, deployable site root is **`Ver3/`** (not `Ver2/`). `netlify.toml` publishes `Ver3`. `Ver2/` is kept as legacy/reference only — do not edit it.
 
 **Where we are:**
-- Ver3 is a full redesign of the whole site. Recently completed milestones (see `git log`): M2.2 rooms rebuild, M3.1 interactive SVG neighbourhood map (homepage + neighbourhood), M3.2 booking-trust block, site-wide Lenis smooth-scroll, contact/faqs pass, GSAP scroll-reveal pass across all pages, homepage luxuries/rooms reorder + always-scrolling hero marquee, and the breakfast coffee-noir sequence (scroll-scrubbed 69-frame canvas animation).
+- Ver3 is a full redesign of the whole site. Recently completed milestones (see `git log`): M2.2 rooms rebuild, M3.1 interactive SVG neighbourhood map, M3.2 booking-trust block, site-wide Lenis smooth-scroll, contact/faqs pass, GSAP scroll-reveal pass, homepage luxuries/rooms reorder + always-scrolling hero marquee, the breakfast **coffee→Danube** sequence (180 scrubbed webp frames), the green-wall site loader, sweep page transitions, the right-edge chapter rail, the new font pairing, the **alma-style mobile room selector**, and the **tresmares-style intro scroll-fill**.
 - All pages (`index, rooms, pleasures, breakfast, neighbourhood, contact, faqs`) exist in `Ver3/` and are on the Ver3 design language.
 - **Production = `main` branch.** A push to `main` is a live deploy to https://secrethotel.netlify.app/ — **always ask first.**
 
 **Branches:**
 - `main` — production (Netlify deploys this).
-- `claude/wonderful-mclaren-d67b3f` — working/feature branch (current work happens here).
+- `claude/wonderful-mclaren-d67b3f` — working/feature branch (current work happens here). `main` and this branch are normally kept at the same commit.
 
-**Open / not-yet-done (deferred during the contact/faqs pass):**
+**Open / not-yet-done:**
+- **Mobile nav has no menu** — `.nav-links` is simply `display: none` ≤1024px with no hamburger or replacement, so subpages are unreachable from a phone except via in-page links. This is the most user-visible gap.
+- **The reserve form is inert** — `.reserve-form` uses `onsubmit="event.preventDefault()"` and posts nowhere. It needs a real destination (Netlify Forms, a booking engine, or mailto) before launch.
 - contact: optional left-edge runlabel + a mini SVG map inset (rhymes with M3.1).
 - faqs: accessibility upgrade — turn `.faq-q` `<div>`s into `<button>` with `aria-expanded`, add smooth open/close animation, make the sticky category nav real `<a href="#id">` links.
+- Homepage frame sets are 1280×720 sources — slightly soft on large retina screens (grain + vignette mask it). Re-generate at 1080p if the client complains.
 
 **To resume on a fresh machine / account:** `git clone https://github.com/Pavkol1/VER-2.0.git`, `git checkout claude/wonderful-mclaren-d67b3f`, then `python3 -m http.server 8000` → http://localhost:8000/Ver3/. Note: chat history and Claude memory do NOT transfer between accounts — only the code (and this file) travels via git.
 
@@ -135,9 +138,9 @@ Old tokens were `--ivory #F2EDE4 / --ink #0D0B08 / --gold #B9904E / --green #2A5
 
 ## Architecture Notes
 
-**Navigation** — fixed; `rgba(13,11,8,0.85)` + `backdrop-filter: blur(14px)` activated by adding `.scrolled` once `window.scrollY > 40`. Mobile uses a hamburger → full-screen overlay.
+**Navigation** — fixed; `rgba(13,11,8,0.85)` + `backdrop-filter: blur(14px)` activated by adding `.scrolled` once `window.scrollY > 40`. ⚠️ **There is no mobile menu**: `.nav-links` is `display: none` ≤1024px and nothing replaces it (no hamburger, no overlay) — only the wordmark, language toggle and Reserve button remain. Nav height is ~92px; other sticky UI docks below that.
 
-**Booking panel** — `<aside>` slides from right via `translateX(100%) → 0`. Form submits to `mailto:hello@storiesbudapest.com`.
+**Reserve** — an inline `.reserve-plate` section at the bottom of `index.html` (anchor `#reserve`), **not** a slide-out panel. Its `.reserve-form` is currently a **non-functional mock**: `onsubmit="event.preventDefault()"` and no action/endpoint. The only real contact route on the page is the footer `mailto:hello@storiesbudapest.com`.
 
 **Rooms** (6 total, in display order):
 1. Presidential Suite — 165–180 m², 2 bed/2.5 bath, Jacuzzi & Sauna
@@ -151,15 +154,35 @@ Old tokens were `--ivory #F2EDE4 / --ink #0D0B08 / --gold #B9904E / --green #2A5
 
 **Pleasures layout** (`pleasures.html`): `.pleasure-feature` sections with `.reverse` modifier for alternating image sides.
 
-**Index rooms rail**: native horizontal scroll + `scroll-snap-type: x mandatory`. An IntersectionObserver with `rootMargin: '-50% 0px -50% 0px'` tracks which room gallery is centered and swaps `--room-bg` / `--room-ink` CSS variables on `body` to repaint the surrounding section per room (`ROOM_COLORS` palette map; active slug lives in `stage.dataset.active`). A 750ms `scrollLockUntil` debounce stops the observer from fighting programmatic `scrollIntoView`.
+**Index rooms cinema** (`.rooms-cinema` / `#roomStage`) — the homepage room browser. **Desktop**: a 2-column grid — sticky `.room-panel` on the left (intro + vertical `.room-list` + CTAs), all six `.room-gallery` blocks stacked vertically on the right; you scroll through 18 photos continuously. An IntersectionObserver with `rootMargin: '-50% 0px -50% 0px'` tracks which gallery crosses the viewport centre and swaps `--room-bg` / `--room-ink` on `body` to repaint the whole section per room (`ROOM_COLORS` map; active slug in `stage.dataset.active`). A 750ms `scrollLockUntil` debounce stops the observer fighting programmatic scrolls.
 
-**Homepage coffee→Danube scene** (`.bk-coffee-scene`, `index.html`): one 430vh sticky scene, one `ScrollTrigger` with `scrub: 0.85` (inertial catch-up). Timeline: breakfast photo → coffee spill (120 webp frames) → breakfast-facts plateau → coffee swirl morphs into the Danube (60 webp frames) → crossfade into `danube-budapest.jpg` (real photo replaces the AI-looking last frames) → neighbourhood titles (`.dn-content`, holds `id="neigh"`). Both frame sets share one `<canvas>`; fractional frame indices are blended via `globalAlpha` so the scrub never steps. A single `.bk-scene-veil` vignette sits above all media layers (no brightness jump between photo/canvas/final). Frames preload via IO at `rootMargin: 300%`; a `painted` flag stops the (black, `alpha:false`) canvas from being revealed before its first draw. On reduced-motion or ≤860px, `body.bk-static` collapses the scene into two static blocks. The running label flips 03→04 mid-scene from `setSceneProgress`.
+**Mobile room selector** (≤880px, alma-style) — the side panel dissolves via `display: contents` so `.room-list` can become a **sticky horizontal pill bar** riding the top across the whole cinema; order becomes intro → selector → galleries → CTAs. The active pill inverts to the room palette and auto-centres itself (horizontal `scrollTo` only — never moves the page); tapping scrolls to that gallery with an offset clearing nav + bar. Two non-obvious constraints, both previously bugs:
+- `.room-stage` must get `align-items: stretch` in the mobile rule — desktop sets `align-items: start` (a sticky-in-grid requirement), and under flex that collapses the galleries to **zero width**, because `.rf` figures hold `position: absolute` imgs and have no intrinsic width.
+- The bar's sticky `top` is `86px` (under the ~92px fixed nav) and drops to `0` via `body.nav-hidden .room-list`, staying in sync as the nav slides away on scroll-down. A plain `top: 0` hides it behind the nav.
+
+Note: `.room-rail` (a horizontal `scroll-snap-type: x mandatory` strip) is **dead CSS** — no markup uses it. It's a leftover of the pre-cinema design; don't extend it.
+
+**Homepage coffee→Danube scene** (`.bk-coffee-scene`, `index.html`): one 430vh sticky scene, one `ScrollTrigger` with `scrub: 0.85` (inertial catch-up). Timeline: breakfast photo → coffee spill (120 webp frames) → breakfast-facts plateau → coffee swirl morphs into the Danube (60 webp frames) → crossfade into `danube-budapest.jpg` (real photo replaces the AI-looking last frames) → neighbourhood titles (`.dn-content`, holds `id="neigh"`). Both frame sets share one `<canvas>`; fractional frame indices are blended via `globalAlpha` so the scrub never steps. A single `.bk-scene-veil` vignette sits above all media layers (no brightness jump between photo/canvas/final). Frames preload via IO at `rootMargin: 300%`; a `painted` flag stops the (black, `alpha:false`) canvas from being revealed before its first draw. On reduced-motion or ≤860px, `body.bk-static` collapses the scene into two static blocks (the whole page gets much shorter on mobile as a result — worth knowing when computing scroll positions). The Breakfast→Neighbourhood handover sits at internal `p=0.62`; the chapter rail reuses that exact split for its 04→05 boundary.
+
+**Homepage intro scroll-fill** (`.intro-strip`, tresmarescapital.com-style) — the headline and both deck paragraphs start dim and **fill word by word, top to bottom, scrubbed to scroll**, staying lit once passed. One ordered GSAP tween over `h1 .w` then `.deck .rw` (65 words), scrubbed off a ScrollTrigger on `.intro-text` (`start: 'top 96%'`, `end: 'bottom 60%'`, `scrub: 1.1`); per-word `sine.inOut` with `duration: 1.4` / `stagger: 0.32` deliberately overlaps ~3 words so the fill front is a soft gradient, not a hard edge. The gold `stories,` underline lights via `--underline` past 30% progress. **Progressive enhancement**: CSS base is `opacity: 1` and GSAP dims to `0.16` at runtime, so with no JS or under reduced motion the text is simply fully readable. This replaced both the old focal-line spotlight (`--reveal`) and the headline rise-in entrance; `.revealed` is still added by an IntersectionObserver because it drives the photo curtain reveals.
 
 **Leaflet map** (index + neighbourhood): tile provider is CARTO Dark Matter (no API key; swap for a keyed Stadia/Mapbox layer before a high-traffic commercial launch). Popup content is built with DOM nodes + `textContent` — never template strings — honoring the project-wide rule. `map.invalidateSize()` fires via IntersectionObserver because Leaflet mismeasures when initialised off-screen.
 
 **Breakfast pricing**: à la carte, **not included** in any room rate — never reintroduce "included" wording. Price wording differs by page: the **homepage** (`index.html`) breakfast facts now read **"Ask reception"** (per the coffee-noir redesign); `breakfast.html` and `faqs.html` still state **"€18 per person"**. If syncing later, decide on one wording across all three. Homepage breakfast **Hours** are **07:30 — 11:00**.
 
 **DOM safety**: always use `textContent`, never `innerHTML`. This is a hard rule across all inline JS (Ver2 and Ver3) and is currently enforced (grep finds zero occurrences).
+
+---
+
+## Verifying scroll work in a browser (read this before debugging animations)
+
+These cost real time more than once — the animations are fine, the *measurements* mislead:
+
+- **Scrubbed ScrollTriggers lag on purpose.** After jumping the scroll programmatically, reading CSS vars or computed opacity immediately returns stale values — `scrub: 0.85`–`1.1` eases over ~1s, and calling `ScrollTrigger.update()` does **not** snap it. A reading of `--bk-canvas-opacity: 0` mid-scene usually means "not settled yet", not "broken". Let it settle, then trust a **screenshot** over a number.
+- **Lenis owns the scroll position.** `window.scrollTo()` gets fought/overridden. Use `window.__lenis.scrollTo(target, { immediate: true })`.
+- **Lazy images collapse geometry.** Room gallery `<img>`s are `loading="lazy"` and `.rf` figures take their height from `aspect-ratio: 3/2` applied to their width (the imgs are `position: absolute`, contributing no intrinsic size). Jump into an unloaded region and every offset you measure is wrong — force `loading='eager'` first when scripting checks.
+- **`display: contents` breaks `offsetParent` chains**, so hand-rolled `offsetTop` walking is unreliable inside the mobile rooms cinema.
+- The homepage repaints continuously (film grain + Lenis rAF + canvas), which can make screenshot capture time out even though the page is healthy — confirm with a console check and a simple `eval` before assuming a hang. Note the preview `eval` helper does **not** await Promises; keep expressions synchronous.
 
 ---
 
