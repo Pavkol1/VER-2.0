@@ -2727,7 +2727,10 @@ body.menu-open nav.top { transform: none !important; }
     // Cinema dims as you leave it toward the next section. Re-pointed from the
     // spotlight bridge (which now sits ABOVE the carousel) to #breakfast (the
     // section that now follows the carousel), preserving the same exit effect.
-    if (cinema) {
+    // Desktop only: on mobile the coffee scene is collapsed (body.bk-static),
+    // #breakfast sits right after the stacked galleries, and this dim would
+    // black out the last rooms' photos while they're still on screen.
+    if (cinema && !window.matchMedia('(max-width: 880px)').matches) {
       gsap.to(cinema, {
         opacity: 0.12,
         scale: 0.992,
