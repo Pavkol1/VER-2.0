@@ -228,20 +228,26 @@ body:not(.page-home) { --logo-init-p: 1; }
 .page-sweep .logo-svg .layer-mid,
 .page-sweep .logo-svg .logo-hotel { fill: var(--paper); }
 body.page-leaving .page-sweep { transform: translateX(0); transition: transform 0.52s cubic-bezier(0.76, 0, 0.24, 1); pointer-events: auto; }
-html.pt-in .page-sweep { transform: translateX(0); transition: none; }
-html.pt-in.pt-go .page-sweep { transform: translateX(-103%); transition: transform 0.68s cubic-bezier(0.76, 0, 0.24, 1) 0.06s; }
+html.pt-in .page-sweep { transform: translateX(0); }
+/* Entry is a pure CSS @keyframes animation gated on html.pt-in alone — no
+   second class, no JS/rAF timing dependency. pt-in is set synchronously in
+   <head> before first paint, so the animation is guaranteed to queue and
+   play on its own; the browser can never "miss" adding it the way a
+   JS-driven second class could. animation-fill-mode:both holds the "from"
+   state during any delay and the "to" state after it finishes. */
+@keyframes sweepRetreat { to { transform: translateX(-103%); } }
+html.pt-in .page-sweep { animation: sweepRetreat 0.68s cubic-bezier(0.76, 0, 0.24, 1) 0.08s both; }
 @media (prefers-reduced-motion: reduce) { .page-sweep { display: none; } }
 
 /* PAGE CONTENT PUSH — the real "previous page rides away, new page opens"
-   motion. Exit: .page-view (everything except nav/mnav/grain/sweep) slides
-   left and dims. Entry: opens via clip-path + opacity only (no transform —
-   see file header). Both keyed off the same pt-in/pt-go/page-leaving classes
-   the sweep panel already uses, so no new JS is needed. */
+   motion. Exit (transition, triggered synchronously by the click handler):
+   .page-view slides left and dims. Entry (animation, see above): opens via
+   clip-path + opacity only (no transform — see file header). */
 body.page-leaving .page-view { transform: translateX(-4%); opacity: 0.55; transition: transform 0.38s var(--ease), opacity 0.38s var(--ease); }
-html.pt-in .page-view { opacity: 0; clip-path: inset(0 0 0 100%); transition: none; }
-html.pt-in.pt-go .page-view { opacity: 1; clip-path: inset(0 0 0 0%); transition: opacity 0.6s var(--ease), clip-path 0.62s var(--ease); }
+@keyframes pageViewOpen { from { opacity: 0; clip-path: inset(0 0 0 100%); } to { opacity: 1; clip-path: inset(0 0 0 0%); } }
+html.pt-in .page-view { animation: pageViewOpen 0.62s var(--ease) both; }
 @media (prefers-reduced-motion: reduce) {
-  .page-view { transform: none !important; opacity: 1 !important; clip-path: none !important; transition: none !important; }
+  .page-view { transform: none !important; opacity: 1 !important; clip-path: none !important; transition: none !important; animation: none !important; }
 }
 
 /* PREMIUM POLISH — grain, blur-up, focus & hover states */
@@ -677,16 +683,17 @@ body.menu-open nav.top { transform: none !important; }
   var root = document.documentElement;
 
   // ── Page sweep: exit panel, entry reveal, bfcache cleanup
+  // Entry animation is pure CSS (see .page-sweep/.page-view @keyframes,
+  // gated on html.pt-in alone) — no rAF/class-add race. Just clean up the
+  // class once it's had time to finish so a later same-tab reload doesn't
+  // start pre-covered again.
   if (root.classList.contains('pt-in')) {
-    requestAnimationFrame(function () { requestAnimationFrame(function () {
-      root.classList.add('pt-go');
-      setTimeout(function () { root.classList.remove('pt-in', 'pt-go'); }, 950);
-    }); });
+    setTimeout(function () { root.classList.remove('pt-in'); }, 900);
   }
   window.addEventListener('pageshow', function (e) {
     if (e.persisted) {
       document.body.classList.remove('page-leaving');
-      root.classList.remove('pt-in', 'pt-go');
+      root.classList.remove('pt-in');
     }
   });
   function transitable (a) {
