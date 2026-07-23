@@ -263,37 +263,6 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
   text-decoration: none;
   transition: color 0.6s var(--ease);
 }
-body { --logo-accent: #320A18; }                       /* wine outline, all surfaces */
-.logo-word {
-  display: block;
-  font-family: 'Playfair Display', serif;
-  font-weight: 500;
-  font-size: clamp(64px, 11vw, 196px);
-  line-height: 1;
-  letter-spacing: 0.20em;
-  text-shadow:
-    calc(-1.4px / var(--scale)) 0                           0 var(--logo-accent),
-    calc( 1.4px / var(--scale)) 0                           0 var(--logo-accent),
-    0                           calc(-1.4px / var(--scale)) 0 var(--logo-accent),
-    0                           calc( 1.4px / var(--scale)) 0 var(--logo-accent),
-    calc(-1px   / var(--scale)) calc(-1px   / var(--scale)) 0 var(--logo-accent),
-    calc( 1px   / var(--scale)) calc(-1px   / var(--scale)) 0 var(--logo-accent),
-    calc(-1px   / var(--scale)) calc( 1px   / var(--scale)) 0 var(--logo-accent),
-    calc( 1px   / var(--scale)) calc( 1px   / var(--scale)) 0 var(--logo-accent);
-  white-space: nowrap;
-}
-.logo-sub {
-  display: block;
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-weight: 400;
-  font-size: 0.18em;
-  color: var(--logo-accent, #320A18);
-  letter-spacing: 0.06em;
-  margin-top: -0.16em;
-  text-indent: 0.06em;
-}
-
 .logo-mark .logo-svg {
   display: block;
   width: clamp(300px, 50vw, 860px);
@@ -528,9 +497,6 @@ body.menu-open nav.top { transform: none !important; }
     </div>
   </div>
 </div>
-<div class="page-view">
-
-
 <div class="logo-stage">
   <div class="logo-mover">
     <a href="index.html" class="logo-mark" aria-label="Stories Hotel — Home">
@@ -547,6 +513,7 @@ body.menu-open nav.top { transform: none !important; }
     </a>
   </div>
 </div>
+<div class="page-view">
 
 
 <!-- PLATE -->
@@ -1063,8 +1030,13 @@ body.menu-open nav.top { transform: none !important; }
   burger.addEventListener('click', function () {
     setOpen(!document.body.classList.contains('menu-open'));
   });
+  // Close instantly on tap so the page-transition panel doesn't animate in
+  // over a still-open menu — it closes first, then the transition plays.
+  overlay.querySelectorAll('.mnav-links a, .mnav-cta').forEach(function (a) {
+    a.addEventListener('click', function () { setOpen(false); });
+  });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') setOpen(false);
+    if (e.key === 'Escape' && document.body.classList.contains('menu-open')) setOpen(false);
   });
   window.addEventListener('pageshow', function (e) {
     if (e.persisted) setOpen(false);
