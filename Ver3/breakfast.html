@@ -214,10 +214,21 @@ body:not(.page-home) { --logo-init-p: 1; }
 /* PAGE TRANSITIONS — ink panel sweep (swipe). On exit the panel slides in
    from the right covering the page, then we navigate; the next page starts
    covered (html.pt-in, set in <head>) and the panel exits to the left. */
-.page-sweep { position: fixed; inset: 0; z-index: 190; background: var(--ink); transform: translateX(102%); pointer-events: none; will-change: transform; }
+.page-sweep {
+  position: fixed; inset: 0; z-index: 190;
+  background:
+    linear-gradient(160deg, rgba(11,20,16,0.6) 0%, rgba(8,26,18,0.8) 100%),
+    url('assets/brand/loader-wall-poster.jpg') center / cover no-repeat;
+  transform: translateX(102%); pointer-events: none; will-change: transform;
+}
 .page-sweep::before, .page-sweep::after { content: ''; position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); opacity: 0.85; }
 .page-sweep::before { left: 0; }
 .page-sweep::after  { right: 0; }
+/* Same vector wordmark as the site loader + nav — rides along inside the
+   sweep panel, no separate timing to coordinate. */
+.page-sweep .logo-svg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: clamp(150px, 18vw, 210px); height: auto; }
+.page-sweep .logo-svg .layer-mid,
+.page-sweep .logo-svg .logo-hotel { fill: var(--paper); }
 body.page-leaving .page-sweep { transform: translateX(0); transition: transform 0.52s cubic-bezier(0.76, 0, 0.24, 1); pointer-events: auto; }
 html.pt-in .page-sweep { transform: translateX(0); transition: none; }
 html.pt-in.pt-go .page-sweep { transform: translateX(-103%); transition: transform 0.68s cubic-bezier(0.76, 0, 0.24, 1) 0.06s; }
@@ -352,7 +363,18 @@ body.menu-open nav.top { transform: none !important; }
 </style>
 </head>
 <body>
-<div class="page-sweep" aria-hidden="true"></div>
+<div class="page-sweep" aria-hidden="true">
+  <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 406 173" focusable="false" aria-hidden="true">
+    <g class="logo-stories" font-family="Optima, Didot, 'Tenor Sans', 'Times New Roman', serif" font-size="50" font-weight="500" letter-spacing="22">
+      <text class="layer-back"   x="55" y="78">STORIES</text>
+      <text class="layer-mid"    x="52" y="75">STORIES</text>
+      <text class="layer-stroke" x="53" y="76">STORIES</text>
+    </g>
+    <text class="logo-hotel" x="181" y="121"
+          font-family="'Snell Roundhand', 'Pinyon Script', 'Brush Script MT', cursive"
+          font-size="29" font-style="italic" letter-spacing="0.5">hotel</text>
+  </svg>
+</div>
 <div class="site-grain" aria-hidden="true"></div>
 
 
