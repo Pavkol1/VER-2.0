@@ -4,7 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stories Budapest — A hotel of stories, quietly told.</title>
+<meta name="description" content="A 44-room boutique hotel in Budapest District VI, on Király utca. Six room characters, à la carte breakfast, a bar &amp; lounge, and a courtyard garden — quietly told, not shouted.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://secrethotel.netlify.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Stories Hotel Budapest">
+<meta property="og:title" content="Stories Budapest — A hotel of stories, quietly told.">
+<meta property="og:description" content="A 44-room boutique hotel in Budapest District VI, on Király utca. Six room characters, à la carte breakfast, a bar &amp; lounge, and a courtyard garden — quietly told, not shouted.">
+<meta property="og:url" content="https://secrethotel.netlify.app/">
+<meta property="og:image" content="https://secrethotel.netlify.app/assets/brand/hero.jpg">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stories Budapest — A hotel of stories, quietly told.">
+<meta name="twitter:description" content="A 44-room boutique hotel in Budapest District VI, on Király utca. Six room characters, à la carte breakfast, a bar &amp; lounge, and a courtyard garden — quietly told, not shouted.">
+<meta name="twitter:image" content="https://secrethotel.netlify.app/assets/brand/hero.jpg">
 <link rel="icon" href="data:,">
+<!-- LCP: the fullscreen loader poster paints before anything else on every visit -->
+<link rel="preload" as="image" href="assets/brand/loader-wall-poster.webp" fetchpriority="high">
 <script>
 /* Page-transition entry: if the previous page set the flag, start covered
    (html.pt-in) so the sweep panel can exit over the first paint. */
@@ -183,7 +199,7 @@ body.in-cinema .cr-label, body.in-cinema .cr-hint { color: var(--room-ink); }
   background: #06100b;
   cursor: none;
 }
-.sp-img { position: absolute; inset: 0; background: url('assets/brand/hero.jpg') center 38% / cover; }
+.sp-img { position: absolute; inset: 0; background: url('assets/brand/hero.webp') center 38% / cover; }
 .sp-img.base { filter: brightness(0.24) grayscale(0.55) saturate(0.7) contrast(1.05); }
 .sp-img.lit {
   filter: brightness(0.98) saturate(1.08);
@@ -540,7 +556,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .intro-strip .overline::before {
   content: ""; width: 48px; height: 1px; background: var(--accent);
 }
-.intro-strip h1 {
+.intro-strip h2 {
   font-family: 'Libre Caslon Text', serif;
   font-weight: 400;
   font-size: clamp(48px, 7.2vw, 124px);
@@ -549,7 +565,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   margin: 0 0 32px;
   text-wrap: balance;
 }
-.intro-strip h1 em { font-style: italic; color: var(--accent); }
+.intro-strip h2 em { font-style: italic; color: var(--accent); }
 .intro-strip .deck {
   line-height: 1.55;
   font-weight: 300;
@@ -568,13 +584,13 @@ body:not(.page-home) { --logo-init-p: 1; }
 
 /* Headline words ride the same scroll-fill as the deck (GSAP scrubs opacity).
    Base opacity:1 so the title is readable with no JS / reduced motion. */
-.intro-strip h1 { white-space: normal; }
-.intro-strip h1 .w {
+.intro-strip h2 { white-space: normal; }
+.intro-strip h2 .w {
   display: inline-block;
   white-space: nowrap;
   will-change: opacity;
 }
-.intro-strip h1 .w.em-word::after {
+.intro-strip h2 .w.em-word::after {
   content: "";
   display: block;
   height: 2px;
@@ -586,8 +602,8 @@ body:not(.page-home) { --logo-init-p: 1; }
   transition: transform 0.6s var(--ease);
 }
 @media (prefers-reduced-motion: reduce) {
-  .intro-strip h1 .w { opacity: 1 !important; }
-  .intro-strip h1 .w.em-word::after { transform: scaleX(1); }
+  .intro-strip h2 .w { opacity: 1 !important; }
+  .intro-strip h2 .w.em-word::after { transform: scaleX(1); }
 }
 
 
@@ -1295,7 +1311,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .spotlight-photo {
   position: absolute;
   inset: 0;
-  background-image: url('assets/brand/luxuries-top-scene.jpg');
+  background-image: url('assets/brand/luxuries-top-scene.webp');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 100% 100%;
@@ -1333,7 +1349,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .spotlight-kicker::before { content: ""; width: 42px; height: 1px; background: var(--accent); }
 #pleasures .bg {
-  background-image: url('assets/brand/luxuries-middle-scene.jpg') !important;
+  background-image: url('assets/brand/luxuries-middle-scene.webp') !important;
   background-position: center center;
   background-size: 100% 100%;
   filter: brightness(0.76) saturate(0.9) contrast(1);
@@ -1368,7 +1384,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   position: absolute;
   inset: 0;
   z-index: -2;
-  background-image: url('assets/brand/luxuries-bottom-scene.jpg');
+  background-image: url('assets/brand/luxuries-bottom-scene.webp');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 100% 100%;
@@ -1458,7 +1474,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .bk-photo-bg {
   z-index: 0;
-  background: url('assets/brand/breakfast-new.jpg') center / cover no-repeat;
+  background: url('assets/brand/breakfast-new.webp') center / cover no-repeat;
   transform: scale(1.04);
   filter: brightness(var(--bk-photo-brightness, 0.82)) saturate(0.92);
   opacity: var(--bk-photo-opacity, 1);
@@ -1470,7 +1486,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .dn-photo {
   z-index: 2;
-  background: url('assets/brand/danube-budapest.jpg') center / cover no-repeat;
+  background: url('assets/brand/danube-budapest.webp') center / cover no-repeat;
   opacity: var(--dn-photo-opacity, 0);
 }
 /* One constant veil above every media layer — photo, canvas and Danube final
@@ -1540,7 +1556,7 @@ body.bk-static .dn-content {
   opacity: 1;
   pointer-events: auto;
   padding: clamp(110px, 22vw, 180px) clamp(24px, 6vw, 96px) clamp(48px, 8vw, 80px);
-  background: linear-gradient(180deg, rgba(11,9,7,0.42), rgba(11,9,7,0.72)), url('assets/brand/danube-budapest.jpg') center / cover no-repeat;
+  background: linear-gradient(180deg, rgba(11,9,7,0.42), rgba(11,9,7,0.72)), url('assets/brand/danube-budapest.webp') center / cover no-repeat;
 }
 .bk-hero-copy {
   bottom: clamp(92px, 12vh, 148px);
@@ -1783,7 +1799,7 @@ body.bk-static .dn-content {
 .reserve-plate::before {
   content: "";
   position: absolute; inset: 0;
-  background: url('assets/brand/A__4T4B8254.JPG') center / cover no-repeat;
+  background: url('assets/brand/A__4T4B8254.webp') center / cover no-repeat;
   opacity: 0.45;
   filter: grayscale(0.18) contrast(1.05);
 }
@@ -1836,7 +1852,7 @@ footer {
 /* Reveal is JS-armed so a no-JS load keeps the footer fully visible. */
 footer.foot-armed { transform: translate3d(0, 84px, 0); opacity: 0; }
 footer.foot-armed.foot-revealed { transform: none; opacity: 1; }
-footer::before { content: ""; position: absolute; inset: 0; background: url('assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.jpg') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
+footer::before { content: ""; position: absolute; inset: 0; background: url('assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.webp') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
 footer::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9,11,10,0.4) 0%, rgba(8,10,9,0.84) 100%); z-index: -1; }
 .foot-grid { position: relative; width: 100%; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .foot-grid h3 { font-family: 'Libre Caslon Text', serif; font-size: 28px; color: #fff; font-weight: 500; }
@@ -2070,13 +2086,71 @@ body.menu-open nav.top { transform: none !important; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   .bg { transform: none !important; }
 }
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 10000;
+  background: var(--primary);
+  color: var(--paper);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 14px 22px;
+  text-decoration: none;
+  transition: top 0.25s var(--ease);
+}
+.skip-link:focus { top: 16px; outline: 2px solid var(--accent); outline-offset: 2px; }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Hotel",
+  "name": "Stories Hotel Budapest",
+  "description": "A 44-room boutique hotel in Budapest District VI, on Király utca. Six room characters, à la carte breakfast, a bar and lounge, and a courtyard garden.",
+  "url": "https://secrethotel.netlify.app/",
+  "telephone": "+36-1-808-0981",
+  "email": "info@storiesbudapest.com",
+  "image": "https://secrethotel.netlify.app/assets/brand/facade-warm.jpg",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Király utca 26",
+    "addressLocality": "Budapest",
+    "postalCode": "1061",
+    "addressCountry": "HU"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 47.4988,
+    "longitude": 19.0598
+  },
+  "starRating": {
+    "@type": "Rating",
+    "ratingValue": "4"
+  },
+  "sameAs": [
+    "https://www.instagram.com/storieshotelbudapest",
+    "https://www.facebook.com/storieshotelbudapest",
+    "https://www.tripadvisor.com/Hotel_Review-g274887-d14172179-Reviews-Stories_Boutique_Hotel-Budapest_Central_Hungary.html"
+  ],
+  "amenityFeature": [
+    { "@type": "LocationFeatureSpecification", "name": "Bar & Lounge", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "GoActive Gym", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Co-working space", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Breakfast available", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Courtyard garden", "value": true }
+  ]
+}
+</script>
 </head>
 <body class="page-home">
+<a href="#main" class="skip-link">Skip to content</a>
+
 
 <!-- SITE LOADER — plays the living green wall while the page settles -->
 <div class="loader" id="siteLoader" aria-hidden="true">
-  <video autoplay muted playsinline loop preload="auto" poster="assets/brand/loader-wall-poster.jpg">
+  <video autoplay muted playsinline loop preload="auto" poster="assets/brand/loader-wall-poster.webp">
     <source src="assets/brand/loader-wall.mp4" type="video/mp4">
   </video>
   <div class="loader-core">
@@ -2158,11 +2232,12 @@ body.menu-open nav.top { transform: none !important; }
     </nav>
     <div class="mnav-foot">
       <a class="mnav-cta" href="#reserve">Reserve a stay</a>
-      <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:hello@storiesbudapest.com">hello@storiesbudapest.com</a></div>
+      <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
     </div>
   </div>
 </div>
 <div class="page-view">
+<main id="main">
 
 
 <nav class="chapter-rail" id="chapterRail" aria-label="Chapters">
@@ -2209,15 +2284,15 @@ body.menu-open nav.top { transform: none !important; }
   <div class="intro-inner">
     <div class="intro-text">
       <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VI · Király utca 26</span></div>
-      <h1><span class="w">A</span> <span class="w">hotel</span> <span class="w">of</span> <span class="w em-word">stories,</span><br><span class="w">quietly</span> <span class="w">told.</span></h1>
+      <h2><span class="w">A</span> <span class="w">hotel</span> <span class="w">of</span> <span class="w em-word">stories,</span><br><span class="w">quietly</span> <span class="w">told.</span></h2>
       <p class="deck" id="introDeck"><span class="rw">Forty-four</span> <span class="rw">rooms,</span> <span class="rw">six</span> <span class="rw">characters,</span> <span class="rw">one</span> <span class="rw">Twenty</span> <span class="rw">Six</span> <span class="rw">building.</span> <span class="rw">A</span> <span class="rw">small</span> <span class="rw">house</span> <span class="rw">on</span> <span class="rw">Király</span> <span class="rw">utca,</span> <span class="rw">lived-in</span> <span class="rw">and</span> <span class="rw">attentive</span> <span class="rw">—</span> <span class="rw">the</span> <span class="rw">opposite</span> <span class="rw">of</span> <span class="rw">anonymous.</span></p>
       <p class="deck deck--secondary"><span class="rw">Discover</span> <span class="rw">the</span> <span class="rw">epitome</span> <span class="rw">of</span> <span class="rw">uniqueness</span> <span class="rw">at</span> <span class="rw">our</span> <span class="rw">boutique</span> <span class="rw">hotel,</span> <span class="rw">where</span> <span class="rw">every</span> <span class="rw">corner</span> <span class="rw">is</span> <span class="rw">infused</span> <span class="rw">with</span> <span class="rw">design</span> <span class="rw">and</span> <span class="rw">excitement.</span> <span class="rw">Your</span> <span class="rw">search</span> <span class="rw">for</span> <span class="rw">the</span> <span class="rw">perfect</span> <span class="rw">destination</span> <span class="rw">ends</span> <span class="rw">here.</span> <span class="rw">Welcome</span> <span class="rw">to</span> <span class="rw">a</span> <span class="rw">world</span> <span class="rw">where</span> <span class="rw">unforgettable</span> <span class="rw">experiences</span> <span class="rw">await</span> <span class="rw">at</span> <span class="rw">every</span> <span class="rw">turn.</span></p>
     </div>
     <div class="intro-photos">
       <figure class="intro-photo intro-photo--corridor">
-        <img src="assets/brand/intro-corridor.jpg"
+        <picture><source srcset="assets/brand/intro-corridor.webp" type="image/webp"><img src="assets/brand/intro-corridor.jpg"
              alt="A guest walking the red-carpeted corridor between the green walls of Stories Hotel"
-             decoding="async" loading="lazy">
+             decoding="async" loading="lazy"></picture>
       </figure>
     </div>
   </div>
@@ -2225,7 +2300,7 @@ body.menu-open nav.top { transform: none !important; }
     <div><span class="l">Form</span><span class="v">Boutique &middot; <em>44</em> rooms</span></div>
     <div><span class="l">Address</span><span class="v">Király utca 26</span></div>
     <div><span class="l">Opened</span><span class="v">MMXXIV</span></div>
-    <div><span class="l">Reservations</span><span class="v">+36 1 234 5678</span></div>
+    <div><span class="l">Reservations</span><span class="v">+36 1 808 0981</span></div>
   </div>
 </section>
 
@@ -2240,7 +2315,7 @@ body.menu-open nav.top { transform: none !important; }
 </section>
 
 <section class="plate" data-label="02 / Little Luxuries" id="pleasures">
-  <div class="bg" style="background-image: url('assets/brand/A__4T4B7716.JPG');"></div>
+  <div class="bg" style="background-image: url('assets/brand/A__4T4B7716.webp');"></div>
   <div class="plate-grain"></div>
   <div class="plate-content">
     <div class="plate-id"><span class="n">III</span><span>·</span><span>Rituals of the house</span></div>
@@ -2265,7 +2340,7 @@ body.menu-open nav.top { transform: none !important; }
         </div>
       </div>
       <div class="pcard b">
-        <img decoding="async" src="assets/photos/GYM/GoActive-5-19.jpg" alt="Gym">
+        <picture><source srcset="assets/photos/GYM/GoActive-5-19.webp" type="image/webp"><img decoding="async" src="assets/photos/GYM/GoActive-5-19.jpg" alt="Gym"></picture>
         <div class="inner">
           <div class="tag">III · 02 — Body</div>
           <h4>Gym, with <em>GoActive</em></h4>
@@ -2274,7 +2349,7 @@ body.menu-open nav.top { transform: none !important; }
         </div>
       </div>
       <div class="pcard c">
-        <img decoding="async" src="assets/photos/Coworking/coworking26.jpg" alt="Create 26">
+        <picture><source srcset="assets/photos/Coworking/coworking26.webp" type="image/webp"><img decoding="async" src="assets/photos/Coworking/coworking26.jpg" alt="Create 26"></picture>
         <div class="inner">
           <div class="tag">III · 03 — Work</div>
           <h4>Create 26 <em>coworking</em></h4>
@@ -2318,68 +2393,68 @@ body.menu-open nav.top { transform: none !important; }
     <div class="room-galleries">
       <div class="room-gallery" data-slug="presidential" aria-hidden="false">
         <figure class="rf">
-          <img decoding="async" src="assets/photos/presidential-suite/01.jpg" alt="Presidential Suite &mdash; view 1" loading="lazy">
+          <picture><source srcset="assets/photos/presidential-suite/01.webp" type="image/webp"><img decoding="async" src="assets/photos/presidential-suite/01.jpg" alt="Presidential Suite &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/presidential-suite/02.jpg" alt="Presidential Suite &mdash; view 2" loading="lazy">
+          <picture><source srcset="assets/photos/presidential-suite/02.webp" type="image/webp"><img decoding="async" src="assets/photos/presidential-suite/02.jpg" alt="Presidential Suite &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/presidential-suite/03.jpg" alt="Presidential Suite &mdash; view 3" loading="lazy">
+          <picture><source srcset="assets/photos/presidential-suite/03.webp" type="image/webp"><img decoding="async" src="assets/photos/presidential-suite/03.jpg" alt="Presidential Suite &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="king" aria-hidden="false">
         <figure class="rf">
-          <img decoding="async" src="assets/photos/king-suite/01.jpg" alt="King Suite &mdash; view 1" loading="lazy">
+          <picture><source srcset="assets/photos/king-suite/01.webp" type="image/webp"><img decoding="async" src="assets/photos/king-suite/01.jpg" alt="King Suite &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/king-suite/02.jpg" alt="King Suite &mdash; view 2" loading="lazy">
+          <picture><source srcset="assets/photos/king-suite/02.webp" type="image/webp"><img decoding="async" src="assets/photos/king-suite/02.jpg" alt="King Suite &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/king-suite/03.jpg" alt="King Suite &mdash; view 3" loading="lazy">
+          <picture><source srcset="assets/photos/king-suite/03.webp" type="image/webp"><img decoding="async" src="assets/photos/king-suite/03.jpg" alt="King Suite &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="junior" aria-hidden="false">
         <figure class="rf">
-          <img decoding="async" src="assets/photos/junior-suite/01.jpg" alt="Junior Suite &mdash; view 1" loading="lazy">
+          <picture><source srcset="assets/photos/junior-suite/01.webp" type="image/webp"><img decoding="async" src="assets/photos/junior-suite/01.jpg" alt="Junior Suite &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/junior-suite/02.jpg" alt="Junior Suite &mdash; view 2" loading="lazy">
+          <picture><source srcset="assets/photos/junior-suite/02.webp" type="image/webp"><img decoding="async" src="assets/photos/junior-suite/02.jpg" alt="Junior Suite &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/junior-suite/03.jpg" alt="Junior Suite &mdash; view 3" loading="lazy">
+          <picture><source srcset="assets/photos/junior-suite/03.webp" type="image/webp"><img decoding="async" src="assets/photos/junior-suite/03.jpg" alt="Junior Suite &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="deluxe" aria-hidden="false">
         <figure class="rf">
-          <img decoding="async" src="assets/photos/deluxe/01.jpg" alt="Deluxe &mdash; view 1" loading="lazy">
+          <picture><source srcset="assets/photos/deluxe/01.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe/01.jpg" alt="Deluxe &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/deluxe/02.jpg" alt="Deluxe &mdash; view 2" loading="lazy">
+          <picture><source srcset="assets/photos/deluxe/02.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe/02.jpg" alt="Deluxe &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/deluxe/03.jpg" alt="Deluxe &mdash; view 3" loading="lazy">
+          <picture><source srcset="assets/photos/deluxe/03.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe/03.jpg" alt="Deluxe &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="deluxe-queen" aria-hidden="false">
         <figure class="rf">
-          <img decoding="async" src="assets/photos/deluxe-queen/01.jpg" alt="Deluxe Queen &mdash; view 1" loading="lazy">
+          <picture><source srcset="assets/photos/deluxe-queen/01.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe-queen/01.jpg" alt="Deluxe Queen &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/deluxe-queen/02.jpg" alt="Deluxe Queen &mdash; view 2" loading="lazy">
+          <picture><source srcset="assets/photos/deluxe-queen/02.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe-queen/02.jpg" alt="Deluxe Queen &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/deluxe-queen/03.jpg" alt="Deluxe Queen &mdash; view 3" loading="lazy">
+          <picture><source srcset="assets/photos/deluxe-queen/03.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe-queen/03.jpg" alt="Deluxe Queen &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="superior" aria-hidden="false">
         <figure class="rf">
-          <img decoding="async" src="assets/photos/superior/01.jpg" alt="Superior &mdash; view 1" loading="lazy">
+          <picture><source srcset="assets/photos/superior/01.webp" type="image/webp"><img decoding="async" src="assets/photos/superior/01.jpg" alt="Superior &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/superior/02.jpg" alt="Superior &mdash; view 2" loading="lazy">
+          <picture><source srcset="assets/photos/superior/02.webp" type="image/webp"><img decoding="async" src="assets/photos/superior/02.jpg" alt="Superior &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <img decoding="async" src="assets/photos/superior/03.jpg" alt="Superior &mdash; view 3" loading="lazy">
+          <picture><source srcset="assets/photos/superior/03.webp" type="image/webp"><img decoding="async" src="assets/photos/superior/03.jpg" alt="Superior &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
     </div>
@@ -2494,7 +2569,7 @@ body.menu-open nav.top { transform: none !important; }
         <span class="tc-label">Direct line</span>
         <h3>Reach a person, <em>not a bot.</em></h3>
         <p>WhatsApp, email, or a phone call &mdash; the same small team answers within the same day. No call centres, no escalation chains.</p>
-        <span class="tc-note">+36 1 234 5678</span>
+        <span class="tc-note">+36 1 808 0981</span>
       </article>
 
       <article class="trust-card">
@@ -2536,14 +2611,16 @@ body.menu-open nav.top { transform: none !important; }
   </div>
 </section>
 
+</main>
+
 <footer id="contact">
   <div class="foot-grid">
     <div>
       <h3>Stories</h3>
       <div class="sub">Budapest · Király utca 26</div>
       <address>Twenty Six Building<br>Király utca 26, 1061 Budapest<br>Hungary</address>
-      <a href="tel:+3612345678" class="ph">+36 1 234 5678</a><br>
-      <a href="mailto:hello@storiesbudapest.com" class="ph">hello@storiesbudapest.com</a>
+      <a href="tel:+3618080981" class="ph">+36 1 808 0981</a><br>
+      <a href="mailto:info@storiesbudapest.com" class="ph">info@storiesbudapest.com</a>
     </div>
     <div>
       <h4>House</h4>
@@ -2566,9 +2643,9 @@ body.menu-open nav.top { transform: none !important; }
     <div>
       <h4>Follow</h4>
       <ul>
-        <li><a href="#">Instagram ↗</a></li>
-        <li><a href="#">Journal</a></li>
-        <li><a href="#">Newsletter</a></li>
+        <li><a href="https://www.instagram.com/storieshotelbudapest" target="_blank" rel="noopener">Instagram ↗</a></li>
+        <li><a href="https://www.facebook.com/storieshotelbudapest" target="_blank" rel="noopener">Facebook ↗</a></li>
+        <li><a href="https://www.tripadvisor.com/Hotel_Review-g274887-d14172179-Reviews-Stories_Boutique_Hotel-Budapest_Central_Hungary.html" target="_blank" rel="noopener">TripAdvisor ↗</a></li>
       </ul>
     </div>
   </div>
@@ -2875,8 +2952,8 @@ body.menu-open nav.top { transform: none !important; }
   // is fully readable with no JS / reduced motion.
   if (introStrip && window.gsap && window.ScrollTrigger && !reduceMo) {
     gsap.registerPlugin(ScrollTrigger);
-    var fillWords = introStrip.querySelectorAll('h1 .w, .deck .rw');
-    var emWord    = introStrip.querySelector('h1 .w.em-word');
+    var fillWords = introStrip.querySelectorAll('h2 .w, .deck .rw');
+    var emWord    = introStrip.querySelector('h2 .w.em-word');
     if (fillWords.length) {
       gsap.set(fillWords, { opacity: 0.16 });
       gsap.to(fillWords, {
