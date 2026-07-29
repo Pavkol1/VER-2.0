@@ -418,9 +418,8 @@ body:not(.page-home) { --logo-init-p: 1; }
 /* INTRO STRIP — editorial section that reveals as logo shrinks away */
 .intro-strip {
   position: relative;
-  /* green→black: bottom edge resolves to #050605 so it flows seamlessly into
-     the spotlight-bridge (#050605) below — no visible seam */
-  background: linear-gradient(180deg, var(--ink) 0%, var(--ink) 66%, #050605 100%);
+  overflow: hidden;
+  background: #0c1410;
   color: var(--paper);
   padding: clamp(96px, 14vw, 200px) clamp(40px, 6vw, 96px) clamp(72px, 9vw, 120px);
 }
@@ -430,8 +429,32 @@ body:not(.page-home) { --logo-init-p: 1; }
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--accent), transparent);
   opacity: 0.45;
+  z-index: 2;
+}
+/* Marble-line procedural background (grain + noise-field contour lines,
+   see design_handoff_marble_background/README.md). Static once revealed. */
+.intro-marble-grain { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* Resting state = fully masked out (same expression the JS reveal starts
+   from) so the pattern never flashes fully-drawn before the wipe begins —
+   it only ever becomes visible by playing forward through the reveal. */
+.intro-marble-mask  {
+  position: absolute; inset: 0;
+  -webkit-mask-image: linear-gradient(115deg, #000 0%, #000 0%, transparent 5%, transparent 100%);
+  mask-image: linear-gradient(115deg, #000 0%, #000 0%, transparent 5%, transparent 100%);
+}
+.intro-marble-mask svg { width: 100%; height: 100%; display: block; }
+/* Bottom edge fades to #050605 so it still flows seamlessly into the
+   spotlight-bridge (#050605) below, same seam-avoidance as before. */
+.intro-marble-fade {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 34%;
+  background: linear-gradient(180deg, transparent 0%, #050605 100%);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-marble-mask { -webkit-mask-image: none !important; mask-image: none !important; }
 }
 .intro-inner {
+  position: relative;
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
@@ -2281,6 +2304,13 @@ body.menu-open nav.top { transform: none !important; }
 
 <!-- INTRO STRIP — editorial reveal as logo shrinks into nav -->
 <section class="intro-strip" id="intro" data-label="01 / The House">
+  <canvas class="intro-marble-grain" id="introMarbleGrain" aria-hidden="true"></canvas>
+  <div class="intro-marble-mask" id="introMarbleMask" aria-hidden="true">
+    <svg id="introMarbleSvg" preserveAspectRatio="none">
+      <path id="introMarblePath" fill="none" stroke="rgba(185,144,78,0.55)" stroke-width="2.2" stroke-linecap="round"></path>
+    </svg>
+  </div>
+  <div class="intro-marble-fade" aria-hidden="true"></div>
   <div class="intro-inner">
     <div class="intro-text">
       <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VI · Király utca 26</span></div>
@@ -2914,12 +2944,148 @@ body.menu-open nav.top { transform: none !important; }
   var introPhoto  = document.querySelector('.intro-photo img');
   var reduceMo    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // ── Marble-line procedural background: grain + noise-field contour lines,
+  // revealed with a diagonal wipe the first time the section is scrolled
+  // into view (design_handoff_marble_background/README.md). Static after.
+  var marbleGrain = document.getElementById('introMarbleGrain');
+  var marbleMask  = document.getElementById('introMarbleMask');
+  var marbleSvg   = document.getElementById('introMarbleSvg');
+  var marblePath  = document.getElementById('introMarblePath');
+
+  function mHash(x, y) {
+    var s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453123;
+    return s - Math.floor(s);
+  }
+  function mNoise2(x, y) {
+    var xi = Math.floor(x), yi = Math.floor(y);
+    var xf = x - xi, yf = y - yi;
+    var u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+    var a = mHash(xi, yi), b = mHash(xi + 1, yi);
+    var c = mHash(xi, yi + 1), d = mHash(xi + 1, yi + 1);
+    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+  }
+  function mFbm(x, y) {
+    var total = 0, amp = 0.5, freq = 1, max = 0;
+    for (var i = 0; i < 3; i++) { total += amp * mNoise2(x * freq, y * freq); max += amp; amp *= 0.5; freq *= 2; }
+    return total / max;
+  }
+  function mPattern(x, y) {
+    var warp = 1.6;
+    var q1 = mFbm(x, y), q2 = mFbm(x + 5.2, y + 1.3);
+    var r1 = mFbm(x + warp * q1 + 1.7, y + warp * q2 + 9.2);
+    var r2 = mFbm(x + warp * q1 + 8.3, y + warp * q2 + 2.8);
+    return mFbm(x + warp * r1, y + warp * r2);
+  }
+  function setupMarbleGrain() {
+    if (!marbleGrain) return;
+    var mdpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = marbleGrain.clientWidth, h = marbleGrain.clientHeight;
+    if (!w || !h) return;
+    marbleGrain.width = w * mdpr; marbleGrain.height = h * mdpr;
+    var ctx = marbleGrain.getContext('2d');
+    ctx.setTransform(mdpr, 0, 0, mdpr, 0, 0);
+    ctx.fillStyle = '#0c1410';
+    ctx.fillRect(0, 0, w, h);
+    ctx.globalAlpha = 0.03;
+    ctx.fillStyle = '#ffffff';
+    for (var i = 0; i < 500; i++) ctx.fillRect(Math.random() * w, Math.random() * h, 1, 1);
+  }
+  function buildMarbleContours() {
+    if (!marbleSvg || !marblePath) return;
+    var w = marbleSvg.clientWidth, h = marbleSvg.clientHeight;
+    if (!w || !h) return;
+    marbleSvg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    var aspect = w / h;
+    var nx = 150, ny = Math.max(60, Math.round(150 / aspect));
+    var S = 1.15;
+    var field = [], min = Infinity, max = -Infinity;
+    for (var j = 0; j <= ny; j++) {
+      var row = [];
+      for (var i = 0; i <= nx; i++) {
+        var x = (i / nx) * aspect * S, y = (j / ny) * S;
+        var v = mPattern(x, y);
+        row.push(v);
+        if (v < min) min = v;
+        if (v > max) max = v;
+      }
+      field.push(row);
+    }
+    var cellW = w / nx, cellH = h / ny, K = 10, segs = [];
+    function clamp01(t) { return Math.min(1, Math.max(0, t)); }
+    function edgePt(name, i, j, v0, v1, v2, v3, level) {
+      if (name === 'T') { var t = clamp01(Math.abs(v1 - v0) < 1e-9 ? 0.5 : (level - v0) / (v1 - v0)); return [(i + t) * cellW, j * cellH]; }
+      if (name === 'R') { var t2 = clamp01(Math.abs(v2 - v1) < 1e-9 ? 0.5 : (level - v1) / (v2 - v1)); return [(i + 1) * cellW, (j + t2) * cellH]; }
+      if (name === 'B') { var t3 = clamp01(Math.abs(v2 - v3) < 1e-9 ? 0.5 : (level - v3) / (v2 - v3)); return [(i + t3) * cellW, (j + 1) * cellH]; }
+      var t4 = clamp01(Math.abs(v3 - v0) < 1e-9 ? 0.5 : (level - v0) / (v3 - v0)); return [i * cellW, (j + t4) * cellH];
+    }
+    for (var k = 1; k <= K; k++) {
+      var level = min + (max - min) * (k / (K + 1));
+      for (var jj = 0; jj < ny; jj++) {
+        for (var ii = 0; ii < nx; ii++) {
+          var v0 = field[jj][ii], v1 = field[jj][ii + 1], v2 = field[jj + 1][ii + 1], v3 = field[jj + 1][ii];
+          var idx = (v0 >= level ? 8 : 0) | (v1 >= level ? 4 : 0) | (v2 >= level ? 2 : 0) | (v3 >= level ? 1 : 0);
+          if (idx === 0 || idx === 15) continue;
+          var center = (v0 + v1 + v2 + v3) / 4, pairs;
+          switch (idx) {
+            case 1: pairs = [['L', 'B']]; break;
+            case 2: pairs = [['B', 'R']]; break;
+            case 3: pairs = [['L', 'R']]; break;
+            case 4: pairs = [['T', 'R']]; break;
+            case 5: pairs = center >= level ? [['T', 'R'], ['L', 'B']] : [['T', 'L'], ['B', 'R']]; break;
+            case 6: pairs = [['T', 'B']]; break;
+            case 7: pairs = [['T', 'L']]; break;
+            case 8: pairs = [['T', 'L']]; break;
+            case 9: pairs = [['T', 'B']]; break;
+            case 10: pairs = center >= level ? [['T', 'L'], ['B', 'R']] : [['T', 'R'], ['L', 'B']]; break;
+            case 11: pairs = [['T', 'R']]; break;
+            case 12: pairs = [['L', 'R']]; break;
+            case 13: pairs = [['B', 'R']]; break;
+            case 14: pairs = [['L', 'B']]; break;
+            default: pairs = [];
+          }
+          for (var p = 0; p < pairs.length; p++) {
+            var p1 = edgePt(pairs[p][0], ii, jj, v0, v1, v2, v3, level);
+            var p2 = edgePt(pairs[p][1], ii, jj, v0, v1, v2, v3, level);
+            segs.push('M' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) + 'L' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1));
+          }
+        }
+      }
+    }
+    marblePath.setAttribute('d', segs.join(''));
+  }
+  function playMarbleReveal() {
+    if (!marbleMask || reduceMo) return;
+    var dur = 6400, start = performance.now();
+    function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+    function step(now) {
+      var p = Math.min(1, (now - start) / dur);
+      var e = ease(p);
+      var pos = -15 + e * 135;
+      var mask = 'linear-gradient(115deg, #000 0%, #000 ' + pos + '%, transparent ' + (pos + 20) + '%, transparent 100%)';
+      marbleMask.style.webkitMaskImage = mask;
+      marbleMask.style.maskImage = mask;
+      if (p < 1) requestAnimationFrame(step);
+      else { marbleMask.style.webkitMaskImage = 'none'; marbleMask.style.maskImage = 'none'; }
+    }
+    requestAnimationFrame(step);
+  }
+  if (marbleGrain && marbleSvg) {
+    setupMarbleGrain();
+    buildMarbleContours();
+    var marbleResizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(marbleResizeTimer);
+      marbleResizeTimer = setTimeout(function () { setupMarbleGrain(); buildMarbleContours(); }, 150);
+    });
+  }
+
   if (introStrip) {
     // Reveal once when the section enters viewport
     var introObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
           introStrip.classList.add('revealed');
+          playMarbleReveal();
           introObs.disconnect();
         }
       });
