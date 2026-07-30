@@ -639,8 +639,8 @@ body.menu-open nav.top { transform: none !important; }
 </script>
 
 <!-- GSAP + ScrollTrigger (vendored, free for commercial use) -->
-<script src="assets/vendor/gsap.min.js"></script>
-<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/gsap.min.js" defer></script>
+<script src="assets/vendor/ScrollTrigger.min.js" defer></script>
 <script>
 /* Shared GSAP reveals — heading rise + block fade-up, Lenis-synced, motion-safe.
    Hard-skips every zone the site already animates so nothing double-fires. */
@@ -729,6 +729,25 @@ body.menu-open nav.top { transform: none !important; }
       var href = a.href;
       document.body.classList.add('page-leaving');
       setTimeout(function () { location.href = href; }, 540);
+    });
+
+    // Prefetch on intent. The sweep panel runs 520ms before navigating, so a
+    // page requested at hover/focus time is usually already in cache when the
+    // navigation fires — the next page then paints instantly behind the panel.
+    var prefetched = {};
+    function prefetch (href) {
+      if (prefetched[href]) return;
+      prefetched[href] = 1;
+      var l = document.createElement('link');
+      l.rel = 'prefetch';
+      l.href = href;
+      document.head.appendChild(l);
+    }
+    ['mouseover', 'focusin', 'touchstart'].forEach(function (ev) {
+      document.addEventListener(ev, function (e) {
+        var a = e.target.closest && e.target.closest('a[href]');
+        if (a && transitable(a)) prefetch(a.href);
+      }, { passive: true, capture: true });
     });
   }
 

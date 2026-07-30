@@ -30,7 +30,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <!-- Leaflet (interactive neighbourhood map) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
 :root {
   --ink:     #0B1410;
@@ -431,95 +430,40 @@ body:not(.page-home) { --logo-init-p: 1; }
   opacity: 0.45;
   z-index: 2;
 }
-/* Marble-line procedural background (grain + noise-field contour lines,
-   see design_handoff_marble_background/README.md). Static once revealed. */
-.intro-marble-grain { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-/* Resting state = fully masked out (same expression the JS reveal starts
-   from) so the pattern never flashes fully-drawn before the wipe begins —
-   it only ever becomes visible by playing forward through the reveal. */
-.intro-marble-mask  {
+/* Self-drawing facade sketch — the section's background layer. Strokes are
+   traced vector data; the pen draws itself once the section scrolls in. */
+.intro-sketch {
   position: absolute; inset: 0;
-  -webkit-mask-image: linear-gradient(115deg, #000 0%, #000 0%, transparent 5%, transparent 100%);
-  mask-image: linear-gradient(115deg, #000 0%, #000 0%, transparent 5%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
 }
-.intro-marble-mask svg { width: 100%; height: 100%; display: block; }
+.intro-sketch svg {
+  width: 100%; height: 100%; display: block;
+}
+/* Group carries the glow + the readability dial-back, so the strokes stay
+   atmosphere rather than competing with the copy sitting on top of them. */
+.intro-sketch g {
+  opacity: 0.5;
+  filter: drop-shadow(0 0 5px rgba(217, 178, 94, 0.45));
+}
+/* Strokes rest fully retracted (dashoffset = length, written by JS) so the
+   finished drawing never flashes before the pen starts. */
 /* Bottom edge fades to #050605 so it still flows seamlessly into the
    spotlight-bridge (#050605) below, same seam-avoidance as before. */
-.intro-marble-fade {
+.intro-sketch-fade {
   position: absolute; left: 0; right: 0; bottom: 0; height: 34%;
   background: linear-gradient(180deg, transparent 0%, #050605 100%);
   pointer-events: none;
-}
-@media (prefers-reduced-motion: reduce) {
-  .intro-marble-mask { -webkit-mask-image: none !important; mask-image: none !important; }
+  z-index: 1;
 }
 .intro-inner {
   position: relative;
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: clamp(48px, 6vw, 96px);
-  align-items: end;
+  grid-template-columns: minmax(0, 1fr);
 }
 .intro-text { min-width: 0; }
-
-/* Right column — diptych: corridor (portrait, hero) + shoes (landscape, supporting).
-   Both photos curtain-in from clipped-bottom state when .intro-strip.revealed fires. */
-.intro-photos {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-.intro-photo {
-  position: relative;
-  margin: 0;
-  overflow: hidden;
-  outline: 1px solid rgba(185, 144, 78, 0.28);
-  outline-offset: -1px;
-  /* Initial state — clipped from bottom up + slight zoom-in */
-  clip-path: inset(0 0 100% 0);
-  transform: scale(1.06);
-  transition: clip-path 1.4s cubic-bezier(0.65, 0, 0.35, 1),
-              transform  1.4s cubic-bezier(0.65, 0, 0.35, 1);
-  will-change: clip-path, transform;
-}
-.intro-photo--corridor { aspect-ratio: 3 / 4; }
-.intro-photo--shoes    { aspect-ratio: 4 / 3; }
-
-.intro-photo img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 110%;
-  object-fit: cover;
-  object-position: center;
-  transform: translate3d(0, calc(var(--parallax-y, 0) * 1px), 0);
-  will-change: transform;
-  filter: brightness(0.94) saturate(0.97);
-}
-/* Shoes drifts ~70% as much as corridor for a subtle depth effect */
-.intro-photo--shoes img {
-  transform: translate3d(0, calc(var(--parallax-y, 0) * 0.7px), 0);
-}
-.intro-photo::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(11,20,16,0) 65%, rgba(11,20,16,0.35) 100%);
-  pointer-events: none;
-}
-
-/* Curtain reveal — fires from the section's IntersectionObserver-bound .revealed */
-.intro-strip.revealed .intro-photo--corridor {
-  clip-path: inset(0);
-  transform: scale(1);
-  transition-delay: 0.1s, 0.1s;
-}
-.intro-strip.revealed .intro-photo--shoes {
-  clip-path: inset(0);
-  transform: scale(1);
-  transition-delay: 0.45s, 0.45s;
-}
 
 /* Scroll-fill deck — words start dim and fill to full as the block scrolls
    through the viewport (tresmarescapital-style). GSAP scrubs per-word opacity;
@@ -531,11 +475,6 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .intro-photo {
-    clip-path: inset(0) !important;
-    transform: none !important;
-    transition: none !important;
-  }
   .intro-strip .rw { opacity: 1 !important; }
 }
 
@@ -597,10 +536,6 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .intro-strip .deck + .deck { margin-top: 1.1em; }
 @media (max-width: 880px) {
-  .intro-inner { grid-template-columns: 1fr; }
-  .intro-photos { max-width: 520px; margin-left: auto; }
-  .intro-photo--corridor { aspect-ratio: 3 / 4; }
-  .intro-photo--shoes    { aspect-ratio: 4 / 3; }
   .intro-meta  { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 40px; padding-top: 22px; }
   .intro-meta .v { font-size: 15px; }
 }
@@ -2304,13 +2239,10 @@ body.menu-open nav.top { transform: none !important; }
 
 <!-- INTRO STRIP — editorial reveal as logo shrinks into nav -->
 <section class="intro-strip" id="intro" data-label="01 / The House">
-  <canvas class="intro-marble-grain" id="introMarbleGrain" aria-hidden="true"></canvas>
-  <div class="intro-marble-mask" id="introMarbleMask" aria-hidden="true">
-    <svg id="introMarbleSvg" preserveAspectRatio="none">
-      <path id="introMarblePath" fill="none" stroke="rgba(185,144,78,0.55)" stroke-width="2.2" stroke-linecap="round"></path>
-    </svg>
+  <div class="intro-sketch" aria-hidden="true">
+    <svg id="introSketch" viewBox="0 0 1448 1086" preserveAspectRatio="xMidYMid slice" focusable="false"></svg>
   </div>
-  <div class="intro-marble-fade" aria-hidden="true"></div>
+  <div class="intro-sketch-fade" aria-hidden="true"></div>
   <div class="intro-inner">
     <div class="intro-text">
       <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VI · Király utca 26</span></div>
@@ -2318,19 +2250,12 @@ body.menu-open nav.top { transform: none !important; }
       <p class="deck" id="introDeck"><span class="rw">Forty-four</span> <span class="rw">rooms,</span> <span class="rw">six</span> <span class="rw">characters,</span> <span class="rw">one</span> <span class="rw">Twenty</span> <span class="rw">Six</span> <span class="rw">building.</span> <span class="rw">A</span> <span class="rw">small</span> <span class="rw">house</span> <span class="rw">on</span> <span class="rw">Király</span> <span class="rw">utca,</span> <span class="rw">lived-in</span> <span class="rw">and</span> <span class="rw">attentive</span> <span class="rw">—</span> <span class="rw">the</span> <span class="rw">opposite</span> <span class="rw">of</span> <span class="rw">anonymous.</span></p>
       <p class="deck deck--secondary"><span class="rw">Discover</span> <span class="rw">the</span> <span class="rw">epitome</span> <span class="rw">of</span> <span class="rw">uniqueness</span> <span class="rw">at</span> <span class="rw">our</span> <span class="rw">boutique</span> <span class="rw">hotel,</span> <span class="rw">where</span> <span class="rw">every</span> <span class="rw">corner</span> <span class="rw">is</span> <span class="rw">infused</span> <span class="rw">with</span> <span class="rw">design</span> <span class="rw">and</span> <span class="rw">excitement.</span> <span class="rw">Your</span> <span class="rw">search</span> <span class="rw">for</span> <span class="rw">the</span> <span class="rw">perfect</span> <span class="rw">destination</span> <span class="rw">ends</span> <span class="rw">here.</span> <span class="rw">Welcome</span> <span class="rw">to</span> <span class="rw">a</span> <span class="rw">world</span> <span class="rw">where</span> <span class="rw">unforgettable</span> <span class="rw">experiences</span> <span class="rw">await</span> <span class="rw">at</span> <span class="rw">every</span> <span class="rw">turn.</span></p>
     </div>
-    <div class="intro-photos">
-      <figure class="intro-photo intro-photo--corridor">
-        <picture><source srcset="assets/brand/intro-corridor.webp" type="image/webp"><img src="assets/brand/intro-corridor.jpg"
-             alt="A guest walking the red-carpeted corridor between the green walls of Stories Hotel"
-             decoding="async" loading="lazy"></picture>
-      </figure>
-    </div>
   </div>
   <div class="intro-meta">
-    <div><span class="l">Form</span><span class="v">Boutique &middot; <em>44</em> rooms</span></div>
-    <div><span class="l">Address</span><span class="v">Király utca 26</span></div>
-    <div><span class="l">Opened</span><span class="v">MMXXIV</span></div>
-    <div><span class="l">Reservations</span><span class="v">+36 1 808 0981</span></div>
+    <div><span class="l"><span class="rw">Form</span></span><span class="v"><span class="rw">Boutique</span> <span class="rw">&middot;</span> <span class="rw"><em>44</em></span> <span class="rw">rooms</span></span></div>
+    <div><span class="l"><span class="rw">Address</span></span><span class="v"><span class="rw">Király</span> <span class="rw">utca</span> <span class="rw">26</span></span></div>
+    <div><span class="l"><span class="rw">Opened</span></span><span class="v"><span class="rw">MMXXIV</span></span></div>
+    <div><span class="l"><span class="rw">Reservations</span></span><span class="v"><span class="rw">+36</span> <span class="rw">1</span> <span class="rw">808</span> <span class="rw">0981</span></span></div>
   </div>
 </section>
 
@@ -2361,7 +2286,7 @@ body.menu-open nav.top { transform: none !important; }
   <div class="body-inner">
     <div class="pleasures-grid">
       <div class="pcard a">
-        <img decoding="async" src="assets/photos/restaurant/Screenshot 2026-04-01 093455.png" alt="Bar and lounge">
+        <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/restaurant/restaurant-01-800.webp 800w, assets/photos/restaurant/restaurant-01-1200.webp 1200w, assets/photos/restaurant/restaurant-01.webp 1600w"><img decoding="async" loading="lazy" src="assets/photos/restaurant/restaurant-01.jpg" alt="Bar and lounge"></picture>
         <div class="inner">
           <div class="tag">III · 01 — Social</div>
           <h4>Bar &amp; social <em>lounge</em></h4>
@@ -2370,7 +2295,7 @@ body.menu-open nav.top { transform: none !important; }
         </div>
       </div>
       <div class="pcard b">
-        <picture><source srcset="assets/photos/GYM/GoActive-5-19.webp" type="image/webp"><img decoding="async" src="assets/photos/GYM/GoActive-5-19.jpg" alt="Gym"></picture>
+        <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/GYM/GoActive-5-19-800.webp 800w, assets/photos/GYM/GoActive-5-19-1200.webp 1200w, assets/photos/GYM/GoActive-5-19.webp 1600w"><img decoding="async" loading="lazy" src="assets/photos/GYM/GoActive-5-19.jpg" alt="Gym"></picture>
         <div class="inner">
           <div class="tag">III · 02 — Body</div>
           <h4>Gym, with <em>GoActive</em></h4>
@@ -2379,7 +2304,7 @@ body.menu-open nav.top { transform: none !important; }
         </div>
       </div>
       <div class="pcard c">
-        <picture><source srcset="assets/photos/Coworking/coworking26.webp" type="image/webp"><img decoding="async" src="assets/photos/Coworking/coworking26.jpg" alt="Create 26"></picture>
+        <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/Coworking/coworking26-800.webp 800w, assets/photos/Coworking/coworking26-1200.webp 1200w, assets/photos/Coworking/coworking26.webp 1600w"><img decoding="async" loading="lazy" src="assets/photos/Coworking/coworking26.jpg" alt="Create 26"></picture>
         <div class="inner">
           <div class="tag">III · 03 — Work</div>
           <h4>Create 26 <em>coworking</em></h4>
@@ -2423,68 +2348,68 @@ body.menu-open nav.top { transform: none !important; }
     <div class="room-galleries">
       <div class="room-gallery" data-slug="presidential" aria-hidden="false">
         <figure class="rf">
-          <picture><source srcset="assets/photos/presidential-suite/01.webp" type="image/webp"><img decoding="async" src="assets/photos/presidential-suite/01.jpg" alt="Presidential Suite &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/presidential-suite/01-800.webp 800w, assets/photos/presidential-suite/01-1200.webp 1200w, assets/photos/presidential-suite/01.webp 1600w"><img decoding="async" src="assets/photos/presidential-suite/01.jpg" alt="Presidential Suite &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/presidential-suite/02.webp" type="image/webp"><img decoding="async" src="assets/photos/presidential-suite/02.jpg" alt="Presidential Suite &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/presidential-suite/02-800.webp 800w, assets/photos/presidential-suite/02-1200.webp 1200w, assets/photos/presidential-suite/02.webp 1600w"><img decoding="async" src="assets/photos/presidential-suite/02.jpg" alt="Presidential Suite &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/presidential-suite/03.webp" type="image/webp"><img decoding="async" src="assets/photos/presidential-suite/03.jpg" alt="Presidential Suite &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/presidential-suite/03-800.webp 800w, assets/photos/presidential-suite/03-1200.webp 1200w, assets/photos/presidential-suite/03.webp 1600w"><img decoding="async" src="assets/photos/presidential-suite/03.jpg" alt="Presidential Suite &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="king" aria-hidden="false">
         <figure class="rf">
-          <picture><source srcset="assets/photos/king-suite/01.webp" type="image/webp"><img decoding="async" src="assets/photos/king-suite/01.jpg" alt="King Suite &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/king-suite/01-800.webp 800w, assets/photos/king-suite/01-1200.webp 1200w, assets/photos/king-suite/01.webp 1600w"><img decoding="async" src="assets/photos/king-suite/01.jpg" alt="King Suite &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/king-suite/02.webp" type="image/webp"><img decoding="async" src="assets/photos/king-suite/02.jpg" alt="King Suite &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/king-suite/02-800.webp 800w, assets/photos/king-suite/02-1200.webp 1200w, assets/photos/king-suite/02.webp 1600w"><img decoding="async" src="assets/photos/king-suite/02.jpg" alt="King Suite &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/king-suite/03.webp" type="image/webp"><img decoding="async" src="assets/photos/king-suite/03.jpg" alt="King Suite &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/king-suite/03-800.webp 800w, assets/photos/king-suite/03-1200.webp 1200w, assets/photos/king-suite/03.webp 1600w"><img decoding="async" src="assets/photos/king-suite/03.jpg" alt="King Suite &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="junior" aria-hidden="false">
         <figure class="rf">
-          <picture><source srcset="assets/photos/junior-suite/01.webp" type="image/webp"><img decoding="async" src="assets/photos/junior-suite/01.jpg" alt="Junior Suite &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/junior-suite/01-800.webp 800w, assets/photos/junior-suite/01-1200.webp 1200w, assets/photos/junior-suite/01.webp 1600w"><img decoding="async" src="assets/photos/junior-suite/01.jpg" alt="Junior Suite &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/junior-suite/02.webp" type="image/webp"><img decoding="async" src="assets/photos/junior-suite/02.jpg" alt="Junior Suite &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/junior-suite/02-800.webp 800w, assets/photos/junior-suite/02-1200.webp 1200w, assets/photos/junior-suite/02.webp 1600w"><img decoding="async" src="assets/photos/junior-suite/02.jpg" alt="Junior Suite &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/junior-suite/03.webp" type="image/webp"><img decoding="async" src="assets/photos/junior-suite/03.jpg" alt="Junior Suite &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/junior-suite/03-800.webp 800w, assets/photos/junior-suite/03-1200.webp 1200w, assets/photos/junior-suite/03.webp 1600w"><img decoding="async" src="assets/photos/junior-suite/03.jpg" alt="Junior Suite &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="deluxe" aria-hidden="false">
         <figure class="rf">
-          <picture><source srcset="assets/photos/deluxe/01.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe/01.jpg" alt="Deluxe &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe/01-800.webp 800w, assets/photos/deluxe/01-1200.webp 1200w, assets/photos/deluxe/01.webp 1600w"><img decoding="async" src="assets/photos/deluxe/01.jpg" alt="Deluxe &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/deluxe/02.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe/02.jpg" alt="Deluxe &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe/02-800.webp 800w, assets/photos/deluxe/02-1200.webp 1200w, assets/photos/deluxe/02.webp 1600w"><img decoding="async" src="assets/photos/deluxe/02.jpg" alt="Deluxe &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/deluxe/03.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe/03.jpg" alt="Deluxe &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe/03-800.webp 800w, assets/photos/deluxe/03-1200.webp 1200w, assets/photos/deluxe/03.webp 1600w"><img decoding="async" src="assets/photos/deluxe/03.jpg" alt="Deluxe &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="deluxe-queen" aria-hidden="false">
         <figure class="rf">
-          <picture><source srcset="assets/photos/deluxe-queen/01.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe-queen/01.jpg" alt="Deluxe Queen &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe-queen/01-800.webp 800w, assets/photos/deluxe-queen/01-1200.webp 1200w, assets/photos/deluxe-queen/01.webp 1600w"><img decoding="async" src="assets/photos/deluxe-queen/01.jpg" alt="Deluxe Queen &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/deluxe-queen/02.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe-queen/02.jpg" alt="Deluxe Queen &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe-queen/02-800.webp 800w, assets/photos/deluxe-queen/02-1200.webp 1200w, assets/photos/deluxe-queen/02.webp 1600w"><img decoding="async" src="assets/photos/deluxe-queen/02.jpg" alt="Deluxe Queen &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/deluxe-queen/03.webp" type="image/webp"><img decoding="async" src="assets/photos/deluxe-queen/03.jpg" alt="Deluxe Queen &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe-queen/03-800.webp 800w, assets/photos/deluxe-queen/03-1200.webp 1200w, assets/photos/deluxe-queen/03.webp 1600w"><img decoding="async" src="assets/photos/deluxe-queen/03.jpg" alt="Deluxe Queen &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="superior" aria-hidden="false">
         <figure class="rf">
-          <picture><source srcset="assets/photos/superior/01.webp" type="image/webp"><img decoding="async" src="assets/photos/superior/01.jpg" alt="Superior &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/superior/01-800.webp 800w, assets/photos/superior/01-1200.webp 1200w, assets/photos/superior/01.webp 1600w"><img decoding="async" src="assets/photos/superior/01.jpg" alt="Superior &mdash; view 1" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/superior/02.webp" type="image/webp"><img decoding="async" src="assets/photos/superior/02.jpg" alt="Superior &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/superior/02-800.webp 800w, assets/photos/superior/02-1200.webp 1200w, assets/photos/superior/02.webp 1600w"><img decoding="async" src="assets/photos/superior/02.jpg" alt="Superior &mdash; view 2" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source srcset="assets/photos/superior/03.webp" type="image/webp"><img decoding="async" src="assets/photos/superior/03.jpg" alt="Superior &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/superior/03-800.webp 800w, assets/photos/superior/03-1200.webp 1200w, assets/photos/superior/03.webp 1600w"><img decoding="async" src="assets/photos/superior/03.jpg" alt="Superior &mdash; view 3" loading="lazy"></picture>
         </figure>
       </div>
     </div>
@@ -2712,11 +2637,21 @@ body.menu-open nav.top { transform: none !important; }
 </script>
 
 <!-- Leaflet library — must load before the init IIFE below uses global L. -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <!-- GSAP + ScrollTrigger (vendored, free for commercial use) -->
-<script src="assets/vendor/gsap.min.js"></script>
-<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script>
+/* GSAP + ScrollTrigger are deferred, so consumers that run at parse time must
+   wait for them. Deferred scripts finish before DOMContentLoaded, so that
+   event is the ready signal; fn always runs, and does its own capability
+   check, so a failed library load still takes the no-motion fallback. */
+window.whenLibsReady = function (fn) {
+  if (window.gsap && window.ScrollTrigger) fn();
+  else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
+  else fn();
+};
+</script>
+<script src="assets/vendor/gsap.min.js" defer></script>
+<script src="assets/vendor/ScrollTrigger.min.js" defer></script>
 <script>
 /* Shared GSAP reveals — heading rise + block fade-up, Lenis-synced, motion-safe.
    Hard-skips every zone the site already animates so nothing double-fires. */
@@ -2939,153 +2874,99 @@ body.menu-open nav.top { transform: none !important; }
   var body = document.body;
   var nav = document.getElementById('topnav');
 
-  // ── A: parallax on .intro-photo + B: scroll-fill reveal on headline + deck ─
+  // ── Scroll-fill reveal on the headline + deck ────────────────────────────
   var introStrip  = document.querySelector('.intro-strip');
-  var introPhoto  = document.querySelector('.intro-photo img');
   var reduceMo    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ── Marble-line procedural background: grain + noise-field contour lines,
-  // revealed with a diagonal wipe the first time the section is scrolled
-  // into view (design_handoff_marble_background/README.md). Static after.
-  var marbleGrain = document.getElementById('introMarbleGrain');
-  var marbleMask  = document.getElementById('introMarbleMask');
-  var marbleSvg   = document.getElementById('introMarbleSvg');
-  var marblePath  = document.getElementById('introMarblePath');
+  // ── Self-drawing facade sketch (background of this section). Traced
+  // stroke data; each path is drawn by animating stroke-dashoffset at a
+  // constant "pen speed" so the whole pass reads as one continuous hand.
+  // Draws once, the first time the section scrolls into view.
+  var sketchSvg = document.getElementById('introSketch');
+  var SKETCH = {"W":1448,"H":1086,"total":82355.72,"strokes":[["M439,97L440,91L436,89L434,84L438,80L439,76L442,76L463,92L559,157L1013,478L1079,526L1117,556L1225,562L1226,567L1229,567L1244,582L1245,585L1261,600L1263,604L1279,619L1282,624",1051.91],["M514,156L517,155L518,157L535,167L537,170L541,171L543,174L557,182L566,190L598,210L604,216L608,217L616,224L658,251L663,256L678,265L680,268L687,271L689,274L691,274L708,287L725,297L727,300L747,312L749,315L766,325L768,328L798,347L800,350L807,353L819,363L873,398L875,401L915,427L933,441L941,445L943,448L947,449L949,452L972,466L978,472L988,477L990,480L998,484L1000,487L1022,501L1025,505L1029,506L1060,529L1065,531L1071,537L1076,539L1081,544L1086,546L1088,549L1112,565L1119,572L1135,582L1141,588L1143,588L1176,613L1183,620L1202,633L1220,649L1223,648L1224,643L1224,640L1222,638L1220,638L1212,631L1212,629L1209,629L1208,626L1198,620L1175,600L1168,596L1120,557",1018.3],["M417,154L417,152L419,152L425,157L429,158L455,176L472,185L506,208L510,209L514,213L518,214L533,225L578,252L585,258L597,264L604,270L616,276L623,282L673,312L677,316L686,320L715,340L722,343L739,355L743,356L753,364L765,370L785,384L789,385L818,405L822,406L826,410L852,425L856,429L860,430L878,443L923,470L930,476L934,477L938,481L964,496L1007,525L1011,526L1024,536L1034,541L1053,555L1084,574L1107,591L1114,594L1122,601L1124,601L1161,628L1166,630L1204,659L1211,662L1212,670L1215,667",963.45],["M1141,579L1106,551L1054,514L1041,503L1032,498L1026,492L1021,490L1016,485L1014,485L985,463L963,449L937,429L922,420L913,412L905,408L889,395L884,393L862,376L854,372L839,360L801,335L789,325L777,318L775,315L767,311L765,308L740,292L738,289L723,280L721,277L719,277L697,260L695,260L667,239L642,223L620,206L618,206L560,164L523,140L439,81",864.81],["M262,82L274,88L352,137L356,138L357,140L361,141L393,162L395,162L396,158L398,158L399,761",765.41],["M673,793L878,831L901,834L927,840L974,848L986,847L993,850L1027,855L1059,862L1094,867L1161,880L1192,884L1211,889L1216,888L1215,893L1208,894L1145,882L1114,877L1105,877L1102,875L1041,866L1041,864L1047,864L1049,866",745.23],["M1137,1018L906,1041L816,1048L808,1050L794,1050L759,1053L752,1055L747,1054L740,1056L736,1055L670,1062L507,1075",633.46],["M1179,1017L889,1047L882,1049L879,1048L830,1054L827,1053L811,1056L795,1056L761,1061L563,1080",620.07],["M409,186L409,181L413,182L433,196L465,214L465,216L470,217L523,249L530,255L536,257L541,261L541,265L549,264L558,272L562,273L596,294L600,298L606,300L638,321L650,327L667,339L671,340L676,345L682,346L688,352L691,352L716,369L743,384L760,396L764,397L764,399L767,399L768,401L774,403L775,405L785,410L785,412L792,413L796,416L797,419L800,419L801,421L836,441L845,448L854,452L858,456L867,460L871,464L874,464L877,466L877,468L882,468L886,471L886,476L883,477L884,481L888,480L908,492",619.2],["M408,190L407,192L404,192L403,260L403,687L410,688L410,690L412,691L487,708L488,711L482,710",597.7],["M42,607L110,622L123,621L146,627L152,627L153,629L163,630L265,653L266,656L281,658L380,680L379,476",553.0],["M878,437L418,144",545.39],["M23,699L231,731L297,743L312,744L384,757L386,757L387,754L393,751L394,742L396,739L395,737L264,714",525.5],["M259,262L258,186L220,167L191,150L175,143L170,139L158,134L155,131L131,120L130,306L146,314L149,314L210,340",492.82],["M66,294L193,345L197,348L203,348L215,342L219,342L219,344L229,348L231,348L235,344L238,344L245,349L244,354L256,357L260,361L265,361L272,366L280,368L296,376L299,376L387,413L390,413L390,411L378,404L367,401L271,361",492.92],["M446,1020L497,1018L498,859L585,866L590,868L590,1014",448.71],["M674,804L927,848L948,850L966,854L973,853L973,855L979,854L986,857L1003,857L1015,860L1023,860L1039,863L1039,865L1034,865L999,858",415.44],["M512,874L577,879L577,1039L446,1048L406,1050L399,1049",403.62],["M343,860L369,875L384,881L387,884L384,888L38,874",401.7],["M511,875L511,878L517,879L570,882L570,917L511,913L511,921L570,923L571,939L570,1033L512,1036L512,1042",397.45],["M23,718L222,746L390,772L393,771L393,768L391,765L391,757L388,757",391.73],["M157,415L180,421L183,425L189,426L191,426L191,422L193,420L264,444L264,448L257,451L254,470L245,468L245,473L248,473L247,475L181,454L156,444L151,444L156,450L163,450L166,456L170,456L250,482L250,489",386.76],["M909,489L911,487L939,504L946,510L953,513L954,516L961,516L962,518L964,518L964,522L971,524L993,539L1015,551L1019,555L1029,559L1030,562L1067,584L1074,590L1079,591L1081,594L1111,612L1118,618L1121,618L1123,622L1126,622L1130,626L1140,631L1141,633L1152,639L1152,641L1156,641L1157,645L1162,646L1176,657L1179,657L1180,660L1188,664L1196,671L1199,671L1199,674L1197,674L1196,672L1194,673L1194,684L1189,683",383.96],["M37,691L165,713L167,712L167,710L171,710L174,717L178,716L178,709L182,711L185,710L185,705L192,709L196,708L205,711L201,702L260,713L263,713L263,704L266,704L301,712L369,724",380.98],["M453,703L417,696L418,737L404,736L404,756L406,756L408,753L414,753L543,778L660,798",373.42],["M727,331L723,332L697,316L667,295L663,294L637,276L610,260L603,254L599,253L578,238L563,230L556,224L512,197L508,193L504,192L463,164L445,154L418,135",368.43],["M667,715L667,709L670,709L670,715L673,723L670,727L670,738L663,739L665,745L665,788L482,753L471,749L419,738",347.11],["M456,788L404,780L406,976L405,1020L444,1020",331.63],["M1203,947L1203,922L1186,919L1184,920L1184,993L1187,993L1188,976L1187,926L1199,926L1198,998L1188,999L1188,1002L1185,1003L1184,994L1177,994L1178,981",316.85],["M131,448L129,447L129,456L133,458L136,458L135,446L139,445L145,448L149,448L149,453L161,464L166,466L168,465L242,489L244,643",306.29],["M252,198L250,189L199,163L194,159L170,148L163,143L139,132L137,194L138,300",302.31],["M368,471L380,475L379,428L198,357L193,353L181,358L180,360L170,365L167,369L165,369",293.91],["M1178,928L1177,919L1164,917L1159,918L1158,994L1160,1005L1162,1005L1162,1000L1172,1000L1174,925L1164,923L1162,924L1162,999",293.96],["M579,364L570,361L570,368L566,369L545,358L544,356L522,346L521,344L514,342L514,347L517,347L538,359L538,427L531,429L529,424L526,422L524,422L522,426L517,427L514,426L514,348",289.43],["M750,435L749,433L751,431L753,432L755,439L748,439L748,548L756,548L762,550L767,554L770,554L776,558L794,565L795,567L804,569L804,571L818,576L818,524L839,534",284.41],["M1229,933L1229,973L1232,975L1232,978L1230,979L1231,988L1284,992L1284,1047L1289,1047L1289,1041L1297,1041L1391,1049",279.39],["M916,1005L922,1005L923,898L935,897L966,900L971,902L971,1016",275.58],["M122,630L121,627L139,630L155,635L210,646L231,652L239,652L257,656L267,661L314,670L378,685L382,685L381,681",275.43],["M258,69L395,155L398,155L399,77L403,76L405,81L415,78L418,75L420,78",270.56],["M399,769L400,1039",270.0],["M662,890L657,889L657,886L664,887L665,899L665,954L663,998L671,998L669,916L671,862",270.32],["M661,791L410,742L408,742L409,752",267.79],["M235,81L379,167L379,241L376,241L363,233",259.99],["M902,452L1039,540L1119,595",259.91],["M661,802L407,757",257.96],["M245,969L245,907L344,911L344,1001",251.08],["M150,975L149,910L238,913L238,1010",251.06],["M964,909L957,909L958,911L956,912L958,914L958,936L955,936L955,938L931,937L931,941L955,942L955,1013L958,1013L958,937",243.34],["M459,476L480,485L492,487L498,491L610,537L610,540L606,541L603,548L597,549L592,545L587,545L584,547L584,549L586,549L587,551L586,558L584,558L586,562L588,562L591,556L591,550L589,546",238.09],["M1055,747L1054,829L1062,830L1062,823L1068,822L1069,824L1074,825L1076,828L1079,828L1082,831L1083,775L1085,775L1085,833",237.34],["M632,470L632,493L636,493L648,498L648,489L654,489L654,486L656,484L660,486L661,492L667,492L667,430L648,421L648,488",227.41],["M1012,918L995,917L995,922L1025,923L1025,1014L1035,1013L1036,963L1048,963L1048,973L1046,973",227.11],["M658,371L645,363L643,363L643,365L666,379L669,379L670,387L673,387L673,368L675,364L674,354L679,354L686,360L690,361L699,368L703,369L704,371L725,382L739,392L755,400L774,413L785,413",222.7],["M570,635L570,609L578,611L578,608L575,604L575,577L513,555L513,559L570,578L572,584L572,597L574,601",222.91],["M555,447L550,445L549,451L547,451L518,438L515,435L511,435L499,429L492,430L492,290L499,291",221.05],["M732,798L722,799L669,789L669,852L672,861L662,861L665,851L665,789",218.91],["M925,542L919,540L909,533L905,533L905,549L915,553L924,559L927,559L927,627L938,629L957,639L967,642L969,645L981,650L981,652L979,652L979,657L982,657L995,664",217.58],["M963,759L963,744L957,741L951,741L951,794L938,795L938,736L949,739L949,793",218.15],["M1021,580L1021,582L1019,582L1020,587L1016,587L1012,584L1008,585L1008,597L1014,599L1030,609L1033,609L1034,613L1023,613L1009,604L1008,611L1012,611L1016,614L1016,654L1008,655L1008,663L1011,663L1014,666L1032,673L1028,675L1011,667",216.13],["M25,905L130,908L130,1018",215.04],["M1130,800L1131,848L1101,843L1101,865L1088,863L1088,839L1092,838L1097,840L1107,840L1107,835L1114,834L1114,812L1112,812L1112,833",214.16],["M762,935L763,1023L793,1022L793,968L799,971L796,953L797,946L796,943L793,943L793,941L795,942",214.45],["M1079,917L1060,917L1060,940L1073,940L1073,943L1060,942L1060,1007L1072,1006L1072,944",210.08],["M258,937L258,914L338,917L337,1024",210.06],["M640,506L633,504L633,546L625,545L624,547L619,549L623,556L623,560L629,558L637,560L639,562L658,568L724,595L727,595L729,590L731,590L732,588L742,590",208.48],["M874,956L877,956L877,961L874,962L872,966L875,969L878,969L883,965L883,963L891,963L891,1022L934,1020L957,1017L970,1018L977,1015L977,1003L981,1003",201.18],["M1300,641L1311,654L1322,652L1375,672L1394,697L1397,705L1394,705L1394,703L1374,680L1372,680L1372,684L1376,686L1376,688L1393,707L1395,706",200.49],["M1055,944L1055,907L1083,909L1083,997L1097,997L1098,1009L1102,1008L1102,1004L1115,1004",200.24],["M1389,1054L1392,1053L1394,1049L1394,1036L1396,1029L1395,996L1389,994L1383,987L1383,985L1377,979L1370,976L1369,973L1365,971L1365,969L1372,972L1390,990L1394,992L1396,992L1396,978L1380,961L1371,945",199.46],["M519,281L503,272L498,272L496,270L494,270L493,272L487,272L486,270L461,257L460,255L438,244L419,232L416,232L416,259L429,264L432,267L462,283",198.31],["M675,887L705,890L705,1032L679,1034",198.23],["M819,783L819,808L821,816L839,821L857,823L901,831L914,835L981,846",196.26],["M238,257L158,218L150,216L151,220L236,260",195.31],["M831,713L819,710L819,777L840,783L857,785L857,777L863,777L864,775L866,775L872,778L872,776L874,776L879,781L886,782L886,785L894,788L894,790L892,790L892,793L905,796",193.3],["M662,874L648,872L645,873L644,1013L608,1015",193.36],["M745,612L724,604L721,604L717,612L718,710L700,712L699,714L695,714L695,720L686,718L686,715L691,712L699,711",188.88],["M914,705L905,703L906,796L908,796L909,798L923,801L932,801L965,809L967,809L966,803L960,799L956,801L956,798L958,798",188.5],["M526,547L511,542L507,539L505,539L503,543L504,702",186.29],["M674,801L854,832",182.65],["M674,875L714,878L716,880L716,1011L721,1011",178.94],["M24,897L137,902L138,966",177.12],["M1319,666L1319,677L1321,677L1326,683L1328,683L1328,686L1330,686L1335,691L1335,693L1337,693L1338,696L1340,696L1340,698L1342,698L1342,700L1344,700L1344,702L1346,702L1351,707L1351,709L1359,715L1359,718L1363,720L1366,720L1366,718L1368,717L1367,714L1341,687L1339,681L1371,676L1375,674",173.65],["M255,478L257,479L257,650",173.24],["M538,608L517,601L514,601L514,605L538,613L539,692L543,693L543,697L546,703L548,703L549,701L558,702L563,710",171.0],["M184,716L350,744",168.34],["M547,270L543,270L541,274L545,276L551,276L553,278L553,281L557,281L563,284L567,288L594,303L665,348L676,346",167.26],["M244,258L243,197L153,151L151,151L152,153",166.32],["M894,693L894,707L889,707L863,697L857,697L857,707L862,707L873,712L885,715L888,714L889,716L889,782",163.71],["M488,537L488,700",163.0],["M1215,905L1215,980L1212,980L1213,895",163.01],["M674,930L698,931L699,986L698,1027L675,1028L676,1044L673,1044",162.1],["M379,242L378,403",161.0],["M769,605L830,629L832,629L831,625L825,624L818,620L750,594",158.62],["M226,358L253,368L257,368L258,370L265,373L271,374L283,380L294,383L296,385L371,414",156.78],["M648,380L648,382L656,385L688,404L694,407L699,407L700,427L698,427L701,431L701,434L693,432L693,439L691,439L652,418L648,418L648,420",157.03],["M410,192L408,193L413,197L419,198L482,237L493,242L507,252L511,253L530,266L534,268L540,266",156.05],["M502,426L502,292L500,292L502,288L500,279L501,273",155.77],["M156,167L191,184L191,222L185,221L155,205L155,168",153.99],["M781,698L781,690L797,695L797,763L794,763L794,760L792,758L784,759L780,755L781,719",151.32],["M543,642L544,615L567,622L567,712L570,713L570,715L568,715",148.22],["M164,162L158,159L153,154L150,154L150,212L158,214L215,242",146.53],["M199,190L202,190L232,205L231,243L200,228L199,191",146.01],["M383,889L383,1035",146.0],["M1152,923L1152,916L1134,914L1131,915L1131,996L1123,997L1123,1007L1141,1005",145.45],["M584,728L569,728L532,720L509,713L498,712L497,710L489,709L489,704L493,704L529,713",144.35],["M1373,989L1289,983L1289,1038L1294,1039",144.31],["M198,490L229,500L229,540L220,538L198,530L198,491",144.2],["M1239,844L1237,850L1234,851L1235,858L1233,858L1233,860L1235,860L1235,862L1232,863L1232,905L1235,905L1235,914L1232,914L1231,973",143.73],["M320,290L314,290L316,286L315,281L317,278L328,278L330,280L329,286L339,282L342,283L346,288L348,296L328,296L334,304L333,314L328,313L324,307L317,306L312,297L313,291",143.48],["M415,198L415,204L419,205L533,273",142.86],["M66,303L187,352L195,351L197,349",141.44],["M739,442L721,431L716,430L716,519L719,519L739,529",140.55],["M156,231L190,246L191,295L187,296L185,294L182,294L179,291L160,284L160,282L164,282L177,289",141.38],["M244,315L244,317L246,318L248,315L255,313L259,318L262,319L267,313L278,314L282,312L285,321L277,321L275,323L276,328L259,321L257,322L257,324L250,325L249,327L225,338L225,340L219,341",139.84],["M632,494L632,498L641,499L714,533L719,534L719,531L714,530L686,516",138.09],["M545,306L545,315L547,315L547,317L545,317L544,315L535,312L534,310L526,307L516,300L515,304L536,314L537,316L568,332L569,334L575,334L575,349",137.45],["M483,486L484,491L489,491L606,540",136.95],["M157,525L149,523L149,528L168,532L235,552L235,583",133.58],["M748,690L748,762L763,764L799,773L803,773L803,770L800,771",134.4],["M486,492L487,500L603,546",132.85],["M585,462L586,342L584,338L584,330",132.48],["M178,590L189,590L188,547L160,539L155,539L155,583",132.13],["M263,660L261,666L377,691L379,691L380,686",132.09],["M769,926L765,925L765,923L761,921L761,916L757,920L753,920L752,1010L736,1010",131.26],["M784,444L783,436L785,432L785,421L788,420L794,425L797,425L798,427L852,459L856,460L869,469L877,469",130.45],["M585,589L585,718",129.0],["M557,283L559,289L562,291L660,350L664,351",128.44],["M466,504L434,491L417,486L417,511L464,528",127.24],["M700,629L700,624L697,621L649,605L649,608L697,624L697,635",124.44],["M820,955L818,950L813,948L812,935L810,935L809,937L803,935L803,926L799,926L798,924L801,917L798,912L800,911L801,906L795,905L794,931L792,931L791,913",122.52],["M514,606L514,697L516,697L519,693L528,693L533,698L535,698L536,693L538,693",123.17],["M948,597L948,577L941,573L938,573L938,622L945,620L950,623L951,626L957,626L959,630L965,632L967,641",122.35],["M687,371L687,366L689,366L776,419L788,416",121.24],["M232,398L241,403L249,411L251,411L258,418L260,418L270,426L270,431L268,431L264,436L254,433L255,430L233,411L231,411L227,406L224,405L223,409",120.08],["M79,480L74,480L72,478L66,479L38,503L38,505L32,510L30,516L25,521L24,526L16,536L4,561",119.63],["M263,878L320,879L365,883L383,882",120.21],["M878,538L885,542L888,542L888,595L886,595L885,593L878,595L876,590L871,589L872,556",119.08],["M147,637L146,640L238,659L240,660L240,680",119.34],["M708,519L707,402",117.0],["M271,734L348,746L386,754",116.76],["M677,389L680,392L684,375L687,374L687,377L690,381L693,384L697,385L700,389L704,390L706,393L710,395L712,395L712,392L717,393L718,401L716,401L718,408L744,422",115.41],["M846,621L845,632L849,632L853,635L871,641L871,643L874,642L905,654L906,616",115.44],["M129,505L130,619",114.0],["M543,362L546,362L566,373L566,442L558,438L553,439L553,437L555,437",112.87],["M511,922L510,994L512,1035",113.06],["M155,477L189,487L189,528L155,518",111.88],["M736,584L734,584L733,586L727,585L633,547",111.71],["M672,433L690,442L690,500L683,502L679,499L677,494L674,494L672,492L669,492L667,494L668,498",111.57],["M389,773L382,776L384,880",111.64],["M544,454L583,471L591,476L596,476L596,473L549,452",111.46],["M1233,579L1227,572L1225,572L1224,578L1226,578L1246,598L1249,603L1280,635L1289,642L1289,644",111.37],["M872,753L872,717L873,716L886,721L886,781",111.34],["M136,504L137,614",110.0],["M781,508L781,491L796,498L796,555L802,556L802,560L805,563L804,568",109.98],["M404,82L404,191",109.0],["M876,537L857,528L857,531L869,537L869,584L865,583L863,587L857,586L857,592L860,592",108.12],["M693,755L699,754L702,756L715,758L720,761L748,767L752,766L767,769L783,774L795,775L796,773",107.77],["M856,499L858,517L863,517L890,533L893,533L895,537L895,539L889,538L888,536L886,536L886,538L882,538L860,526L858,527",107.58],["M628,549L728,589",107.7],["M1097,911L1122,913L1122,996",108.08],["M488,321L420,286L419,284L416,284L416,309",106.71],["M1374,943L1378,954L1394,970L1397,970L1398,949L1389,926L1379,918L1375,908",106.63],["M58,392L61,392L65,397L68,396L69,407L71,411L75,415L81,415L84,418L82,426L73,429L71,423L68,420L69,416L62,412L55,402L55,398L58,396L58,393",107.28],["M656,930L655,1009L656,1030L659,1030L659,1034",107.03],["M139,902L245,906",106.08],["M1102,918L1117,920L1117,1000L1118,1007L1122,1007",106.2],["M777,502L776,488L761,481L761,544L769,543L769,546",104.65],["M160,645L165,653L163,659L163,673L165,677L163,681L166,682L190,686L190,683L187,680L189,678L189,661L187,659L187,656L190,655L190,652",105.26],["M938,671L930,668L930,666L933,666L964,680L988,688L989,689L986,694L982,695L983,697L981,697L981,700L985,700L994,704",105.31],["M25,867L30,866L89,869L92,865L95,865L95,869L97,870L124,871",105.43],["M150,221L150,309L142,308L138,305L134,306",105.19],["M691,642L697,642L701,644L705,649L706,679L703,679L700,687L710,687L709,694L699,695L699,702L693,707L691,711",104.84],["M927,695L927,800",105.0],["M250,120L267,131L274,133L292,143L292,146L289,150L286,150L253,131L252,129L248,128",103.56],["M1001,695L1007,696L1033,708L1036,708L1037,710L1048,713L1048,715L1045,715L1001,696",104.28],["M1136,921L1148,922L1147,1001L1136,1002L1136,1004",104.09],["M170,396L164,396L163,398L170,401L177,399L179,400L180,405L183,408L190,409L247,430",102.53],["M867,473L797,431L795,432L795,438L793,439L789,449",102.88],["M840,641L840,643L850,643L899,662L903,665L909,666L910,668L914,667L917,659L906,655",102.25],["M1154,830L1154,802L1148,802L1148,843L1144,843L1144,848L1140,848L1140,851L1151,853",102.18],["M807,1027L705,1033",102.18],["M630,652L630,647L595,636L596,681L608,684",99.07],["M142,476L144,480L138,480L138,484L143,488L143,503L134,498L131,494L126,495L125,491L121,491L119,494L113,497L119,504L123,504L123,499L119,495",98.58],["M435,98L434,102L430,106L426,107L427,115L421,119L417,131L420,135L429,139L435,124L438,123L440,113L430,107",97.85],["M587,340L587,342L591,346L594,346L594,359L601,361L627,377L631,378L631,373L639,373L639,371L635,371L632,367L634,363L636,364L636,366",98.3],["M745,553L749,554L750,592L739,597L742,606L746,606L748,604L748,597L767,604",97.78],["M607,706L596,704L596,727L582,725L570,721L559,723L534,717",97.86],["M1089,765L1089,836L1083,836L1081,834L1063,831",98.08],["M514,304L514,324L516,326L519,326L570,353L574,353L578,362",97.38],["M1085,750L1085,773L1083,773L1081,769L1081,758L1079,756L1068,752L1062,752L1062,764L1064,768L1082,775",96.79],["M417,389L417,485",96.0],["M150,624L149,529",95.01],["M1379,986L1327,983L1313,980L1289,980L1289,975",95.4],["M1422,1057L1413,1055L1409,1047L1409,1028L1407,1019L1407,970",95.38],["M436,101L515,154",95.13],["M931,942L931,1014L954,1013",95.02],["M103,366L95,361L90,360L88,363L85,363L88,369L85,371L83,378L91,379L102,375L102,382L111,387L115,384L113,371",93.95],["M883,420L884,433L880,433L863,420L858,419L845,409L822,396L820,394L820,392L822,393",93.42],["M80,499L83,502L83,505L88,505L93,512L90,519L82,519L83,526L81,530L72,525L70,513L61,511L58,517L54,517L52,515",93.22],["M789,645L757,633L760,630L811,649",92.84],["M1185,812L1185,797L1188,796L1188,816L1185,816L1185,820L1188,820L1188,860L1183,861",93.26],["M849,647L854,648L855,650L855,656L851,660L851,663L891,678L897,680L902,679L903,674L902,669L900,669L903,666",92.58],["M1142,647L1140,648L1140,652L1143,654L1143,656L1148,657L1149,659L1151,659L1151,662L1154,662L1154,664L1152,665L1148,665L1146,663L1144,664L1144,674L1145,676L1149,676L1158,682L1158,684L1155,685L1147,682L1150,680L1156,683",91.55],["M845,818L845,787L905,800",92.39],["M648,383L649,403L653,403L695,426L697,426L695,411L696,408",92.21],["M999,547L962,525L963,531L967,532L999,552",90.99],["M193,654L196,659L194,666L195,674L193,676L196,683L193,687L209,689L217,692L221,691L223,693L232,695L240,695L241,690",90.56],["M1080,654L1080,644L1066,636L1063,636L1063,639L1069,641L1069,680L1063,682L1062,685L1064,685L1065,683",91.17],["M805,666L804,659L799,660L762,647L762,667L768,667L781,672",91.32],["M1361,842L1370,844L1373,848L1372,849L1374,850L1373,851L1379,870L1385,883L1385,889L1388,889L1391,910L1395,911L1395,909",89.86],["M1063,630L1063,633L1067,633L1078,639L1079,641L1083,641L1083,691L1080,691L1078,687L1076,687L1074,691",89.71],["M200,252L214,257L229,265L232,265L232,302L234,303L239,297L246,299",89.19],["M749,605L824,634L827,634L829,629",88.8],["M762,679L762,684L777,688L777,754L779,754",88.52],["M586,729L603,735L618,737L627,740L631,740L631,736L649,739L649,731L652,731L654,729L659,730",87.82],["M1013,747L1032,753L1034,758L1037,758L1036,818",88.32],["M1137,851L1139,851L1139,872L1141,873L1185,880L1185,862",87.79],["M845,537L844,591L858,593L864,598L874,601L873,602",87.82],["M734,801L821,817",88.46],["M925,455L925,458L927,458L929,453L932,452L932,446L934,446L936,449L942,449L952,458L958,460L958,462L961,462L969,469L972,469L974,472L978,473L986,479",87.29],["M963,582L963,579L971,579L969,573L966,573L945,561L938,561L939,567L961,578L966,577",87.29],["M1057,694L1057,690L1060,689L1060,687L1063,687L1073,692L1074,694L1085,698L1086,700L1090,700L1090,704L1088,705L1089,730L1081,730L1082,728L1084,729",87.25],["M978,817L978,835L980,843L997,848L1039,855",86.55],["M608,230L604,233L604,249L606,249L607,244L611,239L621,245L621,238L623,238L623,235L611,229L611,232L621,237",85.76],["M748,549L749,552L758,552L790,568L801,571L813,578L816,578L818,580L821,580L821,578L819,578",86.06],["M1119,668L1112,666L1112,702L1123,709L1124,715L1112,713L1116,712L1116,706",84.69],["M111,852L144,866L155,865L160,868L174,870L175,873L178,874L190,874",85.19],["M976,563L979,564L980,573L983,573L988,577L994,579L995,581L1000,582L1000,596L997,596L985,588L980,587L980,600",84.8],["M1101,919L1101,1004",85.0],["M977,929L977,935L991,936L991,1001",85.04],["M443,546L421,538L417,538L417,589L422,590",83.51],["M1395,731L1394,712L1396,712L1404,717L1409,723L1412,723L1416,720L1418,721L1419,727L1421,727L1421,731L1423,732L1422,738L1426,736L1435,736L1435,738",84.38],["M1006,821L1041,829L1043,831L1056,832L1079,837L1082,839L1087,839",83.91],["M513,560L513,581L515,583L520,583L572,601",83.86],["M1097,912L1097,996",84.0],["M762,685L762,754L776,754",83.0],["M800,686L800,689L798,689L800,693L800,764L797,764",83.47],["M153,531L173,538L232,554",82.32],["M1056,601L1059,606L1072,612L1072,618L1063,615L1064,630L1069,630L1074,634L1083,637L1084,641L1086,641L1086,637",81.68],["M754,352L793,376L797,380L801,381L808,387L815,390L816,392L819,392L820,388",81.77],["M1213,774L1213,789L1215,789L1215,791L1213,791L1213,800L1215,800L1213,801L1213,807L1215,807L1216,809L1216,821L1215,826L1213,826L1213,808",81.57],["M557,310L583,325L584,329L555,312L552,312L551,318L547,318",80.84],["M194,548L194,629",81.0],["M1081,556L1080,560L1077,561L1078,563L1084,567L1090,568L1090,571L1092,573L1099,575L1104,581L1113,585L1113,587L1118,591L1122,592L1122,587L1127,582L1130,582",81.18],["M1026,792L1026,763L1019,761L1018,762L1018,805",80.69],["M930,693L933,678L937,682L936,687L933,689L933,692L935,694L968,705L974,708L974,711",79.98],["M1138,753L1145,754L1157,760L1161,760L1162,762L1164,762L1164,764L1184,770L1186,773L1188,773L1188,789L1185,789L1184,785",80.33],["M591,1032L591,1039L659,1035L659,1040",80.12],["M648,650L648,730",80.0],["M991,892L991,901L995,902L995,910L977,910L977,928L995,928L995,923",80.12],["M44,695L122,708",79.08],["M1321,899L1315,899L1311,902L1311,905L1315,904L1317,908L1320,908L1321,910L1325,910L1326,907L1329,906L1334,911L1334,915L1330,917L1321,917L1319,914L1317,914L1316,917L1318,918L1318,921L1316,921",78.7],["M1136,922L1136,1001",79.0],["M190,855L204,861L211,866L224,868L233,872L244,871L248,874L248,876L235,877",77.92],["M675,891L698,893L698,926L676,925",78.11],["M1262,929L1267,930L1268,936L1278,935L1287,937L1289,946L1288,974L1283,975L1283,977L1286,978",77.95],["M344,1007L344,1038L384,1036L385,1043",78.12],["M905,434L906,443L911,438L911,433L918,435L918,440L913,443L911,449L900,446L884,434",76.96],["M1021,516L1016,520L1017,522L1022,524L1026,528L1030,528L1031,531L1037,535L1042,536L1042,538L1047,542L1051,542L1054,535L1059,537L1060,532L1058,530L1056,530L1057,532",76.72],["M16,544L20,545L24,542L27,542L24,554L28,558L34,558L37,567L39,567L41,562L40,557L43,556L43,548L40,545L37,545",76.53],["M1109,634L1113,637L1116,637L1116,643L1108,641L1109,656L1122,663L1122,665L1126,665L1126,663L1123,660L1111,655",77.29],["M809,957L809,975L807,985L813,994L817,992L821,984L825,984L836,967",76.68],["M1277,995L1217,990L1216,987L1230,988",77.41],["M119,679L138,684L139,685L136,689L138,691L150,692L152,693L152,696L154,698L157,698L161,695L169,699L169,706L167,709",76.55],["M1214,695L1216,696L1216,737L1213,737L1213,757L1216,758L1216,762L1220,762",77.4],["M137,412L138,407L136,406L136,408L134,408L134,410L122,426L100,448L99,451L104,451L107,453",76.22],["M1077,674L1077,647L1072,643L1071,683L1069,682",75.65],["M857,708L857,712L869,716L869,775",75.65],["M268,1043L343,1038",75.17],["M1000,597L1000,660L1006,662L1007,665L1009,664",74.72],["M1040,777L1040,825L1034,825L1031,823L1014,820",74.87],["M872,552L872,539L885,545L885,592",74.32],["M1183,708L1188,711L1184,713L1184,715L1188,715L1188,743L1186,743L1185,746L1182,746L1170,739L1167,739L1167,741L1169,740",73.59],["M1352,836L1358,836L1361,833L1367,836L1367,834L1370,833L1382,869L1383,871L1385,871L1387,881",74.49],["M198,551L229,559L228,601",74.03],["M626,416L594,400L594,422L597,422L608,428",73.31],["M570,443L569,370",73.01],["M852,684L852,667L855,667L887,680L899,682L899,688",72.71],["M400,1045L399,1048L393,1049L329,1054",73.44],["M1219,673L1232,681L1235,686L1241,688L1244,693L1250,695L1250,698L1254,698L1262,704L1263,706L1261,707L1252,699",73.09],["M1101,765L1101,838",73.0],["M157,400L144,395L139,402L151,407L156,407L163,412L168,412L168,408L163,406L161,402L162,398",72.11],["M613,598L595,592L595,614L599,614L601,616L624,623",71.84],["M1036,614L1033,615L1033,667L1029,666L1028,662L1026,662L1026,666L1028,667",71.64],["M1003,739L1003,811",72.0],["M810,1040L810,1001L801,979L804,978L804,981L806,983",71.76],["M418,689L478,703L488,704",71.66],["M1235,915L1236,987",72.01],["M429,316L419,310L416,310L416,336L419,336L444,348",71.39],["M1100,743L1134,755L1135,749L1127,748L1125,746L1122,746L1120,743L1113,743L1113,741L1115,742",70.87],["M761,446L762,464L765,464L791,477L801,484L804,484L806,489",70.69],["M1090,628L1090,699",71.0],["M1145,678L1145,683L1155,688L1156,725L1150,724L1147,721L1144,721L1144,725",70.52],["M1008,748L1008,752L1011,753L1011,755L1008,755L1008,758L1015,760L1016,809",71.45],["M675,636L651,628L648,629L648,639L655,637L678,645",70.09],["M1344,890L1347,890L1347,896L1352,896L1355,894L1356,901L1362,902L1367,900L1372,903L1374,907L1377,907L1380,915L1383,918L1388,919L1389,921",69.57],["M930,805L963,811L978,815L980,817L998,820",70.14],["M428,366L419,361L416,361L417,388L443,399",68.55],["M219,491L235,496L236,548",68.77],["M1039,584L1042,584L1042,589L1037,588L1031,582L1029,577L1026,578L1024,584L1038,592L1038,596L1042,597L1042,600L1039,600L1039,598",68.7],["M49,614L117,628",69.43],["M1001,684L1001,694L994,695L996,703L1002,702L1019,710L1037,716",69.16],["M922,668L923,675L929,674L981,694",68.87],["M873,479L872,495L865,493L855,486L853,486L852,488L849,488L849,485L846,486L844,489L847,490L847,493L851,494L851,499",67.81],["M980,548L980,545L977,545L977,548L974,549L965,541L964,537L961,536L957,550L952,551L946,548L946,546L954,549",68.4],["M622,563L598,554L598,560L595,564L595,582L592,582L592,585L590,585L589,580",67.73],["M886,687L864,679L860,679L861,681L886,690L892,691L892,689L888,688",68.42],["M1047,725L1054,725L1054,728L1061,726L1092,739L1094,738L1094,735L1096,735L1096,733L1088,731",68.38],["M1315,791L1315,772L1312,772L1312,809L1320,813",67.94],["M856,833L923,844",67.9],["M191,296L191,326L156,312",67.7],["M67,281L129,306",66.85],["M56,447L56,455L54,460L33,451L27,454L27,456L37,465L46,465",67.39],["M44,479L45,474L40,473L40,470L35,467L17,474L17,477L20,478L21,481L27,481L29,484L38,487",66.76],["M906,496L885,484L884,491L881,495L880,505L875,506L872,503L865,503L865,501L867,502",66.89],["M663,678L666,676L666,673L660,674L659,679L661,683L666,685L668,691L670,691L670,696L666,696L667,699L665,699L665,697L663,696L665,689L663,685",66.12],["M1409,895L1416,912L1420,910L1427,895L1429,895L1429,898L1424,908L1428,909L1434,907",66.04],["M543,363L543,429",66.0],["M977,936L977,1002",66.0],["M498,533L499,527L504,518L503,510L501,508L493,506L495,515L491,523L492,534",64.72],["M979,798L979,812L981,812L982,814L1008,818L1008,811L1015,810L1017,812L1021,812",65.44],["M1229,882L1214,879L1214,871L1211,872L1211,885L1189,881L1186,882",64.98],["M905,950L908,953L904,953L903,958L900,958L900,1005L902,1005",65.34],["M516,327L519,334L522,336L570,360",64.89],["M694,440L694,502L691,501",65.16],["M1131,653L1131,718",65.0],["M99,411L103,412L103,417L93,417L85,413L85,410L94,410L94,406L87,401L84,402L83,410",63.89],["M58,459L57,461L54,461L56,466L57,468L59,468L61,475L65,476L84,460L92,452L92,450",64.41],["M949,477L960,485L964,485L968,490L976,495L985,498L985,500L994,507L999,508L999,505",64.43],["M514,584L516,584L518,592L569,608",63.7],["M135,675L148,676L149,679L159,680L159,677L157,675L159,671L157,660L158,654L156,650L160,648",62.76],["M718,723L718,755L720,755L721,757L747,762",62.71],["M989,865L979,864L979,877L981,882L990,883L991,888L1011,890",62.69],["M514,595L514,597L516,598L564,614L567,614L567,609",62.83],["M857,713L857,776",63.0],["M1213,758L1213,773L1215,773L1215,781L1223,781L1228,778L1235,784L1235,787L1233,787L1224,782",63.35],["M992,883L1043,890L1048,889L1047,883",62.66],["M230,197L238,200L240,203L240,253",62.15],["M811,461L805,459L796,452L789,450L789,455L786,455L789,458L793,459L794,462L802,464L802,466L800,466L796,463",61.78],["M648,592L647,594L641,592L641,645",61.56],["M433,618L417,614L417,640L436,644",61.91],["M1244,865L1244,867L1235,866L1235,903L1238,902L1240,904L1245,904L1246,907",62.21],["M138,968L138,1030",62.0],["M958,728L940,722L938,723L938,730L956,737L965,737L965,739L963,738",60.76],["M868,504L873,508L893,517L894,532L892,532L890,517",60.5],["M965,740L965,801",61.0],["M189,430L239,447L240,454",59.88],["M632,439L632,379",60.0],["M148,463L148,468L156,469L161,472L200,484",59.7],["M51,523L52,528L49,532L49,538L52,538L52,540L54,540L61,548L63,548L64,537L68,535L66,530L63,528",60.24],["M1130,587L1127,587L1126,591L1123,593L1127,597L1133,599L1137,604L1144,608L1146,608L1149,603L1152,603L1152,600L1149,598L1147,601L1148,602",59.63],["M99,670L102,670L101,667L103,664L94,658L92,658L92,665L89,668L89,671L81,669L74,671L72,669L77,668",60.28],["M1231,769L1222,765L1221,762L1224,762L1247,774L1247,776L1251,776L1262,782",60.48],["M1160,785L1160,779L1158,776L1154,776L1152,774L1139,770L1139,800",60.04],["M1405,903L1410,903L1413,908L1412,920L1408,922L1402,933L1399,934L1394,918",59.8],["M1313,937L1314,940L1311,944L1312,946L1321,946L1325,940L1330,939L1332,942L1330,950L1339,952L1339,959",59.78],["M813,953L813,956L816,956L819,961L822,962L820,966L823,968L824,972L827,972L831,968L834,961L839,962L839,964L834,966L832,969",59.56],["M200,253L200,299L201,301L210,303L211,305",59.69],["M595,212L644,245",59.08],["M1121,596L1169,630",58.82],["M53,674L77,679L82,679L86,675L92,677L93,681L91,681L90,684L87,684L83,680",59.44],["M1108,657L1108,660L1110,660L1111,662L1122,666L1122,706",58.94],["M259,268L259,266L256,265L255,276L247,270L240,269L240,264L243,261L248,265L251,265L253,263L256,264",57.92],["M291,282L285,293L294,292L295,295L298,296L301,303L300,306L297,306L290,302L288,300L290,295",57.96],["M1016,569L1019,569L1018,581L1007,574L1000,576L1000,579L1004,579L1005,595",58.39],["M708,631L708,615L690,608L683,607L680,604L669,602",57.81],["M1026,634L1026,619L1022,616L1019,616L1019,651",58.0],["M1228,757L1228,712L1220,709L1220,713",57.54],["M1304,785L1304,765L1301,765L1301,800",58.0],["M1033,931L1036,931L1036,939L1048,939L1048,950L1036,950L1036,962",58.0],["M518,340L563,364L566,364L566,360",58.0],["M1260,835L1260,846L1262,848L1263,855L1257,855L1255,859L1265,860L1262,866L1259,866L1256,860",57.84],["M685,603L709,612L714,605L713,595L720,597L725,596",56.66],["M671,434L671,491",57.0],["M588,323L588,321L584,320L567,309L558,298L555,299L553,311",55.91],["M1167,667L1167,671L1170,671L1174,673L1174,675L1177,675L1175,679L1169,679L1170,690L1178,693L1178,696L1173,694L1174,693",56.33],["M576,668L576,612",56.0],["M213,724L268,733",55.73],["M1122,836L1122,792L1112,792L1113,790",56.24],["M1297,881L1305,882L1306,880L1308,880L1307,886L1312,886L1314,889L1323,889L1326,885L1340,891",56.22],["M630,713L630,736L604,730L600,730L599,732",55.92],["M773,346L773,358L775,358L777,352L780,351L780,345L783,345L787,348L787,354L784,354L781,362",55.03],["M150,410L148,420L144,426L144,432L146,433L145,440L130,436L129,443",55.31],["M4,531L17,519L19,515L22,514L25,506L32,502L41,493",54.66],["M1293,648L1315,670L1315,675L1312,675L1312,672L1309,671L1305,675L1306,679",55.05],["M39,651L43,650L42,646L34,645L26,640L25,642L29,648L28,653L31,656L21,654",54.73],["M1243,686L1243,643L1239,639L1236,639L1236,642",54.66],["M1172,858L1170,857L1170,855L1178,856L1178,852L1169,849L1169,854L1166,855L1166,876",54.95],["M1425,910L1421,912L1418,919L1411,927L1409,939L1407,942L1407,959",55.49],["M584,229L587,223L589,223L589,216L591,216L591,214L585,211L583,208L579,207L579,218L587,222",54.09],["M105,429L103,427L105,421L109,421L117,426L121,419L124,419L129,413L129,411L133,407L134,402",54.22],["M493,642L493,696",54.0],["M880,870L882,870L882,864L889,865L890,869L888,871L892,876L895,876L897,873L902,873L901,878L905,881L905,883L903,882",54.37],["M672,270L679,273L683,276L683,278L681,278L682,284L680,285L673,280L671,281L666,292L671,296",54.26],["M813,640L813,638L811,638L812,634L815,634L816,643L814,646L812,646L813,650L811,650L811,652L793,646",52.88],["M1262,785L1274,791L1279,791L1285,794L1285,796L1299,801L1302,805L1308,806",53.07],["M773,880L770,879L767,883L754,882L752,884L753,911L755,911",53.05],["M984,1003L993,1003L993,1016L1024,1014",53.06],["M796,439L803,448L814,454L814,459L820,460L819,450L815,449L815,453",53.19],["M761,466L761,473L768,472L796,486L797,488L802,489",52.71],["M148,469L149,522",53.01],["M857,532L857,585",53.0],["M905,550L905,603",53.0],["M551,208L554,201L556,201L556,194L558,194L558,191L545,184L545,187L556,193",51.91],["M781,426L775,426L773,428L766,427L755,422L753,418L753,411L748,411L748,414L752,415",51.58],["M544,475L544,471L540,470L537,473L536,469L533,468L531,474L528,475L528,479L533,482L533,495",51.97],["M952,600L951,580L954,580L962,584L962,604",51.97],["M869,1018L856,1019L856,1024L890,1022",52.1],["M156,232L156,280L159,282",51.61],["M505,536L512,540L518,541L520,543L553,555",52.09],["M717,712L722,714L723,717L721,717L721,719L713,720L711,728L706,732L699,730L695,721",52.39],["M1063,773L1063,775L1068,776L1068,821",52.1],["M690,388L699,395L708,399L708,401L705,401L689,391L683,389",51.44],["M811,465L811,469L813,469L811,470L811,472L814,472L815,475L819,475L820,467L822,467L840,477",51.05],["M895,502L900,505L902,501L904,500L906,502L907,511L902,510L902,520L907,521L907,518L904,519",50.78],["M1310,742L1313,742L1318,748L1326,752L1329,756L1351,771",51.38],["M1117,762L1105,757L1106,746L1102,746L1101,764L1103,764L1104,767",51.24],["M900,885L899,883L896,883L893,887L898,889L896,896L899,896L900,899L905,899L907,902L909,902L909,905L911,907L914,907L914,904",51.5],["M1405,948L1404,959L1407,960L1407,969L1411,969L1414,972L1414,975L1421,978L1425,977L1428,973",51.19],["M1008,759L1008,810",51.0],["M460,137L465,132L467,132L468,136L472,137L479,143L482,143L482,140L480,138L467,131",50.13],["M796,361L796,373L798,373L802,366L810,369L810,363L805,360L802,360L802,365",50.44],["M862,481L851,477L849,473L849,467L846,466L844,468L845,473L843,477L845,478L845,482L843,484L843,487",49.8],["M1102,629L1106,632L1106,637L1102,638L1102,672L1100,672",50.12],["M1029,809L1029,759",50.0],["M1203,965L1203,993L1211,992L1211,1001L1206,1001",50.06],["M492,436L492,486",50.0],["M1130,849L1131,870L1102,866",50.3],["M695,301L695,307L697,307L700,300L703,300L710,304L711,298L704,293L702,293L702,299",49.36],["M588,337L588,327L591,326L595,328L596,338L600,338L615,347",49.18],["M912,494L930,506L941,511L942,513L950,517L954,517",48.9],["M522,541L568,558",49.04],["M18,592L18,595L16,597L19,600L23,601L25,599L23,591L30,591L30,588L24,585L22,587L22,591",48.81],["M1352,677L1334,679L1319,663L1314,655",49.48],["M1297,939L1296,936L1294,936L1293,938L1293,976L1296,977",48.56],["M872,975L872,991L864,991L859,994L855,994L856,996L851,996L850,999L854,997",48.7],["M237,1045L188,1049",49.16],["M796,776L844,787",49.24],["M749,329L749,344L751,344L754,335L757,335L762,339L764,333L764,331L762,331L762,333",48.21],["M540,452L500,434L498,430",48.34],["M927,679L927,694L911,689L909,687L906,687L905,692L902,692L902,694",47.69],["M812,701L811,653",48.01],["M1304,708L1304,697L1301,696L1301,730",48.16],["M1353,915L1353,918L1357,923L1360,932L1363,932L1365,937L1372,943L1369,944L1365,942L1364,938",48.25],["M659,1044L656,1047L656,1053L679,1053L678,1046L671,1048",47.59],["M649,413L687,434L690,434L690,432",48.42],["M687,644L681,646L681,649L677,654L677,656L679,657L677,658L677,660L674,659L671,667L673,667L673,669L676,669L677,664",48.01],["M506,282L521,289L534,298L538,298L538,287",47.36],["M819,376L819,387L821,387L823,382L825,381L825,376L833,379L829,374L825,373L825,375",46.69],["M102,465L101,459L91,457L80,467L80,469L89,470L91,474",46.67],["M685,509L686,515L683,515L649,499",46.66],["M667,647L648,642L648,649L653,649L667,654",46.51],["M1076,793L1076,779L1071,778L1071,806",47.1],["M1053,846L1053,856L1040,854L1039,830",47.17],["M790,858L788,854L796,854L796,859L794,861L795,862L803,860L809,862L809,867L806,870L807,871",46.94],["M819,1040L818,1035L823,1026L855,1024",47.46],["M750,422L754,423L756,431L759,431L759,433L780,443L781,449",46.71],["M818,476L818,523",47.0],["M1055,642L1056,689",47.01],["M767,674L802,686L807,686L805,681",47.39],["M403,688L404,735",47.01],["M1047,716L1047,719L1043,720L1043,726L1040,730L1041,739L1037,742L1037,757",47.18],["M1062,775L1062,822",47.0],["M1108,787L1107,834",47.01],["M199,455L210,457L236,467L239,467L240,463",46.16],["M162,585L155,585L155,624",46.0],["M1230,589L1230,593L1227,594L1226,598L1223,598L1221,593L1225,588L1225,585L1222,584L1216,590L1220,593",45.72],["M204,595L198,595L198,635",46.0],["M1381,746L1376,741L1372,741L1370,737L1367,738L1366,743L1368,749L1366,750L1366,764",46.37],["M1263,940L1263,986",46.0],["M860,698L861,703L884,710L886,712L895,713L893,708",46.41],["M670,742L669,788",46.01],["M1036,914L1036,930L1039,931L1050,930L1049,914",46.24],["M646,275L648,268L652,265L652,259L654,259L654,257L644,251L646,255L652,258",45.12],["M228,402L261,432",44.6],["M583,479L589,482L594,479L594,488L616,497",45.31],["M995,609L980,601L980,625L984,626",45.12],["M875,610L879,610L882,612L882,614L894,618L896,626L900,626L900,630L897,630L896,627",44.66],["M543,647L543,692",45.0],["M1228,864L1214,861L1214,866L1216,866L1216,868L1208,868L1199,870L1199,872L1201,871",44.77],["M127,871L156,873L169,873L171,871",44.9],["M1224,1034L1210,1033L1211,1002",45.05],["M654,411L690,429L690,431L693,431",45.25],["M762,474L762,476L768,477L771,480L774,480L789,489L797,492L799,492L799,490",45.36],["M653,362L640,354L630,354L631,357L629,361L629,368L631,372",44.37],["M777,504L777,542L773,542L773,544",44.0],["M641,530L641,525L650,528L651,520L667,526L668,530",43.76],["M781,534L780,548L785,547L788,552L793,552L795,555L792,560L794,564",43.87],["M642,566L643,575L638,583L638,586L659,593",43.63],["M229,642L229,603L224,602",44.1],["M127,668L121,665L120,667L123,673L118,673L117,676L123,676L124,674L131,673L131,668",44.12],["M1155,736L1161,738L1161,735L1144,726L1141,726L1141,738",43.56],["M674,745L717,755",44.15],["M1276,815L1276,811L1278,811L1279,809L1289,810L1292,814L1298,815L1301,819L1305,818L1309,822",44.15],["M1173,847L1173,809L1179,810",44.08],["M1045,982L1048,982L1048,999L1050,1003L1049,1011L1060,1011",43.53],["M465,146L461,153L460,159L462,162L466,163L469,166L472,165L476,153L478,152",44.16],["M880,472L882,472L884,475L881,476L877,474L877,485L875,490L876,500L872,502",44.15],["M717,761L718,795L727,798",43.5],["M1185,821L1185,859L1179,857",44.32],["M1243,935L1243,979",44.0],["M796,349L807,358L814,361L831,373",42.64],["M193,390L196,391L196,394L193,397L195,403L201,400L205,404L210,404L210,401L208,401L209,399L210,400",42.74],["M799,511L799,554",43.0],["M819,661L819,648L822,645L823,640L836,644L838,646L840,646L841,644",43.01],["M1362,759L1358,758L1357,734L1358,728L1363,721",42.83],["M1022,882L1023,879L1049,882L1049,868",43.33],["M1078,985L1078,1010L1096,1009",43.03],["M725,333L746,347L755,349L754,351L752,351L749,348",42.94],["M762,675L762,678L775,681L793,688L797,688L797,685",42.65],["M663,999L662,1009L660,1013L674,1013L675,1027",42.56],["M539,306L539,302L534,301L533,299L513,289L507,284",41.51],["M159,357L150,355L149,362L151,364L156,363L164,368L164,366L167,366L169,363",42.26],["M794,575L807,580L807,586L809,586L809,588L812,588L812,593L809,593L807,592L807,587",42.16],["M189,633L188,591",42.01],["M1257,686L1257,655L1254,653L1252,653L1252,655L1255,657",42.21],["M1194,689L1196,689L1196,692L1188,690L1188,695L1195,695L1202,692L1211,691",41.92],["M198,552L198,594",42.0],["M1008,612L1008,654",42.0],["M763,645L803,658",42.06],["M1107,767L1123,772L1123,783L1126,788L1121,788L1122,791",41.76],["M1144,800L1144,842",42.0],["M509,167L508,163L510,163L519,170L522,170L522,168L511,160L508,160L508,162",41.13],["M841,391L841,400L843,401L845,396L847,395L847,390L855,393L852,389L848,389",41.4],["M194,488L194,529",41.0],["M909,605L905,604L905,615L902,615L898,612L894,614L882,608",41.01],["M1243,739L1243,725L1236,723L1237,743",41.31],["M1033,773L1033,758L1029,757L1025,759L1019,756L1013,757L1012,755L1014,755",40.62],["M1249,797L1253,795L1268,803L1274,802L1278,805L1278,807L1272,804",41.26],["M1268,836L1268,819L1271,819L1273,821L1273,839",40.83],["M1063,640L1063,681",41.0],["M1108,664L1108,702L1111,702",41.0],["M1169,697L1169,738",41.0],["M596,734L596,772L598,774",40.83],["M56,845L85,859L92,864",40.8],["M823,986L816,999L817,1025",40.78],["M698,282L731,305",40.22],["M998,497L998,504L1000,504L1003,500L1009,502L1010,496L1005,493L1004,496L1008,498",39.87],["M1048,611L1041,607L1041,635L1045,636",40.19],["M1228,629L1229,669",40.01],["M685,659L690,660L690,695",40.1],["M428,668L417,666L418,688L411,687",40.27],["M552,742L550,746L552,753L570,755L571,750L573,750L574,747",40.12],["M1296,1039L1336,1042",40.11],["M594,489L595,529",40.01],["M927,518L927,558",40.0],["M1102,679L1102,707L1108,708L1113,711",39.91],["M1170,808L1169,848",40.01],["M500,177L500,181L503,181L505,175L510,172L512,175L515,175L519,178L521,176L521,171",38.59],["M146,369L150,379L152,379L162,369L166,370L169,374L172,374",39.04],["M86,450L89,448L95,449L115,427",39.42],["M116,507L116,513L114,517L111,517L106,511L107,503L105,501L98,501",39.17],["M68,655L65,654L63,658L69,660L71,666L53,663",38.53],["M1041,675L1041,636",39.0],["M1016,711L1006,708L1006,712L1003,716L1005,721L1011,721L1019,724",39.37],["M488,751L488,712",39.0],["M1265,754L1265,741L1266,739L1270,740L1272,746L1272,759",38.68],["M764,775L765,777L768,777L763,781L769,789L770,793L779,794L780,790",38.94],["M905,817L907,831L927,834L928,829",39.46],["M1229,828L1228,801L1219,799L1220,802",39.4],["M1026,892L1026,895L1016,895L994,892L992,891L992,889",39.44],["M886,1017L872,1017L872,992",39.0],["M594,360L594,399",39.0],["M693,645L698,646L702,650L703,678",38.77],["M1213,697L1213,736",39.0],["M1169,790L1178,792L1178,808L1172,805L1170,805L1170,807L1173,808",39.09],["M150,393L146,392L145,394L142,394L137,401L133,401L132,393L140,394",38.09],["M1014,509L1014,515L1016,515L1019,511L1021,511L1022,513L1025,512L1026,507L1020,505L1020,507L1024,509",38.29],["M930,534L929,539L933,539L934,541L934,568",38.34],["M352,745L390,751",38.47],["M979,766L979,728",38.0],["M1290,794L1290,756",38.0],["M1330,956L1330,977L1347,977",38.0],["M200,301L200,330L191,327",38.49],["M1037,890L1039,906L1046,906L1046,891",38.12],["M1256,940L1256,978",38.0],["M647,515L648,511L651,511L668,520L674,520L674,522L676,523",36.59],["M681,531L680,532L683,533L683,525L705,535",36.74],["M495,574L493,575L493,610",37.24],["M1044,575L1034,568L1027,566L1029,571L1040,577",37.4],["M51,662L47,662L47,664L49,665L48,668L42,669L38,666L39,659L46,661",36.83],["M529,716L530,713L533,713L563,720",36.97],["M1046,750L1040,748L1040,776L1043,776",37.32],["M905,812L905,801L921,804L929,804L929,802",37.28],["M1308,976L1309,939",37.01],["M1008,733L1008,746L1009,748L1011,748L1011,751L1027,757",37.32],["M430,669L465,677",35.9],["M124,709L159,715",35.51],["M1279,787L1279,751",36.0],["M976,550L976,552L981,553L981,559L988,561L996,567L1000,567L1000,569",36.38],["M175,651L177,651L180,655L178,668L180,681L178,682",35.54],["M261,667L260,692L263,703",36.42],["M1144,684L1144,720",36.0],["M1009,732L1030,738L1031,752",35.88],["M294,268L294,265L297,264L306,266L303,275L303,281L299,280",34.99],["M210,388L224,393L238,408",35.38],["M210,656L209,660L211,662L211,667L209,679L211,687L209,688",34.6],["M236,662L237,663L234,667L234,675L236,677L236,686L234,689L236,694",35.23],["M847,664L847,661L845,661L844,665L845,682L836,680",35.37],["M630,690L630,712L617,709",35.34],["M1177,785L1167,781L1167,777L1169,776L1170,771L1173,771L1182,776",35.4],["M1166,816L1166,851",35.0],["M1123,853L1124,851L1126,852L1126,857L1122,859L1119,859L1117,861L1110,861L1107,859L1111,858",34.5],["M876,871L874,873L877,874L877,877L875,877L874,879L877,881L877,884L872,885L869,881L865,884",34.93],["M196,875L231,876",35.01],["M789,906L791,908L791,912L789,912L788,914L782,916L778,913L775,914L777,923",34.77],["M1273,913L1282,918L1285,930L1288,930L1290,927L1290,921",35.27],["M170,368L177,369L181,377L194,381L198,384",34.62],["M1262,708L1267,708L1271,711L1272,714L1280,718L1281,721L1289,726",34.7],["M906,909L906,913L897,913L895,911L891,915L891,929",35.49],["M290,279L283,271L285,267L285,259L291,261L293,265",33.9],["M41,484L41,492L44,492L62,477",34.43],["M559,488L560,485L562,486L564,493L567,496L567,501L565,502L565,504L570,510",33.97],["M221,659L221,662L218,663L220,668L220,690",33.55],["M1108,714L1103,712L1103,737L1099,737",34.39],["M1325,727L1325,715L1321,714L1321,732",34.12],["M1130,744L1130,725L1132,721L1131,719L1128,719L1124,716",33.71],["M1291,744L1296,744L1299,749L1305,751L1308,754L1308,756L1301,754L1301,757",33.68],["M156,282L156,311L151,310",34.1],["M206,657L202,661L205,671L205,679L203,682L205,688",34.03],["M225,660L225,663L227,665L225,677L225,683L227,686L226,692",33.68],["M670,668L672,669L671,672L674,673L671,675L670,682L673,682L674,677L676,677L675,675L673,676",33.81],["M819,675L819,709",34.0],["M1200,751L1205,752L1205,761L1198,762L1196,760L1196,754L1199,752",33.6],["M858,786L891,793",33.73],["M411,104L409,137",33.06],["M811,506L811,473",33.0],["M1265,702L1265,669",33.0],["M1001,705L999,707L999,737",32.83],["M748,801L747,768",33.02],["M898,821L895,820L895,810L890,814L890,816L888,816L883,808",33.0],["M1086,863L1054,857",32.56],["M884,920L887,923L886,929L892,931L897,926L903,929L903,932",33.43],["M900,933L900,938L903,938L906,935L908,936L908,940L916,943L916,945L912,945",33.02],["M1239,942L1239,975",33.0],["M116,406L123,409L122,415L114,416L112,409L115,407",32.65],["M891,417L898,420L898,422L890,420L890,424L896,427L897,423",32.69],["M62,648L65,648L71,652L76,652L78,654L76,660L80,668",33.31],["M380,692L380,725",33.0],["M1231,700L1233,701L1233,703L1242,704L1247,709L1247,711L1240,708L1239,705",33.14],["M1214,827L1214,860",33.0],["M511,879L511,912",33.0],["M656,890L656,923",33.0],["M1267,944L1267,977",33.0],["M163,353L168,358L169,362L172,362L178,357L187,353",31.85],["M516,449L505,444L501,444L502,455L504,455L504,452",32.13],["M488,534L487,512L488,508L493,505",31.98],["M528,548L550,557L558,557",31.77],["M815,584L818,584L818,613",32.0],["M792,676L804,680L801,672L801,661",32.19],["M142,681L140,685L145,686L151,691L156,691L157,693L164,694",31.69],["M1342,713L1347,716L1346,712L1350,710L1351,713L1355,714L1352,716L1358,718",31.64],["M504,718L514,731L517,731L518,728L514,723L511,723",31.97],["M1366,824L1367,828L1365,829L1355,813L1355,810L1351,809",32.35],["M1426,832L1420,833L1416,830L1416,839L1413,840L1410,845L1407,844",32.24],["M838,865L834,863L831,865L830,867L834,869L834,872L833,875L826,876L827,880",32.14],["M1238,922L1240,917L1242,917L1244,927L1248,927L1252,930L1256,927",31.58],["M304,331L309,333L306,341L301,341L299,339L303,334L305,335L305,337",32.4],["M163,371L152,381L148,390L144,390L143,393",31.88],["M671,390L676,394L679,394L683,398L696,404L697,406",31.61],["M912,430L932,442L938,448",31.81],["M119,680L119,686L93,682",32.31],["M643,277L636,274L640,263L645,261L650,265",31.11],["M108,465L107,460L110,459L109,456L101,458L97,453L95,453L95,456",31.07],["M550,465L558,467L578,477",30.61],["M82,491L78,492L73,497L73,501L78,508L85,509",30.87],["M947,531L947,528L950,528L951,530L951,540L948,540L940,535",30.67],["M1070,601L1073,602L1073,597L1077,596L1093,605",30.64],["M946,641L951,643L954,649L941,643L940,647",30.53],["M1183,676L1183,674L1185,674L1185,681L1182,681L1182,685L1185,686L1186,696",31.21],["M1208,678L1211,679L1211,690L1214,690L1214,694L1218,695L1220,697L1220,700",31.11],["M931,701L933,701L934,696L936,696L938,698L956,704",30.9],["M1203,704L1200,704L1196,709L1203,711L1205,715L1202,719L1197,718",31.25],["M845,714L845,683",31.0],["M965,731L968,731L969,726L969,716L966,716L967,726",31.15],["M1396,744L1395,738L1399,735L1397,730L1401,725L1401,721L1405,721",30.87],["M1305,850L1305,844L1309,843L1309,848L1315,850L1314,856L1317,857",30.69],["M1358,955L1361,959L1361,968L1352,964L1354,962L1357,965",30.92],["M120,350L120,352L124,354L124,362L126,362L128,365L133,366L137,366L137,364",31.18],["M955,522L954,542L951,542L951,545L954,545L954,543",31.02],["M1139,759L1143,759L1156,764L1159,766L1159,768L1163,768L1164,765",30.7],["M538,194L538,204L540,204L541,200L544,197L549,197L550,199L548,198",29.84],["M723,313L723,325L725,325L728,318L731,318L735,321",29.62],["M168,444L196,454",29.73],["M836,513L844,517L844,536L842,536",29.94],["M700,551L708,554L709,556L708,569L705,569L705,566",29.82],["M568,564L584,569L584,582",29.76],["M1209,595L1209,625",30.0],["M1296,644L1316,666",29.73],["M1086,672L1085,642",30.02],["M1247,716L1248,714L1256,716L1263,722L1263,724L1261,724L1256,720",30.1],["M1077,728L1073,727L1073,725L1067,724L1067,722L1082,727",30.02],["M864,949L861,953L851,958L847,962L847,964L842,967",29.67],["M245,998L245,1028",30.0],["M121,349L136,350L139,355L138,358L141,360L141,362",29.63],["M767,448L793,462",29.53],["M172,653L174,658L173,663L175,672L173,676L174,682",30.26],["M653,251L677,268",29.41],["M516,461L516,469L511,469L502,465L502,471",28.85],["M780,576L784,576L784,601",29.0],["M746,610L754,610L759,615L759,620L754,627",28.67],["M1171,631L1194,648",28.6],["M973,658L973,661L971,661L970,653L962,648L959,648L959,652",29.5],["M981,713L979,714L979,727L992,731",28.84],["M1278,741L1278,738L1282,738L1286,742L1288,741L1288,739L1282,735L1279,735L1279,737",29.1],["M1060,742L1072,744L1084,749L1086,749L1086,747",29.17],["M1244,826L1244,808L1238,805L1237,809",28.83],["M1204,837L1200,837L1198,839L1198,842L1203,844L1205,848L1203,851L1197,852",29.37],["M999,845L999,820L1002,818",28.61],["M1315,975L1313,972L1313,947",28.61],["M1152,982L1152,1005L1158,1005",29.0],["M1254,1045L1283,1047",29.07],["M468,137L468,145L471,145L471,147L474,147L479,151L480,144",29.47],["M495,254L500,257L500,261L495,259L494,262L492,262L491,257L494,255",29.08],["M1006,503L1004,508L1001,510L1002,512L1013,519L1015,519L1015,516",29.27],["M1212,599L1212,628",29.0],["M90,672L106,677L118,677",28.76],["M1107,768L1107,782L1121,787",28.87],["M1144,781L1155,783L1155,801",29.18],["M735,885L739,886L740,888L740,893L732,893L732,887L735,886",28.52],["M546,178L523,162",28.02],["M538,271L531,279L531,282L537,282L537,286L534,283",27.87],["M258,298L258,294L256,293L247,300L249,302L251,301L251,299L254,299",27.7],["M870,410L867,410L868,404L871,404L875,407L875,412L871,416",27.74],["M944,461L944,470L946,470L949,465L956,467L957,463",28.23],["M126,464L131,465L135,460L140,460L144,464L146,470",28.48],["M552,482L550,491L550,503L543,503",28.22],["M686,540L689,540L692,546L691,549L688,549L688,558L690,561",28.48],["M965,609L965,581",28.0],["M576,692L576,720",28.0],["M659,747L643,742L632,741",27.81],["M1280,836L1280,827L1285,828L1285,842",28.1],["M806,874L812,875L811,884L814,884L816,882L821,883L822,881",28.3],["M813,962L812,990",28.02],["M248,303L248,308L245,308L243,306L236,308L232,306L232,311",27.58],["M551,319L551,321L574,333",27.94],["M749,415L747,423L750,423L750,426L748,427L746,432L748,438",28.19],["M149,680L150,684L154,684L161,691L171,691",28.02],["M1221,692L1226,692L1229,695L1230,699L1228,699L1221,693L1218,694",27.75],["M939,707L951,709L954,712L965,715",27.81],["M1385,890L1388,918",28.16],["M121,465L119,468L101,468L97,471",26.61],["M681,561L680,556L682,534",27.19],["M754,589L759,592L770,590L772,587L771,581",26.7],["M1159,619L1155,616L1155,614L1158,612L1158,610L1162,611L1163,608L1160,606L1158,609",27.1],["M1177,620L1182,621L1181,624L1174,624L1173,627L1169,627L1166,623",27.42],["M543,730L543,732L539,734L539,737L543,742L543,746L545,747L543,752",27.5],["M1075,735L1081,738L1087,738L1087,745L1085,746L1085,741",26.94],["M679,756L681,755L683,757L683,760L688,763L688,766L685,767L688,773",26.77],["M1026,797L1026,814L1021,813L1021,818",27.1],["M1241,816L1241,811L1237,810L1237,828",27.12],["M30,840L48,847L56,848",27.38],["M1250,908L1252,908L1255,912L1260,910L1260,913L1256,917L1257,923",27.12],["M1305,925L1310,926L1308,931L1311,933L1311,935L1310,938L1302,938",27.25],["M905,448L923,461L926,461L926,459",27.2],["M862,523L886,535",26.83],["M941,562L942,565L963,576",26.87],["M146,645L146,647L148,647L150,650L149,655L148,657L146,657L145,647",26.99],["M940,724L941,728L958,733L962,736",26.84],["M1245,787L1251,792L1251,794L1243,791L1242,789L1236,788",26.67],["M405,1022L405,1049",27.0],["M581,237L572,233L574,224L578,218",26.28],["M227,419L218,412L208,408L206,405",25.78],["M60,429L61,439L55,438L53,442L50,442L49,440",25.84],["M38,445L37,444L40,440L40,437L37,432L42,429L46,432",26.08],["M784,448L781,451L777,451L769,446L765,447L765,445L767,445",25.8],["M980,487L980,493L983,493L986,488L991,491L993,486",26.05],["M742,586L742,580L734,575L731,578L732,584",25.76],["M1222,615L1219,614L1220,610L1230,618L1231,621L1228,621",26.25],["M1195,633L1196,636L1192,636L1189,631L1185,631L1186,627L1188,627L1189,630",26.28],["M1240,644L1236,643L1236,665",26.12],["M819,664L819,674L834,679",25.81],["M1271,680L1271,668L1267,665L1265,665L1265,668L1269,669",26.12],["M178,692L180,694L184,693L192,700L200,701",25.64],["M1256,731L1258,732L1257,756",26.26],["M1306,738L1298,732L1294,731L1294,728L1290,727L1291,730L1293,730",26.41],["M1131,763L1131,789",26.0],["M1114,803L1114,810L1112,810L1112,799L1114,799L1114,797L1112,798",26.24],["M1225,806L1220,803L1220,823",25.83],["M626,881L626,876L619,877L619,884L626,884",26.07],["M1316,1050L1290,1048",26.08],["M648,379L655,381L656,383L666,387L667,389L670,388",25.68],["M712,400L711,409L718,412L716,414L713,414L712,411",25.66],["M930,464L940,472L949,474L949,476L947,475",26.26],["M1208,644L1210,644L1212,648L1206,646L1204,651L1202,651L1198,647",25.84],["M1061,690L1085,701",26.4],["M931,910L931,936",26.0],["M196,286L196,311",25.0],["M543,301L543,276",25.0],["M730,309L730,311L738,316L738,322L736,322L733,327",25.26],["M152,416L175,425",24.7],["M575,480L578,480L578,491L582,494L586,494L586,492",25.0],["M1164,617L1164,622L1167,622L1169,618L1172,617L1170,613L1168,615L1169,617",25.17],["M1060,618L1059,610L1055,611L1055,624",25.19],["M756,636L756,661",25.0],["M1322,775L1322,777L1325,778L1325,798",25.16],["M859,807L858,813L861,814L870,815L870,813L872,813L873,811",24.54],["M1176,814L1176,811L1179,811L1179,830",25.0],["M1229,911L1226,907L1224,907L1222,910L1220,917L1221,921L1224,921",25.01],["M851,942L848,945L847,949L839,955L841,957L843,954",24.8],["M1206,1014L1199,1013L1194,1015L1181,1016",25.49],["M416,206L416,231",25.0],["M511,449L511,455L509,457L510,462L502,459L502,456",25.47],["M417,512L417,537",25.0],["M929,516L932,517L933,525L936,525L940,528L946,528",25.22],["M717,535L716,560",25.02],["M956,551L962,553L963,555L965,555L965,557L954,552",24.64],["M226,310L232,312L232,330",24.32],["M263,331L260,331L258,334L259,351",23.63],["M174,435L172,432L170,432L166,436L170,442L175,440",23.86],["M880,438L900,451",23.85],["M755,465L755,441",24.0],["M666,533L665,531L663,531L661,534L662,544L657,548",24.29],["M1081,612L1085,617L1091,619L1091,623L1098,625",24.01],["M879,617L882,615L882,619L891,622L893,624L893,628",23.92],["M1277,637L1278,640L1281,641L1280,646L1282,649L1289,649L1289,647",24.03],["M1202,638L1203,642L1199,642L1199,646L1194,645L1189,640",24.29],["M1254,645L1251,644L1251,641L1255,641L1261,647L1261,650L1259,649",23.88],["M1027,652L1026,661L1023,661L1022,658L1016,658L1015,655",24.38],["M674,751L688,754L691,753L685,751",23.8],["M979,770L979,784L989,786",24.2],["M1009,841L1015,843L1024,843L1025,845L1031,846",23.64],["M1157,855L1161,855L1161,875",24.0],["M1293,921L1293,929L1291,930L1293,932L1298,932L1300,930L1297,930",23.89],["M1226,568L1225,570L1212,574L1211,576L1209,576L1209,578L1211,577",24.31],["M1079,599L1079,607L1077,610L1076,618L1072,619",23.79],["M1117,623L1117,631L1115,631L1115,628L1104,629",24.05],["M417,641L418,665",24.02],["M663,862L664,886",24.02],["M1037,906L1037,913L1045,914L1048,913L1047,907",24.31],["M932,907L956,908",24.02],["M932,908L934,910L955,911",23.85],["M962,476L962,481L965,481L969,476L969,473L975,473",23.4],["M808,492L806,490L803,490L799,494L799,506",23.49],["M1069,548L1068,551L1061,551L1053,546L1052,543",22.76],["M821,586L842,596",23.26],["M1211,586L1211,579L1209,579L1208,582L1209,593",23.21],["M877,614L875,615L876,636",23.26],["M1185,766L1185,751L1188,748L1188,744",23.24],["M1332,782L1333,803L1335,804",23.26],["M1115,839L1115,836L1118,836L1123,840L1123,844L1129,846",22.73],["M1418,856L1413,860L1411,867L1409,867L1408,865L1408,860",22.92],["M871,952L870,954L868,954L868,957L863,963L863,965L869,963",23.37],["M257,994L257,1017",23.0],["M834,1002L831,1003L830,1010L832,1011L836,1008L838,1003",22.85],["M818,1027L818,1025L821,1024L828,1012L832,1012",23.05],["M416,260L416,283",23.0],["M416,337L416,360",23.0],["M417,590L417,613",23.0],["M1012,600L1011,603L1029,612",23.29],["M980,626L980,649",23.0],["M1340,699L1336,704L1338,705L1340,702L1342,702L1344,707L1347,706",22.79],["M1062,766L1063,772L1079,776",22.58],["M1144,782L1144,795L1154,798",23.44],["M273,148L273,155L277,155L286,161",21.82],["M382,180L386,177L387,174L390,173L394,163",22.09],["M805,475L805,481L803,481L801,470L802,467",22.34],["M82,479L85,478L85,483L82,487L73,486",22.22],["M40,498L36,504L28,511L27,515",21.96],["M1063,542L1063,547L1068,544L1072,545L1073,542L1069,543",22.24],["M629,565L630,578L634,578L636,574",21.51],["M804,595L811,599L811,611L809,611",22.06],["M1244,605L1244,608L1249,608L1249,612L1247,612L1244,619",21.62],["M68,625L90,629",22.36],["M880,639L880,625L883,623L886,626",21.85],["M950,639L970,647",21.54],["M689,653L683,653L679,661L675,662L678,662",22.07],["M1073,701L1074,699L1076,700L1076,704L1085,707L1085,711",21.96],["M1333,723L1333,745",22.0],["M780,798L766,796L764,795L764,793L768,793",22.38],["M925,845L947,848",22.2],["M360,910L359,888",22.02],["M1401,988L1401,995L1403,996L1403,998L1400,1008",21.68],["M844,494L844,516",22.0],["M404,757L404,779",22.0],["M1346,780L1345,785L1351,789L1351,792L1347,797",21.71],["M949,849L971,852",22.2],["M433,90L421,92L418,97L415,98",21.16],["M550,303L553,293L553,282",21.44],["M681,350L678,349L665,353L666,349",20.89],["M243,450L244,445L256,446L257,450",21.26],["M145,473L141,475L140,473L136,472L135,468L132,468L130,466",20.78],["M673,551L673,532L675,531",21.24],["M1012,570L1004,567L1004,570L1000,570L999,575",20.64],["M1217,598L1214,596L1213,599L1215,599L1217,603L1223,608",21.05],["M123,633L123,654",21.0],["M1315,714L1314,707L1311,707L1311,718",21.07],["M845,761L845,782",21.0],["M1166,792L1166,813",21.0],["M1365,795L1361,793L1355,793L1355,795L1350,796L1352,799",21.18],["M963,817L957,816L957,814L952,814L950,815L950,818L952,820",21.15],["M1240,980L1256,979L1256,984",21.03],["M272,134L290,145",21.1],["M200,331L219,339",20.62],["M114,436L117,439L123,439L126,442L127,446L129,446",20.61],["M566,443L566,447L570,448L570,454L572,455L571,460",21.46],["M596,682L596,703",21.0],["M1188,751L1188,772",21.0],["M955,914L955,935",21.0],["M1072,918L1073,939",21.02],["M856,971L858,971L859,974L856,977L852,977L851,980L853,980L854,978",20.8],["M857,997L856,1018",21.02],["M644,1014L644,1035",21.0],["M576,209L574,209L571,213L571,226",20.0],["M884,410L871,401L869,401L870,403",20.05],["M728,458L746,467",20.12],["M891,476L908,486",19.72],["M823,488L841,497",20.12],["M1045,523L1048,524L1048,528L1045,528L1046,531L1044,535L1042,535",19.8],["M1006,551L1018,559L1024,559",20.42],["M633,594L630,594L630,611",20.0],["M862,599L880,607",19.7],["M1084,629L1084,626L1081,626L1082,636L1084,636L1084,634",20.05],["M1318,692L1319,687L1323,689L1327,687L1326,685L1324,685L1324,687",20.28],["M1382,706L1382,726",20.0],["M1107,728L1109,727L1113,729L1114,727L1119,727L1119,733",19.94],["M1399,757L1396,757L1394,753L1391,756L1388,756L1387,761",19.81],["M1206,784L1203,782L1202,778L1197,778L1197,785",19.73],["M767,894L761,895L761,897L763,898L762,902L765,904L765,906",20.05],["M1297,941L1297,961",20.0],["M1055,947L1055,967",20.0],["M1280,978L1267,978L1267,985",20.0],["M420,74L440,75",20.02],["M648,403L649,412L653,410L651,404",19.85],["M175,409L187,414L191,420",20.21],["M594,423L594,443",20.0],["M1035,515L1040,518L1040,521L1036,522L1034,520L1035,516",19.91],["M703,536L703,547L706,549L709,549L709,547",19.61],["M1065,552L1066,555L1074,560L1076,560L1076,555",19.6],["M1239,601L1241,601L1241,603L1238,608L1235,608L1238,602",19.54],["M648,608L649,628",20.02],["M595,615L595,635",20.0],["M1003,667L1021,675",19.7],["M909,669L909,673L913,673L920,677L924,676",20.19],["M1219,674L1222,678L1224,678L1234,686",19.81],["M847,1004L847,1024",20.0],["M273,175L273,156",19.0],["M221,357L204,349",18.79],["M849,385L833,374",19.42],["M374,415L386,420L387,414",19.08],["M598,444L594,444L594,459",19.0],["M779,486L796,495",19.24],["M55,506L52,505L50,511L47,514L47,516L50,517",18.89],["M936,514L945,520L950,520L952,518",18.65],["M1027,562L1027,564L1022,564L1021,576",19.04],["M764,578L756,575L756,585",18.54],["M790,586L790,571L786,569",19.47],["M235,600L235,619",19.0],["M872,609L859,603L857,603L856,606",19.48],["M1265,612L1278,626",19.1],["M872,622L867,620L866,627L860,629",18.78],["M694,667L694,686",19.0],["M953,669L953,650",19.0],["M549,727L554,729L554,734L558,734L558,739",19.39],["M535,735L535,740L531,748L536,749",19.04],["M872,756L872,775",19.0],["M1283,757L1282,750L1278,750L1278,747L1281,747L1282,749",19.31],["M783,786L783,794L788,794L790,800",19.32],["M1301,825L1301,833L1304,833L1304,841",19.0],["M1158,846L1158,848L1156,849L1157,851L1145,849",18.64],["M1407,891L1408,884L1410,884L1411,894",19.12],["M670,271L666,274L666,288",19.0],["M496,281L500,285L499,288L495,288L495,282",18.82],["M515,328L514,339L517,339L519,335",18.52],["M631,341L637,343L637,345L635,346L639,353",18.62],["M852,399L847,407L842,406L842,402",18.53],["M937,450L937,454L933,458L932,462L927,462",18.78],["M814,460L813,468L818,469L817,471L815,471L816,472",18.81],["M844,592L846,596L849,594L857,597L859,596",18.86],["M1154,644L1156,645L1156,654L1154,661",18.52],["M147,658L146,662L147,671L149,671L148,675",19.3],["M1212,671L1214,672L1214,689",19.24],["M670,697L670,699L667,700L669,702L669,705L665,705L666,709",19.11],["M662,719L661,722L665,729L665,737",19.22],["M1238,840L1238,843L1234,848L1231,848L1226,844",18.81],["M239,352L239,354L232,356L229,354L230,349",17.98],["M133,421L133,429L143,432",18.44],["M548,442L544,437L543,430L539,428",17.95],["M481,499L480,492L476,491L476,489L480,486",18.19],["M1034,601L1034,597L1031,597L1033,608",18.18],["M1208,631L1222,643",18.44],["M1292,653L1291,658L1287,658L1283,653L1284,651",17.74],["M1304,666L1303,664L1301,666L1302,671L1306,669L1309,670",17.8],["M1354,676L1372,673",18.25],["M1043,685L1040,685L1040,700",18.0],["M1167,690L1166,708",18.03],["M1340,691L1353,704",18.38],["M1324,693L1327,692L1327,689L1330,690L1330,693L1328,693L1326,696",17.93],["M371,725L381,726L381,734",18.05],["M1167,760L1167,742",18.0],["M1375,772L1375,769L1381,769L1380,766L1376,766L1375,768",18.4],["M1139,802L1139,820",18.0],["M1340,806L1350,808L1347,801",17.81],["M867,809L864,809L860,804L859,800L861,799L861,797",17.76],["M841,864L841,862L845,860L846,865L849,865L849,868",17.57],["M781,870L783,871L784,877L777,880L776,882",18.17],["M793,960L794,964L792,965L789,960L790,957L788,958",17.59],["M638,252L635,256L636,269",18.04],["M590,313L594,314L595,318L588,316L589,314",17.76],["M711,414L713,418L716,418L716,429",18.47],["M888,596L888,599L892,603L892,609L890,609L891,610",18.07],["M1216,738L1215,756",18.03],["M752,1011L752,1029",18.0],["M196,258L196,275",17.0],["M745,314L759,324",17.2],["M461,357L476,364",16.55],["M720,476L735,483",16.55],["M543,478L542,480L544,495",17.37],["M517,489L523,484L521,475",17.03],["M811,520L811,537",17.0],["M969,551L976,555L975,561L978,561",17.15],["M946,573L961,581",17.0],["M1235,581L1247,593",16.97],["M650,595L662,599L664,599L662,597",17.48],["M852,603L852,607L856,607L856,611L854,611L853,608",17.16],["M750,628L749,623L752,619L752,612",17.1],["M1236,632L1236,627L1238,626L1246,632",17.24],["M1124,658L1124,649L1122,649L1118,645",16.66],["M780,686L796,691",16.76],["M1032,686L1035,687L1034,692L1036,693L1036,700",17.5],["M258,699L241,696",17.26],["M1225,717L1224,715L1220,714L1221,725",17.4],["M1057,746L1058,763",17.03],["M1119,763L1126,765L1127,775",17.33],["M935,825L935,827L950,830",17.3],["M1297,865L1299,862L1306,865L1307,862L1304,862",17.38],["M1239,869L1245,871L1256,871",17.32],["M1262,875L1264,872L1266,872L1273,878L1273,880",16.83],["M840,935L838,936L838,939L835,939L831,942L832,946",17.36],["M848,998L849,999L847,1003L843,1003L841,999L838,999",17.36],["M1208,1011L1191,1012",17.03],["M603,1015L590,1015L590,1019",17.0],["M1354,1044L1371,1045",17.03],["M278,298L277,302L270,310L270,312",16.75],["M571,335L573,352",17.12],["M1092,556L1096,558L1096,561L1093,562L1092,566L1090,567",16.99],["M966,558L969,560L969,562L967,562L967,566L969,566L969,563",16.61],["M1311,676L1310,679L1311,681L1314,681L1314,685L1310,682",17.4],["M709,695L709,703L715,710",17.22],["M664,709L663,719L670,718",17.12],["M1051,718L1060,718L1065,720L1066,722",16.62],["M780,931L780,938L784,947",16.85],["M511,192L501,187L502,182",16.28],["M667,365L669,365L670,370L670,376L667,376",16.1],["M193,386L204,385L208,387",15.52],["M560,498L561,506L566,512",15.87],["M471,556L486,561",15.81],["M1006,556L1016,562L1018,562L1018,560",15.66],["M636,565L634,564L634,575L632,577",16.06],["M92,630L108,633",16.28],["M1126,641L1123,638L1120,638L1120,642L1116,644",15.71],["M1010,679L1010,681L1005,681L1005,690",16.0],["M1024,684L1024,679L1020,679L1021,676L1023,676L1024,678",16.4],["M934,718L934,702",16.0],["M1186,719L1186,735",16.0],["M1355,725L1352,723L1352,721L1355,721L1356,719L1351,718",15.94],["M1276,733L1274,728L1264,725",15.83],["M756,742L756,758",16.0],["M982,756L997,761",15.81],["M630,757L630,741",16.0],["M1345,772L1347,774L1347,779L1341,779L1341,781",15.83],["M1204,814L1198,816L1198,821L1203,821",16.32],["M958,825L957,826L962,830L966,830L968,826",16.29],["M1291,828L1291,844",16.0],["M852,888L848,888L848,883L854,880",15.71],["M661,924L656,924L656,929L662,929",16.0],["M1238,934L1248,934L1249,937L1246,938",16.32],["M887,992L886,1008",16.03],["M778,427L780,429L781,442",15.87],["M758,429L772,437",16.12],["M929,525L933,526L933,538",16.12],["M938,544L939,560",16.03],["M1033,674L1042,679L1040,684",15.68],["M857,680L857,696",16.0],["M575,729L591,732",16.28],["M1040,826L1043,828L1053,829L1054,831",15.89],["M1230,838L1237,838L1239,840L1241,840L1241,838L1239,838",15.83],["M752,911L751,914L747,916L747,918L753,919",15.72],["M547,215L542,213L538,209L539,205",15.17],["M856,390L868,399",15.0],["M152,420L152,435",15.0],["M594,469L594,465L597,465L604,469",15.06],["M550,473L550,475L555,475L555,478L552,478L552,476",15.0],["M557,480L557,478L559,477L569,482",15.42],["M557,492L557,507",15.0],["M578,504L575,504L574,507L578,509L579,513",14.76],["M729,546L743,552",15.23],["M582,563L589,566L589,573",14.62],["M790,590L790,605",15.0],["M970,595L970,580",15.0],["M235,627L235,642",15.0],["M887,635L890,640L894,641L896,646",15.34],["M948,638L942,634L937,633L938,631",14.55],["M733,647L747,652",14.87],["M694,664L693,657L687,656L686,654",15.39],["M1014,681L1016,682L1016,685L1012,691L1009,691",15.45],["M1376,699L1376,714",15.0],["M958,705L972,709",14.56],["M1355,707L1365,718",14.87],["M1151,734L1153,741L1149,740L1150,737",14.57],["M1003,735L1002,725L1004,721",14.52],["M1089,757L1089,764L1097,766",15.25],["M785,777L783,780L779,780L779,783L775,785",15.08],["M789,779L792,782L792,786L794,786L797,790",15.24],["M1343,791L1341,793L1344,798L1346,798L1346,800L1344,801",14.9],["M875,798L876,801L879,802L888,801",15.38],["M948,825L943,824L939,819L939,816",14.5],["M1318,825L1314,824L1312,827L1319,830",15.34],["M1011,831L1011,829L1008,829L1009,825L1006,825L1007,828",15.29],["M1081,843L1084,843L1084,852L1081,853",15.16],["M1025,912L1025,919L1017,919",15.0],["M1399,1023L1399,1038",15.0],["M200,386L203,392L209,398",15.19],["M1152,666L1156,670L1156,679",14.66],["M762,668L762,674L766,673L765,668",15.22],["M120,687L135,690",15.3],["M1059,692L1073,698",15.23],["M1038,719L1036,720L1036,726L1038,726L1039,721",15.34],["M1026,727L1035,731L1037,730L1037,727",15.08],["M983,848L983,854L992,856",15.22],["M1410,868L1409,883",15.03],["M857,978L856,993",15.03],["M660,1014L660,1029",15.0],["M277,290L279,297L284,293",13.68],["M683,365L683,369L679,378",13.85],["M119,370L122,379L126,380",13.61],["M449,376L462,382",14.32],["M987,484L987,482L990,482L997,487",13.6],["M1084,550L1084,548L1081,548L1080,552L1084,554",13.6],["M420,564L433,568",13.6],["M1234,595L1234,598L1230,601L1230,603L1232,603L1233,601",14.24],["M849,598L846,597L846,608",14.16],["M1154,609L1153,613L1150,613L1145,609",13.53],["M720,622L733,627",13.93],["M895,633L899,634L900,644",14.17],["M1189,637L1189,639L1184,638L1182,636L1184,632",14.4],["M1125,644L1128,646L1131,645L1132,648L1136,649",14.05],["M1210,659L1213,660L1213,658L1217,657L1218,662",14.38],["M973,669L973,675L967,670",13.81],["M1001,674L1002,662L1000,663",14.28],["M805,690L805,704",14.0],["M812,703L812,717",14.0],["M1110,723L1109,721L1111,720L1118,721L1120,723",14.37],["M756,725L756,739",14.0],["M510,734L511,744L515,745",14.17],["M1290,750L1290,755L1294,756L1294,761",14.12],["M849,763L849,777",14.0],["M630,765L630,779",14.0],["M686,778L684,778L685,781L694,782",14.22],["M1071,809L1071,823",14.0],["M1017,832L1020,828L1023,828L1023,830L1021,830L1020,832",14.24],["M1035,832L1032,831L1032,842",14.16],["M1288,874L1286,875L1286,877L1290,881L1292,881L1293,879",14.13],["M1433,884L1431,891L1429,891L1429,893L1431,892",13.52],["M826,932L825,938L822,938L822,943",14.08],["M898,955L894,958L897,962L897,964L895,964",14.0],["M838,989L838,987L840,986L839,982L837,982L838,986",14.48],["M1214,1021L1214,1031L1218,1031",14.0],["M505,1076L491,1077",14.04],["M492,275L492,289",14.0],["M259,355L267,355L267,358L265,360",13.83],["M638,356L638,370",14.0],["M255,471L255,477L247,476",14.06],["M857,517L857,523L861,522L860,518",14.25],["M630,579L630,593",14.0],["M709,595L709,609",14.0],["M1205,652L1211,657L1214,657L1216,656L1215,655",14.46],["M1318,678L1319,686L1322,685L1323,682",14.39],["M890,692L892,706",14.14],["M1188,696L1188,710",14.0],["M938,708L938,722",14.0],["M804,774L818,777",14.32],["M1108,784L1108,786L1120,789",14.37],["M1253,830L1260,831L1261,834L1259,834L1258,832",14.47],["M1226,839L1229,839L1226,843L1224,843L1224,841L1226,840",14.24],["M1108,841L1122,844",14.32],["M831,1014L823,1025",13.6],["M827,390L830,384L832,384L832,380",12.71],["M918,503L929,510",13.04],["M914,520L907,517L906,512",12.71],["M503,534L515,538",12.65],["M705,541L706,545L708,546L710,546L710,541",13.36],["M666,542L665,548L659,551",12.79],["M781,572L783,572L783,570L786,570L787,573L784,573",13.16],["M1119,575L1118,573L1115,573L1114,577L1118,578",13.48],["M1253,615L1251,616L1252,621L1249,620L1250,618",12.73],["M1127,627L1123,624L1120,624L1120,622L1123,623",13.16],["M1272,632L1269,633L1270,638L1268,638L1268,635",13.26],["M948,653L946,654L946,659L941,661",12.62],["M1272,657L1266,654L1265,657L1268,658",13.03],["M729,665L741,669",12.65],["M1297,666L1300,660L1302,662L1304,662L1303,661",12.95],["M1140,668L1140,660L1143,660L1144,662",13.24],["M1327,678L1336,687",12.73],["M1382,686L1378,679L1374,676",13.06],["M659,687L655,688L655,686L657,683L660,683",12.73],["M1294,689L1295,702",13.04],["M1372,698L1372,685",13.0],["M1140,704L1140,717",13.0],["M1372,704L1372,717",13.0],["M984,714L996,718",12.65],["M1352,760L1349,764L1351,766L1353,766L1354,764L1355,765",13.48],["M1201,793L1201,806",13.0],["M1260,815L1260,828",13.0],["M1326,817L1336,821L1337,823",13.01],["M1196,874L1193,873L1192,870L1199,869",13.4],["M1190,877L1199,877L1199,873",13.0],["M1256,888L1269,891",13.34],["M1337,946L1343,949L1345,949L1345,947L1343,947",12.71],["M783,949L785,948L785,950L787,951L787,953L785,953L784,951",12.71],["M1283,950L1284,937",13.04],["M829,973L821,983",12.81],["M829,994L828,997L824,1000L827,1004",13.16],["M702,290L710,294L712,297",12.55],["M591,338L593,338L593,343L590,342L590,339",13.16],["M253,358L252,361L254,363L257,363L258,367",13.11],["M270,432L268,439L264,443",12.94],["M939,543L943,543L945,544L945,546L941,544",12.71],["M877,603L889,608",13.0],["M1088,620L1087,626L1091,627L1091,624",13.21],["M1162,664L1163,667L1161,669L1161,672L1163,672L1163,670",12.99],["M909,674L905,681L907,686",13.45],["M1199,675L1197,688",13.15],["M1175,680L1178,683L1178,692",13.24],["M976,694L974,707",13.15],["M1236,771L1247,777",12.53],["M1169,791L1169,804",13.0],["M1242,833L1245,833L1244,835L1240,835L1240,837L1242,836",13.47],["M1243,928L1243,932L1252,931",13.06],["M793,932L795,937L795,940L793,940L793,937",13.39],["M1284,978L1284,991",13.0],["M672,999L674,1012",13.15],["M923,1006L923,1019",13.0],["M513,190L518,179",12.08],["M267,329L271,333L276,329",12.06],["M478,341L489,346",12.08],["M133,359L135,362L143,364",11.85],["M640,386L640,374",12.0],["M640,388L640,400",12.0],["M632,445L632,457",12.0],["M41,516L39,518L45,525",12.05],["M698,518L698,515L693,512L694,510L695,511",12.48],["M466,529L477,533",11.7],["M693,558L701,567",12.04],["M766,568L777,573",12.08],["M986,627L997,632",12.08],["M449,648L461,651",12.37],["M959,659L958,671",12.04],["M1279,669L1278,667L1281,666L1286,670",11.8],["M1277,672L1277,675L1283,679L1282,681",12.45],["M455,704L467,706",12.17],["M893,718L894,730",12.04],["M119,727L118,715",12.04],["M1123,731L1126,731L1127,740",12.06],["M1347,736L1347,748",12.0],["M1201,741L1201,729",12.0],["M1333,775L1331,774L1332,772L1335,772L1338,775",11.71],["M1331,827L1327,826L1325,829L1323,829L1323,831",11.73],["M1204,828L1198,829L1198,823",12.08],["M1071,843L1075,840L1076,845L1078,845",12.1],["M1119,854L1118,852L1115,852L1115,849L1117,849L1117,851",12.24],["M860,887L860,881L862,879L865,881",12.43],["M984,895L981,895L981,901L984,901",12.0],["M1026,908L1025,896",12.04],["M1225,932L1220,932L1220,925",12.0],["M1404,973L1405,961",12.04],["M1174,1003L1178,1003L1178,995",12.0],["M605,250L604,253L611,258",11.76],["M494,435L495,438L497,438L497,440L501,443",12.16],["M117,440L119,444L126,446",11.75],["M1102,569L1104,569L1105,572L1103,576L1101,576",11.63],["M980,574L980,586",12.0],["M514,585L514,594L517,593",12.16],["M1121,625L1122,630L1120,637",12.38],["M849,648L849,655L847,660",12.39],["M1198,771L1204,772L1204,776L1202,777",12.32],["M900,914L900,926",12.0],["M614,256L619,246",11.18],["M244,323L244,320L246,320L250,324",10.66],["M179,382L184,381L189,384",10.93],["M479,439L489,443",10.77],["M121,460L122,455L128,456",11.18],["M900,534L900,545",11.0],["M658,536L657,542L652,544",11.47],["M812,555L811,566",11.05],["M722,563L716,561L716,566",11.32],["M770,564L780,568",10.77],["M1157,591L1166,598",11.4],["M970,622L970,633",11.0],["M1197,623L1206,630",11.4],["M1220,623L1220,626L1222,626L1225,631",10.83],["M1055,635L1055,641L1050,639",11.39],["M720,643L731,646",11.4],["M1104,671L1104,676L1102,676L1102,678L1104,677",11.24],["M728,684L739,687",11.4],["M1020,685L1021,696",11.05],["M1315,716L1315,727",11.0],["M1085,717L1085,715L1078,710",10.6],["M188,720L199,721",11.05],["M1026,730L1026,728L1021,728L1022,726L1024,727",11.47],["M1351,740L1352,751",11.05],["M233,744L232,733",11.05],["M504,744L505,746L514,747",11.29],["M577,744L577,749L580,751L580,753",10.61],["M1118,752L1129,755",11.4],["M314,757L312,746",11.18],["M703,762L703,764L696,769",10.6],["M644,770L643,772L652,774",11.46],["M682,773L684,762",11.18],["M1184,777L1180,779L1180,786",11.47],["M872,800L876,810",10.77],["M1139,834L1139,845",11.0],["M982,874L993,875",11.05],["M1224,884L1216,883L1215,880",11.22],["M1405,1030L1405,1041",11.0],["M242,1045L253,1045",11.0],["M546,458L552,461L552,465",10.71],["M79,469L72,475L72,477",11.22],["M845,477L850,478L850,484",11.1],["M486,500L483,502L483,504L487,508",11.26],["M675,519L680,519L682,521L682,524",10.83],["M1140,589L1133,598",11.4],["M1055,605L1057,605L1058,607L1057,609L1055,609L1055,606",11.47],["M747,612L748,623",11.05],["M1173,628L1181,635",10.63],["M684,646L684,649L679,655",10.81],["M1129,647L1129,652L1132,652L1132,649",11.0],["M659,672L656,677L657,682",10.93],["M1025,815L1031,818L1031,822",10.71],["M1308,834L1308,837L1311,837L1309,842",11.39],["M774,859L779,861L781,861L781,859L779,859",11.39],["M1188,861L1188,869L1191,870",11.16],["M1203,871L1203,882",11.0],["M981,883L981,894",11.0],["M1048,951L1048,962",11.0],["M288,161L288,151",10.0],["M305,290L295,291",10.05],["M479,293L488,297",9.85],["M127,389L123,380",9.85],["M478,390L487,394",9.85],["M176,396L186,399",10.44],["M423,414L432,418",9.85],["M156,438L165,443",10.3],["M116,486L117,483L120,483L123,486",10.4],["M620,499L629,503",9.85],["M883,503L892,508",10.3],["M822,506L831,510",9.85],["M1028,518L1028,524L1030,525L1030,527",10.24],["M498,521L495,531",10.44],["M615,540L624,544",9.85],["M451,549L461,552",10.44],["M576,564L582,565L584,568",9.69],["M795,596L794,601L797,605",10.1],["M1083,604L1092,609",10.3],["M860,614L860,618L854,616",10.32],["M965,617L965,627",10.0],["M1029,619L1029,629",10.0],["M634,621L634,631",10.0],["M493,625L493,635",10.0],["M748,627L748,632L743,631",10.1],["M1140,635L1148,641",10.0],["M929,645L928,655",10.05],["M1147,652L1151,652L1151,658",10.0],["M1292,662L1294,662L1296,660L1296,657L1298,656",10.06],["M962,665L962,668L966,674",10.21],["M630,668L630,678",10.0],["M748,674L748,684",10.0],["M467,678L477,680",10.2],["M1025,688L1024,698",10.05],["M1172,702L1172,697L1177,697",10.0],["M1295,704L1295,714",10.0],["M1074,708L1075,707L1076,709L1082,709",9.65],["M1017,726L1010,724L1009,722",9.52],["M1341,736L1341,746",10.0],["M644,749L644,751L647,752L649,756",9.63],["M979,795L979,785",10.0],["M1076,799L1076,809",10.0],["M938,810L940,812L940,816L943,817",9.99],["M1325,810L1324,804L1328,804",10.08],["M1343,820L1341,825L1345,826",9.51],["M1332,831L1340,831L1340,833",10.0],["M1061,851L1071,853",10.2],["M1337,854L1336,853L1338,851L1343,854",10.07],["M771,865L777,864L778,868",10.21],["M1253,876L1256,881L1260,881",9.83],["M1245,893L1247,898L1252,897",10.48],["M1336,909L1340,909L1341,913L1343,913",10.12],["M829,948L828,950L831,952L830,956",9.96],["M1343,957L1352,962",10.3],["M1352,973L1342,975",10.2],["M847,994L844,991L845,987L843,987",10.37],["M1200,1001L1203,1001L1203,994",10.0],["M130,1024L130,1028L124,1027",10.08],["M1378,1046L1388,1046",10.0],["M180,290L189,294",9.85],["M149,381L150,382L145,389",10.02],["M854,394L854,398L848,396",10.32],["M879,507L887,513",10.0],["M906,522L905,532",10.05],["M1001,559L1003,559L1004,562L1001,562L1000,560",10.4],["M1023,590L1031,596",10.0],["M1057,593L1059,594L1059,597L1056,596L1056,594",10.4],["M1175,662L1174,672",10.05],["M1329,697L1333,697L1333,700L1335,698",9.83],["M565,724L575,726",10.2],["M1104,738L1110,739L1110,741L1112,741",10.08],["M1215,762L1215,772",10.0],["M968,810L978,812",10.2],["M815,930L817,931L818,936L821,937",10.5],["M863,966L861,969L859,969L859,971L861,970",9.84],["M835,973L836,979L839,981",9.69],["M1211,981L1211,983L1216,983L1216,986",10.0],["M367,185L375,189",8.94],["M585,205L592,210",8.6],["M700,314L696,312L695,308",8.6],["M576,452L576,461",9.0],["M249,454L246,462",8.54],["M971,482L972,479L974,479L974,475",9.16],["M866,485L866,488L860,486",9.32],["M92,488L83,488",9.0],["M87,491L90,493L88,498",8.99],["M524,498L525,495L531,493",9.49],["M575,498L584,501",9.49],["M18,523L14,531",8.94],["M786,557L781,549",9.43],["M1051,584L1059,589",9.43],["M165,587L174,589",9.22],["M666,596L674,599",8.54],["M900,598L900,607",9.0],["M860,609L868,612",8.54],["M1088,616L1089,613L1091,614L1091,618",9.4],["M630,621L630,630",9.0],["M1259,623L1257,627L1258,629L1260,629",8.71],["M908,624L916,627",8.54],["M838,637L838,634L844,632",9.32],["M942,639L938,638L937,640L934,640",9.36],["M1275,641L1272,644L1268,642",8.71],["M472,654L481,656",9.22],["M904,657L912,660",8.54],["M1006,673L1014,676",8.54],["M1290,679L1294,678L1296,682",8.6],["M1078,701L1087,704",9.49],["M916,706L925,709",9.49],["M1321,706L1323,704L1326,709",8.66],["M979,710L981,701",9.22],["M877,715L882,717L885,716",8.55],["M1206,727L1197,728",9.06],["M822,728L831,730",9.22],["M1254,730L1251,729L1251,732L1254,733",9.32],["M1064,731L1073,734",9.49],["M931,734L931,743",9.0],["M1057,735L1055,735L1054,738L1055,742",9.29],["M659,742L650,740",9.22],["M1158,746L1158,741L1160,741L1160,739",9.0],["M1312,758L1317,758L1319,761",8.61],["M651,759L656,766",8.6],["M700,773L700,776L696,780",8.66],["M1340,787L1337,786L1337,792",9.16],["M465,790L474,791",9.06],["M795,795L792,792L792,787",9.24],["M886,805L883,805L880,809L881,810",9.41],["M966,833L957,832",9.06],["M1054,842L1053,833",9.06],["M1404,844L1403,848L1398,849",9.22],["M1106,847L1112,854",9.22],["M1378,897L1376,901L1372,902",8.6],["M1215,903L1215,894",9.0],["M1325,960L1325,969",9.0],["M1152,965L1152,974",9.0],["M1402,965L1401,974",9.06],["M97,1026L106,1027",9.06],["M1341,1043L1350,1043",9.0],["M581,211L588,216",8.6],["M499,262L501,271",9.22],["M493,263L490,271",8.54],["M673,272L680,277",8.6],["M559,273L559,278L557,278L557,280",9.0],["M239,355L240,358L243,358L244,355",9.32],["M866,411L863,419",8.54],["M57,469L58,478",9.06],["M717,520L717,529",9.0],["M1044,527L1040,530L1039,534",9.12],["M1141,591L1143,592L1143,595L1139,594",9.36],["M896,615L905,618",9.49],["M1075,620L1082,625",8.6],["M1130,638L1132,639L1132,641L1129,641L1129,639",9.24],["M145,640L146,644L150,642",8.6],["M105,678L106,681L109,681L108,678",9.32],["M1236,687L1243,693",9.22],["M905,693L905,702",9.0],["M511,699L514,708",9.49],["M1237,719L1243,722L1243,724",8.71],["M969,732L970,737L966,736",9.22],["M671,739L672,741L665,741",9.24],["M1139,760L1139,769",9.0],["M1145,796L1145,798L1152,798",9.0],["M1036,940L1036,949",9.0],["M1084,999L1084,1008",9.0],["M244,275L244,283",8.0],["M216,306L212,307L212,305L214,305",8.12],["M282,327L286,328L286,330L284,329",8.36],["M777,336L783,341",7.81],["M576,378L576,386",8.0],["M43,433L46,433L46,435L49,436",8.16],["M797,449L799,449L803,453",7.66],["M529,483L528,486L524,488",7.63],["M891,498L885,492",8.49],["M781,523L781,531",8.0],["M493,541L491,543L493,548",8.21],["M755,562L756,567L759,567",8.1],["M762,571L762,563",8.0],["M768,578L775,582",8.06],["M634,587L633,579",8.06],["M1065,602L1059,601L1059,603",8.08],["M952,603L952,611",8.0],["M1239,613L1241,614L1244,609",8.07],["M1280,628L1286,634",8.49],["M630,637L630,645",8.0],["M929,643L929,635",8.0],["M1163,660L1163,663L1158,662",8.1],["M250,661L258,663",8.25],["M1178,669L1180,661",8.25],["M1038,679L1031,676",7.62],["M1316,695L1311,694L1310,697",8.26],["M1072,710L1072,718",8.0],["M974,714L976,716L975,721",7.93],["M1338,722L1341,721L1343,725",7.63],["M1123,723L1123,725L1125,725L1127,728",7.61],["M974,728L974,736",8.0],["M691,730L690,738",8.06],["M1311,731L1312,739",8.06],["M535,732L530,732L531,735",8.16],["M845,734L845,742",8.0],["M1060,736L1061,728",8.06],["M520,738L515,732",7.81],["M974,740L974,748",8.0],["M1090,745L1090,753",8.0],["M649,749L650,753L654,754",8.25],["M648,769L649,771L655,772",8.32],["M931,773L931,781",8.0],["M807,784L801,790",8.49],["M1224,785L1220,785L1220,789",8.0],["M737,799L729,800",8.06],["M795,799L803,800",8.06],["M1330,808L1328,808L1328,806L1332,804",8.47],["M1334,810L1332,813L1333,815L1335,815",7.84],["M1253,812L1252,816L1256,816",8.12],["M927,813L927,805",8.0],["M1286,815L1288,815L1289,813L1286,811",7.84],["M969,821L969,826L971,828",7.83],["M962,823L958,819L958,817",7.66],["M1252,825L1252,817",8.0],["M1019,835L1017,838L1013,839",7.73],["M1348,841L1348,839L1346,839L1343,842",8.24],["M1390,865L1388,865L1385,870",7.83],["M1276,866L1273,867L1273,870L1272,868",8.4],["M762,890L762,888L766,886L766,884",8.47],["M1329,891L1323,896",7.81],["M883,914L880,914L881,919",8.1],["M1269,917L1268,919L1262,918",8.32],["M1055,973L1055,981",8.0],["M1411,988L1419,988",8.0],["M1055,1002L1055,1010",8.0],["M1330,1052L1338,1052",8.0],["M545,188L545,196",8.0],["M594,319L596,327",8.25],["M712,388L717,389L717,392",8.1],["M174,410L172,414L169,413",7.63],["M384,421L380,424L379,427",8.16],["M763,477L770,481",8.06],["M857,498L864,501",7.62],["M693,503L696,506L696,508L694,509",8.48],["M585,519L588,519L588,521L585,520",8.16],["M957,520L956,521L960,522L961,524",7.77],["M627,546L627,548L621,550",8.32],["M595,583L595,591",8.0],["M518,584L521,591",7.62],["M1072,603L1072,611",8.0],["M927,628L928,631L930,631L931,628",8.32],["M1218,651L1216,654L1214,654L1215,652",7.84],["M899,670L900,678",8.06],["M670,683L669,685L671,686L672,683",7.63],["M709,714L713,715L713,719",8.12],["M1057,719L1064,722",7.62],["M1126,756L1126,764",8.0],["M1143,761L1143,769",8.0],["M1259,796L1263,796L1265,800",8.47],["M1149,844L1153,845L1155,848",7.73],["M241,877L241,879L245,879L246,877",8.24],["M1358,972L1360,974L1365,973",7.93],["M433,121L427,117",7.21],["M219,244L225,247",6.71],["M620,350L626,353",6.71],["M453,353L459,356",6.71],["M129,395L127,394L128,392L131,392",7.47],["M904,423L910,427",7.21],["M46,448L46,451L43,454",7.24],["M519,471L521,474L524,473",6.77],["M101,480L105,481L104,484",7.29],["M805,494L805,501",7.0]]};
+  var sketchPaths = [];
 
-  function mHash(x, y) {
-    var s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453123;
-    return s - Math.floor(s);
-  }
-  function mNoise2(x, y) {
-    var xi = Math.floor(x), yi = Math.floor(y);
-    var xf = x - xi, yf = y - yi;
-    var u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
-    var a = mHash(xi, yi), b = mHash(xi + 1, yi);
-    var c = mHash(xi, yi + 1), d = mHash(xi + 1, yi + 1);
-    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
-  }
-  function mFbm(x, y) {
-    var total = 0, amp = 0.5, freq = 1, max = 0;
-    for (var i = 0; i < 3; i++) { total += amp * mNoise2(x * freq, y * freq); max += amp; amp *= 0.5; freq *= 2; }
-    return total / max;
-  }
-  function mPattern(x, y) {
-    var warp = 1.6;
-    var q1 = mFbm(x, y), q2 = mFbm(x + 5.2, y + 1.3);
-    var r1 = mFbm(x + warp * q1 + 1.7, y + warp * q2 + 9.2);
-    var r2 = mFbm(x + warp * q1 + 8.3, y + warp * q2 + 2.8);
-    return mFbm(x + warp * r1, y + warp * r2);
-  }
-  function setupMarbleGrain() {
-    if (!marbleGrain) return;
-    var mdpr = Math.min(window.devicePixelRatio || 1, 2);
-    var w = marbleGrain.clientWidth, h = marbleGrain.clientHeight;
-    if (!w || !h) return;
-    marbleGrain.width = w * mdpr; marbleGrain.height = h * mdpr;
-    var ctx = marbleGrain.getContext('2d');
-    ctx.setTransform(mdpr, 0, 0, mdpr, 0, 0);
-    ctx.fillStyle = '#0c1410';
-    ctx.fillRect(0, 0, w, h);
-    ctx.globalAlpha = 0.03;
-    ctx.fillStyle = '#ffffff';
-    for (var i = 0; i < 500; i++) ctx.fillRect(Math.random() * w, Math.random() * h, 1, 1);
-  }
-  function buildMarbleContours() {
-    if (!marbleSvg || !marblePath) return;
-    var w = marbleSvg.clientWidth, h = marbleSvg.clientHeight;
-    if (!w || !h) return;
-    marbleSvg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
-    var aspect = w / h;
-    var nx = 150, ny = Math.max(60, Math.round(150 / aspect));
-    var S = 1.15;
-    var field = [], min = Infinity, max = -Infinity;
-    for (var j = 0; j <= ny; j++) {
-      var row = [];
-      for (var i = 0; i <= nx; i++) {
-        var x = (i / nx) * aspect * S, y = (j / ny) * S;
-        var v = mPattern(x, y);
-        row.push(v);
-        if (v < min) min = v;
-        if (v > max) max = v;
-      }
-      field.push(row);
+  var sketchGroup = null, sketchNext = 0;
+
+  // Stroke lengths are baked exactly into the data above (every stroke is a
+  // pure polyline, so the length is computed offline). Nothing here calls
+  // getTotalLength — that pass cost 1600 geometry computations, twice over,
+  // and was what made the build visible as a hitch mid-scroll.
+  function sketchChunk (limit) {
+    if (!sketchSvg || sketchNext >= SKETCH.strokes.length) return true;
+    var NS = 'http://www.w3.org/2000/svg';
+    if (!sketchGroup) {
+      sketchGroup = document.createElementNS(NS, 'g');
+      sketchGroup.setAttribute('fill', 'none');
+      sketchGroup.setAttribute('stroke', '#d9b25e');
+      sketchGroup.setAttribute('stroke-width', '1.6');
+      sketchGroup.setAttribute('stroke-linecap', 'round');
+      sketchGroup.setAttribute('stroke-linejoin', 'round');
+      sketchSvg.appendChild(sketchGroup);
     }
-    var cellW = w / nx, cellH = h / ny, K = 10, segs = [];
-    function clamp01(t) { return Math.min(1, Math.max(0, t)); }
-    function edgePt(name, i, j, v0, v1, v2, v3, level) {
-      if (name === 'T') { var t = clamp01(Math.abs(v1 - v0) < 1e-9 ? 0.5 : (level - v0) / (v1 - v0)); return [(i + t) * cellW, j * cellH]; }
-      if (name === 'R') { var t2 = clamp01(Math.abs(v2 - v1) < 1e-9 ? 0.5 : (level - v1) / (v2 - v1)); return [(i + 1) * cellW, (j + t2) * cellH]; }
-      if (name === 'B') { var t3 = clamp01(Math.abs(v2 - v3) < 1e-9 ? 0.5 : (level - v3) / (v2 - v3)); return [(i + t3) * cellW, (j + 1) * cellH]; }
-      var t4 = clamp01(Math.abs(v3 - v0) < 1e-9 ? 0.5 : (level - v0) / (v3 - v0)); return [i * cellW, (j + t4) * cellH];
+    var end = limit ? Math.min(SKETCH.strokes.length, sketchNext + limit) : SKETCH.strokes.length;
+    var frag = document.createDocumentFragment();
+    for (; sketchNext < end; sketchNext++) {
+      var s = SKETCH.strokes[sketchNext];
+      var p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', s[0]);
+      p.style.strokeDasharray = s[1];
+      p.style.strokeDashoffset = reduceMo ? 0 : s[1];   // rest fully retracted
+      frag.appendChild(p);
+      sketchPaths.push({ el: p, len: s[1] });
     }
-    for (var k = 1; k <= K; k++) {
-      var level = min + (max - min) * (k / (K + 1));
-      for (var jj = 0; jj < ny; jj++) {
-        for (var ii = 0; ii < nx; ii++) {
-          var v0 = field[jj][ii], v1 = field[jj][ii + 1], v2 = field[jj + 1][ii + 1], v3 = field[jj + 1][ii];
-          var idx = (v0 >= level ? 8 : 0) | (v1 >= level ? 4 : 0) | (v2 >= level ? 2 : 0) | (v3 >= level ? 1 : 0);
-          if (idx === 0 || idx === 15) continue;
-          var center = (v0 + v1 + v2 + v3) / 4, pairs;
-          switch (idx) {
-            case 1: pairs = [['L', 'B']]; break;
-            case 2: pairs = [['B', 'R']]; break;
-            case 3: pairs = [['L', 'R']]; break;
-            case 4: pairs = [['T', 'R']]; break;
-            case 5: pairs = center >= level ? [['T', 'R'], ['L', 'B']] : [['T', 'L'], ['B', 'R']]; break;
-            case 6: pairs = [['T', 'B']]; break;
-            case 7: pairs = [['T', 'L']]; break;
-            case 8: pairs = [['T', 'L']]; break;
-            case 9: pairs = [['T', 'B']]; break;
-            case 10: pairs = center >= level ? [['T', 'L'], ['B', 'R']] : [['T', 'R'], ['L', 'B']]; break;
-            case 11: pairs = [['T', 'R']]; break;
-            case 12: pairs = [['L', 'R']]; break;
-            case 13: pairs = [['B', 'R']]; break;
-            case 14: pairs = [['L', 'B']]; break;
-            default: pairs = [];
-          }
-          for (var p = 0; p < pairs.length; p++) {
-            var p1 = edgePt(pairs[p][0], ii, jj, v0, v1, v2, v3, level);
-            var p2 = edgePt(pairs[p][1], ii, jj, v0, v1, v2, v3, level);
-            segs.push('M' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) + 'L' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1));
-          }
-        }
-      }
-    }
-    marblePath.setAttribute('d', segs.join(''));
+    sketchGroup.appendChild(frag);
+    return sketchNext >= SKETCH.strokes.length;
   }
-  function playMarbleReveal() {
-    if (!marbleMask || reduceMo) return;
-    var dur = 6400, start = performance.now();
-    function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
-    function step(now) {
-      var p = Math.min(1, (now - start) / dur);
-      var e = ease(p);
-      var pos = -15 + e * 135;
-      var mask = 'linear-gradient(115deg, #000 0%, #000 ' + pos + '%, transparent ' + (pos + 20) + '%, transparent 100%)';
-      marbleMask.style.webkitMaskImage = mask;
-      marbleMask.style.maskImage = mask;
-      if (p < 1) requestAnimationFrame(step);
-      else { marbleMask.style.webkitMaskImage = 'none'; marbleMask.style.maskImage = 'none'; }
-    }
-    requestAnimationFrame(step);
+
+  function buildSketch () { sketchChunk(0); }          // finish whatever is left
+
+  // Spread the build over frames as soon as the page has loaded — on index the
+  // loader is still up at that point, so the work is invisible, and it sits on
+  // neither the critical path nor the scroll path.
+  function sketchBuildIdle () {
+    if (sketchChunk(200)) return;
+    requestAnimationFrame(sketchBuildIdle);
   }
-  if (marbleGrain && marbleSvg) {
-    setupMarbleGrain();
-    buildMarbleContours();
-    var marbleResizeTimer;
-    window.addEventListener('resize', function () {
-      clearTimeout(marbleResizeTimer);
-      marbleResizeTimer = setTimeout(function () { setupMarbleGrain(); buildMarbleContours(); }, 150);
+  if (sketchSvg) {
+    if (document.readyState === 'complete') sketchBuildIdle();
+    else window.addEventListener('load', sketchBuildIdle);
+  }
+
+  function playSketchReveal () {
+    if (!sketchSvg || reduceMo || !sketchPaths.length) return;
+    var DURATION = 8000;                       // ms for the whole drawing pass
+    var OVERLAP  = 0.92;                       // <1 lets strokes overlap slightly
+    var speed = SKETCH.total / DURATION;       // px per ms — constant pen speed
+    var cum = 0;
+    sketchPaths.forEach(function (p) {
+      var anim = p.el.animate(
+        [{ strokeDashoffset: p.len }, { strokeDashoffset: 0 }],
+        { duration: Math.max(90, p.len / speed), delay: (cum / speed) * OVERLAP, easing: 'linear', fill: 'forwards' }
+      );
+      anim.onfinish = function () { p.el.style.strokeDashoffset = 0; };
+      cum += p.len;
     });
   }
 
   if (introStrip) {
+    // Safety net: the chunked build normally finishes during the loader, but
+    // if a visitor reaches the section before it has, finish the remainder
+    // here rather than revealing a half-built drawing.
+    var sketchWarm = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      buildSketch();
+      sketchWarm.disconnect();
+    }, { rootMargin: '100% 0px' });
+    sketchWarm.observe(introStrip);
+
     // Reveal once when the section enters viewport
     var introObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
           introStrip.classList.add('revealed');
-          playMarbleReveal();
+          buildSketch();                 // no-op if the warm pass already ran
+          playSketchReveal();
           introObs.disconnect();
         }
       });
@@ -3093,32 +2974,17 @@ body.menu-open nav.top { transform: none !important; }
     introObs.observe(introStrip);
   }
 
-  // Parallax — drives --parallax-y on the .intro-strip itself so both
-  // photos in the diptych can read from it (CSS picks different multipliers).
-  if (introStrip && !reduceMo) {
-    var pTicking = false;
-    function parallax() {
-      var rect = introStrip.getBoundingClientRect();
-      var vh   = window.innerHeight;
-      var c    = rect.top + rect.height / 2 - vh / 2;
-      var y    = Math.max(-80, Math.min(80, c * -0.12));
-      introStrip.style.setProperty('--parallax-y', y.toFixed(1));
-      pTicking = false;
-    }
-    window.addEventListener('scroll', function () {
-      if (!pTicking) { requestAnimationFrame(parallax); pTicking = true; }
-    }, { passive: true });
-    parallax();
-  }
-
-  // Scroll-fill (tresmarescapital-style): the headline + both deck paragraphs
-  // start dim and fill to full, word by word, scrubbed to the block's scroll
-  // progress — and stay filled once passed. One ordered sequence: title words
-  // first, then the two decks. GSAP owns opacity; CSS base stays 1 so the text
-  // is fully readable with no JS / reduced motion.
+  // Scroll-fill (tresmarescapital-style): the headline, both deck paragraphs
+  // and the meta row start dim and fill to full, word by word, scrubbed to the
+  // block's scroll progress — and stay filled once passed. One ordered
+  // sequence in document order: title words, the two decks, then the meta row
+  // last, so the row only begins lighting once the decks are through. GSAP
+  // owns opacity; CSS base stays 1 so the text is fully readable with no JS /
+  // reduced motion.
+  whenLibsReady(function () {
   if (introStrip && window.gsap && window.ScrollTrigger && !reduceMo) {
     gsap.registerPlugin(ScrollTrigger);
-    var fillWords = introStrip.querySelectorAll('h2 .w, .deck .rw');
+    var fillWords = introStrip.querySelectorAll('h2 .w, .deck .rw, .intro-meta .rw');
     var emWord    = introStrip.querySelector('h2 .w.em-word');
     if (fillWords.length) {
       gsap.set(fillWords, { opacity: 0.16 });
@@ -3132,7 +2998,10 @@ body.menu-open nav.top { transform: none !important; }
         scrollTrigger: {
           trigger: introStrip.querySelector('.intro-text'),
           start: 'top 96%',                 // begins earlier, as the block enters
-          end: 'bottom 60%',
+          // Runs through to the meta row so the extra words get their own
+          // scroll distance instead of compressing the deck's fill.
+          endTrigger: introStrip.querySelector('.intro-meta'),
+          end: 'bottom 70%',
           scrub: 1.1,                       // more inertia → smoother catch-up
           // Light the gold underline on "stories," once the title is mostly lit.
           onUpdate: function (self) {
@@ -3142,6 +3011,7 @@ body.menu-open nav.top { transform: none !important; }
       });
     }
   }
+  });
 
 
   // Toggle nav.scrolled past the first 40px of scroll — opacity/background
@@ -3371,7 +3241,42 @@ body.classList.toggle('in-cinema', e.isIntersecting);
 // a keyed Stadia/Mapbox layer before a high-traffic commercial launch.
 (function () {
   var el = document.getElementById('neighMap');
-  if (!el || typeof L === 'undefined') return;
+  if (!el) return;
+
+  /* Leaflet's CSS + JS (~45 KB, third-party CDN) used to block first paint for
+     a map that sits far below the fold on both pages. They now land only once
+     the section is within two viewports, then the map builds. */
+  function loadLeaflet (done) {
+    if (typeof L !== 'undefined') { done(); return; }
+    if (window.__leafletQueue) { window.__leafletQueue.push(done); return; }
+    window.__leafletQueue = [done];
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    css.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
+    css.crossOrigin = '';
+    document.head.appendChild(css);
+    var js = document.createElement('script');
+    js.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    js.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
+    js.crossOrigin = '';
+    js.onload = js.onerror = function () {
+      var q = window.__leafletQueue || [];
+      window.__leafletQueue = null;
+      q.forEach(function (f) { f(); });
+    };
+    document.head.appendChild(js);
+  }
+
+  var mapWarm = new IntersectionObserver(function (entries) {
+    if (!entries[0].isIntersecting) return;
+    mapWarm.disconnect();
+    loadLeaflet(initMap);
+  }, { rootMargin: '200% 0px' });
+  mapWarm.observe(el);
+
+  function initMap () {
+  if (typeof L === 'undefined') return;
 
   var HOTEL = [47.4988, 19.0598];
   var places = [
@@ -3436,6 +3341,7 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     });
   }, { threshold: 0.1 });
   io.observe(el);
+  }
 })();
 }());
 </script>
@@ -3490,6 +3396,7 @@ body.classList.toggle('in-cinema', e.isIntersecting);
    blended (drawImage × globalAlpha) so the scrub never visibly "steps",
    and ScrollTrigger's scrub easing adds the Apple-style inertia. */
 (function () {
+  function start () {
   var scene = document.querySelector('.bk-coffee-scene');
   var stage = scene && scene.querySelector('.bk-coffee-stage');
   var canvas = document.getElementById('bkCoffeeCanvas');
@@ -3636,6 +3543,8 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     });
   }, { rootMargin: '300% 0px' });
   warm.observe(scene);
+  }
+  whenLibsReady(start);
 })();
 </script>
 
@@ -3796,6 +3705,25 @@ body.classList.toggle('in-cinema', e.isIntersecting);
       var href = a.href;
       document.body.classList.add('page-leaving');
       setTimeout(function () { location.href = href; }, 540);
+    });
+
+    // Prefetch on intent. The sweep panel runs 520ms before navigating, so a
+    // page requested at hover/focus time is usually already in cache when the
+    // navigation fires — the next page then paints instantly behind the panel.
+    var prefetched = {};
+    function prefetch (href) {
+      if (prefetched[href]) return;
+      prefetched[href] = 1;
+      var l = document.createElement('link');
+      l.rel = 'prefetch';
+      l.href = href;
+      document.head.appendChild(l);
+    }
+    ['mouseover', 'focusin', 'touchstart'].forEach(function (ev) {
+      document.addEventListener(ev, function (e) {
+        var a = e.target.closest && e.target.closest('a[href]');
+        if (a && transitable(a)) prefetch(a.href);
+      }, { passive: true, capture: true });
     });
   }
 

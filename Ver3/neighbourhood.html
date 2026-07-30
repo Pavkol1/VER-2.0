@@ -27,7 +27,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <!-- Leaflet (interactive neighbourhood map) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
 :root {
   --ink:     #0B1410;
@@ -622,7 +621,6 @@ body.menu-open nav.top { transform: none !important; }
 </script>
 
 <!-- Leaflet library — must load before the init IIFE below uses global L. -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
 (function () {
@@ -661,7 +659,42 @@ body.menu-open nav.top { transform: none !important; }
 // a keyed Stadia/Mapbox layer before a high-traffic commercial launch.
 (function () {
   var el = document.getElementById('neighMap');
-  if (!el || typeof L === 'undefined') return;
+  if (!el) return;
+
+  /* Leaflet's CSS + JS (~45 KB, third-party CDN) used to block first paint for
+     a map that sits far below the fold on both pages. They now land only once
+     the section is within two viewports, then the map builds. */
+  function loadLeaflet (done) {
+    if (typeof L !== 'undefined') { done(); return; }
+    if (window.__leafletQueue) { window.__leafletQueue.push(done); return; }
+    window.__leafletQueue = [done];
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    css.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
+    css.crossOrigin = '';
+    document.head.appendChild(css);
+    var js = document.createElement('script');
+    js.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    js.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
+    js.crossOrigin = '';
+    js.onload = js.onerror = function () {
+      var q = window.__leafletQueue || [];
+      window.__leafletQueue = null;
+      q.forEach(function (f) { f(); });
+    };
+    document.head.appendChild(js);
+  }
+
+  var mapWarm = new IntersectionObserver(function (entries) {
+    if (!entries[0].isIntersecting) return;
+    mapWarm.disconnect();
+    loadLeaflet(initMap);
+  }, { rootMargin: '200% 0px' });
+  mapWarm.observe(el);
+
+  function initMap () {
+  if (typeof L === 'undefined') return;
 
   var HOTEL = [47.4988, 19.0598];
   var places = [
@@ -724,13 +757,14 @@ body.menu-open nav.top { transform: none !important; }
     });
   }, { threshold: 0.1 });
   io.observe(el);
+  }
 })();
 }());
 </script>
 
 <!-- GSAP + ScrollTrigger (vendored, free for commercial use) -->
-<script src="assets/vendor/gsap.min.js"></script>
-<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/gsap.min.js" defer></script>
+<script src="assets/vendor/ScrollTrigger.min.js" defer></script>
 <script>
 /* Shared GSAP reveals — heading rise + block fade-up, Lenis-synced, motion-safe.
    Hard-skips every zone the site already animates so nothing double-fires. */
@@ -819,6 +853,25 @@ body.menu-open nav.top { transform: none !important; }
       var href = a.href;
       document.body.classList.add('page-leaving');
       setTimeout(function () { location.href = href; }, 540);
+    });
+
+    // Prefetch on intent. The sweep panel runs 520ms before navigating, so a
+    // page requested at hover/focus time is usually already in cache when the
+    // navigation fires — the next page then paints instantly behind the panel.
+    var prefetched = {};
+    function prefetch (href) {
+      if (prefetched[href]) return;
+      prefetched[href] = 1;
+      var l = document.createElement('link');
+      l.rel = 'prefetch';
+      l.href = href;
+      document.head.appendChild(l);
+    }
+    ['mouseover', 'focusin', 'touchstart'].forEach(function (ev) {
+      document.addEventListener(ev, function (e) {
+        var a = e.target.closest && e.target.closest('a[href]');
+        if (a && transitable(a)) prefetch(a.href);
+      }, { passive: true, capture: true });
     });
   }
 
