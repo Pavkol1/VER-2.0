@@ -2935,7 +2935,7 @@ window.whenLibsReady = function (fn) {
 
   function playSketchReveal () {
     if (!sketchSvg || reduceMo || !sketchPaths.length) return;
-    var DURATION = 8000;                       // ms for the whole drawing pass
+    var DURATION = 4000;                       // ms for the whole drawing pass
     var OVERLAP  = 0.92;                       // <1 lets strokes overlap slightly
     var speed = SKETCH.total / DURATION;       // px per ms — constant pen speed
     var cum = 0;
