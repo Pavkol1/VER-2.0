@@ -1411,7 +1411,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 /* BREAKFAST */
 .bk-coffee-scene {
   position: relative;
-  min-height: 430vh;
+  min-height: 1200vh;
   background: #0B0907;
   color: var(--paper);
 }
@@ -1426,7 +1426,11 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .bk-photo-bg,
 .bk-coffee-canvas,
+.bk-coffee-video,
+.bk-danube-video,
 .dn-photo,
+.dn-sky-video,
+.dn-sky,
 .bk-scene-veil {
   position: absolute;
   inset: 0;
@@ -1440,21 +1444,55 @@ body:not(.page-home) { --logo-init-p: 1; }
   filter: brightness(var(--bk-photo-brightness, 0.82)) saturate(0.92);
   opacity: var(--bk-photo-opacity, 1);
 }
+/* Three stages. The pour is still a scrubbed frame sequence — you pour the
+   coffee by scrolling, and abstract liquid forgives close inspection. The
+   surface it settles into is a seamless ping-pong loop that holds for as long
+   as the reader stays with the facts, and the morph to the Danube plays once
+   at its own pace: scrubbing that one let people freeze on any frame and
+   study the generated architecture. */
 .bk-coffee-canvas {
   z-index: 1;
   display: block;
   opacity: var(--bk-canvas-opacity, 0);
 }
-.dn-photo {
+.bk-coffee-video {
   z-index: 2;
+  object-fit: cover;
+  opacity: var(--bk-loop-opacity, 0);
+}
+.bk-danube-video {
+  z-index: 3;
+  object-fit: cover;
+  opacity: var(--bk-trans-opacity, 0);
+  transition: opacity 0.6s var(--ease);
+}
+.dn-photo {
+  z-index: 4;
   background: url('assets/brand/danube-budapest.webp') center / cover no-repeat;
   opacity: var(--dn-photo-opacity, 0);
+  transition: opacity 0.9s var(--ease);
+}
+/* The crane up to the sky is a real shot: it opens on this same river frame,
+   lifts until the city has left the bottom of frame, and settles on cloud.
+   Its own last frame is what .dn-sky holds afterwards, so the freeze at the
+   end is invisible. */
+.dn-sky-video {
+  z-index: 5;
+  object-fit: cover;
+  opacity: var(--dn-skyclip-opacity, 0);
+  transition: opacity 0.7s var(--ease);
+}
+.dn-sky {
+  z-index: 6;
+  background: url('assets/brand/sky-evening.webp') center / cover no-repeat;
+  opacity: var(--dn-sky-opacity, 0);
+  transition: opacity 1.3s var(--ease);
 }
 /* One constant veil above every media layer — photo, canvas and Danube final
    all sit under the same vignette, so there is no brightness/edge jump when
    one layer crossfades into the next. */
 .bk-scene-veil {
-  z-index: 3;
+  z-index: 7;
   pointer-events: none;
   background:
     radial-gradient(95% 80% at 50% 42%, rgba(11,9,7,0.04) 0%, rgba(11,9,7,0.5) 74%, rgba(11,9,7,0.8) 100%),
@@ -1463,7 +1501,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .bk-scene-grain {
   position: absolute;
   inset: 0;
-  z-index: 4;
+  z-index: 8;
   pointer-events: none;
   opacity: 0.14;
   mix-blend-mode: soft-light;
@@ -1475,14 +1513,14 @@ body:not(.page-home) { --logo-init-p: 1; }
 .bk-hero-copy,
 .bk-coffee-content {
   position: absolute;
-  z-index: 5;
+  z-index: 9;
   left: clamp(24px, 6vw, 96px);
   right: clamp(24px, 6vw, 96px);
   color: var(--paper);
 }
 .dn-content {
   position: absolute;
-  z-index: 5;
+  z-index: 9;
   left: clamp(24px, 6vw, 96px);
   right: clamp(24px, 6vw, 96px);
   bottom: clamp(48px, 7vh, 96px);
@@ -1492,13 +1530,37 @@ body:not(.page-home) { --logo-init-p: 1; }
   pointer-events: none;
 }
 .dn-content .plate-id { margin-bottom: 24px; }
+/* The district list and the map ride the same Danube frame — the titles hand
+   over to them in place rather than dropping the reader onto a flat panel. */
+.dn-detail {
+  position: absolute;
+  z-index: 9;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  padding: clamp(88px, 12vh, 140px) clamp(24px, 6vw, 96px) clamp(48px, 7vh, 88px);
+  opacity: var(--dn-detail-opacity, 0);
+  transform: translateY(var(--dn-detail-y, 26px));
+  pointer-events: none;
+}
+.dn-detail .neigh-grid { margin-top: 0; align-items: center; }
+.dn-detail .neigh-map { aspect-ratio: auto; height: min(58vh, 540px); }
+.dn-detail .ix > * { border-top-color: rgba(255,255,255,0.2); }
+@media (max-width: 1100px) {
+  .dn-detail .neigh-grid { grid-template-columns: 1fr; gap: 24px; }
+  .dn-detail .neigh-map { height: min(38vh, 320px); }
+}
 /* Static fallback (touch / narrow / reduced-motion): the cinematic stage
    collapses into two stacked editorial blocks with real backgrounds. */
 body.bk-static .bk-coffee-scene { min-height: 0; }
 body.bk-static .bk-coffee-stage { position: relative; height: auto; min-height: 0; }
 body.bk-static .bk-photo-bg,
 body.bk-static .bk-coffee-canvas,
+body.bk-static .bk-coffee-video,
+body.bk-static .bk-danube-video,
 body.bk-static .dn-photo,
+body.bk-static .dn-sky-video,
+body.bk-static .dn-sky,
 body.bk-static .bk-scene-veil,
 body.bk-static .bk-hero-copy { display: none; }
 body.bk-static .bk-coffee-content {
@@ -1517,7 +1579,7 @@ body.bk-static .dn-content {
   opacity: 1;
   pointer-events: auto;
   padding: clamp(110px, 22vw, 180px) clamp(24px, 6vw, 96px) clamp(48px, 8vw, 80px);
-  background: linear-gradient(180deg, rgba(11,9,7,0.42), rgba(11,9,7,0.72)), url('assets/brand/danube-budapest.webp') center / cover no-repeat;
+  background: linear-gradient(180deg, rgba(11,9,7,0.42), rgba(11,9,7,0.72)), url('assets/brand/sky-evening.webp') center / cover no-repeat;
 }
 .bk-hero-copy {
   bottom: clamp(92px, 12vh, 148px);
@@ -2409,7 +2471,16 @@ body.menu-open nav.top { transform: none !important; }
   <div class="bk-coffee-stage">
     <div class="bk-photo-bg" aria-hidden="true"></div>
     <canvas class="bk-coffee-canvas" id="bkCoffeeCanvas" aria-hidden="true"></canvas>
+    <video class="bk-coffee-video" id="bkCoffeeLoop" muted loop playsinline preload="none"
+           poster="assets/coffee/coffee-loop-poster.webp"
+           data-src="assets/coffee/coffee-loop.mp4" aria-hidden="true"></video>
+    <video class="bk-danube-video" id="bkDanubeClip" muted playsinline preload="none"
+           data-src="assets/coffee/coffee-danube.mp4" aria-hidden="true"></video>
     <div class="dn-photo" aria-hidden="true"></div>
+    <video class="dn-sky-video" id="dnSkyRise" muted playsinline preload="none"
+           poster="assets/brand/sky-rise-poster.webp"
+           data-src="assets/brand/sky-rise.mp4" aria-hidden="true"></video>
+    <div class="dn-sky" aria-hidden="true"></div>
     <div class="bk-scene-veil" aria-hidden="true"></div>
     <div class="bk-scene-grain" aria-hidden="true"></div>
 
@@ -2437,6 +2508,24 @@ body.menu-open nav.top { transform: none !important; }
       </div>
     </div>
 
+    <div class="dn-detail" aria-hidden="false">
+  <div class="neigh-grid">
+    <div class="ix">
+      <span class="n">01</span><span class="pl">Gerbeaud <em>—</em></span><span class="k">1858 · Coffee &amp; confectionery</span><span class="d">8 min</span>
+      <span class="n">02</span><span class="pl">Opera House <em>—</em></span><span class="k">Andrássy út · Restored 2022</span><span class="d">6 min</span>
+      <span class="n">03</span><span class="pl">Szimpla Kert <em>—</em></span><span class="k">The original ruin bar</span><span class="d">4 min</span>
+      <span class="n">04</span><span class="pl">Rumbach Synagogue <em>—</em></span><span class="k">Jewish Quarter</span><span class="d">3 min</span>
+      <span class="n">05</span><span class="pl">Gozsdu Udvar <em>—</em></span><span class="k">Seven connected courtyards</span><span class="d">5 min</span>
+      <span class="n">06</span><span class="pl">Dobrumba <em>—</em></span><span class="k">Levantine, Dob utca</span><span class="d">7 min</span>
+      <span class="n">07</span><span class="pl">Mazel Tov <em>—</em></span><span class="k">Garden, Middle-Eastern</span><span class="d">4 min</span>
+    </div>
+    <div class="neigh-map">
+      <div id="neighMap" class="neigh-leaflet" role="img"
+           aria-label="Map of Budapest District VI — Stories Hotel on Király utca 26 and nearby landmarks"></div>
+    </div>
+  </div>
+    </div>
+
     <div class="dn-content" id="neigh">
       <div class="plate-id"><span class="n">V</span><span>·</span><span>District VI, on foot</span></div>
       <div class="plate-title-block">
@@ -2446,27 +2535,6 @@ body.menu-open nav.top { transform: none !important; }
     </div>
   </div>
 </section>
-
-<section class="body dark" data-label="04 / Neighbourhood">
-  <div class="body-inner">
-    <div class="neigh-grid">
-      <div class="ix">
-        <span class="n">01</span><span class="pl">Gerbeaud <em>—</em></span><span class="k">1858 · Coffee &amp; confectionery</span><span class="d">8 min</span>
-        <span class="n">02</span><span class="pl">Opera House <em>—</em></span><span class="k">Andrássy út · Restored 2022</span><span class="d">6 min</span>
-        <span class="n">03</span><span class="pl">Szimpla Kert <em>—</em></span><span class="k">The original ruin bar</span><span class="d">4 min</span>
-        <span class="n">04</span><span class="pl">Rumbach Synagogue <em>—</em></span><span class="k">Jewish Quarter</span><span class="d">3 min</span>
-        <span class="n">05</span><span class="pl">Gozsdu Udvar <em>—</em></span><span class="k">Seven connected courtyards</span><span class="d">5 min</span>
-        <span class="n">06</span><span class="pl">Dobrumba <em>—</em></span><span class="k">Levantine, Dob utca</span><span class="d">7 min</span>
-        <span class="n">07</span><span class="pl">Mazel Tov <em>—</em></span><span class="k">Garden, Middle-Eastern</span><span class="d">4 min</span>
-      </div>
-      <div class="neigh-map">
-        <div id="neighMap" class="neigh-leaflet" role="img"
-             aria-label="Map of Budapest District VI — Stories Hotel on Király utca 26 and nearby landmarks"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- TRUST GRID — reasons to book direct, before the reservation plate -->
 <section class="trust-grid">
   <div class="trust-inner">
@@ -3301,12 +3369,20 @@ body.classList.toggle('in-cinema', e.isIntersecting);
 
   var bounds = [];
   places.forEach(function (p) {
-    var lab = (p.hotel ? 'Stories · 26' : p.name)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // Built as DOM nodes, not a markup string — Leaflet's divIcon accepts an
+    // element and assigns strings via innerHTML, which the project forbids.
+    var mark = document.createElement('div');
+    mark.className = 'nmark' + (p.hotel ? ' is-hotel' : '');
+    var lab = document.createElement('span');
+    lab.className = 'lab';
+    lab.textContent = p.hotel ? 'Stories · 26' : p.name;
+    var dot = document.createElement('span');
+    dot.className = 'dot';
+    mark.appendChild(lab);
+    mark.appendChild(dot);
     var icon = L.divIcon({
       className: '',
-      html: '<div class="nmark' + (p.hotel ? ' is-hotel' : '') + '">' +
-            '<span class="lab">' + lab + '</span><span class="dot"></span></div>',
+      html: mark,
       iconSize: [14, 14], iconAnchor: [7, 7], popupAnchor: [0, -12]
     });
     L.marker(p.ll, { icon: icon, title: p.name, riseOnHover: true })
@@ -3376,157 +3452,219 @@ body.classList.toggle('in-cinema', e.isIntersecting);
 })();
 </script>
 <script>
-/* BREAKFAST → DANUBE sequence — one continuous sticky scene.
-   Two webp frame sets share one canvas; fractional frame indices are
-   blended (drawImage × globalAlpha) so the scrub never visibly "steps",
-   and ScrollTrigger's scrub easing adds the Apple-style inertia. */
+/* BREAKFAST → DANUBE — one continuous sticky scene in three stages:
+   the cup pours (scrubbed frames — you pour it by scrolling), the surface it
+   settles into holds as a seamless loop for as long as the reader stays with
+   the facts, then a single clip morphs it into the Danube at its own pace.
+   Only that last stage stopped being scrubbable: freezing on any frame of
+   generated architecture invites the eye to pick it apart. */
 (function () {
   function start () {
-  var scene = document.querySelector('.bk-coffee-scene');
-  var stage = scene && scene.querySelector('.bk-coffee-stage');
-  var canvas = document.getElementById('bkCoffeeCanvas');
-  var content = scene && scene.querySelector('.bk-coffee-content');
+  var scene     = document.querySelector('.bk-coffee-scene');
+  var stage     = scene && scene.querySelector('.bk-coffee-stage');
+  var canvas    = document.getElementById('bkCoffeeCanvas');
+  var loopV     = document.getElementById('bkCoffeeLoop');
+  var transV    = document.getElementById('bkDanubeClip');
+  var skyV      = document.getElementById('dnSkyRise');
+  var content   = scene && scene.querySelector('.bk-coffee-content');
   var dnContent = scene && scene.querySelector('.dn-content');
-  if (!scene || !stage || !canvas) return;
+  var dnDetail  = scene && scene.querySelector('.dn-detail');
+  if (!scene || !stage || !canvas || !loopV || !transV || !skyV) return;
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var narrow = window.matchMedia('(max-width: 860px)').matches;
   var hasMotion = window.gsap && window.ScrollTrigger && !reduce && !narrow;
-
-  if (!hasMotion) {
-    document.body.classList.add('bk-static');
-    return;
-  }
+  if (!hasMotion) { document.body.classList.add('bk-static'); return; }
 
   gsap.registerPlugin(ScrollTrigger);
+  function clamp01 (v) { return Math.min(1, Math.max(0, v)); }
 
-  var SETS = {
-    coffee: { n: 120, base: 'assets/coffee/frame_', imgs: [], started: false, loaded: 0 },
-    danube: { n: 60,  base: 'assets/danube/frame_', imgs: [], started: false, loaded: 0 }
-  };
+  // ── stage 1: the pour, drawn from a frame sequence ──────────────────────
+  var N = 120, imgs = [], started = false, painted = false, lastF = 0;
   var ctx = canvas.getContext('2d', { alpha: false });
   var dpr = Math.min(window.devicePixelRatio || 1, 2);
-  var last = { set: SETS.coffee, f: 0 };
-  var painted = false;                 // canvas is opaque black until first draw
-
   function pad (n) { return ('00' + n).slice(-3); }
-  function ok (img) { return img && img.complete && img.naturalWidth; }
-  function cover (img) {
-    var cw = canvas.width, ch = canvas.height, iw = img.naturalWidth, ih = img.naturalHeight;
-    var s = Math.max(cw / iw, ch / ih), w = iw * s, h = ih * s;
-    ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+  function ok (im) { return im && im.complete && im.naturalWidth; }
+  function cover (im) {
+    var cw = canvas.width, ch = canvas.height, iw = im.naturalWidth, ih = im.naturalHeight;
+    var s = Math.max(cw / iw, ch / ih), w = iw * s, hh = ih * s;
+    ctx.drawImage(im, (cw - w) / 2, (ch - hh) / 2, w, hh);
   }
-  // Fractional-index draw: floor frame at full alpha, ceil frame blended on
-  // top — eliminates the per-frame "stepping" of the previous version.
-  function drawBlend (set, f) {
-    f = Math.max(0, Math.min(set.n - 1, f));
-    var i0 = Math.floor(f), i1 = Math.min(set.n - 1, i0 + 1), t = f - i0;
-    var a = set.imgs[i0];
-    if (!ok(a)) {                       // not loaded yet → nearest loaded below
-      for (var k = i0; k >= 0; k--) if (ok(set.imgs[k])) { a = set.imgs[k]; break; }
+  // Fractional index: the floor frame at full alpha with the next blended over
+  // it, so the pour never visibly steps between frames.
+  function drawBlend (f) {
+    f = Math.max(0, Math.min(N - 1, f));
+    var i0 = Math.floor(f), i1 = Math.min(N - 1, i0 + 1), t = f - i0;
+    var a = imgs[i0];
+    if (!ok(a)) {
+      for (var k = i0; k >= 0; k--) if (ok(imgs[k])) { a = imgs[k]; break; }
       if (!ok(a)) return;
-      cover(a); painted = true; last = { set: set, f: f };
-      return;
     }
     cover(a);
-    var b = set.imgs[i1];
-    if (i1 !== i0 && t > 0.02 && ok(b)) {
-      ctx.globalAlpha = t;
-      cover(b);
-      ctx.globalAlpha = 1;
-    }
-    painted = true;
-    last = { set: set, f: f };
+    var b = imgs[i1];
+    if (i1 !== i0 && t > 0.02 && ok(b)) { ctx.globalAlpha = t; cover(b); ctx.globalAlpha = 1; }
+    painted = true; lastF = f;
   }
   function resize () {
     var r = canvas.getBoundingClientRect();
     canvas.width  = Math.max(1, Math.round(r.width  * dpr));
     canvas.height = Math.max(1, Math.round(r.height * dpr));
-    drawBlend(last.set, last.f);
+    drawBlend(lastF);
   }
-
-  function preload (set, done) {
-    if (set.started) return;
-    set.started = true;
-    for (var k = 0; k < set.n; k++) (function (k) {
+  function preloadFrames () {
+    if (started) return;
+    started = true;
+    for (var k = 0; k < N; k++) (function (k) {
       var im = new Image();
-      im.onload = im.onerror = function () {
-        set.loaded++;
-        if (k === 0 && set === SETS.coffee) drawBlend(set, 0);
-        if (set.loaded === set.n && done) done();
-      };
-      im.src = set.base + pad(k + 1) + '.webp';
-      set.imgs[k] = im;
+      im.onload = im.onerror = function () { if (k === 0) drawBlend(0); };
+      im.src = 'assets/coffee/frame_' + pad(k + 1) + '.webp';
+      imgs[k] = im;
     })(k);
   }
 
-  function clamp01 (v) { return Math.min(1, Math.max(0, v)); }
+  // ── stages 2 and 3: the clips ───────────────────────────────────────────
+  var clipsLoaded = false;
+  function loadClips () {
+    if (clipsLoaded) return;
+    clipsLoaded = true;
+    [loopV, transV, skyV].forEach(function (v) {
+      if (v.dataset.src && !v.src) { v.src = v.dataset.src; v.load(); }
+    });
+    loopV.play().catch(function () {});
+  }
 
-  /* Scene timeline (p = 0..1 across ~330vh of scrub):
-     0.00–0.10  breakfast hero copy blurs away
-     0.06–0.40  coffee spill, frames 1→120 (photo crossfades into canvas)
-     0.42–0.62  breakfast facts plateau (in → hold → out)
-     0.60–0.86  coffee swirl morphs into the Danube, frames 1→60
-     0.84–0.93  Danube photo (gabriel-miklos) crossfades over the last frames
-     0.90–1.00  neighbourhood titles rise over the Danube photo            */
+  var TRIGGER = 0.46;              // scroll point that commits to the morph
+  var phase = 'coffee', hold = null;
+  function setPhase (next) {
+    if (phase === next) return;
+    phase = next;
+    clearTimeout(hold);
+    if (next === 'coffee') {
+      stage.style.setProperty('--bk-trans-opacity', '0');
+      stage.style.setProperty('--dn-photo-opacity', '0');
+      try { transV.pause(); transV.currentTime = 0; } catch (e) {}
+      loopV.play().catch(function () {});
+    } else if (next === 'transition') {
+      loadClips();
+      try { transV.currentTime = 0; } catch (e) {}
+      // The morph clip opens on coffee, so it fades in over the loop and the
+      // loop only stops once it is fully covered — no flash of the layer below.
+      stage.style.setProperty('--bk-trans-opacity', '1');
+      transV.play().catch(function () { setPhase('settled'); });
+      hold = setTimeout(function () { loopV.pause(); }, 800);
+    } else {                        // settled — the photograph takes over
+      stage.style.setProperty('--dn-photo-opacity', '1');
+      loopV.pause();
+      hold = setTimeout(function () {
+        transV.pause();
+        stage.style.setProperty('--bk-trans-opacity', '0');
+      }, 1000);
+    }
+  }
+  transV.addEventListener('ended', function () { setPhase('settled'); });
+  transV.addEventListener('error', function () { setPhase('settled'); });
+
+  // ── the crane up to the sky, on its own trigger further down the scene ──
+  var SKY_TRIGGER = 0.79;
+  var sky = 'river', skyHold = null;
+  function setSky (next) {
+    if (sky === next) return;
+    sky = next;
+    clearTimeout(skyHold);
+    if (next === 'river') {
+      stage.style.setProperty('--dn-skyclip-opacity', '0');
+      stage.style.setProperty('--dn-sky-opacity', '0');
+      try { skyV.pause(); skyV.currentTime = 0; } catch (e) {}
+    } else if (next === 'rising') {
+      loadClips();
+      try { skyV.currentTime = 0; } catch (e) {}
+      // The clip opens on this same river frame, so it fades in over the
+      // photograph without a visible cut, then lifts.
+      stage.style.setProperty('--dn-skyclip-opacity', '1');
+      stage.style.setProperty('--dn-sky-opacity', '0');
+      skyV.play().catch(function () { setSky('sky'); });
+    } else {                        // sky — the clip's own last frame holds
+      stage.style.setProperty('--dn-sky-opacity', '1');
+      skyHold = setTimeout(function () {
+        skyV.pause();
+        stage.style.setProperty('--dn-skyclip-opacity', '0');
+      }, 900);
+    }
+  }
+  skyV.addEventListener('ended', function () { setSky('sky'); });
+  skyV.addEventListener('error', function () { setSky('sky'); });
+
+
+  /* Scene timeline (p = 0..1 across the sticky scene):
+       0.00–0.05  breakfast hero copy blurs away
+       0.03–0.08  breakfast photo crossfades into the canvas
+       0.04–0.24  the cup pours, frames 1→120, scrubbed (~1.8 screens)
+       0.23–0.30  the pour settles into the looping surface
+       0.32–0.38  breakfast facts in, holding to 0.50 (~1.1 screens)
+       0.54       the morph clip is committed to and plays once; scrolling
+                  back up simply returns to the coffee loop
+       0.64–0.69  neighbourhood titles rise, holding to 0.79 (~0.9 screens)
+       0.80       the crane clip is committed to: the camera lifts off the
+                  river and settles on cloud, holding on its own last frame
+       0.84–0.90  the titles hand over to the district list and the map,
+                  which hold to the end of the scene (~0.9 screens)         */
   function setSceneProgress (p) {
-    var heroOut   = clamp01(p / 0.10);
-    var canvasIn  = clamp01((p - 0.05) / 0.10);
-    var bkIn      = clamp01((p - 0.42) / 0.07);
-    var bkOut     = clamp01((p - 0.56) / 0.06);
-    var bkVis     = bkIn * (1 - bkOut);
-    var dnPhotoIn = clamp01((p - 0.84) / 0.09);
-    var dnIn      = clamp01((p - 0.90) / 0.08);
+    if (p >= TRIGGER && phase === 'coffee') setPhase('transition');
+    else if (p < TRIGGER - 0.08 && phase !== 'coffee') setPhase('coffee');
+    if (p >= SKY_TRIGGER && sky === 'river') setSky('rising');
+    else if (p < SKY_TRIGGER - 0.06 && sky !== 'river') setSky('river');
 
+    var heroOut  = clamp01(p / 0.04);
+    var canvasIn = clamp01((p - 0.025) / 0.045);
+    var loopIn   = clamp01((p - 0.19) / 0.06);
+    var bkIn     = clamp01((p - 0.26) / 0.05);
+    var bkOut    = clamp01((p - 0.42) / 0.045);
+    var bkVis    = bkIn * (1 - bkOut);
+    var dnIn     = clamp01((p - 0.56) / 0.045);
+    var dnOut    = clamp01((p - 0.79) / 0.045);
+    var dnVis    = dnIn * (1 - dnOut);
+    var detailIn = clamp01((p - 0.845) / 0.05);
+
+    if (!painted) canvasIn = 0;    // never reveal an unpainted canvas
     stage.style.setProperty('--bk-hero-opacity', (1 - heroOut).toFixed(3));
     stage.style.setProperty('--bk-hero-y', (-heroOut * 26).toFixed(1) + 'px');
     stage.style.setProperty('--bk-hero-blur', (heroOut * 10).toFixed(1) + 'px');
-    if (!painted) canvasIn = 0;        // never reveal an unpainted (black) canvas
     stage.style.setProperty('--bk-photo-opacity', (1 - canvasIn).toFixed(3));
     stage.style.setProperty('--bk-photo-brightness', (0.82 - canvasIn * 0.32).toFixed(3));
     stage.style.setProperty('--bk-canvas-opacity', canvasIn.toFixed(3));
+    stage.style.setProperty('--bk-loop-opacity', loopIn.toFixed(3));
     stage.style.setProperty('--bk-content-opacity', bkVis.toFixed(3));
     stage.style.setProperty('--bk-content-y', ((1 - bkIn) * 24).toFixed(1) + 'px');
-    stage.style.setProperty('--dn-photo-opacity', dnPhotoIn.toFixed(3));
-    stage.style.setProperty('--dn-content-opacity', dnIn.toFixed(3));
+    stage.style.setProperty('--dn-content-opacity', dnVis.toFixed(3));
     stage.style.setProperty('--dn-content-y', ((1 - dnIn) * 28).toFixed(1) + 'px');
+    stage.style.setProperty('--dn-detail-opacity', detailIn.toFixed(3));
+    stage.style.setProperty('--dn-detail-y', ((1 - detailIn) * 26).toFixed(1) + 'px');
     if (content) content.style.pointerEvents = bkVis > 0.75 ? 'auto' : 'none';
-    if (dnContent) dnContent.style.pointerEvents = dnIn > 0.75 ? 'auto' : 'none';
+    if (dnContent) dnContent.style.pointerEvents = dnVis > 0.75 ? 'auto' : 'none';
+    if (dnDetail) dnDetail.style.pointerEvents = detailIn > 0.6 ? 'auto' : 'none';
 
+    drawBlend(clamp01((p - 0.035) / 0.165) * (N - 1));
   }
 
   resize();
   window.addEventListener('resize', resize, { passive: true });
   setSceneProgress(0);
-
   ScrollTrigger.create({
     trigger: scene,
     start: 'top top',
     end: 'bottom bottom',
-    scrub: 0.85,                       // inertial catch-up — no hard lock
-    onUpdate: function (self) {
-      var p = self.progress;
-      var pd = (p - 0.60) / 0.26;      // Danube window
-      if (pd > 0) {
-        if (!SETS.danube.started) preload(SETS.danube);
-        drawBlend(SETS.danube, clamp01(pd) * (SETS.danube.n - 1));
-      } else {
-        var pc = clamp01((p - 0.06) / 0.34);
-        drawBlend(SETS.coffee, pc * (SETS.coffee.n - 1));
-      }
-      setSceneProgress(p);
-    }
+    scrub: 0.85,
+    onUpdate: function (self) { setSceneProgress(self.progress); }
   });
 
-  // Coffee frames load as soon as the scene is within ~1.5 viewports;
-  // the Danube set follows automatically once coffee is in.
   var warm = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
       if (!e.isIntersecting) return;
-      preload(SETS.coffee, function () { preload(SETS.danube); });
+      preloadFrames();
+      loadClips();
       warm.disconnect();
     });
-  }, { rootMargin: '300% 0px' });
+  }, { rootMargin: '250% 0px' });
   warm.observe(scene);
   }
   whenLibsReady(start);
@@ -3568,7 +3706,7 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     var reserve = document.getElementById('reserve');
     if (!stage || !rituals || !cinema || !bk || !reserve) return;
     var bkSpan = Math.max(1, bk.offsetHeight - vh);
-    var split = bk.offsetTop + 0.62 * bkSpan;      // canvas Breakfast→Neighbourhood handover
+    var split = bk.offsetTop + 0.50 * bkSpan;      // Breakfast→Neighbourhood handover
     bounds = [
       0,
       rituals.offsetTop,

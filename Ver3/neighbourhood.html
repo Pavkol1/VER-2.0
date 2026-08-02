@@ -76,7 +76,30 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 .scrollcue .line { width: 1px; height: 52px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.6), transparent); animation: scrolldrop 2.2s ease-in-out infinite; }
 @keyframes scrolldrop { 0%, 100% { opacity: 0.3; transform: translateY(-8px); } 50% { opacity: 1; transform: translateY(8px); } }
 
-.body-dark { background: var(--ink-2); color: rgba(255,255,255,0.84); padding: clamp(80px, 10vw, 140px) clamp(40px, 6vw, 96px); }
+/* The neighbourhood + map section sits on the same Danube photograph the
+   homepage scene resolves to, so the two readings of the district rhyme.
+   A heavy scrim keeps the list, the map and the copy fully legible. */
+.body-dark {
+  position: relative;
+  background: var(--ink-2);
+  color: rgba(255,255,255,0.84);
+  padding: clamp(80px, 10vw, 140px) clamp(40px, 6vw, 96px);
+}
+.body-dark::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: url('assets/brand/danube-budapest.webp') center / cover no-repeat;
+  opacity: 0.28;
+  filter: saturate(0.85) contrast(1.02);
+  pointer-events: none;
+}
+.body-dark::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(11,20,16,0.72) 0%, rgba(8,26,18,0.86) 60%, rgba(8,26,18,0.94) 100%);
+  pointer-events: none;
+}
+.body-dark > * { position: relative; z-index: 1; }
 .body-inner { max-width: 1200px; margin: 0 auto; }
 
 .neigh-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 4vw, 64px); margin-bottom: clamp(64px, 8vw, 96px); }
@@ -734,12 +757,20 @@ body.menu-open nav.top { transform: none !important; }
 
   var bounds = [];
   places.forEach(function (p) {
-    var lab = (p.hotel ? 'Stories · 26' : p.name)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // Built as DOM nodes, not a markup string — Leaflet's divIcon accepts an
+    // element and assigns strings via innerHTML, which the project forbids.
+    var mark = document.createElement('div');
+    mark.className = 'nmark' + (p.hotel ? ' is-hotel' : '');
+    var lab = document.createElement('span');
+    lab.className = 'lab';
+    lab.textContent = p.hotel ? 'Stories · 26' : p.name;
+    var dot = document.createElement('span');
+    dot.className = 'dot';
+    mark.appendChild(lab);
+    mark.appendChild(dot);
     var icon = L.divIcon({
       className: '',
-      html: '<div class="nmark' + (p.hotel ? ' is-hotel' : '') + '">' +
-            '<span class="lab">' + lab + '</span><span class="dot"></span></div>',
+      html: mark,
       iconSize: [14, 14], iconAnchor: [7, 7], popupAnchor: [0, -12]
     });
     L.marker(p.ll, { icon: icon, title: p.name, riseOnHover: true })
