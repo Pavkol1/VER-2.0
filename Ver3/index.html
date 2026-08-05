@@ -42,10 +42,11 @@
   --paper-2: #E5DECE;
   --rule:    #C9C1B0;
   --text:    #2A2A22;
-  --text-2:  #6A6A5C;
-  --text-3:  #9A9A8C;
+  --text-2:  #5A5A4E;
+  --text-3:  #5F5F52;
   --primary: #123524;
   --accent:  #B9904E;
+  --accent-ink: #123524;  /* accent for text on LIGHT surfaces — set to #B9904E to restore gold */
   --ease:    cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1581,6 +1582,20 @@ body.bk-static .dn-content {
   padding: clamp(110px, 22vw, 180px) clamp(24px, 6vw, 96px) clamp(48px, 8vw, 80px);
   background: linear-gradient(180deg, rgba(11,9,7,0.42), rgba(11,9,7,0.72)), url('assets/brand/sky-evening.webp') center / cover no-repeat;
 }
+/* The district list and the map live inside the stage, so without this they
+   stayed at opacity 0 with no controller left to raise them — the one thing a
+   competitor cannot copy, invisible on every phone. */
+body.bk-static .dn-detail {
+  position: relative;
+  inset: auto;
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+  align-content: start;
+  padding: 0 clamp(24px, 6vw, 96px) clamp(72px, 12vw, 110px);
+  background: linear-gradient(180deg, rgba(11,9,7,0.72), rgba(11,9,7,0.86)), url('assets/brand/sky-evening.webp') center / cover no-repeat;
+}
+body.bk-static .dn-detail .neigh-map { height: min(70vh, 460px); }
 .bk-hero-copy {
   bottom: clamp(92px, 12vh, 148px);
   opacity: var(--bk-hero-opacity, 1);
@@ -1775,7 +1790,7 @@ body.bk-static .dn-content {
   font-size: 10px;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 .trust-card h3 {
   font-family: 'Libre Caslon Text', serif;
@@ -2217,7 +2232,7 @@ body.menu-open nav.top { transform: none !important; }
   </div>
   <div class="nav-right">
     <div class="lang-toggle"><button type="button" class="active">EN</button><button type="button">HU</button></div>
-    <a href="#reserve" class="nav-cta magnet">Reserve</a>
+    <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="nav-cta magnet" target="_blank" rel="noopener">Reserve</a>
     <button type="button" class="m-burger" id="mnavBtn" aria-expanded="false" aria-controls="mnav" aria-label="Menu">
       <span></span><span></span>
     </button>
@@ -2236,7 +2251,7 @@ body.menu-open nav.top { transform: none !important; }
       <a href="faqs.html"><span class="n">07</span>FAQ</a>
     </nav>
     <div class="mnav-foot">
-      <a class="mnav-cta" href="#reserve">Reserve a stay</a>
+      <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Reserve a stay</a>
       <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
     </div>
   </div>
@@ -2269,7 +2284,7 @@ body.menu-open nav.top { transform: none !important; }
     <h1 class="sp-ttl"><span class="sp-out">A hotel of <em>stories,</em><br>quietly told.</span><span class="sp-fill" aria-hidden="true">A hotel of <em>stories,</em><br>quietly told.</span></h1>
     <p class="sp-sub">Forty-four rooms, six characters — a small house on Király utca.</p>
     <div class="sp-acts">
-      <a class="sp-btn-solid" href="#reserve">Book a stay <span aria-hidden="true">&rarr;</span></a>
+      <a class="sp-btn-solid" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Book a stay <span aria-hidden="true">&rarr;</span></a>
       <a class="sp-btn-ghost" href="rooms.html">Explore rooms <span aria-hidden="true">&rarr;</span></a>
     </div>
   </div>
@@ -2595,8 +2610,8 @@ body.menu-open nav.top { transform: none !important; }
   <div class="reserve-inner">
     <div class="reserve-over">06 / Reservations</div>
     <h2>Begin <em>your</em><br>Budapest chapter.</h2>
-    <p>Direct bookings include a complimentary welcome drink at the bar and late checkout (subject to availability). We answer within the same day.</p>
-    <form class="reserve-form" onsubmit="event.preventDefault();">
+    <p>Direct bookings include a complimentary welcome drink at the bar and late checkout (subject to availability).</p>
+    <form class="reserve-form" onsubmit="event.preventDefault(); window.open('https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951', '_blank', 'noopener');">
       <div class="field">
         <span class="lab">Check-in</span>
         <input type="date">
@@ -3639,9 +3654,13 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     stage.style.setProperty('--dn-content-y', ((1 - dnIn) * 28).toFixed(1) + 'px');
     stage.style.setProperty('--dn-detail-opacity', detailIn.toFixed(3));
     stage.style.setProperty('--dn-detail-y', ((1 - detailIn) * 26).toFixed(1) + 'px');
-    if (content) content.style.pointerEvents = bkVis > 0.75 ? 'auto' : 'none';
-    if (dnContent) dnContent.style.pointerEvents = dnVis > 0.75 ? 'auto' : 'none';
-    if (dnDetail) dnDetail.style.pointerEvents = detailIn > 0.6 ? 'auto' : 'none';
+    // Mirror reachability on both axes. pointer-events alone left these blocks
+    // in the tab order while fully transparent, so keyboard focus disappeared
+    // into invisible layers of a 1200vh sticky scene with no visible ring.
+    var bkOn = bkVis > 0.75, dnOn = dnVis > 0.75, detOn = detailIn > 0.6;
+    if (content) { content.style.pointerEvents = bkOn ? 'auto' : 'none'; content.inert = !bkOn; }
+    if (dnContent) { dnContent.style.pointerEvents = dnOn ? 'auto' : 'none'; dnContent.inert = !dnOn; }
+    if (dnDetail) { dnDetail.style.pointerEvents = detOn ? 'auto' : 'none'; dnDetail.inert = !detOn; }
 
     drawBlend(clamp01((p - 0.035) / 0.165) * (N - 1));
   }

@@ -34,10 +34,11 @@
   --paper-2: #E5DECE;
   --rule:    #C9C1B0;
   --text:    #2A2A22;
-  --text-2:  #6A6A5C;
-  --text-3:  #9A9A8C;
+  --text-2:  #5A5A4E;
+  --text-3:  #5F5F52;
   --primary: #123524;
   --accent:  #B9904E;
+  --accent-ink: #123524;  /* accent for text on LIGHT surfaces — set to #B9904E to restore gold */
   --ease:    cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -66,9 +67,10 @@ nav.top { position: sticky; top: 0; left: 0; right: 0; z-index: 80; padding: 22p
 .faq-body { padding: 0 clamp(40px, 6vw, 96px) clamp(80px, 10vw, 120px); }
 .faq-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: clamp(48px, 6vw, 96px); align-items: start; }
 .faq-nav { position: sticky; top: 96px; }
-.faq-nav-item { display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3); padding: 10px 0; border-top: 1px solid var(--rule); transition: color 0.3s var(--ease); cursor: pointer; }
+.faq-nav-item { display: block; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3); padding: 10px 0; border-top: 1px solid var(--rule); transition: color 0.3s var(--ease); cursor: pointer; }
 .faq-nav-item:first-child { border-top: none; }
 .faq-nav-item:hover { color: var(--ink); }
+.faq-nav-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .faq-nav-item.active { color: var(--ink); font-weight: 500; }
 .faq-group { margin-bottom: 56px; }
 .faq-group-title { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(20px, 2.2vw, 28px); color: var(--ink); margin-bottom: 24px; letter-spacing: -0.005em; }
@@ -76,10 +78,12 @@ nav.top { position: sticky; top: 0; left: 0; right: 0; z-index: 80; padding: 22p
 
 .faq-item { border-top: 1px solid var(--rule); }
 .faq-item:last-child { border-bottom: 1px solid var(--rule); }
-.faq-q { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; cursor: pointer; gap: 24px; user-select: none; }
+.faq-q { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; cursor: pointer; gap: 24px; user-select: none;
+  width: 100%; background: none; border: none; text-align: left; font: inherit; color: inherit; }
+.faq-q:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .faq-q-text { font-family: 'Libre Caslon Text', serif; font-size: 17px; color: var(--ink); font-weight: 400; line-height: 1.3; }
 .faq-icon { font-family: 'JetBrains Mono', monospace; font-size: 18px; color: var(--text-3); transition: transform 0.3s var(--ease), color 0.3s var(--ease); flex-shrink: 0; }
-.faq-item.open .faq-icon { transform: rotate(45deg); color: var(--accent); }
+.faq-item.open .faq-icon { transform: rotate(45deg); color: var(--accent-ink); }
 .faq-a { display: none; padding-bottom: 20px; }
 .faq-item.open .faq-a { display: block; }
 .faq-a p { font-size: 15px; line-height: 1.7; color: var(--text-2); font-weight: 300; max-width: 600px; }
@@ -129,7 +133,16 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
 @media (max-width: 1024px) {
   .nav-links { display: none; }
   .faq-inner { grid-template-columns: 1fr; }
-  .faq-nav { display: none; }
+  .faq-nav {
+    position: sticky; top: 86px; z-index: 20;
+    display: flex; gap: 22px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    margin: 0 calc(-1 * clamp(24px, 6vw, 96px)) 32px;
+    padding: 12px clamp(24px, 6vw, 96px);
+    background: var(--paper); border-bottom: 1px solid var(--rule);
+    scrollbar-width: none;
+  }
+  .faq-nav::-webkit-scrollbar { display: none; }
+  .faq-nav-item { border-top: none; padding: 6px 0; white-space: nowrap; flex: 0 0 auto; }
   .foot-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) { .foot-grid { grid-template-columns: 1fr; } }
@@ -387,7 +400,7 @@ body.menu-open nav.top { transform: none !important; }
     <a href="neighbourhood.html">Neighbourhood</a>
     <a href="contact.html">Contact</a>
   </div>
-  <a href="index.html#reserve" class="nav-cta magnet">Reserve</a>
+  <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="nav-cta magnet" target="_blank" rel="noopener">Reserve</a>
     <button type="button" class="m-burger" id="mnavBtn" aria-expanded="false" aria-controls="mnav" aria-label="Menu">
       <span></span><span></span>
     </button>
@@ -405,7 +418,7 @@ body.menu-open nav.top { transform: none !important; }
       <a href="faqs.html" class="active" aria-current="page"><span class="n">07</span>FAQ</a>
     </nav>
     <div class="mnav-foot">
-      <a class="mnav-cta" href="index.html#reserve">Reserve a stay</a>
+      <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Reserve a stay</a>
       <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
     </div>
   </div>
@@ -439,107 +452,107 @@ body.menu-open nav.top { transform: none !important; }
 <div class="faq-body">
   <div class="faq-inner">
     <nav class="faq-nav" aria-label="FAQ categories">
-      <span class="faq-nav-item active" data-target="arrival">Arrival &amp; stay</span>
-      <span class="faq-nav-item" data-target="rooms">Rooms</span>
-      <span class="faq-nav-item" data-target="food">Food &amp; drink</span>
-      <span class="faq-nav-item" data-target="access">Access &amp; location</span>
-      <span class="faq-nav-item" data-target="booking">Booking &amp; policies</span>
+      <a class="faq-nav-item active" href="#arrival">Arrival &amp; stay</a>
+      <a class="faq-nav-item" href="#rooms">Rooms</a>
+      <a class="faq-nav-item" href="#food">Food &amp; drink</a>
+      <a class="faq-nav-item" href="#access">Access &amp; location</a>
+      <a class="faq-nav-item" href="#booking">Booking &amp; policies</a>
     </nav>
 
     <div class="faq-content">
       <div class="faq-group" id="arrival">
         <h2 class="faq-group-title">Arrival &amp; <em>stay</em></h2>
         <div class="faq-item open">
-          <div class="faq-q"><span class="faq-q-text">What are the check-in and check-out times?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>Check-in is from 15:00. Check-out is by 11:00. If you're arriving earlier or need a late checkout, tell us when you book — we'll do what we can. Direct bookings include late checkout subject to availability.</p></div>
+          <button type="button" class="faq-q" aria-expanded="true" aria-controls="faq-a-1"><span class="faq-q-text">What are the check-in and check-out times?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-1"><p>Check-in is from 15:00. Check-out is by 11:00. If you're arriving earlier or need a late checkout, tell us when you book — we'll do what we can. Direct bookings include late checkout subject to availability.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Is there someone at the hotel around the clock?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>Yes. There's always someone here between 15:00 and 22:00 for check-ins. For arrivals outside those hours, we arrange a keybox or a team member will meet you — just let us know in advance.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-2"><span class="faq-q-text">Is there someone at the hotel around the clock?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-2"><p>Yes. There's always someone here between 15:00 and 22:00 for check-ins. For arrivals outside those hours, we arrange a keybox or a team member will meet you — just let us know in advance.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Can I store luggage before check-in or after check-out?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>Yes, luggage storage is available on request. Drop it off and go explore — we'll look after it.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-3"><span class="faq-q-text">Can I store luggage before check-in or after check-out?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-3"><p>Yes, luggage storage is available on request. Drop it off and go explore — we'll look after it.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">What is included in the stay?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>Every stay includes access to the GoActive gym and sauna, access to Create 26 coworking, and high-speed WiFi throughout the building. Direct bookings also receive a complimentary welcome drink at the bar. Breakfast at Twenty Six is à la carte — €18 per person — and not bundled into the room rate; we'd rather you pay only for what you order.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-4"><span class="faq-q-text">What is included in the stay?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-4"><p>Every stay includes access to the GoActive gym and sauna, access to Create 26 coworking, and high-speed WiFi throughout the building. Direct bookings also receive a complimentary welcome drink at the bar. Breakfast at Twenty Six is à la carte — €18 per person — and not bundled into the room rate; we'd rather you pay only for what you order.</p></div>
         </div>
       </div>
 
       <div class="faq-group" id="rooms">
         <h2 class="faq-group-title">The <em>rooms</em></h2>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">How many rooms are in the hotel?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>Six characters — from the Presidential Suite (165–180 m², two floors) to the Superior Room (17 m², deliberately cosy) — across 44 rooms in the house. See the <a href="rooms.html">Rooms page</a> for the full list.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-5"><span class="faq-q-text">How many rooms are in the hotel?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-5"><p>Six characters — from the Presidential Suite (165–180 m², two floors) to the Superior Room (17 m², deliberately cosy) — across 44 rooms in the house. See the <a href="rooms.html">Rooms page</a> for the full list.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Do any rooms have a Jacuzzi or sauna?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>Yes. The Presidential Suite and King Suite both have private Jacuzzis. The Presidential Suite also has a private sauna. All guests have access to the GoActive gym sauna regardless of room type.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-6"><span class="faq-q-text">Do any rooms have a Jacuzzi or sauna?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-6"><p>Yes. The Presidential Suite and King Suite both have private Jacuzzis. The Presidential Suite also has a private sauna. All guests have access to the GoActive gym sauna regardless of room type.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Can rooms accommodate more than two guests?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>The Junior Suite sleeps up to three with its sofa-bed arrangement. The Presidential Suite accommodates four comfortably. Please enquire for specific room configurations.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-7"><span class="faq-q-text">Can rooms accommodate more than two guests?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-7"><p>The Junior Suite sleeps up to three with its sofa-bed arrangement. The Presidential Suite accommodates four comfortably. Please enquire for specific room configurations.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Are pets allowed?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>We love the idea but the building doesn't allow it. We're sorry.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-8"><span class="faq-q-text">Are pets allowed?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-8"><p>We love the idea but the building doesn't allow it. We're sorry.</p></div>
         </div>
       </div>
 
       <div class="faq-group" id="food">
         <h2 class="faq-group-title">Food &amp; <em>drink</em></h2>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">What time is breakfast served?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>07:00 to 11:00, Monday through Sunday, in the Twenty Six restaurant on the ground floor. If you have an early flight or need something before 07:00, speak to us the night before.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-9"><span class="faq-q-text">What time is breakfast served?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-9"><p>07:00 to 11:00, Monday through Sunday, in the Twenty Six restaurant on the ground floor. If you have an early flight or need something before 07:00, speak to us the night before.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Is breakfast included in the room rate?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>No — breakfast is a separate €18 per person, à la carte. We kept it off the rate on purpose: you order what you actually want in the morning, not a buffet you didn't ask for. Add it when you check in, or skip it and walk five minutes to the bakeries on Klauzál tér.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-10"><span class="faq-q-text">Is breakfast included in the room rate?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-10"><p>No — breakfast is a separate €18 per person, à la carte. We kept it off the rate on purpose: you order what you actually want in the morning, not a buffet you didn't ask for. Add it when you check in, or skip it and walk five minutes to the bakeries on Klauzál tér.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">When does the bar open?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>The bar opens at 17:00 daily and closes when it should. On warm evenings it spills into the Twenty Six courtyard. Guests are welcome to use the bar at any time — it's your living room too.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-11"><span class="faq-q-text">When does the bar open?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-11"><p>The bar opens at 17:00 daily and closes when it should. On warm evenings it spills into the Twenty Six courtyard. Guests are welcome to use the bar at any time — it's your living room too.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Can you accommodate dietary requirements?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>Yes. Let us know when you book and the kitchen will prepare for it. The menu has options for most dietary needs — vegetarian, gluten-free, dairy-free. Just ask.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-12"><span class="faq-q-text">Can you accommodate dietary requirements?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-12"><p>Yes. Let us know when you book and the kitchen will prepare for it. The menu has options for most dietary needs — vegetarian, gluten-free, dairy-free. Just ask.</p></div>
         </div>
       </div>
 
       <div class="faq-group" id="access">
         <h2 class="faq-group-title">Access &amp; <em>location</em></h2>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">How do I get to the hotel from the airport?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>Budapest Liszt Ferenc Airport is about 35 minutes by taxi (fixed rate of approximately 9,000 Ft). The 100E airport express bus goes to Deák tér, from where it's a 15-minute walk or a short tram ride. We can arrange a private transfer if you'd prefer — just ask.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-13"><span class="faq-q-text">How do I get to the hotel from the airport?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-13"><p>Budapest Liszt Ferenc Airport is about 35 minutes by taxi (fixed rate of approximately 9,000 Ft). The 100E airport express bus goes to Deák tér, from where it's a 15-minute walk or a short tram ride. We can arrange a private transfer if you'd prefer — just ask.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Is there parking at the hotel?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>We don't have a dedicated car park, but there are paid parking zones on and around Király utca, and a public car park on Akácfa utca a short walk away. We'll send details when you book.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-14"><span class="faq-q-text">Is there parking at the hotel?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-14"><p>We don't have a dedicated car park, but there are paid parking zones on and around Király utca, and a public car park on Akácfa utca a short walk away. We'll send details when you book.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Is the hotel accessible for guests with mobility needs?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>The building is a historic townhouse with some limitations. The ground floor and common areas are step-free, but some rooms require using stairs. Please contact us before booking and we'll advise honestly.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-15"><span class="faq-q-text">Is the hotel accessible for guests with mobility needs?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-15"><p>The building is a historic townhouse with some limitations. The ground floor and common areas are step-free, but some rooms require using stairs. Please contact us before booking and we'll advise honestly.</p></div>
         </div>
       </div>
 
       <div class="faq-group" id="booking">
         <h2 class="faq-group-title">Booking &amp; <em>policies</em></h2>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">What is the cancellation policy?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>Free cancellation up to 5 days before check-in. Cancellations within 5 days are charged one night. No-shows are charged the full stay. We can make exceptions for genuine emergencies — just call us.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-16"><span class="faq-q-text">What is the cancellation policy?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-16"><p>Free cancellation up to 5 days before check-in. Cancellations within 5 days are charged one night. No-shows are charged the full stay. We can make exceptions for genuine emergencies — just call us.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Why book directly rather than through an OTA?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>Direct bookings get a complimentary welcome drink at the bar and late checkout (subject to availability). We also know who you are before you arrive, which means we can prepare better. The rate is the same — or sometimes better.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-17"><span class="faq-q-text">Why book directly rather than through an OTA?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-17"><p>Direct bookings get a complimentary welcome drink at the bar and late checkout (subject to availability). We also know who you are before you arrive, which means we can prepare better. The rate is the same — or sometimes better.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Do you accept group bookings?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>Buy out a single character for a closed group, or the whole 44-room house — occasionally how guests celebrate something significant. <a href="contact.html">Get in touch</a> and we'll talk through what's possible.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-18"><span class="faq-q-text">Do you accept group bookings?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-18"><p>Buy out a single character for a closed group, or the whole 44-room house — occasionally how guests celebrate something significant. <a href="contact.html">Get in touch</a> and we'll talk through what's possible.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span class="faq-q-text">Is there a minimum stay?</span><span class="faq-icon">+</span></div>
-          <div class="faq-a"><p>No minimum stay as a rule, though some periods (long weekends, major events) may have a two-night minimum. The booking form will show what applies to your dates.</p></div>
+          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-19"><span class="faq-q-text">Is there a minimum stay?</span><span class="faq-icon" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-a-19"><p>No minimum stay as a rule, though some periods (long weekends, major events) may have a two-night minimum. The booking form will show what applies to your dates.</p></div>
         </div>
       </div>
     </div>
@@ -640,22 +653,27 @@ body.menu-open nav.top { transform: none !important; }
   var items = document.querySelectorAll('.faq-item');
   items.forEach(function (item) {
     var q = item.querySelector('.faq-q');
+    // Independent toggles: opening one no longer closes the rest, so a guest
+    // can hold the cancellation answer and the direct-booking answer open
+    // side by side. State is mirrored onto the button for assistive tech.
     q.addEventListener('click', function () {
-      var isOpen = item.classList.contains('open');
-      items.forEach(function (i) { i.classList.remove('open'); });
-      if (!isOpen) item.classList.add('open');
+      var open = !item.classList.contains('open');
+      item.classList.toggle('open', open);
+      q.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
   });
 
   var navItems = document.querySelectorAll('.faq-nav-item');
   navItems.forEach(function (ni) {
-    ni.addEventListener('click', function () {
-      var target = document.getElementById(ni.dataset.target);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        navItems.forEach(function (n) { n.classList.remove('active'); });
-        ni.classList.add('active');
-      }
+    ni.addEventListener('click', function (e) {
+      var target = document.querySelector(ni.getAttribute('href'));
+      if (!target) return;                       // let the browser handle it
+      e.preventDefault();
+      // Lenis owns the scroll position on this page; scrollIntoView fights it.
+      if (window.__lenis && window.__lenis.scrollTo) window.__lenis.scrollTo(target, { offset: -110 });
+      else window.scrollTo({ top: target.offsetTop - 110, behavior: 'smooth' });
+      navItems.forEach(function (n) { n.classList.remove('active'); });
+      ni.classList.add('active');
     });
   });
 }());

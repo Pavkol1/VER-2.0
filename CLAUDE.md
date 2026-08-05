@@ -2,7 +2,9 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-> **RULE #1: Always invoke the `frontend-design:frontend-design` skill before writing or editing any frontend code. Every session. No exceptions.**
+> **RULE #1: Always invoke the `impeccable` skill before writing or editing any frontend code. Every session. No exceptions.**
+>
+> It supersedes `frontend-design:frontend-design`, which is no longer the lead skill here. Product truth lives in [PRODUCT.md](PRODUCT.md) — read it before design decisions, and keep it current rather than re-deriving it.
 
 ---
 
@@ -20,9 +22,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `claude/wonderful-mclaren-d67b3f` — working/feature branch (current work happens here). `main` and this branch are normally kept at the same commit.
 
 **Open / not-yet-done:**
-- **The reserve form is inert** — `.reserve-form` uses `onsubmit="event.preventDefault()"` and posts nowhere. It needs a real destination (Netlify Forms, a booking engine, or mailto) before launch.
+- **Booking runs through SabeeApp** — all 21 booking CTAs and the homepage reserve form open `https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951` in a new tab. The form opens it via JS, **not** a GET action: the inputs carry no `name`, and a GET submit would rebuild the query string and drop the engine's own `?p=` token. Dates and the chosen room are **not** passed through yet — that needs SabeeApp's parameter names.
+- **contact.html's form is still inert** — `onsubmit="event.preventDefault()"`, posts nowhere, while its copy promises a same-day reply. Netlify Forms is the obvious destination.
 - contact: optional left-edge runlabel + a mini SVG map inset (rhymes with M3.1).
-- faqs: accessibility upgrade — turn `.faq-q` `<div>`s into `<button>` with `aria-expanded`, add smooth open/close animation, make the sticky category nav real `<a href="#id">` links.
+- **Truthfulness pass still open** — the homepage trust grid publishes a review score and stay count ("Four point eight" / "1200+ stays") plus "From €55 each way" and "Lowest rate, guaranteed"; PRODUCT.md lists all of these as absent and forbidden to invent, and faqs.html contradicts the rate claim. Breakfast hours disagree too: 07:30 on index, 07:00 in breakfast.html's body, 07:30 in its own meta description.
 - Homepage frame sets are 1280×720 sources — slightly soft on large retina screens (grain + vignette mask it). Re-generate at 1080p if the client complains.
 
 **To resume on a fresh machine / account:** `git clone https://github.com/Pavkol1/VER-2.0.git`, `git checkout claude/wonderful-mclaren-d67b3f`, then `python3 -m http.server 8000` → http://localhost:8000/Ver3/. Note: chat history and Claude memory do NOT transfer between accounts — only the code (and this file) travels via git.
@@ -60,9 +63,9 @@ Per user preference, ask Claude to start the server rather than running it yours
 │   ├── contact.html      60vh hero + 2-column contact info/form
 │   ├── faqs.html         Paper bg (no plate), sticky nav sidebar, accordion FAQ
 │   └── assets/
-│       ├── brand/        Hero/plate backgrounds + logos (hero.jpg, breakfast-new.jpg, danube-budapest.jpg, loader-wall.mp4/-poster.jpg, …)
-│       ├── coffee/       frame_001…120.webp + coffee-final.webp — coffee spill scroll sequence (cropped to 3:2, no bars)
-│       ├── danube/       frame_001…060.webp — coffee→Danube morph sequence (ends crossfading into danube-budapest.jpg)
+│       ├── brand/        Hero/plate backgrounds, logos, danube-budapest.webp, sky-evening.webp, sky-rise.mp4 (crane to sky)
+│       ├── coffee/       frame_001…120.webp (the scrubbed pour) + coffee-loop.mp4 (ping-pong surface)
+│       │                 + coffee-danube.mp4 (the morph, plays once)
 │       ├── photos/       Per-room and amenity galleries (presidential-suite/, king-suite/, …)
 │       └── vendor/       lenis.min.js · gsap.min.js · ScrollTrigger.min.js
 └── Ver2/                 legacy / reference only — do NOT edit
@@ -101,10 +104,11 @@ GSAP + ScrollTrigger load **deferred** just before the inline `<script>` block o
 --paper-2: #E5DECE
 --rule:    #C9C1B0   /* hairline borders */
 --text:    #2A2A22
---text-2:  #6A6A5C
---text-3:  #9A9A8C   /* mono labels */
+--text-2:  #5A5A4E   /* 5.67:1 on paper — retuned 2026-08-05 for WCAG AA */
+--text-3:  #5F5F52   /* mono labels · 5.25:1 — was #9A9A8C at 2.31:1, an AA fail */
 --primary: #123524   /* deep emerald */
---accent:  #B9904E   /* gold (briefly dark emerald on 2026-06-12, reverted same day per client) */
+--accent:  #B9904E   /* gold — for text this is only safe on DARK surfaces (5.7-6.4:1) */
+--accent-ink: #123524 /* the accent for text on LIGHT surfaces · 10.92:1 */
 --ease:    cubic-bezier(0.22, 0.61, 0.36, 1)
 ```
 
@@ -113,6 +117,8 @@ GSAP + ScrollTrigger load **deferred** just before the inline `<script>` block o
 - Body/UI: `Schibsted Grotesk` — free stand-in for **ABC Monument Grotesk**; if the client buys licences, swap to self-hosted originals
 - Labels/overlines/mono: `JetBrains Mono`, 10–11px, `letter-spacing: 0.18em–0.28em`, uppercase
 - `Playfair Display` + `Pinyon Script` are used by the hero logo wordmark system
+
+**Accessibility** — WCAG AA is a confirmed product requirement (see PRODUCT.md). `faqs.html` was rebuilt 2026-08-05: the 19 accordion triggers are real `<button aria-expanded aria-controls>`, answers carry matching `id`s, the 5 category items are real anchors routed through Lenis (native `scrollIntoView` fights it), toggles are independent, and below 1024px the category sidebar becomes a sticky horizontal bar instead of `display: none`. On index, `.bk-coffee-content`, `.dn-content` and `.dn-detail` get `inert` mirrored onto their `pointer-events` writes so keyboard focus cannot land in a transparent layer of the sticky scene.
 
 **Ver3-specific systems** (present in every page, near-identical CSS/JS blocks):
 - **Logo stage** (`.logo-stage` / `.logo-mover`) — wordmark that scales/moves into the nav slot; flips ink⇄paper via `body.logo-on-light` as you cross light/dark sections.
@@ -201,7 +207,13 @@ These cost real time more than once — the animations are fine, the *measuremen
 
 ## Frontend Skill
 
-**ALWAYS invoke the `frontend-design:frontend-design` skill FIRST** — before writing or editing any frontend code, every session, no exceptions.
+**ALWAYS invoke the `impeccable` skill FIRST** — before writing or editing any frontend code, every session, no exceptions. It replaced `frontend-design:frontend-design` as the lead skill on 2026-08-05; don't run both.
+
+It is installed globally at `~/.claude/skills/impeccable/`, so it travels with the machine, **not** with this repo — a fresh clone on another machine needs `npx impeccable install` first. It also installs a detector hook (`~/.claude/settings.local.json`) that checks UI files after each edit and does a deeper pass at the end of a turn; `/impeccable hooks off` disables it.
+
+Useful sub-commands: `/impeccable document` records the incumbent design system into DESIGN.md, `/impeccable audit <target>` runs accessibility/performance/responsive checks, `/impeccable critique <target>` is a UX review, `/impeccable polish <target>` is a pre-ship pass.
+
+**Product context:** [PRODUCT.md](PRODUCT.md) at the repo root holds the confirmed product record — users, positioning, constraints, what must never be fabricated. Written 2026-08-05 from a client interview. Read it before design decisions; update it when product truth changes.
 
 **Anti-generic guardrails:**
 - Never use the same font for headings and body

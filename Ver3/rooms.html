@@ -34,10 +34,11 @@
   --paper-2: #E5DECE;
   --rule:    #C9C1B0;
   --text:    #2A2A22;
-  --text-2:  #6A6A5C;
-  --text-3:  #9A9A8C;
+  --text-2:  #5A5A4E;
+  --text-3:  #5F5F52;
   --primary: #123524;
   --accent:  #B9904E;
+  --accent-ink: #123524;  /* accent for text on LIGHT surfaces — set to #B9904E to restore gold */
   --ease:    cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -175,13 +176,14 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
   font-size: 10px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-ink);
   margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 12px;
 }
 .room-num::before { content: ""; width: 28px; height: 1px; background: var(--room-accent, var(--accent)); }
+.room-entry.dark-info .room-num { color: var(--accent); }   /* gold still reads on ink */
 .room-info h2 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(32px, 4vw, 56px); line-height: 1.05; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 16px; }
 .room-entry.dark-info .room-info h2 { color: #fff; }
 .room-info h2 em { font-style: italic; color: var(--primary); }
@@ -506,7 +508,7 @@ body.menu-open nav.top { transform: none !important; }
     <a href="neighbourhood.html">Neighbourhood</a>
     <a href="contact.html">Contact</a>
   </div>
-  <a href="index.html#reserve" class="nav-cta magnet">Reserve</a>
+  <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="nav-cta magnet" target="_blank" rel="noopener">Reserve</a>
     <button type="button" class="m-burger" id="mnavBtn" aria-expanded="false" aria-controls="mnav" aria-label="Menu">
       <span></span><span></span>
     </button>
@@ -524,7 +526,7 @@ body.menu-open nav.top { transform: none !important; }
       <a href="faqs.html"><span class="n">07</span>FAQ</a>
     </nav>
     <div class="mnav-foot">
-      <a class="mnav-cta" href="index.html#reserve">Reserve a stay</a>
+      <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Reserve a stay</a>
       <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
     </div>
   </div>
@@ -608,7 +610,7 @@ body.menu-open nav.top { transform: none !important; }
       <div class="spec-item"><div class="spec-label">Floors</div><div class="spec-val">Two-level</div></div>
       <div class="spec-item"><div class="spec-label">View</div><div class="spec-val">Courtyard terrace</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
+    <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="room-cta magnet" target="_blank" rel="noopener">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
@@ -646,7 +648,7 @@ body.menu-open nav.top { transform: none !important; }
       <div class="spec-item"><div class="spec-label">Sauna</div><div class="spec-val">Private sauna</div></div>
       <div class="spec-item"><div class="spec-label">Living</div><div class="spec-val">Separate lounge</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
+    <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="room-cta magnet" target="_blank" rel="noopener">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
@@ -690,7 +692,7 @@ body.menu-open nav.top { transform: none !important; }
       <div class="spec-item"><div class="spec-label">Bath</div><div class="spec-val">1 full bathroom</div></div>
       <div class="spec-item"><div class="spec-label">Characters</div><div class="spec-val">4 colour rooms</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
+    <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="room-cta magnet" target="_blank" rel="noopener">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
@@ -734,7 +736,7 @@ body.menu-open nav.top { transform: none !important; }
       <div class="spec-item"><div class="spec-label">Bath</div><div class="spec-val">1 full bathroom</div></div>
       <div class="spec-item"><div class="spec-label">Floor</div><div class="spec-val">Upper floors</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
+    <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="room-cta magnet" target="_blank" rel="noopener">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
@@ -766,7 +768,7 @@ body.menu-open nav.top { transform: none !important; }
       <div class="spec-item"><div class="spec-label">Light</div><div class="spec-val">South-facing</div></div>
       <div class="spec-item"><div class="spec-label">Guests</div><div class="spec-val">Up to 2</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
+    <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="room-cta magnet" target="_blank" rel="noopener">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
@@ -810,7 +812,7 @@ body.menu-open nav.top { transform: none !important; }
       <div class="spec-item"><div class="spec-label">Mood</div><div class="spec-val">Intimate · cosy</div></div>
       <div class="spec-item"><div class="spec-label">Sleeps</div><div class="spec-val">Up to 2</div></div>
     </div>
-    <a href="index.html#reserve" class="room-cta magnet">Reserve this room <span aria-hidden="true">&rarr;</span></a>
+    <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="room-cta magnet" target="_blank" rel="noopener">Reserve this room <span aria-hidden="true">&rarr;</span></a>
   </div>
 </article>
 
