@@ -2611,22 +2611,22 @@ body.menu-open nav.top { transform: none !important; }
     <div class="reserve-over">06 / Reservations</div>
     <h2>Begin <em>your</em><br>Budapest chapter.</h2>
     <p>Direct bookings include a complimentary welcome drink at the bar and late checkout (subject to availability).</p>
-    <form class="reserve-form" onsubmit="event.preventDefault(); window.open('https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951', '_blank', 'noopener');">
+    <form class="reserve-form" id="reserveForm">
       <div class="field">
-        <span class="lab">Check-in</span>
-        <input type="date">
+        <label class="lab" for="resIn">Check-in</label>
+        <input type="date" id="resIn">
       </div>
       <div class="field">
-        <span class="lab">Check-out</span>
-        <input type="date">
+        <label class="lab" for="resOut">Check-out</label>
+        <input type="date" id="resOut">
       </div>
       <div class="field">
-        <span class="lab">Guests</span>
-        <select>
-          <option>1 guest</option>
-          <option selected>2 guests</option>
-          <option>3 guests</option>
-          <option>4 guests</option>
+        <label class="lab" for="resAdults">Guests</label>
+        <select id="resAdults">
+          <option value="1">1 guest</option>
+          <option value="2" selected>2 guests</option>
+          <option value="3">3 guests</option>
+          <option value="4">4 guests</option>
         </select>
       </div>
       <button class="go" type="submit">Check availability →</button>
@@ -3980,6 +3980,48 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     setTimeout(finish, MAX);
   })();
 
+
+  // ── Reserve form: hand the dates to the booking engine ─────────────────
+  // Deep-link shape confirmed against the live engine, camelCase and all:
+  //   /search-list?p=<token>&checkIn=YYYY-MM-DD&checkOut=YYYY-MM-DD&adults=N
+  // Without both dates we open the engine's own start page rather than send
+  // a half-built query it would have to reject.
+  (function () {
+    var form = document.getElementById('reserveForm');
+    if (!form) return;
+    var BASE  = 'https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel';
+    var TOKEN = '063b197ca9a16951';
+    var inEl = document.getElementById('resIn');
+    var outEl = document.getElementById('resOut');
+    var adEl = document.getElementById('resAdults');
+
+    function iso (d) { return d.toISOString().slice(0, 10); }
+    var today = new Date();
+    if (inEl) inEl.min = iso(today);
+    // Check-out can never precede check-in — the browser enforces it, so the
+    // engine never receives a range it would bounce.
+    function syncMin () {
+      if (!inEl || !outEl || !inEl.value) return;
+      var next = new Date(inEl.value);
+      next.setDate(next.getDate() + 1);
+      outEl.min = iso(next);
+      if (outEl.value && outEl.value <= inEl.value) outEl.value = iso(next);
+    }
+    if (inEl) inEl.addEventListener('change', syncMin);
+    syncMin();
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var url = BASE + '?p=' + TOKEN;
+      if (inEl && outEl && inEl.value && outEl.value && outEl.value > inEl.value) {
+        url = BASE + '/search-list?p=' + TOKEN +
+              '&checkIn=' + encodeURIComponent(inEl.value) +
+              '&checkOut=' + encodeURIComponent(outEl.value) +
+              '&adults=' + encodeURIComponent(adEl && adEl.value ? adEl.value : '2');
+      }
+      window.open(url, '_blank', 'noopener');
+    });
+  })();
 
   // ── Blur-up: photos settle in from a soft blur instead of popping
   function blurUp () {
