@@ -1,29 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stories Budapest — A hotel of stories, quietly told.</title>
-<meta name="description" content="A 44-room boutique hotel in Budapest District VI, on Király utca. Six room characters, à la carte breakfast, a bar &amp; lounge, and a courtyard garden — quietly told, not shouted.">
+<title>Stories Budapest — Történetek háza, csendesen elmesélve.</title>
+<meta name="description" content="44 szobás butikhotel Budapest VI. kerületében, a Király utcában. Hat szobakarakter, à la carte reggeli, bár és lounge, valamint udvari kert — csendesen elmesélve, nem hangoskodva.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://secrethotel.netlify.app/">
+<link rel="canonical" href="https://secrethotel.netlify.app/hu/">
 <link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/">
 <link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/">
 <link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Stories Hotel Budapest">
-<meta property="og:title" content="Stories Budapest — A hotel of stories, quietly told.">
-<meta property="og:description" content="A 44-room boutique hotel in Budapest District VI, on Király utca. Six room characters, à la carte breakfast, a bar &amp; lounge, and a courtyard garden — quietly told, not shouted.">
-<meta property="og:url" content="https://secrethotel.netlify.app/">
+<meta property="og:title" content="Stories Budapest — Történetek háza, csendesen elmesélve.">
+<meta property="og:description" content="44 szobás butikhotel Budapest VI. kerületében, a Király utcában. Hat szobakarakter, à la carte reggeli, bár és lounge, valamint udvari kert — csendesen elmesélve, nem hangoskodva.">
+<meta property="og:url" content="https://secrethotel.netlify.app/hu/">
 <meta property="og:image" content="https://secrethotel.netlify.app/assets/brand/hero.jpg">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="hu_HU">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Stories Budapest — A hotel of stories, quietly told.">
-<meta name="twitter:description" content="A 44-room boutique hotel in Budapest District VI, on Király utca. Six room characters, à la carte breakfast, a bar &amp; lounge, and a courtyard garden — quietly told, not shouted.">
+<meta name="twitter:title" content="Stories Budapest — Történetek háza, csendesen elmesélve.">
+<meta name="twitter:description" content="44 szobás butikhotel Budapest VI. kerületében, a Király utcában. Hat szobakarakter, à la carte reggeli, bár és lounge, valamint udvari kert — csendesen elmesélve, nem hangoskodva.">
 <meta name="twitter:image" content="https://secrethotel.netlify.app/assets/brand/hero.jpg">
 <link rel="icon" href="data:,">
 <!-- LCP: the fullscreen loader poster paints before anything else on every visit -->
-<link rel="preload" as="image" href="assets/brand/hero.webp" fetchpriority="high">
+<link rel="preload" as="image" href="../assets/brand/hero.webp" fetchpriority="high">
 <script>
 /* Page-transition entry: if the previous page set the flag, start covered
    (html.pt-in) so the sweep panel can exit over the first paint. */
@@ -205,7 +205,7 @@ body.in-cinema .cr-label, body.in-cinema .cr-hint { color: var(--room-ink); }
   background: #06100b;
   cursor: none;
 }
-.sp-img { position: absolute; inset: 0; background: url('assets/brand/hero.webp') center 38% / cover; }
+.sp-img { position: absolute; inset: 0; background: url('../assets/brand/hero.webp') center 38% / cover; }
 .sp-img.base { filter: brightness(0.24) grayscale(0.55) saturate(0.7) contrast(1.05); }
 .sp-img.lit {
   filter: brightness(0.98) saturate(1.08);
@@ -1277,7 +1277,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 .spotlight-photo {
   position: absolute;
   inset: 0;
-  background-image: url('assets/brand/luxuries-top-scene.webp');
+  background-image: url('../assets/brand/luxuries-top-scene.webp');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 100% 100%;
@@ -1315,7 +1315,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .spotlight-kicker::before { content: ""; width: 42px; height: 1px; background: var(--accent); }
 #pleasures .bg {
-  background-image: url('assets/brand/luxuries-middle-scene.webp') !important;
+  background-image: url('../assets/brand/luxuries-middle-scene.webp') !important;
   background-position: center center;
   background-size: 100% 100%;
   filter: brightness(0.76) saturate(0.9) contrast(1);
@@ -1350,7 +1350,7 @@ body:not(.page-home) { --logo-init-p: 1; }
   position: absolute;
   inset: 0;
   z-index: -2;
-  background-image: url('assets/brand/luxuries-bottom-scene.webp');
+  background-image: url('../assets/brand/luxuries-bottom-scene.webp');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 100% 100%;
@@ -1444,7 +1444,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .bk-photo-bg {
   z-index: 0;
-  background: url('assets/brand/breakfast-new.webp') center / cover no-repeat;
+  background: url('../assets/brand/breakfast-new.webp') center / cover no-repeat;
   transform: scale(1.04);
   filter: brightness(var(--bk-photo-brightness, 0.82)) saturate(0.92);
   opacity: var(--bk-photo-opacity, 1);
@@ -1473,7 +1473,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .dn-photo {
   z-index: 4;
-  background: url('assets/brand/danube-budapest.webp') center / cover no-repeat;
+  background: url('../assets/brand/danube-budapest.webp') center / cover no-repeat;
   opacity: var(--dn-photo-opacity, 0);
   transition: opacity 0.9s var(--ease);
 }
@@ -1489,7 +1489,7 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .dn-sky {
   z-index: 6;
-  background: url('assets/brand/sky-evening.webp') center / cover no-repeat;
+  background: url('../assets/brand/sky-evening.webp') center / cover no-repeat;
   opacity: var(--dn-sky-opacity, 0);
   transition: opacity 1.3s var(--ease);
 }
@@ -1575,7 +1575,7 @@ body.bk-static .bk-coffee-content {
   opacity: 1;
   pointer-events: auto;
   padding: clamp(80px, 14vw, 130px) clamp(24px, 6vw, 96px);
-  background: linear-gradient(rgba(11,9,7,0.78), rgba(11,9,7,0.9)), url('assets/coffee/coffee-final.webp') center / cover no-repeat;
+  background: linear-gradient(rgba(11,9,7,0.78), rgba(11,9,7,0.9)), url('../assets/coffee/coffee-final.webp') center / cover no-repeat;
 }
 body.bk-static .dn-content {
   position: relative;
@@ -1584,7 +1584,7 @@ body.bk-static .dn-content {
   opacity: 1;
   pointer-events: auto;
   padding: clamp(110px, 22vw, 180px) clamp(24px, 6vw, 96px) clamp(48px, 8vw, 80px);
-  background: linear-gradient(180deg, rgba(11,9,7,0.42), rgba(11,9,7,0.72)), url('assets/brand/sky-evening.webp') center / cover no-repeat;
+  background: linear-gradient(180deg, rgba(11,9,7,0.42), rgba(11,9,7,0.72)), url('../assets/brand/sky-evening.webp') center / cover no-repeat;
 }
 /* The district list and the map live inside the stage, so without this they
    stayed at opacity 0 with no controller left to raise them — the one thing a
@@ -1597,7 +1597,7 @@ body.bk-static .dn-detail {
   pointer-events: auto;
   align-content: start;
   padding: 0 clamp(24px, 6vw, 96px) clamp(72px, 12vw, 110px);
-  background: linear-gradient(180deg, rgba(11,9,7,0.72), rgba(11,9,7,0.86)), url('assets/brand/sky-evening.webp') center / cover no-repeat;
+  background: linear-gradient(180deg, rgba(11,9,7,0.72), rgba(11,9,7,0.86)), url('../assets/brand/sky-evening.webp') center / cover no-repeat;
 }
 body.bk-static .dn-detail .neigh-map { height: min(70vh, 460px); }
 .bk-hero-copy {
@@ -1841,7 +1841,7 @@ body.bk-static .dn-detail .neigh-map { height: min(70vh, 460px); }
 .reserve-plate::before {
   content: "";
   position: absolute; inset: 0;
-  background: url('assets/brand/A__4T4B8254.webp') center / cover no-repeat;
+  background: url('../assets/brand/A__4T4B8254.webp') center / cover no-repeat;
   opacity: 0.45;
   filter: grayscale(0.18) contrast(1.05);
 }
@@ -1894,7 +1894,7 @@ footer {
 /* Reveal is JS-armed so a no-JS load keeps the footer fully visible. */
 footer.foot-armed { transform: translate3d(0, 84px, 0); opacity: 0; }
 footer.foot-armed.foot-revealed { transform: none; opacity: 1; }
-footer::before { content: ""; position: absolute; inset: 0; background: url('assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.webp') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
+footer::before { content: ""; position: absolute; inset: 0; background: url('../assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.webp') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
 footer::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9,11,10,0.4) 0%, rgba(8,10,9,0.84) 100%); z-index: -1; }
 .foot-grid { position: relative; width: 100%; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .foot-grid h3 { font-family: 'Libre Caslon Text', serif; font-size: 28px; color: #fff; font-weight: 500; }
@@ -2152,9 +2152,9 @@ body.menu-open nav.top { transform: none !important; }
   "@context": "https://schema.org",
   "@type": "Hotel",
   "name": "Stories Hotel Budapest",
-  "description": "A 44-room boutique hotel in Budapest District VI, on Király utca. Six room characters, à la carte breakfast, a bar and lounge, and a courtyard garden.",
-  "inLanguage": "en",
-  "url": "https://secrethotel.netlify.app/",
+  "description": "44 szobás butikhotel Budapest VI. kerületében, a Király utcában. Hat szobakarakter, à la carte reggeli, bár és lounge, valamint udvari kert.",
+  "inLanguage": "hu",
+  "url": "https://secrethotel.netlify.app/hu/",
   "telephone": "+36-1-808-0981",
   "foundingDate": "2019",
   "email": "info@storiesbudapest.com",
@@ -2191,7 +2191,7 @@ body.menu-open nav.top { transform: none !important; }
 </script>
 </head>
 <body class="page-home">
-<a href="#main" class="skip-link">Skip to content</a>
+<a href="#main" class="skip-link">Ugrás a tartalomra</a>
 
 
 <!-- SITE LOADER — plays the living green wall while the page settles -->
@@ -2239,16 +2239,16 @@ body.menu-open nav.top { transform: none !important; }
     </svg>
   </a>
   <div class="nav-links">
-    <a href="rooms.html">Rooms</a>
-    <a href="pleasures.html">Pleasures</a>
-    <a href="breakfast.html">Breakfast</a>
-    <a href="neighbourhood.html">Neighbourhood</a>
-    <a href="contact.html">Contact</a>
+    <a href="rooms.html">Szobák</a>
+    <a href="pleasures.html">Élmények</a>
+    <a href="breakfast.html">Reggeli</a>
+    <a href="neighbourhood.html">A negyed</a>
+    <a href="contact.html">Kapcsolat</a>
   </div>
   <div class="nav-right">
-    <div class="lang-toggle"><a href="index.html" hreflang="en" class="active" aria-current="true">EN</a><a href="hu/index.html" hreflang="hu" class="">HU</a></div>
-    <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="nav-cta magnet" target="_blank" rel="noopener">Reserve</a>
-    <button type="button" class="m-burger" id="mnavBtn" aria-expanded="false" aria-controls="mnav" aria-label="Menu">
+    <div class="lang-toggle"><a href="../index.html" hreflang="en" class="">EN</a><a href="index.html" hreflang="hu" class="active" aria-current="true">HU</a></div>
+    <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="nav-cta magnet" target="_blank" rel="noopener">Foglalás</a>
+    <button type="button" class="m-burger" id="mnavBtn" aria-expanded="false" aria-controls="mnav" aria-label="Menü">
       <span></span><span></span>
     </button>
   </div>
@@ -2257,18 +2257,18 @@ body.menu-open nav.top { transform: none !important; }
 <div class="mnav" id="mnav" aria-hidden="true">
   <div class="mnav-inner">
     <nav class="mnav-links" aria-label="Site">
-      <a href="index.html" class="active" aria-current="page"><span class="n">01</span>Home</a>
-      <a href="rooms.html"><span class="n">02</span>Rooms</a>
-      <a href="pleasures.html"><span class="n">03</span>Pleasures</a>
-      <a href="breakfast.html"><span class="n">04</span>Breakfast</a>
-      <a href="neighbourhood.html"><span class="n">05</span>Neighbourhood</a>
-      <a href="contact.html"><span class="n">06</span>Contact</a>
-      <a href="faqs.html"><span class="n">07</span>FAQ</a>
+      <a href="index.html" class="active" aria-current="page"><span class="n">01</span>Főoldal</a>
+      <a href="rooms.html"><span class="n">02</span>Szobák</a>
+      <a href="pleasures.html"><span class="n">03</span>Élmények</a>
+      <a href="breakfast.html"><span class="n">04</span>Reggeli</a>
+      <a href="neighbourhood.html"><span class="n">05</span>A negyed</a>
+      <a href="contact.html"><span class="n">06</span>Kapcsolat</a>
+      <a href="faqs.html"><span class="n">07</span>GYIK</a>
     </nav>
     <div class="mnav-foot">
-      <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Reserve a stay</a>
+      <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Foglaljon szobát</a>
       <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
-      <div class="mnav-lang"><a href="index.html" hreflang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="hu/index.html" hreflang="hu">Magyar</a></div>
+      <div class="mnav-lang"><a href="../index.html" hreflang="en">English</a><span aria-hidden="true">·</span><a href="index.html" hreflang="hu" aria-current="true">Magyar</a></div>
     </div>
   </div>
 </div>
@@ -2276,16 +2276,16 @@ body.menu-open nav.top { transform: none !important; }
 <main id="main">
 
 
-<nav class="chapter-rail" id="chapterRail" aria-label="Chapters">
+<nav class="chapter-rail" id="chapterRail" aria-label="Fejezetek">
   <div class="cr-bar" id="crBar">
-    <button class="cr-seg" type="button" aria-label="01 — The House"><span class="cr-fill"></span><span class="cr-hint">01<span class="cr-sep">◆</span>The House</span></button>
-    <button class="cr-seg" type="button" aria-label="02 — Little Luxuries"><span class="cr-fill"></span><span class="cr-hint">02<span class="cr-sep">◆</span>Little Luxuries</span></button>
-    <button class="cr-seg" type="button" aria-label="03 — Rooms"><span class="cr-fill"></span><span class="cr-hint">03<span class="cr-sep">◆</span>Rooms</span></button>
-    <button class="cr-seg" type="button" aria-label="04 — Breakfast"><span class="cr-fill"></span><span class="cr-hint">04<span class="cr-sep">◆</span>Breakfast</span></button>
-    <button class="cr-seg" type="button" aria-label="05 — Neighbourhood"><span class="cr-fill"></span><span class="cr-hint">05<span class="cr-sep">◆</span>Neighbourhood</span></button>
-    <button class="cr-seg" type="button" aria-label="06 — Reservations"><span class="cr-fill"></span><span class="cr-hint">06<span class="cr-sep">◆</span>Reservations</span></button>
+    <button class="cr-seg" type="button" aria-label="01 — A ház"><span class="cr-fill"></span><span class="cr-hint">01<span class="cr-sep">◆</span>A ház</span></button>
+    <button class="cr-seg" type="button" aria-label="02 — Apró luxusok"><span class="cr-fill"></span><span class="cr-hint">02<span class="cr-sep">◆</span>Apró luxusok</span></button>
+    <button class="cr-seg" type="button" aria-label="03 — Szobák"><span class="cr-fill"></span><span class="cr-hint">03<span class="cr-sep">◆</span>Szobák</span></button>
+    <button class="cr-seg" type="button" aria-label="04 — Reggeli"><span class="cr-fill"></span><span class="cr-hint">04<span class="cr-sep">◆</span>Reggeli</span></button>
+    <button class="cr-seg" type="button" aria-label="05 — A negyed"><span class="cr-fill"></span><span class="cr-hint">05<span class="cr-sep">◆</span>A negyed</span></button>
+    <button class="cr-seg" type="button" aria-label="06 — Foglalás"><span class="cr-fill"></span><span class="cr-hint">06<span class="cr-sep">◆</span>Foglalás</span></button>
   </div>
-  <span class="cr-label" id="crLabel" aria-hidden="true"><span id="crNum">01</span><span class="cr-sep">◆</span><span id="crName">The House</span></span>
+  <span class="cr-label" id="crLabel" aria-hidden="true"><span id="crNum">01</span><span class="cr-sep">◆</span><span id="crName">A ház</span></span>
 </nav>
 
 <!-- HERO — Spotlight: cursor-reveal landing (base + lit image layers). -->
@@ -2296,21 +2296,21 @@ body.menu-open nav.top { transform: none !important; }
   <div class="sp-ring" id="spRing" aria-hidden="true"></div>
 
   <div class="sp-body">
-    <div class="sp-kicker"><span class="rule"></span>Budapest VI · Est. 2019<span class="rule"></span></div>
-    <h1 class="sp-ttl"><span class="sp-out">A hotel of <em>stories,</em><br>quietly told.</span><span class="sp-fill" aria-hidden="true">A hotel of <em>stories,</em><br>quietly told.</span></h1>
-    <p class="sp-sub">Forty-four rooms, six characters — a small house on Király utca.</p>
+    <div class="sp-kicker"><span class="rule"></span>Budapest VI. · Alapítva 2019<span class="rule"></span></div>
+    <h1 class="sp-ttl"><span class="sp-out"><em>Történetek</em> háza,<br>csendesen elmesélve.</span><span class="sp-fill" aria-hidden="true"><em>Történetek</em> háza,<br>csendesen elmesélve.</span></h1>
+    <p class="sp-sub">Negyvennégy szoba, hat karakter — egy kis ház a Király utcában.</p>
     <div class="sp-acts">
-      <a class="sp-btn-solid" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Book a stay <span aria-hidden="true">&rarr;</span></a>
-      <a class="sp-btn-ghost" href="rooms.html">Explore rooms <span aria-hidden="true">&rarr;</span></a>
+      <a class="sp-btn-solid" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Foglaljon szobát <span aria-hidden="true">&rarr;</span></a>
+      <a class="sp-btn-ghost" href="rooms.html">Szobák felfedezése <span aria-hidden="true">&rarr;</span></a>
     </div>
   </div>
 
-  <div class="sp-hint">Move your cursor to reveal</div>
+  <div class="sp-hint">Mozgassa a kurzort a felfedezéshez</div>
 
   <div class="sp-marq" aria-hidden="true">
     <div class="sp-track">
-      <span>Forty-four rooms</span><span>Breakfast at Twenty Six</span><span>Bar &amp; lounge</span><span>Garden atrium</span><span>GoActive gym</span><span>District VI · Király utca</span>
-      <span>Forty-four rooms</span><span>Breakfast at Twenty Six</span><span>Bar &amp; lounge</span><span>Garden atrium</span><span>GoActive gym</span><span>District VI · Király utca</span>
+      <span>Negyvennégy szoba</span><span>Reggeli a Twenty Six-ben</span><span>Bár és lounge</span><span>Kerti átrium</span><span>GoActive edzőterem</span><span>VI. kerület · Király utca</span>
+      <span>Negyvennégy szoba</span><span>Reggeli a Twenty Six-ben</span><span>Bár és lounge</span><span>Kerti átrium</span><span>GoActive edzőterem</span><span>VI. kerület · Király utca</span>
     </div>
   </div>
 </section>
@@ -2323,17 +2323,17 @@ body.menu-open nav.top { transform: none !important; }
   <div class="intro-sketch-fade" aria-hidden="true"></div>
   <div class="intro-inner">
     <div class="intro-text">
-      <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VI · Király utca 26</span></div>
-      <h2><span class="w">A</span> <span class="w">hotel</span> <span class="w">of</span> <span class="w em-word">stories,</span><br><span class="w">quietly</span> <span class="w">told.</span></h2>
-      <p class="deck" id="introDeck"><span class="rw">Forty-four</span> <span class="rw">rooms,</span> <span class="rw">six</span> <span class="rw">characters,</span> <span class="rw">one</span> <span class="rw">Twenty</span> <span class="rw">Six</span> <span class="rw">building.</span> <span class="rw">A</span> <span class="rw">small</span> <span class="rw">house</span> <span class="rw">on</span> <span class="rw">Király</span> <span class="rw">utca,</span> <span class="rw">lived-in</span> <span class="rw">and</span> <span class="rw">attentive</span> <span class="rw">—</span> <span class="rw">the</span> <span class="rw">opposite</span> <span class="rw">of</span> <span class="rw">anonymous.</span></p>
-      <p class="deck deck--secondary"><span class="rw">Discover</span> <span class="rw">the</span> <span class="rw">epitome</span> <span class="rw">of</span> <span class="rw">uniqueness</span> <span class="rw">at</span> <span class="rw">our</span> <span class="rw">boutique</span> <span class="rw">hotel,</span> <span class="rw">where</span> <span class="rw">every</span> <span class="rw">corner</span> <span class="rw">is</span> <span class="rw">infused</span> <span class="rw">with</span> <span class="rw">design</span> <span class="rw">and</span> <span class="rw">excitement.</span> <span class="rw">Your</span> <span class="rw">search</span> <span class="rw">for</span> <span class="rw">the</span> <span class="rw">perfect</span> <span class="rw">destination</span> <span class="rw">ends</span> <span class="rw">here.</span> <span class="rw">Welcome</span> <span class="rw">to</span> <span class="rw">a</span> <span class="rw">world</span> <span class="rw">where</span> <span class="rw">unforgettable</span> <span class="rw">experiences</span> <span class="rw">await</span> <span class="rw">at</span> <span class="rw">every</span> <span class="rw">turn.</span></p>
+      <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VI. · Király utca 26</span></div>
+      <h2><span class="w em-word">Történetek</span> <span class="w">háza,</span><br><span class="w">csendesen</span> <span class="w">elmesélve.</span></h2>
+      <p class="deck" id="introDeck"><span class="rw">Negyvennégy</span> <span class="rw">szoba,</span> <span class="rw">hat</span> <span class="rw">karakter,</span> <span class="rw">egy</span> <span class="rw">Twenty</span> <span class="rw">Six</span> <span class="rw">épület.</span> <span class="rw">Egy</span> <span class="rw">kis</span> <span class="rw">ház</span> <span class="rw">a</span> <span class="rw">Király</span> <span class="rw">utcában,</span> <span class="rw">lakott</span> <span class="rw">és</span> <span class="rw">figyelmes</span> <span class="rw">—</span> <span class="rw">az</span> <span class="rw">arctalanság</span> <span class="rw">ellentéte.</span></p>
+      <p class="deck deck--secondary"><span class="rw">Fedezze</span> <span class="rw">fel</span> <span class="rw">az</span> <span class="rw">egyediség</span> <span class="rw">megtestesülését</span> <span class="rw">butikhotelünkben,</span> <span class="rw">ahol</span> <span class="rw">minden</span> <span class="rw">sarok</span> <span class="rw">tervezéssel</span> <span class="rw">és</span> <span class="rw">izgalommal</span> <span class="rw">telt.</span> <span class="rw">A</span> <span class="rw">tökéletes</span> <span class="rw">úti</span> <span class="rw">cél</span> <span class="rw">keresése</span> <span class="rw">itt</span> <span class="rw">véget</span> <span class="rw">ér.</span> <span class="rw">Üdvözöljük</span> <span class="rw">egy</span> <span class="rw">világban,</span> <span class="rw">ahol</span> <span class="rw">minden</span> <span class="rw">fordulónál</span> <span class="rw">felejthetetlen</span> <span class="rw">élmények</span> <span class="rw">várnak.</span></p>
     </div>
   </div>
   <div class="intro-meta">
-    <div><span class="l"><span class="rw">Form</span></span><span class="v"><span class="rw">Boutique</span> <span class="rw">&middot;</span> <span class="rw"><em>44</em></span> <span class="rw">rooms</span></span></div>
-    <div><span class="l"><span class="rw">Address</span></span><span class="v"><span class="rw">Király</span> <span class="rw">utca</span> <span class="rw">26</span></span></div>
-    <div><span class="l"><span class="rw">Opened</span></span><span class="v"><span class="rw">MMXIX</span></span></div>
-    <div><span class="l"><span class="rw">Reservations</span></span><span class="v"><span class="rw">+36</span> <span class="rw">1</span> <span class="rw">808</span> <span class="rw">0981</span></span></div>
+    <div><span class="l"><span class="rw">Forma</span></span><span class="v"><span class="rw">Butik</span> <span class="rw">&middot;</span> <span class="rw"><em>44</em></span> <span class="rw">szoba</span></span></div>
+    <div><span class="l"><span class="rw">Cím</span></span><span class="v"><span class="rw">Király</span> <span class="rw">utca</span> <span class="rw">26</span></span></div>
+    <div><span class="l"><span class="rw">Nyitás</span></span><span class="v"><span class="rw">MMXIX</span></span></div>
+    <div><span class="l"><span class="rw">Foglalás</span></span><span class="v"><span class="rw">+36</span> <span class="rw">1</span> <span class="rw">808</span> <span class="rw">0981</span></span></div>
   </div>
 </section>
 
@@ -2342,52 +2342,52 @@ body.menu-open nav.top { transform: none !important; }
   <div class="spotlight-sticky">
     <div class="spotlight-photo"></div>
     <div class="spotlight-copy">
-      <div class="spotlight-kicker">III · Rituals of the house</div>
+      <div class="spotlight-kicker">III · A ház rituáléi</div>
     </div>
   </div>
 </section>
 
 <section class="plate" data-label="02 / Little Luxuries" id="pleasures">
-  <div class="bg" style="background-image: url('assets/brand/A__4T4B7716.webp');"></div>
+  <div class="bg" style="background-image: url('../assets/brand/A__4T4B7716.webp');"></div>
   <div class="plate-grain"></div>
   <div class="plate-content">
-    <div class="plate-id"><span class="n">III</span><span>·</span><span>Rituals of the house</span></div>
+    <div class="plate-id"><span class="n">III</span><span>·</span><span>A ház rituáléi</span></div>
     <div class="plate-title-block">
-      <h2>Little <em>luxuries.</em></h2>
-      <p class="plate-deck">The small things that make a stay feel particular. A bar downstairs, a gym and a desk a short walk away — each with its own rhythm.</p>
+      <h2>Apró <em>luxusok.</em></h2>
+      <p class="plate-deck">Az apró dolgok, amelyektől egy ittlét különleges lesz. Egy bár a földszinten, egy edzőterem és egy íróasztal néhány percre — mindegyiknek megvan a maga ritmusa.</p>
     </div>
   </div>
-  <div class="scrollcue"><span>Explore</span><span class="line"></span></div>
+  <div class="scrollcue"><span>Felfedezés</span><span class="line"></span></div>
 </section>
 
 <section class="body dark pleasures-body" data-label="02 / Little Luxuries">
   <div class="body-inner">
     <div class="pleasures-grid">
       <div class="pcard a">
-        <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/restaurant/restaurant-01-800.webp 800w, assets/photos/restaurant/restaurant-01-1200.webp 1200w, assets/photos/restaurant/restaurant-01.webp 1600w"><img decoding="async" loading="lazy" src="assets/photos/restaurant/restaurant-01.jpg" alt="Bar and lounge"></picture>
+        <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/restaurant/restaurant-01-800.webp 800w, ../assets/photos/restaurant/restaurant-01-1200.webp 1200w, ../assets/photos/restaurant/restaurant-01.webp 1600w"><img decoding="async" loading="lazy" src="../assets/photos/restaurant/restaurant-01.jpg" alt="Bár és lounge"></picture>
         <div class="inner">
-          <div class="tag">III · 01 — Social</div>
-          <h4>Bar &amp; social <em>lounge</em></h4>
-          <p>Hungarian vermouths, natural wines from Tokaj, classics made slowly. A room that spills into the Twenty Six courtyard every evening after five.</p>
-          <a href="pleasures.html#bar" class="more">Read the bar chapter →</a>
+          <div class="tag">III · 01 — Társasági</div>
+          <h4>Bár és <em>lounge</em></h4>
+          <p>Magyar vermutok, tokaji natúrborok, ráérősen kevert klasszikusok. Egy tér, amely öt óra után minden este kicsordul a Twenty Six udvarára.</p>
+          <a href="pleasures.html#bar" class="more">A bár fejezete →</a>
         </div>
       </div>
       <div class="pcard b">
-        <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/GYM/GoActive-5-19-800.webp 800w, assets/photos/GYM/GoActive-5-19-1200.webp 1200w, assets/photos/GYM/GoActive-5-19.webp 1600w"><img decoding="async" loading="lazy" src="assets/photos/GYM/GoActive-5-19.jpg" alt="Gym"></picture>
+        <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/GYM/GoActive-5-19-800.webp 800w, ../assets/photos/GYM/GoActive-5-19-1200.webp 1200w, ../assets/photos/GYM/GoActive-5-19.webp 1600w"><img decoding="async" loading="lazy" src="../assets/photos/GYM/GoActive-5-19.jpg" alt="Edzőterem"></picture>
         <div class="inner">
-          <div class="tag">III · 02 — Body</div>
-          <h4>Gym, with <em>GoActive</em></h4>
-          <p>Our neighbours at GoActive, five minutes away — Technogym equipment and a sauna. Reception can arrange access.</p>
-          <a href="pleasures.html#gym" class="more">See schedule →</a>
+          <div class="tag">III · 02 — Test</div>
+          <h4>Edzőterem, <em>GoActive</em></h4>
+          <p>Szomszédaink, a GoActive, öt percre — Technogym gépek és szauna. A recepció megszervezi a belépést.</p>
+          <a href="pleasures.html#gym" class="more">Órarend →</a>
         </div>
       </div>
       <div class="pcard c">
-        <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/Coworking/coworking26-800.webp 800w, assets/photos/Coworking/coworking26-1200.webp 1200w, assets/photos/Coworking/coworking26.webp 1600w"><img decoding="async" loading="lazy" src="assets/photos/Coworking/coworking26.jpg" alt="Create 26"></picture>
+        <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/Coworking/coworking26-800.webp 800w, ../assets/photos/Coworking/coworking26-1200.webp 1200w, ../assets/photos/Coworking/coworking26.webp 1600w"><img decoding="async" loading="lazy" src="../assets/photos/Coworking/coworking26.jpg" alt="Create 26"></picture>
         <div class="inner">
-          <div class="tag">III · 03 — Work</div>
+          <div class="tag">III · 03 — Munka</div>
           <h4>Create 26 <em>coworking</em></h4>
-          <p>A quiet floor of private desks and meeting rooms in the Twenty Six building. Ask reception and we'll arrange a desk.</p>
-          <a href="pleasures.html#coworking" class="more">Request a desk →</a>
+          <p>Csendes szint saját íróasztalokkal és tárgyalókkal a Twenty Six épületben. Szóljon a recepción, és intézünk egy asztalt.</p>
+          <a href="pleasures.html#coworking" class="more">Asztalt kérek →</a>
         </div>
       </div>
     </div>
@@ -2401,7 +2401,7 @@ body.menu-open nav.top { transform: none !important; }
 
     <aside class="room-panel">
       <header class="panel-header">
-        <p class="panel-intro">Our rooms are designed with the utmost attention to furnishings, colors and fabrics, all while respecting the comfort and privacy of our guests.</p>
+        <p class="panel-intro">Szobáinkat a berendezésre, a színekre és a textilekre fordított legnagyobb figyelemmel terveztük, tiszteletben tartva vendégeink kényelmét és nyugalmát.</p>
       </header>
 
       <nav class="room-list" aria-label="Choose a room">
@@ -2415,10 +2415,10 @@ body.menu-open nav.top { transform: none !important; }
 
       <div class="panel-actions">
         <a class="panel-cta magnet" id="panelCta" href="rooms.html#presidential">
-          Explore the rooms <span aria-hidden="true">&rarr;</span>
+          Szobák felfedezése <span aria-hidden="true">&rarr;</span>
         </a>
         <button type="button" class="panel-cta ghost" id="nextChapter" aria-label="Skip to the next section">
-          Next chapter <span aria-hidden="true">&darr;</span>
+          Következő fejezet <span aria-hidden="true">&darr;</span>
         </button>
       </div>
     </aside>
@@ -2426,68 +2426,68 @@ body.menu-open nav.top { transform: none !important; }
     <div class="room-galleries">
       <div class="room-gallery" data-slug="presidential" aria-hidden="false">
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/presidential-suite/01-800.webp 800w, assets/photos/presidential-suite/01-1200.webp 1200w, assets/photos/presidential-suite/01.webp 1600w"><img decoding="async" src="assets/photos/presidential-suite/01.jpg" alt="Presidential Suite &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/presidential-suite/01-800.webp 800w, ../assets/photos/presidential-suite/01-1200.webp 1200w, ../assets/photos/presidential-suite/01.webp 1600w"><img decoding="async" src="../assets/photos/presidential-suite/01.jpg" alt="Presidential Suite &mdash; 1. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/presidential-suite/02-800.webp 800w, assets/photos/presidential-suite/02-1200.webp 1200w, assets/photos/presidential-suite/02.webp 1600w"><img decoding="async" src="assets/photos/presidential-suite/02.jpg" alt="Presidential Suite &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/presidential-suite/02-800.webp 800w, ../assets/photos/presidential-suite/02-1200.webp 1200w, ../assets/photos/presidential-suite/02.webp 1600w"><img decoding="async" src="../assets/photos/presidential-suite/02.jpg" alt="Presidential Suite &mdash; 2. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/presidential-suite/03-800.webp 800w, assets/photos/presidential-suite/03-1200.webp 1200w, assets/photos/presidential-suite/03.webp 1600w"><img decoding="async" src="assets/photos/presidential-suite/03.jpg" alt="Presidential Suite &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/presidential-suite/03-800.webp 800w, ../assets/photos/presidential-suite/03-1200.webp 1200w, ../assets/photos/presidential-suite/03.webp 1600w"><img decoding="async" src="../assets/photos/presidential-suite/03.jpg" alt="Presidential Suite &mdash; 3. nézet" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="king" aria-hidden="false">
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/king-suite/01-800.webp 800w, assets/photos/king-suite/01-1200.webp 1200w, assets/photos/king-suite/01.webp 1600w"><img decoding="async" src="assets/photos/king-suite/01.jpg" alt="King Suite &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/king-suite/01-800.webp 800w, ../assets/photos/king-suite/01-1200.webp 1200w, ../assets/photos/king-suite/01.webp 1600w"><img decoding="async" src="../assets/photos/king-suite/01.jpg" alt="King Suite &mdash; 1. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/king-suite/02-800.webp 800w, assets/photos/king-suite/02-1200.webp 1200w, assets/photos/king-suite/02.webp 1600w"><img decoding="async" src="assets/photos/king-suite/02.jpg" alt="King Suite &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/king-suite/02-800.webp 800w, ../assets/photos/king-suite/02-1200.webp 1200w, ../assets/photos/king-suite/02.webp 1600w"><img decoding="async" src="../assets/photos/king-suite/02.jpg" alt="King Suite &mdash; 2. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/king-suite/03-800.webp 800w, assets/photos/king-suite/03-1200.webp 1200w, assets/photos/king-suite/03.webp 1600w"><img decoding="async" src="assets/photos/king-suite/03.jpg" alt="King Suite &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/king-suite/03-800.webp 800w, ../assets/photos/king-suite/03-1200.webp 1200w, ../assets/photos/king-suite/03.webp 1600w"><img decoding="async" src="../assets/photos/king-suite/03.jpg" alt="King Suite &mdash; 3. nézet" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="junior" aria-hidden="false">
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/junior-suite/01-800.webp 800w, assets/photos/junior-suite/01-1200.webp 1200w, assets/photos/junior-suite/01.webp 1600w"><img decoding="async" src="assets/photos/junior-suite/01.jpg" alt="Junior Suite &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/junior-suite/01-800.webp 800w, ../assets/photos/junior-suite/01-1200.webp 1200w, ../assets/photos/junior-suite/01.webp 1600w"><img decoding="async" src="../assets/photos/junior-suite/01.jpg" alt="Junior Suite &mdash; 1. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/junior-suite/02-800.webp 800w, assets/photos/junior-suite/02-1200.webp 1200w, assets/photos/junior-suite/02.webp 1600w"><img decoding="async" src="assets/photos/junior-suite/02.jpg" alt="Junior Suite &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/junior-suite/02-800.webp 800w, ../assets/photos/junior-suite/02-1200.webp 1200w, ../assets/photos/junior-suite/02.webp 1600w"><img decoding="async" src="../assets/photos/junior-suite/02.jpg" alt="Junior Suite &mdash; 2. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/junior-suite/03-800.webp 800w, assets/photos/junior-suite/03-1200.webp 1200w, assets/photos/junior-suite/03.webp 1600w"><img decoding="async" src="assets/photos/junior-suite/03.jpg" alt="Junior Suite &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/junior-suite/03-800.webp 800w, ../assets/photos/junior-suite/03-1200.webp 1200w, ../assets/photos/junior-suite/03.webp 1600w"><img decoding="async" src="../assets/photos/junior-suite/03.jpg" alt="Junior Suite &mdash; 3. nézet" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="deluxe" aria-hidden="false">
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe/01-800.webp 800w, assets/photos/deluxe/01-1200.webp 1200w, assets/photos/deluxe/01.webp 1600w"><img decoding="async" src="assets/photos/deluxe/01.jpg" alt="Deluxe &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/deluxe/01-800.webp 800w, ../assets/photos/deluxe/01-1200.webp 1200w, ../assets/photos/deluxe/01.webp 1600w"><img decoding="async" src="../assets/photos/deluxe/01.jpg" alt="Deluxe &mdash; 1. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe/02-800.webp 800w, assets/photos/deluxe/02-1200.webp 1200w, assets/photos/deluxe/02.webp 1600w"><img decoding="async" src="assets/photos/deluxe/02.jpg" alt="Deluxe &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/deluxe/02-800.webp 800w, ../assets/photos/deluxe/02-1200.webp 1200w, ../assets/photos/deluxe/02.webp 1600w"><img decoding="async" src="../assets/photos/deluxe/02.jpg" alt="Deluxe &mdash; 2. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe/03-800.webp 800w, assets/photos/deluxe/03-1200.webp 1200w, assets/photos/deluxe/03.webp 1600w"><img decoding="async" src="assets/photos/deluxe/03.jpg" alt="Deluxe &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/deluxe/03-800.webp 800w, ../assets/photos/deluxe/03-1200.webp 1200w, ../assets/photos/deluxe/03.webp 1600w"><img decoding="async" src="../assets/photos/deluxe/03.jpg" alt="Deluxe &mdash; 3. nézet" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="deluxe-queen" aria-hidden="false">
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe-queen/01-800.webp 800w, assets/photos/deluxe-queen/01-1200.webp 1200w, assets/photos/deluxe-queen/01.webp 1600w"><img decoding="async" src="assets/photos/deluxe-queen/01.jpg" alt="Deluxe Queen &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/deluxe-queen/01-800.webp 800w, ../assets/photos/deluxe-queen/01-1200.webp 1200w, ../assets/photos/deluxe-queen/01.webp 1600w"><img decoding="async" src="../assets/photos/deluxe-queen/01.jpg" alt="Deluxe Queen &mdash; 1. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe-queen/02-800.webp 800w, assets/photos/deluxe-queen/02-1200.webp 1200w, assets/photos/deluxe-queen/02.webp 1600w"><img decoding="async" src="assets/photos/deluxe-queen/02.jpg" alt="Deluxe Queen &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/deluxe-queen/02-800.webp 800w, ../assets/photos/deluxe-queen/02-1200.webp 1200w, ../assets/photos/deluxe-queen/02.webp 1600w"><img decoding="async" src="../assets/photos/deluxe-queen/02.jpg" alt="Deluxe Queen &mdash; 2. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/deluxe-queen/03-800.webp 800w, assets/photos/deluxe-queen/03-1200.webp 1200w, assets/photos/deluxe-queen/03.webp 1600w"><img decoding="async" src="assets/photos/deluxe-queen/03.jpg" alt="Deluxe Queen &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/deluxe-queen/03-800.webp 800w, ../assets/photos/deluxe-queen/03-1200.webp 1200w, ../assets/photos/deluxe-queen/03.webp 1600w"><img decoding="async" src="../assets/photos/deluxe-queen/03.jpg" alt="Deluxe Queen &mdash; 3. nézet" loading="lazy"></picture>
         </figure>
       </div>
       <div class="room-gallery" data-slug="superior" aria-hidden="false">
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/superior/01-800.webp 800w, assets/photos/superior/01-1200.webp 1200w, assets/photos/superior/01.webp 1600w"><img decoding="async" src="assets/photos/superior/01.jpg" alt="Superior &mdash; view 1" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/superior/01-800.webp 800w, ../assets/photos/superior/01-1200.webp 1200w, ../assets/photos/superior/01.webp 1600w"><img decoding="async" src="../assets/photos/superior/01.jpg" alt="Superior &mdash; 1. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/superior/02-800.webp 800w, assets/photos/superior/02-1200.webp 1200w, assets/photos/superior/02.webp 1600w"><img decoding="async" src="assets/photos/superior/02.jpg" alt="Superior &mdash; view 2" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/superior/02-800.webp 800w, ../assets/photos/superior/02-1200.webp 1200w, ../assets/photos/superior/02.webp 1600w"><img decoding="async" src="../assets/photos/superior/02.jpg" alt="Superior &mdash; 2. nézet" loading="lazy"></picture>
         </figure>
         <figure class="rf">
-          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/superior/03-800.webp 800w, assets/photos/superior/03-1200.webp 1200w, assets/photos/superior/03.webp 1600w"><img decoding="async" src="assets/photos/superior/03.jpg" alt="Superior &mdash; view 3" loading="lazy"></picture>
+          <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/superior/03-800.webp 800w, ../assets/photos/superior/03-1200.webp 1200w, ../assets/photos/superior/03.webp 1600w"><img decoding="async" src="../assets/photos/superior/03.jpg" alt="Superior &mdash; 3. nézet" loading="lazy"></picture>
         </figure>
       </div>
     </div>
@@ -2503,38 +2503,38 @@ body.menu-open nav.top { transform: none !important; }
     <div class="bk-photo-bg" aria-hidden="true"></div>
     <canvas class="bk-coffee-canvas" id="bkCoffeeCanvas" aria-hidden="true"></canvas>
     <video class="bk-coffee-video" id="bkCoffeeLoop" muted loop playsinline preload="none"
-           poster="assets/coffee/coffee-loop-poster.webp"
-           data-src="assets/coffee/coffee-loop.mp4" aria-hidden="true"></video>
+           poster="../assets/coffee/coffee-loop-poster.webp"
+           data-src="../assets/coffee/coffee-loop.mp4" aria-hidden="true"></video>
     <video class="bk-danube-video" id="bkDanubeClip" muted playsinline preload="none"
-           data-src="assets/coffee/coffee-danube.mp4" aria-hidden="true"></video>
+           data-src="../assets/coffee/coffee-danube.mp4" aria-hidden="true"></video>
     <div class="dn-photo" aria-hidden="true"></div>
     <video class="dn-sky-video" id="dnSkyRise" muted playsinline preload="none"
-           poster="assets/brand/sky-rise-poster.webp"
-           data-src="assets/brand/sky-rise.mp4" aria-hidden="true"></video>
+           poster="../assets/brand/sky-rise-poster.webp"
+           data-src="../assets/brand/sky-rise.mp4" aria-hidden="true"></video>
     <div class="dn-sky" aria-hidden="true"></div>
     <div class="bk-scene-veil" aria-hidden="true"></div>
     <div class="bk-scene-grain" aria-hidden="true"></div>
 
     <div class="bk-hero-copy">
-      <div class="plate-id"><span class="n">IV</span><span>·</span><span>Breakfast at Twenty Six</span></div>
-      <h2>A table set<br>with <em>intention.</em></h2>
-      <p>Not a buffet. You order, you sit, you talk — a gentle ritual to start each day.</p>
+      <div class="plate-id"><span class="n">IV</span><span>·</span><span>Reggeli a Twenty Six-ben</span></div>
+      <h2>Egy asztal,<br><em>szándékkal</em> megterítve.</h2>
+      <p>Nem büfé. Ön rendel, leül, beszélget — szelíd rituálé minden nap kezdetére.</p>
     </div>
 
     <div class="bk-coffee-content">
       <div class="bk-grid">
         <div>
-          <h3>Ground floor of the <em>Twenty Six</em> building.</h3>
-          <p>Breakfast is served in the Twenty Six restaurant downstairs — a room that functions as a living room for District VI. A short menu, cooked to order, that shifts with the seasons.</p>
-          <p>We don't do buffets. You order, you sit, you talk. Eggs cooked by someone who cares.</p>
-          <a href="breakfast.html" class="bk-cta">See the full menu →</a>
+          <h3>A <em>Twenty Six</em> épület földszintjén.</h3>
+          <p>A reggelit a földszinti Twenty Six étteremben szolgáljuk fel — egy teremben, amely a VI. kerület nappalijaként működik. Rövid étlap, frissen elkészítve, amely az évszakokkal együtt változik.</p>
+          <p>Nálunk nincs büfé. Ön rendel, leül, beszélget. A tojást olyasvalaki készíti, akinek fontos.</p>
+          <a href="breakfast.html" class="bk-cta">A teljes étlap →</a>
         </div>
         <div class="bk-right">
-          <div class="bk-fact"><span class="l">Hours</span><span class="v">07:30 — 11:00</span></div>
-          <div class="bk-fact"><span class="l">Place</span><span class="v">Twenty Six, ground</span></div>
-          <div class="bk-fact"><span class="l">Style</span><span class="v"><em>À la carte</em></span></div>
-          <div class="bk-fact"><span class="l">Price</span><span class="v">Ask reception</span></div>
-          <div class="bk-fact"><span class="l">Service</span><span class="v">Ordered at table</span></div>
+          <div class="bk-fact"><span class="l">Nyitvatartás</span><span class="v">07:30 — 11:00</span></div>
+          <div class="bk-fact"><span class="l">Helyszín</span><span class="v">Twenty Six, földszint</span></div>
+          <div class="bk-fact"><span class="l">Stílus</span><span class="v"><em>À la carte</em></span></div>
+          <div class="bk-fact"><span class="l">Ár</span><span class="v">Kérdezze a recepciót</span></div>
+          <div class="bk-fact"><span class="l">Felszolgálás</span><span class="v">Az asztalnál rendelve</span></div>
         </div>
       </div>
     </div>
@@ -2542,26 +2542,26 @@ body.menu-open nav.top { transform: none !important; }
     <div class="dn-detail" aria-hidden="false">
   <div class="neigh-grid">
     <div class="ix">
-      <span class="n">01</span><span class="pl">Gerbeaud <em>—</em></span><span class="k">1858 · Coffee &amp; confectionery</span><span class="d">8 min</span>
-      <span class="n">02</span><span class="pl">Opera House <em>—</em></span><span class="k">Andrássy út · Restored 2022</span><span class="d">6 min</span>
-      <span class="n">03</span><span class="pl">Szimpla Kert <em>—</em></span><span class="k">The original ruin bar</span><span class="d">4 min</span>
-      <span class="n">04</span><span class="pl">Rumbach Synagogue <em>—</em></span><span class="k">Jewish Quarter</span><span class="d">3 min</span>
-      <span class="n">05</span><span class="pl">Gozsdu Udvar <em>—</em></span><span class="k">Seven connected courtyards</span><span class="d">5 min</span>
-      <span class="n">06</span><span class="pl">Dobrumba <em>—</em></span><span class="k">Levantine, Dob utca</span><span class="d">7 min</span>
-      <span class="n">07</span><span class="pl">Mazel Tov <em>—</em></span><span class="k">Garden, Middle-Eastern</span><span class="d">4 min</span>
+      <span class="n">01</span><span class="pl">Gerbeaud <em>—</em></span><span class="k">1858 · Kávé és cukrászda</span><span class="d">8 perc</span>
+      <span class="n">02</span><span class="pl">Operaház <em>—</em></span><span class="k">Andrássy út · 2022-ben felújítva</span><span class="d">6 perc</span>
+      <span class="n">03</span><span class="pl">Szimpla Kert <em>—</em></span><span class="k">Az eredeti romkocsma</span><span class="d">4 perc</span>
+      <span class="n">04</span><span class="pl">Rumbach utcai zsinagóga <em>—</em></span><span class="k">Zsidónegyed</span><span class="d">3 perc</span>
+      <span class="n">05</span><span class="pl">Gozsdu Udvar <em>—</em></span><span class="k">Hét egybenyíló udvar</span><span class="d">5 perc</span>
+      <span class="n">06</span><span class="pl">Dobrumba <em>—</em></span><span class="k">Levantei konyha, Dob utca</span><span class="d">7 perc</span>
+      <span class="n">07</span><span class="pl">Mazel Tov <em>—</em></span><span class="k">Kerthelyiség, közel-keleti</span><span class="d">4 perc</span>
     </div>
     <div class="neigh-map">
       <div id="neighMap" class="neigh-leaflet" role="img"
-           aria-label="Map of Budapest District VI — Stories Hotel on Király utca 26 and nearby landmarks"></div>
+           aria-label="Budapest VI. kerületének térképe — a Stories Hotel a Király utca 26. alatt és a közeli látnivalók"></div>
     </div>
   </div>
     </div>
 
     <div class="dn-content" id="neigh">
-      <div class="plate-id"><span class="n">V</span><span>·</span><span>District VI, on foot</span></div>
+      <div class="plate-id"><span class="n">V</span><span>·</span><span>VI. kerület, gyalogosan</span></div>
       <div class="plate-title-block">
-        <h2>A quarter worth<br>the <em>walk.</em></h2>
-        <p class="plate-deck">Király utca runs through one of Budapest's most walkable districts. Seven short steps from the door — the places we send guests when they ask.</p>
+        <h2>Egy negyed, amiért<br>érdemes <em>sétálni.</em></h2>
+        <p class="plate-deck">A Király utca Budapest egyik leginkább bejárható negyedén fut végig. Hét rövid séta a kaputól — azok a helyek, ahová a vendégeinket küldjük.</p>
       </div>
     </div>
   </div>
@@ -2571,51 +2571,51 @@ body.menu-open nav.top { transform: none !important; }
   <div class="trust-inner">
     <div class="trust-head">
       <div>
-        <div class="overline"><span>VI</span><span>&middot;</span><span>Why book direct</span></div>
-        <h2>The <em>quiet</em><br>benefits.</h2>
+        <div class="overline"><span>VI</span><span>&middot;</span><span>Miért közvetlenül</span></div>
+        <h2>A <em>csendes</em><br>előnyök.</h2>
       </div>
-      <p>Six small reassurances before you reserve. Direct bookings get the lowest rate, the most flexibility, and a human on the other end of the line.</p>
+      <p>Hat apró megnyugvás a foglalás előtt. A közvetlen foglalás a legjobb árat, a legnagyobb rugalmasságot és egy valódi embert jelent a vonal másik végén.</p>
     </div>
 
     <div class="trust-cards">
       <article class="trust-card">
-        <span class="tc-label">Best rate</span>
-        <h3>Direct booking, <em>direct savings.</em></h3>
-        <p>Our best rate lives on this site. Booking direct is the cheapest way to stay with us, and it puts you straight through to the people who run the house.</p>
-        <span class="tc-note">Our best rate is here</span>
+        <span class="tc-label">Legjobb ár</span>
+        <h3>Közvetlen foglalás, <em>közvetlen megtakarítás.</em></h3>
+        <p>A legjobb árunk ezen az oldalon él. A közvetlen foglalás a legolcsóbb módja annak, hogy nálunk szálljon meg, és egyenesen azokhoz köti Önt, akik a házat viszik.</p>
+        <span class="tc-note">A legjobb árunk itt van</span>
       </article>
 
       <article class="trust-card">
-        <span class="tc-label">Cancellation</span>
-        <h3>Free cancellation <em>up to 5 days</em> before check-in.</h3>
+        <span class="tc-label">Lemondás</span>
+        <h3>Ingyenes lemondás a bejelentkezés előtt <em>5 nappal.</em></h3>
       </article>
 
       <article class="trust-card">
-        <span class="tc-label">Transfer</span>
-        <h3>Airport <em>on request.</em></h3>
-        <p>A private car from Liszt Ferenc to the door of Twenty Six, through the transfer partner we work with. Arranged at the time of booking, charged separately to the room.</p>
-        <a class="tc-note" href="https://new.transfersforhotels.com/h/budapest/stories-boutique-hotel" target="_blank" rel="noopener">Book a transfer &#8599;</a>
+        <span class="tc-label">Transzfer</span>
+        <h3>Reptéri transzfer <em>kérésre.</em></h3>
+        <p>Magánautó a Liszt Ferenc repülőtértől a Twenty Six kapujáig, transzferpartnerünkön keresztül. Foglaláskor egyeztetve, a szobaártól külön számolva.</p>
+        <a class="tc-note" href="https://new.transfersforhotels.com/h/budapest/stories-boutique-hotel" target="_blank" rel="noopener">Transzfer foglalása &#8599;</a>
       </article>
 
       <article class="trust-card">
-        <span class="tc-label">Timing</span>
-        <h3>Check-in 3pm &middot; <em>check-out 11am.</em></h3>
-        <p>Early arrival or late departure can usually be arranged when the room is free &mdash; just ask the front desk on the day.</p>
-        <span class="tc-note">Flexible on request</span>
+        <span class="tc-label">Időzítés</span>
+        <h3>Bejelentkezés 15:00 &middot; <em>kijelentkezés 11:00.</em></h3>
+        <p>Korai érkezés vagy késői távozás általában megoldható, ha a szoba szabad &mdash; kérdezze a recepciót aznap.</p>
+        <span class="tc-note">Kérésre rugalmasan</span>
       </article>
 
       <article class="trust-card">
-        <span class="tc-label">Direct line</span>
-        <h3>Reach a person, <em>not a bot.</em></h3>
-        <p>WhatsApp, email, or a phone call &mdash; the same small team answers within the same day. No call centres, no escalation chains. WhatsApp: +36 20 318 0027.</p>
+        <span class="tc-label">Közvetlen vonal</span>
+        <h3>Embert ér el, <em>nem chatbotot.</em></h3>
+        <p>WhatsApp, e-mail vagy telefon &mdash; ugyanaz a kis csapat válaszol, még aznap. Nincs call center, nincs ügyintézői lánc. WhatsApp: +36 20 318 0027.</p>
         <span class="tc-note">+36 1 808 0981</span>
       </article>
 
       <article class="trust-card">
-        <span class="tc-label">The building</span>
-        <h3>A gym and a desk, <em>arranged for you.</em></h3>
-        <p>The GoActive gym is five minutes away and Create 26 keeps a quiet floor of desks in the Twenty Six building. Both are run by neighbours — reception arranges access.</p>
-        <span class="tc-note">Ask at reception</span>
+        <span class="tc-label">Az épület</span>
+        <h3>Edzőterem és íróasztal, <em>megszervezzük.</em></h3>
+        <p>A GoActive edzőterem öt percre van, a Create 26 pedig csendes irodaszintet tart fenn a Twenty Six épületben. Mindkettőt szomszédaink üzemeltetik — a belépést a recepció intézi.</p>
+        <span class="tc-note">Kérdezze a recepciót</span>
       </article>
     </div>
   </div>
@@ -2624,28 +2624,28 @@ body.menu-open nav.top { transform: none !important; }
 <!-- RESERVE -->
 <section class="reserve-plate" id="reserve" data-label="05 / Reservations">
   <div class="reserve-inner">
-    <div class="reserve-over">06 / Reservations</div>
-    <h2>Begin <em>your</em><br>Budapest chapter.</h2>
-    <p>Booking here gets you our best rate, and puts you straight through to the people who run the house.</p>
+    <div class="reserve-over">06 / Foglalás</div>
+    <h2>Kezdje el <em>a saját</em><br>budapesti fejezetét.</h2>
+    <p>Az itteni foglalással a legjobb árunkat kapja, és egyenesen azokhoz kerül, akik a házat viszik.</p>
     <form class="reserve-form" id="reserveForm">
       <div class="field">
-        <label class="lab" for="resIn">Check-in</label>
+        <label class="lab" for="resIn">Bejelentkezés</label>
         <input type="date" id="resIn">
       </div>
       <div class="field">
-        <label class="lab" for="resOut">Check-out</label>
+        <label class="lab" for="resOut">Kijelentkezés</label>
         <input type="date" id="resOut">
       </div>
       <div class="field">
-        <label class="lab" for="resAdults">Guests</label>
+        <label class="lab" for="resAdults">Vendégek</label>
         <select id="resAdults">
-          <option value="1">1 guest</option>
-          <option value="2" selected>2 guests</option>
-          <option value="3">3 guests</option>
-          <option value="4">4 guests</option>
+          <option value="1">1 vendég</option>
+          <option value="2" selected>2 vendég</option>
+          <option value="3">3 vendég</option>
+          <option value="4">4 vendég</option>
         </select>
       </div>
-      <button class="go" type="submit">Check availability →</button>
+      <button class="go" type="submit">Szabad helyek →</button>
     </form>
   </div>
 </section>
@@ -2657,30 +2657,30 @@ body.menu-open nav.top { transform: none !important; }
     <div>
       <h3>Stories</h3>
       <div class="sub">Budapest · Király utca 26</div>
-      <address>Twenty Six Building<br>Király utca 26, 1061 Budapest<br>Hungary</address>
+      <address>Twenty Six épület<br>Király utca 26, 1061 Budapest<br>Magyarország</address>
       <a href="tel:+3618080981" class="ph">+36 1 808 0981</a><br>
       <a href="mailto:info@storiesbudapest.com" class="ph">info@storiesbudapest.com</a>
     </div>
     <div>
-      <h4>House</h4>
+      <h4>A ház</h4>
       <ul>
-        <li><a href="rooms.html">Rooms</a></li>
-        <li><a href="breakfast.html">Breakfast</a></li>
-        <li><a href="pleasures.html">Bar &amp; lounge</a></li>
-        <li><a href="pleasures.html#gym">Gym · GoActive</a></li>
+        <li><a href="rooms.html">Szobák</a></li>
+        <li><a href="breakfast.html">Reggeli</a></li>
+        <li><a href="pleasures.html">Bár és lounge</a></li>
+        <li><a href="pleasures.html#gym">Edzőterem · GoActive</a></li>
       </ul>
     </div>
     <div>
-      <h4>Visiting</h4>
+      <h4>Látogatóknak</h4>
       <ul>
-        <li><a href="neighbourhood.html">Neighbourhood</a></li>
-        <li><a href="contact.html">Directions</a></li>
-        <li><a href="faqs.html">FAQ</a></li>
-        <li><a href="contact.html">Press</a></li>
+        <li><a href="neighbourhood.html">A negyed</a></li>
+        <li><a href="contact.html">Megközelítés</a></li>
+        <li><a href="faqs.html">GYIK</a></li>
+        <li><a href="contact.html">Sajtó</a></li>
       </ul>
     </div>
     <div>
-      <h4>Follow</h4>
+      <h4>Kövessen minket</h4>
       <ul>
         <li><a href="https://www.instagram.com/storieshotelbudapest" target="_blank" rel="noopener">Instagram ↗</a></li>
         <li><a href="https://www.facebook.com/storieshotelbudapest" target="_blank" rel="noopener">Facebook ↗</a></li>
@@ -2690,14 +2690,14 @@ body.menu-open nav.top { transform: none !important; }
   </div>
   <div class="foot-bar">
     <span>© 2026 Stories Hotel Budapest</span>
-    <span class="foot-lang"><a href="index.html" hreflang="en" aria-current="true">English</a><span class="sep">·</span><a href="hu/index.html" hreflang="hu">Magyar</a></span>
+    <span class="foot-lang"><a href="../index.html" hreflang="en">English</a><span class="sep">·</span><a href="index.html" hreflang="hu" aria-current="true">Magyar</a></span>
   </div>
 </footer>
 </div>
 
 
 <!-- Lenis smooth-scroll: more distance per wheel tick + buttery easing. Skipped under prefers-reduced-motion. -->
-<script src="assets/vendor/lenis.min.js" defer></script>
+<script src="../assets/vendor/lenis.min.js" defer></script>
 <script>
 (function () {
   function start () {
@@ -2734,8 +2734,8 @@ window.whenLibsReady = function (fn) {
   else fn();
 };
 </script>
-<script src="assets/vendor/gsap.min.js" defer></script>
-<script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+<script src="../assets/vendor/gsap.min.js" defer></script>
+<script src="../assets/vendor/ScrollTrigger.min.js" defer></script>
 <script>
 /* Shared GSAP reveals — heading rise + block fade-up, Lenis-synced, motion-safe.
    Hard-skips every zone the site already animates so nothing double-fires. */
@@ -3364,14 +3364,14 @@ body.classList.toggle('in-cinema', e.isIntersecting);
 
   var HOTEL = [47.4988, 19.0598];
   var places = [
-    { name: 'Stories Hotel',         tag: 'Király utca 26',  walk: 'You are here', hotel: true, ll: HOTEL,             desc: 'The Twenty Six building — your base in District VI.' },
-    { name: 'Gerbeaud',              tag: 'Coffeehouse',     walk: '8 min walk',   ll: [47.4965, 19.0508], desc: 'Vörösmarty tér · 1858. The grand café of the Pest side.' },
-    { name: 'Hungarian State Opera', tag: 'Culture',         walk: '6 min walk',   ll: [47.5025, 19.0577], desc: 'Andrássy út 22. Neo-Renaissance interior, restored 2022.' },
-    { name: 'Szimpla Kert',          tag: 'Ruin bar',        walk: '4 min walk',   ll: [47.4972, 19.0640], desc: 'The original ruin bar. Kazinczy utca 14.' },
-    { name: 'Rumbach Synagogue',     tag: 'Jewish Quarter',  walk: '3 min walk',   ll: [47.4975, 19.0583], desc: 'Moorish revival, restored 2021 — the smaller of the three.' },
-    { name: 'Gozsdu Udvar',          tag: 'Courtyards',      walk: '5 min walk',   ll: [47.4974, 19.0601], desc: 'Seven connected courtyards between Király and Dob utca.' },
-    { name: 'Dobrumba',              tag: 'Levantine',       walk: '7 min walk',   ll: [47.4968, 19.0579], desc: 'Levantine cooking, Dob utca 5. Book ahead on weekends.' },
-    { name: 'Mazel Tov',             tag: 'Garden bar',      walk: '4 min walk',   ll: [47.5000, 19.0670], desc: 'Akácfa utca 47. Middle-Eastern food, glass-roofed garden.' }
+    { name: 'Stories Hotel',         tag: 'Király utca 26',  walk: 'Itt van most', hotel: true, ll: HOTEL,             desc: 'A Twenty Six épület — az Ön bázisa a VI. kerületben.' },
+    { name: 'Gerbeaud',              tag: 'Kávéház',     walk: '8 perc séta',   ll: [47.4965, 19.0508], desc: 'Vörösmarty tér · 1858. A pesti oldal nagy kávéháza.' },
+    { name: 'Magyar Állami Operaház', tag: 'Kultúra',         walk: '6 perc séta',   ll: [47.5025, 19.0577], desc: 'Andrássy út 22. Neoreneszánsz belső, 2022-ben felújítva.' },
+    { name: 'Szimpla Kert',          tag: 'Romkocsma',        walk: '4 perc séta',   ll: [47.4972, 19.0640], desc: 'Az eredeti romkocsma. Kazinczy utca 14.' },
+    { name: 'Rumbach utcai zsinagóga',     tag: 'Zsidónegyed',  walk: '3 perc séta',   ll: [47.4975, 19.0583], desc: 'Mór stílusú, 2021-ben felújítva — a három közül a legkisebb.' },
+    { name: 'Gozsdu Udvar',          tag: 'Udvarok',      walk: '5 perc séta',   ll: [47.4974, 19.0601], desc: 'Hét egybenyíló udvar a Király és a Dob utca között.' },
+    { name: 'Dobrumba',              tag: 'Levantei',       walk: '7 perc séta',   ll: [47.4968, 19.0579], desc: 'Levantei konyha, Dob utca 5. Hétvégén foglaljon előre.' },
+    { name: 'Mazel Tov',             tag: 'Kertbár',      walk: '4 perc séta',   ll: [47.5000, 19.0670], desc: 'Akácfa utca 47. Közel-keleti konyha, üvegtetős kert.' }
   ];
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -3540,7 +3540,7 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     for (var k = 0; k < N; k++) (function (k) {
       var im = new Image();
       im.onload = im.onerror = function () { if (k === 0) drawBlend(0); };
-      im.src = 'assets/coffee/frame_' + pad(k + 1) + '.webp';
+      im.src = '../assets/coffee/frame_' + pad(k + 1) + '.webp';
       imgs[k] = im;
     })(k);
   }
@@ -3712,12 +3712,12 @@ body.classList.toggle('in-cinema', e.isIntersecting);
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var CH = [
-    { num: '01', name: 'The House' },
-    { num: '02', name: 'Little Luxuries' },
-    { num: '03', name: 'Rooms' },
-    { num: '04', name: 'Breakfast' },
-    { num: '05', name: 'Neighbourhood' },
-    { num: '06', name: 'Reservations' }
+    { num: '01', name: 'A ház' },
+    { num: '02', name: 'Apró luxusok' },
+    { num: '03', name: 'Szobák' },
+    { num: '04', name: 'Reggeli' },
+    { num: '05', name: 'A negyed' },
+    { num: '06', name: 'Foglalás' }
   ];
   var bounds = [];    // chapter starts in probe space (probe = scrollY + vh/2)
   var endP = 1;       // probe value at the very bottom
@@ -3962,7 +3962,7 @@ body.classList.toggle('in-cinema', e.isIntersecting);
 
     var hero = new Image();
     hero.onload = hero.onerror = function () { mark('hero'); };
-    hero.src = 'assets/brand/hero.webp';
+    hero.src = '../assets/brand/hero.webp';
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { mark('fonts'); });
     else signals.fonts = 1;
     if (document.readyState === 'complete') mark('load');

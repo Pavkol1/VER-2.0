@@ -25,7 +25,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Booking runs through SabeeApp** — all 21 booking CTAs and the homepage reserve form open `https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951` in a new tab. The form opens it via JS, **not** a GET action: the inputs carry no `name`, and a GET submit would rebuild the query string and drop the engine's own `?p=` token. Dates and the chosen room are **not** passed through yet — that needs SabeeApp's parameter names.
 - **contact.html's form is still inert** — `onsubmit="event.preventDefault()"`, posts nowhere, while its copy promises a same-day reply. Netlify Forms is the obvious destination.
 - contact: optional left-edge runlabel + a mini SVG map inset (rhymes with M3.1).
-- **Truthfulness pass still open** — the homepage trust grid publishes a review score and stay count ("Four point eight" / "1200+ stays") plus "From €55 each way" and "Lowest rate, guaranteed"; PRODUCT.md lists all of these as absent and forbidden to invent, and faqs.html contradicts the rate claim. Breakfast hours disagree too: 07:30 on index, 07:00 in breakfast.html's body, 07:30 in its own meta description.
+- **Fact-check outstanding** — see [FACT-CHECK.md](FACT-CHECK.md), a full audit of every claim on the site with the open questions numbered. The invented ones (review score, stay count, transfer price, best-rate guarantee) were **removed 2026-08-06** and only return if the client confirms real figures. Two internal contradictions are still unresolved and flagged there: whether the King Suite has a private sauna (`rooms.html` says yes, `faqs.html` implies only the Presidential does), and whether GoActive is in the building or a five-minute walk away.
 - Homepage frame sets are 1280×720 sources — slightly soft on large retina screens (grain + vignette mask it). Re-generate at 1080p if the client complains.
 
 **To resume on a fresh machine / account:** `git clone https://github.com/Pavkol1/VER-2.0.git`, `git checkout claude/wonderful-mclaren-d67b3f`, then `python3 -m http.server 8000` → http://localhost:8000/Ver3/. Note: chat history and Claude memory do NOT transfer between accounts — only the code (and this file) travels via git.
@@ -72,6 +72,15 @@ Per user preference, ask Claude to start the server rather than running it yours
 ```
 
 Asset URLs in the HTML use `assets/...` (relative from `Ver3/`). When adding photos, place them inside `Ver3/assets/`.
+
+**Hungarian mirror (`Ver3/hu/`)** — the site ships in two languages as **14 files, not 7**. `Ver3/hu/` holds a full translated copy of every page; `Ver2`-style client-side string swapping was deliberately not used, because separate URLs are what Google needs to index and rank the Hungarian version. Consequences to respect:
+
+- **Every content or markup change must be made twice** — once in `Ver3/X.html`, once in `Ver3/hu/X.html`. There is no build step to generate one from the other. A structural change (new section, renamed class, new script) applies to both; only the visible copy differs.
+- **`hu/` pages reference assets one level up** (`../assets/…`). Absolute `https://…/assets/…` URLs inside `og:image`/`twitter:image`/JSON-LD stay absolute — don't rewrite those.
+- Internal page links inside `hu/` stay bare (`rooms.html`), so HU pages link to HU pages.
+- Each page declares `hreflang` **en / hu / x-default** and a per-language `canonical`; index carries `inLanguage` in its JSON-LD. Adding a page means adding both copies plus the hreflang pair.
+- The language switch is real in three places: the nav `.lang-toggle` (index only, hidden ≤560px), the `.mnav-lang` line in the mobile menu, and `.foot-lang` in the shared footer — the footer one is the only switch the six subpages have on desktop.
+- Room type names (Presidential Suite, King Suite, …), "Twenty Six", "Create 26", "GoActive" and "Onyx" are treated as proper nouns and stay untranslated in HU.
 
 **Images** — every gallery photo ships as `NAME.webp` (1600w) plus generated `NAME-800.webp` and `NAME-1200.webp`, wired through `<picture><source srcset="… 800w, … 1200w, … 1600w" sizes="(max-width: 880px) 100vw, 50vw">` with a single-size `.jpg` fallback on the `<img>`. **Regenerate the variants whenever a source photo is replaced** (Pillow, quality 74/76, `method=6`) or the `srcset` will 404. Every image on every page is `loading="lazy"` — there are no eager images left.
 
@@ -177,7 +186,7 @@ Note: `.room-rail` (a horizontal `scroll-snap-type: x mandatory` strip) is **dea
 
 **Leaflet map** (index + neighbourhood): tile provider is CARTO Dark Matter (no API key; swap for a keyed Stadia/Mapbox layer before a high-traffic commercial launch). Popup content is built with DOM nodes + `textContent` — never template strings — honoring the project-wide rule. `map.invalidateSize()` fires via IntersectionObserver because Leaflet mismeasures when initialised off-screen.
 
-**Breakfast pricing**: à la carte, **not included** in any room rate — never reintroduce "included" wording. Price wording differs by page: the **homepage** (`index.html`) breakfast facts now read **"Ask reception"** (per the coffee-noir redesign); `breakfast.html` and `faqs.html` still state **"€18 per person"**. If syncing later, decide on one wording across all three. Homepage breakfast **Hours** are **07:30 — 11:00**.
+**Breakfast pricing**: à la carte, **not included** in any room rate — never reintroduce "included" wording. **The price is not published on the site** (client decision 2026-08-06): every mention reads **"ask reception"**, and the old "€18 per person" wording is retired — don't bring it back. **Hours are 07:30 — 11:00** on every page (the 07:00 that used to sit in `breakfast.html`'s body and `faqs.html` was wrong; confirmed 2026-08-06).
 
 **DOM safety**: always use `textContent`, never `innerHTML`. This is a hard rule across all inline JS (Ver2 and Ver3) and is currently enforced (grep finds zero occurrences).
 

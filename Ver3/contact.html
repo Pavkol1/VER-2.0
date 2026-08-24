@@ -7,6 +7,9 @@
 <meta name="description" content="Get in touch with Stories Hotel Budapest — Király utca 26, District VI. A small team that reads every message and replies the same day.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://secrethotel.netlify.app/contact.html">
+<link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/contact.html">
+<link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/contact.html">
+<link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/contact.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Stories Hotel Budapest">
 <meta property="og:title" content="Contact — Stories Budapest">
@@ -372,6 +375,15 @@ body.menu-open nav.top { transform: none !important; }
   transition: top 0.25s var(--ease);
 }
 .skip-link:focus { top: 16px; outline: 2px solid var(--accent); outline-offset: 2px; }
+.foot-lang { display: inline-flex; gap: 10px; align-items: center; }
+.foot-lang a { color: rgba(255,255,255,0.35); border-bottom: 1px solid transparent; transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.foot-lang a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.foot-lang a[aria-current="true"] { color: rgba(255,255,255,0.82); }
+.foot-lang .sep { opacity: 0.4; }
+.mnav-lang { margin-top: 14px; display: inline-flex; gap: 10px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(237,231,218,0.5); }
+.mnav-lang a { color: rgba(237,231,218,0.6); min-height: 44px; display: inline-flex; align-items: center; }
+.mnav-lang a[aria-current="true"] { color: var(--accent); }
+@media (max-width: 520px) { .foot-bar { flex-wrap: wrap; gap: 10px; } }
 </style>
 </head>
 <body>
@@ -421,6 +433,7 @@ body.menu-open nav.top { transform: none !important; }
     <div class="mnav-foot">
       <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Reserve a stay</a>
       <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
+      <div class="mnav-lang"><a href="contact.html" hreflang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="hu/contact.html" hreflang="hu">Magyar</a></div>
     </div>
   </div>
 </div>
@@ -460,7 +473,7 @@ body.menu-open nav.top { transform: none !important; }
   <div class="contact-inner">
     <div class="contact-info">
       <h2>The house, in <em>detail.</em></h2>
-      <p>Stories Hotel Budapest is housed in the Twenty Six building on Király utca — a five-minute walk from the Jewish Quarter, a ten-minute walk from Vörösmarty tér. We'll send directions when you book.</p>
+      <p>Stories Hotel Budapest is housed in the Twenty Six building on Király utca, in the Jewish Quarter — a ten-minute walk from Vörösmarty tér. We'll send directions when you book.</p>
       <div class="contact-details">
         <div class="detail-row">
           <div class="detail-label">Address</div>
@@ -471,12 +484,16 @@ body.menu-open nav.top { transform: none !important; }
           <div class="detail-val"><a href="tel:+3618080981">+36 1 808 0981</a></div>
         </div>
         <div class="detail-row">
+          <div class="detail-label">WhatsApp</div>
+          <div class="detail-val"><a href="https://wa.me/36203180027" target="_blank" rel="noopener">+36 20 318 0027</a></div>
+        </div>
+        <div class="detail-row">
           <div class="detail-label">Email</div>
           <div class="detail-val"><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
         </div>
         <div class="detail-row">
           <div class="detail-label">Check-in</div>
-          <div class="detail-val">15:00 — 22:00</div>
+          <div class="detail-val">From 15:00 · reception 24/7</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">Check-out</div>
@@ -490,29 +507,32 @@ body.menu-open nav.top { transform: none !important; }
 
       <div class="directions">
         <h3>Getting here</h3>
-        <div class="dir-item"><div class="dir-icon">M1</div><div class="dir-text">Metro line 1 (yellow) — Opera station, 8 min walk</div></div>
-        <div class="dir-item"><div class="dir-icon">M2</div><div class="dir-text">Metro line 2 (red) — Astoria station, 6 min walk</div></div>
-        <div class="dir-item"><div class="dir-icon">BUS</div><div class="dir-text">Lines 9, 16, 105 — Király utca stop, 1 min walk</div></div>
-        <div class="dir-item"><div class="dir-icon">AIR</div><div class="dir-text">Budapest Liszt Ferenc Airport — 35 min by taxi or shuttle</div></div>
-        <div class="dir-item"><div class="dir-icon">CAR</div><div class="dir-text">Parking available nearby — we'll send details on booking</div></div>
+        <div class="dir-item"><div class="dir-icon">M1</div><div class="dir-text">Metro line 1 (yellow) — Opera station, 5 min walk</div></div>
+        <div class="dir-item"><div class="dir-icon">M2</div><div class="dir-text">Metro line 2 (red) — Deák Ferenc tér, 5 min walk</div></div>
+        <div class="dir-item"><div class="dir-icon">BUS</div><div class="dir-text">Lines 9, 16, 105 — nearest stop, 7 min walk</div></div>
+        <div class="dir-item"><div class="dir-icon">AIR</div><div class="dir-text">Budapest Liszt Ferenc Airport — 35 min by taxi, typically €30–35</div></div>
+        <div class="dir-item"><div class="dir-icon">CAR</div><div class="dir-text">No hotel car park — a wide choice of paid parking in the area</div></div>
       </div>
     </div>
 
     <div class="contact-form-wrap">
       <h2>Send us a <em>note.</em></h2>
       <div class="sub">Reservations · Press · General enquiries</div>
-      <form class="cform" onsubmit="event.preventDefault();">
+      <form class="cform" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="contact">
+        <input type="hidden" name="language" value="en">
+        <p hidden><label>Leave this empty: <input name="bot-field"></label></p>
         <div class="cform-field">
           <label class="cform-label" for="cf-name">Your name</label>
-          <input type="text" id="cf-name" placeholder="First and last name" autocomplete="name">
+          <input type="text" id="cf-name" name="name" placeholder="First and last name" autocomplete="name" required>
         </div>
         <div class="cform-field">
           <label class="cform-label" for="cf-email">Email</label>
-          <input type="email" id="cf-email" placeholder="your@email.com" autocomplete="email">
+          <input type="email" id="cf-email" name="email" placeholder="your@email.com" autocomplete="email" required>
         </div>
         <div class="cform-field">
           <label class="cform-label" for="cf-subject">Subject</label>
-          <select id="cf-subject">
+          <select id="cf-subject" name="subject">
             <option value="">Select a topic</option>
             <option>Reservation enquiry</option>
             <option>Press &amp; media</option>
@@ -523,11 +543,11 @@ body.menu-open nav.top { transform: none !important; }
         </div>
         <div class="cform-field">
           <label class="cform-label" for="cf-msg">Message</label>
-          <textarea id="cf-msg" placeholder="Tell us what you need…"></textarea>
+          <textarea id="cf-msg" name="message" placeholder="Tell us what you need…" required></textarea>
         </div>
         <div class="cform-submit">
           <button class="cform-btn" type="submit">Send message →</button>
-          <span class="cform-note">We reply within the same day.</span>
+          <span class="cform-note" data-sending="Sending…" data-sent="Thank you — we'll be in touch today." data-failed="That did not send. Please email info@storiesbudapest.com.">We reply within the same day.</span>
         </div>
       </form>
     </div>
@@ -574,7 +594,7 @@ body.menu-open nav.top { transform: none !important; }
   </div>
   <div class="foot-bar">
     <span>© 2026 Stories Hotel Budapest</span>
-    <span>Photography · Assaf Pinchuk &amp; Dor Sharon</span>
+    <span class="foot-lang"><a href="contact.html" hreflang="en" aria-current="true">English</a><span class="sep">·</span><a href="hu/contact.html" hreflang="hu">Magyar</a></span>
   </div>
 </footer>
 </div>
@@ -797,6 +817,41 @@ body.menu-open nav.top { transform: none !important; }
     if (e.persisted) setOpen(false);
   });
 })();
+</script>
+<script>
+/* Contact form -> Netlify Forms. The form posts natively on its own; this
+   only upgrades it to an in-page confirmation so the guest never leaves the
+   page. If anything here throws, the native POST still works. */
+(function () {
+  var form = document.querySelector('form.cform');
+  if (!form) return;
+  var note = form.querySelector('.cform-note');
+  var btn  = form.querySelector('.cform-btn');
+  if (!note || !btn) return;
+  var idle = note.textContent;
+
+  form.addEventListener('submit', function (e) {
+    if (!form.checkValidity()) return;          // let the browser show its own errors
+    e.preventDefault();
+    btn.disabled = true;
+    note.textContent = note.dataset.sending || 'Sending…';
+
+    var data = new URLSearchParams(new FormData(form)).toString();
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: data
+    }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      form.reset();
+      note.textContent = note.dataset.sent || 'Thank you — we\'ll be in touch.';
+      btn.disabled = false;
+    }).catch(function () {
+      note.textContent = note.dataset.failed || 'That did not send. Please email us directly.';
+      btn.disabled = false;
+    });
+  });
+}());
 </script>
 </body>
 </html>

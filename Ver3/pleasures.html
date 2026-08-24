@@ -7,6 +7,9 @@
 <meta name="description" content="The bar &amp; lounge, the GoActive gym, and a co-working desk — the everyday luxuries at Stories Hotel Budapest, on Király utca in District VI.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://secrethotel.netlify.app/pleasures.html">
+<link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/pleasures.html">
+<link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/pleasures.html">
+<link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/pleasures.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Stories Hotel Budapest">
 <meta property="og:title" content="Pleasures — Stories Budapest">
@@ -368,6 +371,15 @@ body.menu-open nav.top { transform: none !important; }
   transition: top 0.25s var(--ease);
 }
 .skip-link:focus { top: 16px; outline: 2px solid var(--accent); outline-offset: 2px; }
+.foot-lang { display: inline-flex; gap: 10px; align-items: center; }
+.foot-lang a { color: rgba(255,255,255,0.35); border-bottom: 1px solid transparent; transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.foot-lang a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.foot-lang a[aria-current="true"] { color: rgba(255,255,255,0.82); }
+.foot-lang .sep { opacity: 0.4; }
+.mnav-lang { margin-top: 14px; display: inline-flex; gap: 10px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(237,231,218,0.5); }
+.mnav-lang a { color: rgba(237,231,218,0.6); min-height: 44px; display: inline-flex; align-items: center; }
+.mnav-lang a[aria-current="true"] { color: var(--accent); }
+@media (max-width: 520px) { .foot-bar { flex-wrap: wrap; gap: 10px; } }
 </style>
 </head>
 <body>
@@ -417,6 +429,7 @@ body.menu-open nav.top { transform: none !important; }
     <div class="mnav-foot">
       <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Reserve a stay</a>
       <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
+      <div class="mnav-lang"><a href="pleasures.html" hreflang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="hu/pleasures.html" hreflang="hu">Magyar</a></div>
     </div>
   </div>
 </div>
@@ -464,7 +477,7 @@ body.menu-open nav.top { transform: none !important; }
     <p>Hungarian vermouths, natural wines from Tokaj, classics made slowly. Not a hotel bar — a bar that happens to be in a hotel. It spills into the Twenty Six courtyard every evening after five, and stays open as long as it needs to.</p>
     <p>The cocktail list is short and seasonal. The bar team knows what they're doing. You can bring your laptop if you're not ready to be social yet.</p>
     <div class="pf-facts">
-      <div class="pf-fact"><span class="l">Opens</span><span class="v">17:00 daily</span></div>
+      <div class="pf-fact"><span class="l">Opens</span><span class="v">17:00 &mdash; 00:00 daily</span></div>
       <div class="pf-fact"><span class="l">Style</span><span class="v">Craft cocktails · Natural wine</span></div>
       <div class="pf-fact"><span class="l">Location</span><span class="v">Ground floor, Twenty Six</span></div>
       <div class="pf-fact"><span class="l">Terrace</span><span class="v">Inner courtyard, seasonal</span></div>
@@ -480,13 +493,13 @@ body.menu-open nav.top { transform: none !important; }
   <div class="pf-info">
     <div class="pf-tag">III · 02 — Body</div>
     <h2>Gym, with <em>GoActive</em></h2>
-    <p>We don't run the gym ourselves — our neighbours at GoActive do, and they do it better than we could. Full Technogym equipment, a sauna, and a team that knows the names of regulars. Complimentary with every stay.</p>
-    <p>A five-minute walk from the hotel. Classes available on the schedule below — book ahead, they fill quickly.</p>
+    <p>We don't run the gym ourselves — our neighbours at GoActive do, and they do it better than we could. Full Technogym equipment, a sauna, and a team that knows the names of regulars. Ask at reception and we'll arrange your access.</p>
+    <p>A five-minute walk from the hotel. Classes available on their schedule — book ahead, they fill quickly.</p>
     <div class="pf-facts">
-      <div class="pf-fact"><span class="l">Hours</span><span class="v">06:00 — 22:00</span></div>
+      <div class="pf-fact"><span class="l">Hours</span><span class="v">Mon&ndash;Thu 06:30&ndash;22:30</span></div>
       <div class="pf-fact"><span class="l">Equipment</span><span class="v">Full Technogym suite</span></div>
-      <div class="pf-fact"><span class="l">Sauna</span><span class="v">Included</span></div>
-      <div class="pf-fact"><span class="l">Cost</span><span class="v">Complimentary</span></div>
+      <div class="pf-fact"><span class="l">Weekend</span><span class="v">Sat 08:00&ndash;20:00 &middot; Sun 10:00&ndash;20:00</span></div>
+      <div class="pf-fact"><span class="l">Friday</span><span class="v">06:30&ndash;21:30</span></div>
     </div>
   </div>
 </section>
@@ -499,13 +512,13 @@ body.menu-open nav.top { transform: none !important; }
   <div class="pf-info">
     <div class="pf-tag">III · 03 — Work</div>
     <h2>Create 26 <em>coworking</em></h2>
-    <p>A quiet floor of private desks and meeting rooms shared with the Twenty Six building community. One desk per guest, at no charge. Good wifi, good coffee, enough quiet to think.</p>
-    <p>For longer stays, or for guests who work as they travel — a place that takes work seriously without being precious about it.</p>
+    <p>A quiet floor of private desks and meeting rooms shared with the Twenty Six building community. Good wifi, good coffee, enough quiet to think.</p>
+    <p>For longer stays, or for guests who work as they travel — a place that takes work seriously without being precious about it. Ask at reception and we'll arrange a desk.</p>
     <div class="pf-facts">
-      <div class="pf-fact"><span class="l">Hours</span><span class="v">08:00 — 20:00</span></div>
-      <div class="pf-fact"><span class="l">Desks</span><span class="v">One per guest</span></div>
+      <div class="pf-fact"><span class="l">Hours</span><span class="v">Mon&ndash;Fri 09:00&ndash;17:00</span></div>
+      <div class="pf-fact"><span class="l">Weekend</span><span class="v">Closed</span></div>
       <div class="pf-fact"><span class="l">Meetings</span><span class="v">Bookable rooms</span></div>
-      <div class="pf-fact"><span class="l">Cost</span><span class="v">Complimentary</span></div>
+      <div class="pf-fact"><span class="l">Access</span><span class="v">Ask at reception</span></div>
     </div>
   </div>
 </section>
@@ -550,7 +563,7 @@ body.menu-open nav.top { transform: none !important; }
   </div>
   <div class="foot-bar">
     <span>© 2026 Stories Hotel Budapest</span>
-    <span>Photography · Assaf Pinchuk &amp; Dor Sharon</span>
+    <span class="foot-lang"><a href="pleasures.html" hreflang="en" aria-current="true">English</a><span class="sep">·</span><a href="hu/pleasures.html" hreflang="hu">Magyar</a></span>
   </div>
 </footer>
 </div>

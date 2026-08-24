@@ -4,19 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Breakfast — Stories Budapest</title>
-<meta name="description" content="À la carte breakfast at Stories Hotel Budapest — local produce from Hunyadi tér market, bread baked at dawn, served 07:30–11:00. Not a buffet — a ritual.">
+<meta name="description" content="À la carte breakfast at Stories Hotel Budapest — ordered at table in the Twenty Six restaurant, served 07:30–11:00. Not a buffet — a ritual.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://secrethotel.netlify.app/breakfast.html">
+<link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/breakfast.html">
+<link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/breakfast.html">
+<link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/breakfast.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Stories Hotel Budapest">
 <meta property="og:title" content="Breakfast — Stories Budapest">
-<meta property="og:description" content="À la carte breakfast at Stories Hotel Budapest — local produce from Hunyadi tér market, bread baked at dawn, served 07:30–11:00. Not a buffet — a ritual.">
+<meta property="og:description" content="À la carte breakfast at Stories Hotel Budapest — ordered at table in the Twenty Six restaurant, served 07:30–11:00. Not a buffet — a ritual.">
 <meta property="og:url" content="https://secrethotel.netlify.app/breakfast.html">
 <meta property="og:image" content="https://secrethotel.netlify.app/assets/brand/breakfast-new.jpg">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Breakfast — Stories Budapest">
-<meta name="twitter:description" content="À la carte breakfast at Stories Hotel Budapest — local produce from Hunyadi tér market, bread baked at dawn, served 07:30–11:00. Not a buffet — a ritual.">
+<meta name="twitter:description" content="À la carte breakfast at Stories Hotel Budapest — ordered at table in the Twenty Six restaurant, served 07:30–11:00. Not a buffet — a ritual.">
 <meta name="twitter:image" content="https://secrethotel.netlify.app/assets/brand/breakfast-new.jpg">
 <script>
 /* Page-transition entry: if the previous page set the flag, start covered
@@ -101,20 +104,9 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 .menu-item:last-child { border-bottom: none; }
 .menu-item .name { font-size: 15px; color: var(--text); font-weight: 300; }
 .menu-item .desc { font-size: 13px; color: var(--text-3); font-weight: 300; margin-top: 2px; }
-.menu-item .price { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-2); letter-spacing: 0.1em; white-space: nowrap; }
 .menu-item-inner { flex: 1; }
 
 /* SOURCING */
-.sourcing-block { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 5vw, 80px); align-items: center; padding: clamp(60px, 8vw, 96px) clamp(40px, 6vw, 96px); background: var(--ink-2); }
-.sourcing-block h2 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; color: #fff; margin-bottom: 20px; letter-spacing: -0.01em; }
-.sourcing-block h2 em { font-style: italic; color: var(--accent); }
-.sourcing-block p { font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.65); font-weight: 300; margin-bottom: 14px; }
-.sourcing-list { list-style: none; }
-.sourcing-list li { padding: 14px 0; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 20px; }
-.sourcing-list li:last-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
-.sourcing-list .sn { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 0.2em; min-width: 24px; }
-.sourcing-list .sp { font-family: 'Libre Caslon Text', serif; font-size: 17px; color: #fff; }
-.sourcing-list .sd { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 300; margin-top: 2px; }
 
 /* FOOTER — oversized (~75vh), rounded top, photo + dark scrim, slide-up reveal. Shared site-wide. */
 footer {
@@ -148,7 +140,7 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
 
 @media (max-width: 1024px) {
   .nav-links { display: none; }
-  .bk-intro, .menu-grid, .sourcing-block { grid-template-columns: 1fr; }
+  .bk-intro, .menu-grid { grid-template-columns: 1fr; }
   .foot-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) { .foot-grid { grid-template-columns: 1fr; } }
@@ -376,6 +368,15 @@ body.menu-open nav.top { transform: none !important; }
   transition: top 0.25s var(--ease);
 }
 .skip-link:focus { top: 16px; outline: 2px solid var(--accent); outline-offset: 2px; }
+.foot-lang { display: inline-flex; gap: 10px; align-items: center; }
+.foot-lang a { color: rgba(255,255,255,0.35); border-bottom: 1px solid transparent; transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.foot-lang a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.foot-lang a[aria-current="true"] { color: rgba(255,255,255,0.82); }
+.foot-lang .sep { opacity: 0.4; }
+.mnav-lang { margin-top: 14px; display: inline-flex; gap: 10px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(237,231,218,0.5); }
+.mnav-lang a { color: rgba(237,231,218,0.6); min-height: 44px; display: inline-flex; align-items: center; }
+.mnav-lang a[aria-current="true"] { color: var(--accent); }
+@media (max-width: 520px) { .foot-bar { flex-wrap: wrap; gap: 10px; } }
 </style>
 </head>
 <body>
@@ -425,6 +426,7 @@ body.menu-open nav.top { transform: none !important; }
     <div class="mnav-foot">
       <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Reserve a stay</a>
       <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
+      <div class="mnav-lang"><a href="breakfast.html" hreflang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="hu/breakfast.html" hreflang="hu">Magyar</a></div>
     </div>
   </div>
 </div>
@@ -455,7 +457,7 @@ body.menu-open nav.top { transform: none !important; }
     <div class="plate-id"><span class="n">IV</span><span>·</span><span>Breakfast at Twenty Six</span></div>
     <div class="plate-title-block">
       <h1>A table set<br>with <em>intention.</em></h1>
-      <p class="plate-deck">Not a buffet. You order, you sit, you talk. Local produce from Hunyadi tér, bread baked at dawn — a gentle ritual to start each day.</p>
+      <p class="plate-deck">Not a buffet. You order, you sit, you talk — a gentle ritual to start each day.</p>
     </div>
   </div>
   <div class="scrollcue"><span>The menu</span><span class="line"></span></div>
@@ -466,17 +468,15 @@ body.menu-open nav.top { transform: none !important; }
     <div class="bk-intro">
       <div>
         <h2>Ground floor of the <em>Twenty Six</em> building.</h2>
-        <p>Breakfast is served in the Twenty Six restaurant downstairs — a room that functions as a living room for District VI. Hungarian produce from the markets at Hunyadi tér, bread baked at dawn, a menu that shifts with the seasons.</p>
-        <p>We don't do buffets. You order, you sit, you talk. Eggs cooked by someone who cares. The coffee is Onyx. The orange juice is pressed in front of you.</p>
-        <p>Breakfast is €18 per person, ordered à la carte. If you need an early start, tell us the night before and we'll arrange it.</p>
+        <p>Breakfast is served in the Twenty Six restaurant downstairs — a room that functions as a living room for District VI. A short menu, cooked to order, that shifts with the seasons.</p>
+        <p>We don't do buffets. You order, you sit, you talk. Eggs cooked by someone who cares. The orange juice is pressed in front of you.</p>
+        <p>Breakfast is ordered à la carte — ask reception for the current price. If you need an early start, tell us the night before and we'll arrange it.</p>
       </div>
       <div class="bk-right">
-        <div class="bk-fact"><span class="l">Hours</span><span class="v">07:00 — 11:00</span></div>
+        <div class="bk-fact"><span class="l">Hours</span><span class="v">07:30 — 11:00</span></div>
         <div class="bk-fact"><span class="l">Place</span><span class="v">Twenty Six, ground floor</span></div>
         <div class="bk-fact"><span class="l">Style</span><span class="v"><em>À la carte</em></span></div>
-        <div class="bk-fact"><span class="l">Price</span><span class="v">€18 per person</span></div>
-        <div class="bk-fact"><span class="l">Coffee</span><span class="v">Onyx Specialty</span></div>
-        <div class="bk-fact"><span class="l">Sourcing</span><span class="v">Hunyadi tér market</span></div>
+        <div class="bk-fact"><span class="l">Price</span><span class="v">Ask reception</span></div>
       </div>
     </div>
 
@@ -485,43 +485,29 @@ body.menu-open nav.top { transform: none !important; }
     <div class="menu-grid">
       <div class="menu-cat">
         <h3>To <em>start</em></h3>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Sourdough & cultured butter</div><div class="desc">Baked at dawn, served warm</div></div><div class="price">1,800 Ft</div></div>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Seasonal fruit plate</div><div class="desc">Hunyadi tér market</div></div><div class="price">2,400 Ft</div></div>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Hungarian charcuterie</div><div class="desc">Mangalica, pick & smoked cheese</div></div><div class="price">3,200 Ft</div></div>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Yoghurt & granola</div><div class="desc">Local honey, seeds</div></div><div class="price">1,600 Ft</div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Sourdough & cultured butter</div><div class="desc">Served warm</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Seasonal fruit plate</div><div class="desc">Whatever is best that week</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Hungarian charcuterie</div><div class="desc">Mangalica, pick & smoked cheese</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Yoghurt & granola</div><div class="desc">Local honey, seeds</div></div></div>
       </div>
       <div class="menu-cat">
         <h3>Eggs &amp; <em>mains</em></h3>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Eggs your way</div><div class="desc">Fried, scrambled, poached</div></div><div class="price">2,200 Ft</div></div>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Shakshuka</div><div class="desc">Roasted peppers, spiced tomato</div></div><div class="price">3,400 Ft</div></div>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Avocado toast</div><div class="desc">Sourdough, poached egg, chilli</div></div><div class="price">3,600 Ft</div></div>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Omelette</div><div class="desc">Filled with herbs, cheese or ham</div></div><div class="price">2,800 Ft</div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Eggs your way</div><div class="desc">Fried, scrambled, poached</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Shakshuka</div><div class="desc">Roasted peppers, spiced tomato</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Avocado toast</div><div class="desc">Sourdough, poached egg, chilli</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Omelette</div><div class="desc">Filled with herbs, cheese or ham</div></div></div>
       </div>
       <div class="menu-cat">
         <h3><em>Coffee</em> &amp; drinks</h3>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Onyx espresso</div><div class="desc">Single origin, seasonal</div></div><div class="price">900 Ft</div></div>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Filter coffee</div><div class="desc">Batch brew, Onyx roast</div></div><div class="price">800 Ft</div></div>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Fresh orange juice</div><div class="desc">Pressed to order</div></div><div class="price">1,400 Ft</div></div>
-        <div class="menu-item"><div class="menu-item-inner"><div class="name">Cold brew</div><div class="desc">12-hour steep</div></div><div class="price">1,200 Ft</div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Espresso</div><div class="desc">Single origin, seasonal</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Filter coffee</div><div class="desc">Batch brew</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Fresh orange juice</div><div class="desc">Pressed to order</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Cold brew</div><div class="desc">12-hour steep</div></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="sourcing-block">
-  <div>
-    <h2>From <em>Hunyadi tér</em> market.</h2>
-    <p>The market at Hunyadi tér has been selling Budapest its produce since the 1890s. We're regulars. The team shops there each morning for whatever's best that day — which is why the menu shifts slightly with the season, and why the fruit tastes like it was picked recently (because it was).</p>
-    <p>We believe in knowing where things come from. The suppliers below are the people we've worked with long enough to trust.</p>
-  </div>
-  <ul class="sourcing-list">
-    <li><div><div class="sn">01</div></div><div><div class="sp">Hunyadi tér market</div><div class="sd">Seasonal vegetables, fruit, dairy</div></div></li>
-    <li><div><div class="sn">02</div></div><div><div class="sp">Budai bakery</div><div class="sd">Sourdough, pastries — baked daily</div></div></li>
-    <li><div><div class="sn">03</div></div><div><div class="sp">Onyx Coffee</div><div class="sd">Specialty coffee, District V</div></div></li>
-    <li><div><div class="sn">04</div></div><div><div class="sp">Mangalica farmers</div><div class="sd">Heritage pork, Somogy county</div></div></li>
-    <li><div><div class="sn">05</div></div><div><div class="sp">Balaton creamery</div><div class="sd">Cultured butter, aged cheeses</div></div></li>
-  </ul>
-</section>
 
 </main>
 
@@ -563,7 +549,7 @@ body.menu-open nav.top { transform: none !important; }
   </div>
   <div class="foot-bar">
     <span>© 2026 Stories Hotel Budapest</span>
-    <span>Photography · Assaf Pinchuk &amp; Dor Sharon</span>
+    <span class="foot-lang"><a href="breakfast.html" hreflang="en" aria-current="true">English</a><span class="sep">·</span><a href="hu/breakfast.html" hreflang="hu">Magyar</a></span>
   </div>
 </footer>
 </div>

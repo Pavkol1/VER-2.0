@@ -7,6 +7,9 @@
 <meta name="description" content="Answers to common questions about staying at Stories Hotel Budapest — booking, breakfast, rooms, and the neighbourhood on Király utca.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://secrethotel.netlify.app/faqs.html">
+<link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/faqs.html">
+<link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/faqs.html">
+<link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/faqs.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Stories Hotel Budapest">
 <meta property="og:title" content="FAQ — Stories Budapest">
@@ -371,6 +374,15 @@ body.menu-open nav.top { transform: none !important; }
   transition: top 0.25s var(--ease);
 }
 .skip-link:focus { top: 16px; outline: 2px solid var(--accent); outline-offset: 2px; }
+.foot-lang { display: inline-flex; gap: 10px; align-items: center; }
+.foot-lang a { color: rgba(255,255,255,0.35); border-bottom: 1px solid transparent; transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.foot-lang a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.foot-lang a[aria-current="true"] { color: rgba(255,255,255,0.82); }
+.foot-lang .sep { opacity: 0.4; }
+.mnav-lang { margin-top: 14px; display: inline-flex; gap: 10px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(237,231,218,0.5); }
+.mnav-lang a { color: rgba(237,231,218,0.6); min-height: 44px; display: inline-flex; align-items: center; }
+.mnav-lang a[aria-current="true"] { color: var(--accent); }
+@media (max-width: 520px) { .foot-bar { flex-wrap: wrap; gap: 10px; } }
 </style>
 </head>
 <body>
@@ -420,6 +432,7 @@ body.menu-open nav.top { transform: none !important; }
     <div class="mnav-foot">
       <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Reserve a stay</a>
       <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
+      <div class="mnav-lang"><a href="faqs.html" hreflang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="hu/faqs.html" hreflang="hu">Magyar</a></div>
     </div>
   </div>
 </div>
@@ -464,11 +477,11 @@ body.menu-open nav.top { transform: none !important; }
         <h2 class="faq-group-title">Arrival &amp; <em>stay</em></h2>
         <div class="faq-item open">
           <button type="button" class="faq-q" aria-expanded="true" aria-controls="faq-a-1"><span class="faq-q-text">What are the check-in and check-out times?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-1"><p>Check-in is from 15:00. Check-out is by 11:00. If you're arriving earlier or need a late checkout, tell us when you book — we'll do what we can. Direct bookings include late checkout subject to availability.</p></div>
+          <div class="faq-a" id="faq-a-1"><p>Check-in is from 15:00. Check-out is by 11:00. If you're arriving earlier or need a late checkout, tell us when you book — we'll do what we can, subject to availability.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-2"><span class="faq-q-text">Is there someone at the hotel around the clock?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-2"><p>Yes. There's always someone here between 15:00 and 22:00 for check-ins. For arrivals outside those hours, we arrange a keybox or a team member will meet you — just let us know in advance.</p></div>
+          <div class="faq-a" id="faq-a-2"><p>Yes — reception is staffed 24 hours a day, every day. Check-in opens at 15:00, but arrive whenever your journey gets you here; someone will be at the desk.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-3"><span class="faq-q-text">Can I store luggage before check-in or after check-out?</span><span class="faq-icon" aria-hidden="true">+</span></button>
@@ -476,7 +489,7 @@ body.menu-open nav.top { transform: none !important; }
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-4"><span class="faq-q-text">What is included in the stay?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-4"><p>Every stay includes access to the GoActive gym and sauna, access to Create 26 coworking, and high-speed WiFi throughout the building. Direct bookings also receive a complimentary welcome drink at the bar. Breakfast at Twenty Six is à la carte — €18 per person — and not bundled into the room rate; we'd rather you pay only for what you order.</p></div>
+          <div class="faq-a" id="faq-a-4"><p>High-speed WiFi throughout the building, and luggage storage before check-in or after check-out. The GoActive gym and the Create 26 coworking floor are run by neighbours rather than by us — they are not part of the rate, but reception is glad to arrange access to either. Breakfast at Twenty Six is à la carte — ask reception for the current price — and not bundled into the room rate; we'd rather you pay only for what you order.</p></div>
         </div>
       </div>
 
@@ -484,15 +497,15 @@ body.menu-open nav.top { transform: none !important; }
         <h2 class="faq-group-title">The <em>rooms</em></h2>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-5"><span class="faq-q-text">How many rooms are in the hotel?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-5"><p>Six characters — from the Presidential Suite (165–180 m², two floors) to the Superior Room (17 m², deliberately cosy) — across 44 rooms in the house. See the <a href="rooms.html">Rooms page</a> for the full list.</p></div>
+          <div class="faq-a" id="faq-a-5"><p>Six characters — from the Presidential Suite (165–180 m², three floors) to the Superior Room (17 m², deliberately cosy) — across 44 rooms in the house. See the <a href="rooms.html">Rooms page</a> for the full list.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-6"><span class="faq-q-text">Do any rooms have a Jacuzzi or sauna?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-6"><p>Yes. The Presidential Suite and King Suite both have private Jacuzzis. The Presidential Suite also has a private sauna. All guests have access to the GoActive gym sauna regardless of room type.</p></div>
+          <div class="faq-a" id="faq-a-6"><p>Yes. The Presidential Suite and the King Suite each have a private Jacuzzi and a private sauna.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-7"><span class="faq-q-text">Can rooms accommodate more than two guests?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-7"><p>The Junior Suite sleeps up to three with its sofa-bed arrangement. The Presidential Suite accommodates four comfortably. Please enquire for specific room configurations.</p></div>
+          <div class="faq-a" id="faq-a-7"><p>The Junior Suite sleeps up to four with its sofa-bed arrangement. The Presidential Suite accommodates up to six. Please enquire for specific room configurations.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-8"><span class="faq-q-text">Are pets allowed?</span><span class="faq-icon" aria-hidden="true">+</span></button>
@@ -504,19 +517,19 @@ body.menu-open nav.top { transform: none !important; }
         <h2 class="faq-group-title">Food &amp; <em>drink</em></h2>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-9"><span class="faq-q-text">What time is breakfast served?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-9"><p>07:00 to 11:00, Monday through Sunday, in the Twenty Six restaurant on the ground floor. If you have an early flight or need something before 07:00, speak to us the night before.</p></div>
+          <div class="faq-a" id="faq-a-9"><p>07:30 to 11:00, Monday through Sunday, in the Twenty Six restaurant on the ground floor. If you have an early flight or need something before 07:30, speak to us the night before.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-10"><span class="faq-q-text">Is breakfast included in the room rate?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-10"><p>No — breakfast is a separate €18 per person, à la carte. We kept it off the rate on purpose: you order what you actually want in the morning, not a buffet you didn't ask for. Add it when you check in, or skip it and walk five minutes to the bakeries on Klauzál tér.</p></div>
+          <div class="faq-a" id="faq-a-10"><p>No — breakfast is charged separately, à la carte; ask reception for the current price. We kept it off the rate on purpose: you order what you actually want in the morning, not a buffet you didn't ask for. Add it when you check in, or skip it and walk five minutes to the bakeries on Klauzál tér.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-11"><span class="faq-q-text">When does the bar open?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-11"><p>The bar opens at 17:00 daily and closes when it should. On warm evenings it spills into the Twenty Six courtyard. Guests are welcome to use the bar at any time — it's your living room too.</p></div>
+          <div class="faq-a" id="faq-a-11"><p>The bar is open from 17:00 to midnight, every day. On warm evenings it spills into the Twenty Six courtyard. Guests are welcome at any time — it's your living room too.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-12"><span class="faq-q-text">Can you accommodate dietary requirements?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-12"><p>Yes. Let us know when you book and the kitchen will prepare for it. The menu has options for most dietary needs — vegetarian, gluten-free, dairy-free. Just ask.</p></div>
+          <div class="faq-a" id="faq-a-12"><p>Usually, yes — subject to what the kitchen has in that morning. Ask in the restaurant and they will tell you what they can do.</p></div>
         </div>
       </div>
 
@@ -524,15 +537,15 @@ body.menu-open nav.top { transform: none !important; }
         <h2 class="faq-group-title">Access &amp; <em>location</em></h2>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-13"><span class="faq-q-text">How do I get to the hotel from the airport?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-13"><p>Budapest Liszt Ferenc Airport is about 35 minutes by taxi (fixed rate of approximately 9,000 Ft). The 100E airport express bus goes to Deák tér, from where it's a 15-minute walk or a short tram ride. We can arrange a private transfer if you'd prefer — just ask.</p></div>
+          <div class="faq-a" id="faq-a-13"><p>Budapest Liszt Ferenc Airport is about 35 minutes by taxi, typically €30–35. The 100E airport express bus goes to Deák Ferenc tér, a short walk away. We also work with a transfer partner and can book a car for you — just ask.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-14"><span class="faq-q-text">Is there parking at the hotel?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-14"><p>We don't have a dedicated car park, but there are paid parking zones on and around Király utca, and a public car park on Akácfa utca a short walk away. We'll send details when you book.</p></div>
+          <div class="faq-a" id="faq-a-14"><p>We don't have a car park of our own. There is a wide choice of paid parking in the area, and reception will point you to whichever suits your car and your stay.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-15"><span class="faq-q-text">Is the hotel accessible for guests with mobility needs?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-15"><p>The building is a historic townhouse with some limitations. The ground floor and common areas are step-free, but some rooms require using stairs. Please contact us before booking and we'll advise honestly.</p></div>
+          <div class="faq-a" id="faq-a-15"><p>There is a lift. The building is a historic townhouse, so a few rooms still have steps of their own — if you need a room reachable without stairs, contact reception before booking and we'll hold one for you, subject to availability.</p></div>
         </div>
       </div>
 
@@ -540,19 +553,19 @@ body.menu-open nav.top { transform: none !important; }
         <h2 class="faq-group-title">Booking &amp; <em>policies</em></h2>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-16"><span class="faq-q-text">What is the cancellation policy?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-16"><p>Free cancellation up to 5 days before check-in. Cancellations within 5 days are charged one night. No-shows are charged the full stay. We can make exceptions for genuine emergencies — just call us.</p></div>
+          <div class="faq-a" id="faq-a-16"><p>Free cancellation up to 5 days before check-in. Cancellations within 5 days are charged in full, as are no-shows. We can make exceptions for genuine emergencies — just call us.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-17"><span class="faq-q-text">Why book directly rather than through an OTA?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-17"><p>Direct bookings get a complimentary welcome drink at the bar and late checkout (subject to availability). We also know who you are before you arrive, which means we can prepare better. The rate is the same — or sometimes better.</p></div>
+          <div class="faq-a" id="faq-a-17"><p>You get our best rate here — booking direct is the cheapest way to stay with us. We also know who you are before you arrive, which means we can prepare better, and anything you need changing goes straight to the person who can change it.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-18"><span class="faq-q-text">Do you accept group bookings?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-18"><p>Buy out a single character for a closed group, or the whole 44-room house — occasionally how guests celebrate something significant. <a href="contact.html">Get in touch</a> and we'll talk through what's possible.</p></div>
+          <div class="faq-a" id="faq-a-18"><p>Subject to availability — a single room type for a closed group, or the whole 44-room house. Tell us the dates and the size of the party. <a href="contact.html">Get in touch</a> and we'll talk through what's possible.</p></div>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-19"><span class="faq-q-text">Is there a minimum stay?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-19"><p>No minimum stay as a rule, though some periods (long weekends, major events) may have a two-night minimum. The booking form will show what applies to your dates.</p></div>
+          <div class="faq-a" id="faq-a-19"><p>No minimum stay. The booking form will show what applies to your dates.</p></div>
         </div>
       </div>
     </div>
@@ -607,7 +620,7 @@ body.menu-open nav.top { transform: none !important; }
   </div>
   <div class="foot-bar">
     <span>© 2026 Stories Hotel Budapest</span>
-    <span>Photography · Assaf Pinchuk &amp; Dor Sharon</span>
+    <span class="foot-lang"><a href="faqs.html" hreflang="en" aria-current="true">English</a><span class="sep">·</span><a href="hu/faqs.html" hreflang="hu">Magyar</a></span>
   </div>
 </footer>
 </div>

@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Neighbourhood — Stories Budapest</title>
-<meta name="description" content="The bars, courtyards, and kitchens of Budapest District VI, a short walk from Stories Hotel on Király utca — the places we send guests when they ask.">
+<title>Reggeli — Stories Budapest</title>
+<meta name="description" content="À la carte reggeli a Stories Hotel Budapestben — az asztalnál rendelve, a Twenty Six étteremben, 07:30–11:00 között. Nem büfé, hanem rituálé.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://secrethotel.netlify.app/neighbourhood.html">
-<link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/neighbourhood.html">
-<link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/neighbourhood.html">
-<link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/neighbourhood.html">
+<link rel="canonical" href="https://secrethotel.netlify.app/hu/breakfast.html">
+<link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/breakfast.html">
+<link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/breakfast.html">
+<link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/breakfast.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Stories Hotel Budapest">
-<meta property="og:title" content="Neighbourhood — Stories Budapest">
-<meta property="og:description" content="The bars, courtyards, and kitchens of Budapest District VI, a short walk from Stories Hotel on Király utca — the places we send guests when they ask.">
-<meta property="og:url" content="https://secrethotel.netlify.app/neighbourhood.html">
-<meta property="og:image" content="https://secrethotel.netlify.app/assets/brand/facade-warm.jpg">
-<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Reggeli — Stories Budapest">
+<meta property="og:description" content="À la carte reggeli a Stories Hotel Budapestben — az asztalnál rendelve, a Twenty Six étteremben, 07:30–11:00 között. Nem büfé, hanem rituálé.">
+<meta property="og:url" content="https://secrethotel.netlify.app/hu/breakfast.html">
+<meta property="og:image" content="https://secrethotel.netlify.app/assets/brand/breakfast-new.jpg">
+<meta property="og:locale" content="hu_HU">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Neighbourhood — Stories Budapest">
-<meta name="twitter:description" content="The bars, courtyards, and kitchens of Budapest District VI, a short walk from Stories Hotel on Király utca — the places we send guests when they ask.">
-<meta name="twitter:image" content="https://secrethotel.netlify.app/assets/brand/facade-warm.jpg">
+<meta name="twitter:title" content="Reggeli — Stories Budapest">
+<meta name="twitter:description" content="À la carte reggeli a Stories Hotel Budapestben — az asztalnál rendelve, a Twenty Six étteremben, 07:30–11:00 között. Nem büfé, hanem rituálé.">
+<meta name="twitter:image" content="https://secrethotel.netlify.app/assets/brand/breakfast-new.jpg">
 <script>
 /* Page-transition entry: if the previous page set the flag, start covered
    (html.pt-in) so the sweep panel can exit over the first paint. */
@@ -29,12 +29,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Tenor+Sans&family=Pinyon+Script&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- Leaflet (interactive neighbourhood map) -->
 <style>
 :root {
   --ink:     #0B1410;
-  --ink-2:   #0E2017;
-  --ink-3:   #081A12;
+  --ink-2:   #1A1F1A;
   --paper:   #EDE7DA;
   --paper-2: #E5DECE;
   --rule:    #C9C1B0;
@@ -80,105 +78,35 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 .scrollcue .line { width: 1px; height: 52px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.6), transparent); animation: scrolldrop 2.2s ease-in-out infinite; }
 @keyframes scrolldrop { 0%, 100% { opacity: 0.3; transform: translateY(-8px); } 50% { opacity: 1; transform: translateY(8px); } }
 
-/* The neighbourhood + map section sits on the same Danube photograph the
-   homepage scene resolves to, so the two readings of the district rhyme.
-   A heavy scrim keeps the list, the map and the copy fully legible. */
-.body-dark {
-  position: relative;
-  background: var(--ink-2);
-  color: rgba(255,255,255,0.84);
-  padding: clamp(80px, 10vw, 140px) clamp(40px, 6vw, 96px);
-}
-.body-dark::before {
-  content: "";
-  position: absolute; inset: 0;
-  background: url('assets/brand/danube-budapest.webp') center / cover no-repeat;
-  opacity: 0.28;
-  filter: saturate(0.85) contrast(1.02);
-  pointer-events: none;
-}
-.body-dark::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(11,20,16,0.72) 0%, rgba(8,26,18,0.86) 60%, rgba(8,26,18,0.94) 100%);
-  pointer-events: none;
-}
-.body-dark > * { position: relative; z-index: 1; }
+/* BREAKFAST CONTENT */
+.body { background: var(--paper); padding: clamp(80px, 10vw, 140px) clamp(40px, 6vw, 96px); }
 .body-inner { max-width: 1200px; margin: 0 auto; }
 
-.neigh-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 4vw, 64px); margin-bottom: clamp(64px, 8vw, 96px); }
-.ix { display: grid; grid-template-columns: 40px 1fr 1fr auto; column-gap: 20px; }
-.ix > * { padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.12); font-weight: 400; }
-.ix .n { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: rgba(255,255,255,0.5); }
-.ix .pl { font-family: 'Libre Caslon Text', serif; font-size: 19px; color: #fff; }
-.ix .pl em { font-style: italic; color: var(--accent); font-weight: 400; }
-.ix .k { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 300; }
-.ix .d { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.1em; white-space: nowrap; }
+.bk-intro { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(40px, 5vw, 80px); align-items: start; margin-bottom: clamp(64px, 8vw, 96px); }
+.bk-intro h2 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; color: var(--ink); margin-bottom: 20px; letter-spacing: -0.01em; }
+.bk-intro h2 em { font-style: italic; color: var(--primary); }
+.bk-intro p { font-size: 16px; line-height: 1.7; color: var(--text); margin-bottom: 14px; font-weight: 300; }
+.bk-right { padding-top: 4px; }
+.bk-fact { display: flex; justify-content: space-between; padding: 18px 0; border-top: 1px solid var(--rule); }
+.bk-fact:last-child { border-bottom: 1px solid var(--rule); }
+.bk-fact .l { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-2); }
+.bk-fact .v { font-family: 'Libre Caslon Text', serif; font-size: 18px; color: var(--ink); font-weight: 500; }
+.bk-fact .v em { font-style: italic; color: var(--primary); font-weight: 400; }
 
-/* isolation:isolate traps Leaflet's internal z-index (panes/controls reach
-   ~1000) inside this box so it can never paint over the fixed nav. */
-.neigh-map { position: relative; isolation: isolate; z-index: 0; background: var(--ink-3); border: 1px solid rgba(255,255,255,0.08); aspect-ratio: 4/5; overflow: hidden; }
-.neigh-leaflet { position: absolute; inset: 0; width: 100%; height: 100%; background: var(--ink-3); }
-.neigh-leaflet .leaflet-tile-pane { filter: saturate(0.5) brightness(0.92) contrast(1.04) sepia(0.12) hue-rotate(85deg); }
-.neigh-leaflet.leaflet-container { background: var(--ink-3); font-family: 'Schibsted Grotesk', sans-serif; outline: none; }
-.neigh-leaflet .leaflet-control-zoom { border: none; margin: 14px; box-shadow: none; }
-.neigh-leaflet .leaflet-control-zoom a {
-  background: rgba(11,20,16,0.82); color: var(--paper);
-  border: 1px solid rgba(237,231,218,0.18);
-  width: 32px; height: 32px; line-height: 32px; font-size: 16px;
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-  transition: background 0.25s var(--ease), color 0.25s var(--ease);
-}
-.neigh-leaflet .leaflet-control-zoom a:first-child { border-radius: 4px 4px 0 0; }
-.neigh-leaflet .leaflet-control-zoom a:last-child { border-radius: 0 0 4px 4px; border-top: none; }
-.neigh-leaflet .leaflet-control-zoom a:hover { background: var(--accent); color: var(--ink); }
-.neigh-leaflet .leaflet-control-attribution {
-  background: rgba(8,16,12,0.66); color: rgba(237,231,218,0.5);
-  font: 400 9px/1.5 'JetBrains Mono', monospace; padding: 2px 8px;
-}
-.neigh-leaflet .leaflet-control-attribution a { color: rgba(237,231,218,0.72); }
-.nmark { position: relative; }
-.nmark .dot {
-  display: block; width: 12px; height: 12px; border-radius: 50%;
-  background: rgba(237,231,218,0.72); border: 1.5px solid rgba(11,20,16,0.55);
-  box-shadow: 0 1px 5px rgba(0,0,0,0.5);
-  transition: transform 0.2s var(--ease), background 0.2s var(--ease);
-}
-.nmark.is-hotel .dot {
-  width: 16px; height: 16px; background: var(--accent); border-color: rgba(11,20,16,0.4);
-  box-shadow: 0 0 0 5px rgba(185,144,78,0.22), 0 0 14px rgba(185,144,78,0.6);
-}
-.nmark:hover .dot { transform: scale(1.35); background: var(--accent); }
-.nmark .lab {
-  position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%);
-  font: 600 9px 'JetBrains Mono', monospace; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--paper); white-space: nowrap; pointer-events: none;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.85); opacity: 0; transition: opacity 0.2s var(--ease);
-}
-.nmark.is-hotel .lab { opacity: 1; color: var(--accent); }
-.nmark:hover .lab { opacity: 1; }
-.neigh-leaflet .leaflet-popup-content-wrapper { background: var(--paper); color: var(--ink); border-radius: 2px; box-shadow: 0 14px 36px rgba(0,0,0,0.45); }
-.neigh-leaflet .leaflet-popup-content { margin: 16px 20px; width: 220px !important; }
-.neigh-leaflet .leaflet-popup-tip { background: var(--paper); }
-.neigh-leaflet .leaflet-popup-close-button { color: var(--text-3); padding: 6px 8px 0 0; }
-.neigh-leaflet .leaflet-popup-close-button:hover { color: var(--ink); }
-.np-tag  { font: 500 9px 'JetBrains Mono', monospace; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 7px; }
-.np-name { font: 500 18px 'Libre Caslon Text', serif; margin-bottom: 5px; letter-spacing: -0.005em; color: var(--ink); }
-.np-desc { font: 400 13px 'Schibsted Grotesk', sans-serif; line-height: 1.45; color: var(--text-2); margin-bottom: 10px; }
-.np-walk { font: 500 11px 'JetBrains Mono', monospace; letter-spacing: 0.18em; color: var(--primary); display: inline-flex; align-items: center; gap: 10px; }
-.np-walk::before { content: ""; width: 18px; height: 1px; background: var(--accent); }
+/* MENU SECTION */
+.section-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--text-3); margin-bottom: 32px; display: flex; align-items: center; gap: 16px; }
+.section-label::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+.menu-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-bottom: clamp(64px, 8vw, 96px); }
+.menu-cat { background: var(--paper-2); padding: 32px; }
+.menu-cat h3 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: 22px; color: var(--ink); margin-bottom: 20px; letter-spacing: -0.005em; }
+.menu-cat h3 em { font-style: italic; color: var(--primary); }
+.menu-item { padding: 10px 0; border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.menu-item:last-child { border-bottom: none; }
+.menu-item .name { font-size: 15px; color: var(--text); font-weight: 300; }
+.menu-item .desc { font-size: 13px; color: var(--text-3); font-weight: 300; margin-top: 2px; }
+.menu-item-inner { flex: 1; }
 
-/* EXTENDED LIST */
-.section-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 32px; display: flex; align-items: center; gap: 16px; }
-.section-label::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
-
-.place-cats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); }
-.place-cat h3 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: 20px; color: #fff; margin-bottom: 20px; letter-spacing: -0.005em; }
-.place-cat h3 em { font-style: italic; color: var(--accent); }
-.place-item { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
-.place-item:last-child { border-bottom: none; }
-.place-name { font-family: 'Libre Caslon Text', serif; font-size: 16px; color: rgba(255,255,255,0.88); margin-bottom: 2px; }
-.place-note { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 300; }
+/* SOURCING */
 
 /* FOOTER — oversized (~75vh), rounded top, photo + dark scrim, slide-up reveal. Shared site-wide. */
 footer {
@@ -196,7 +124,7 @@ footer {
 }
 footer.foot-armed { transform: translate3d(0, 84px, 0); opacity: 0; }
 footer.foot-armed.foot-revealed { transform: none; opacity: 1; }
-footer::before { content: ""; position: absolute; inset: 0; background: url('assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.webp') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
+footer::before { content: ""; position: absolute; inset: 0; background: url('../assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.webp') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
 footer::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9,11,10,0.4) 0%, rgba(8,10,9,0.84) 100%); z-index: -1; }
 .foot-grid { position: relative; width: 100%; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .foot-grid h3 { font-family: 'Libre Caslon Text', serif; font-size: 28px; color: #fff; font-weight: 500; }
@@ -212,9 +140,7 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
 
 @media (max-width: 1024px) {
   .nav-links { display: none; }
-  .neigh-grid, .place-cats { grid-template-columns: 1fr; }
-  .ix { grid-template-columns: 32px 1fr auto; }
-  .ix .k { display: none; }
+  .bk-intro, .menu-grid { grid-template-columns: 1fr; }
   .foot-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) { .foot-grid { grid-template-columns: 1fr; } }
@@ -454,7 +380,7 @@ body.menu-open nav.top { transform: none !important; }
 </style>
 </head>
 <body>
-<a href="#main" class="skip-link">Skip to content</a>
+<a href="#main" class="skip-link">Ugrás a tartalomra</a>
 
 <div class="page-sweep" aria-hidden="true">
   <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 406 173" focusable="false" aria-hidden="true">
@@ -474,14 +400,14 @@ body.menu-open nav.top { transform: none !important; }
 <nav class="top" id="topnav">
   <span class="nav-brand-slot" aria-hidden="true"></span>
   <div class="nav-links">
-    <a href="rooms.html">Rooms</a>
-    <a href="pleasures.html">Pleasures</a>
-    <a href="breakfast.html">Breakfast</a>
-    <a href="neighbourhood.html" class="active">Neighbourhood</a>
-    <a href="contact.html">Contact</a>
+    <a href="rooms.html">Szobák</a>
+    <a href="pleasures.html">Élmények</a>
+    <a href="breakfast.html" class="active">Reggeli</a>
+    <a href="neighbourhood.html">A negyed</a>
+    <a href="contact.html">Kapcsolat</a>
   </div>
-  <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="nav-cta magnet" target="_blank" rel="noopener">Reserve</a>
-    <button type="button" class="m-burger" id="mnavBtn" aria-expanded="false" aria-controls="mnav" aria-label="Menu">
+  <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="nav-cta magnet" target="_blank" rel="noopener">Foglalás</a>
+    <button type="button" class="m-burger" id="mnavBtn" aria-expanded="false" aria-controls="mnav" aria-label="Menü">
       <span></span><span></span>
     </button>
 </nav>
@@ -489,18 +415,18 @@ body.menu-open nav.top { transform: none !important; }
 <div class="mnav" id="mnav" aria-hidden="true">
   <div class="mnav-inner">
     <nav class="mnav-links" aria-label="Site">
-      <a href="index.html"><span class="n">01</span>Home</a>
-      <a href="rooms.html"><span class="n">02</span>Rooms</a>
-      <a href="pleasures.html"><span class="n">03</span>Pleasures</a>
-      <a href="breakfast.html"><span class="n">04</span>Breakfast</a>
-      <a href="neighbourhood.html" class="active" aria-current="page"><span class="n">05</span>Neighbourhood</a>
-      <a href="contact.html"><span class="n">06</span>Contact</a>
-      <a href="faqs.html"><span class="n">07</span>FAQ</a>
+      <a href="index.html"><span class="n">01</span>Főoldal</a>
+      <a href="rooms.html"><span class="n">02</span>Szobák</a>
+      <a href="pleasures.html"><span class="n">03</span>Élmények</a>
+      <a href="breakfast.html" class="active" aria-current="page"><span class="n">04</span>Reggeli</a>
+      <a href="neighbourhood.html"><span class="n">05</span>A negyed</a>
+      <a href="contact.html"><span class="n">06</span>Kapcsolat</a>
+      <a href="faqs.html"><span class="n">07</span>GYIK</a>
     </nav>
     <div class="mnav-foot">
-      <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Reserve a stay</a>
+      <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Foglaljon szobát</a>
       <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
-      <div class="mnav-lang"><a href="neighbourhood.html" hreflang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="hu/neighbourhood.html" hreflang="hu">Magyar</a></div>
+      <div class="mnav-lang"><a href="../breakfast.html" hreflang="en">English</a><span aria-hidden="true">·</span><a href="breakfast.html" hreflang="hu" aria-current="true">Magyar</a></div>
     </div>
   </div>
 </div>
@@ -525,66 +451,63 @@ body.menu-open nav.top { transform: none !important; }
 
 
 <section class="plate visible">
-  <div class="bg" style="background-image: url('assets/brand/facade-warm.webp');"></div>
+  <div class="bg" style="background-image: url('../assets/brand/breakfast-new.webp');"></div>
   <div class="plate-grain"></div>
   <div class="plate-content">
-    <div class="plate-id"><span class="n">V</span><span>·</span><span>District VI, on foot</span></div>
+    <div class="plate-id"><span class="n">IV</span><span>·</span><span>Reggeli a Twenty Six-ben</span></div>
     <div class="plate-title-block">
-      <h1>A quarter worth<br>the <em>walk.</em></h1>
-      <p class="plate-deck">Király utca runs through one of Budapest's most walkable districts. These are the places we send guests when they ask — and where we go ourselves.</p>
+      <h1>Egy asztal,<br><em>szándékkal</em> megterítve.</h1>
+      <p class="plate-deck">Nem büfé. Ön rendel, leül, beszélget — szelíd rituálé minden nap kezdetére.</p>
     </div>
   </div>
-  <div class="scrollcue"><span>The list</span><span class="line"></span></div>
+  <div class="scrollcue"><span>Az étlap</span><span class="line"></span></div>
 </section>
 
-<section class="body-dark">
+<section class="body">
   <div class="body-inner">
-    <div class="neigh-grid">
-      <div class="ix">
-        <span class="n">01</span><span class="pl">Gerbeaud <em>—</em></span><span class="k">1858 · Coffee &amp; confectionery</span><span class="d">8 min</span>
-        <span class="n">02</span><span class="pl">Opera House <em>—</em></span><span class="k">Andrássy út · Restored 2022</span><span class="d">6 min</span>
-        <span class="n">03</span><span class="pl">Szimpla Kert <em>—</em></span><span class="k">The original ruin bar</span><span class="d">4 min</span>
-        <span class="n">04</span><span class="pl">Rumbach Synagogue <em>—</em></span><span class="k">Jewish Quarter</span><span class="d">3 min</span>
-        <span class="n">05</span><span class="pl">Gozsdu Udvar <em>—</em></span><span class="k">Seven connected courtyards</span><span class="d">5 min</span>
-        <span class="n">06</span><span class="pl">Dobrumba <em>—</em></span><span class="k">Levantine, Dob utca</span><span class="d">7 min</span>
-        <span class="n">07</span><span class="pl">Mazel Tov <em>—</em></span><span class="k">Garden, Middle-Eastern</span><span class="d">4 min</span>
+    <div class="bk-intro">
+      <div>
+        <h2>A <em>Twenty Six</em> épület földszintjén.</h2>
+        <p>A reggelit a földszinti Twenty Six étteremben szolgáljuk fel — egy teremben, amely a VI. kerület nappalijaként működik. Rövid étlap, frissen elkészítve, amely az évszakokkal együtt változik.</p>
+        <p>Nálunk nincs büfé. Ön rendel, leül, beszélget. A tojást olyasvalaki készíti, akinek fontos. A narancslevet a szeme láttára facsarjuk.</p>
+        <p>A reggeli à la carte rendelhető — az aktuális árról kérdezze a recepciót. Ha korán indulna, szóljon előző este, és megoldjuk.</p>
       </div>
-      <div class="neigh-map">
-        <div id="neighMap" class="neigh-leaflet" role="img"
-             aria-label="Map of Budapest District VI — Stories Hotel on Király utca 26 and nearby landmarks"></div>
+      <div class="bk-right">
+        <div class="bk-fact"><span class="l">Nyitvatartás</span><span class="v">07:30 — 11:00</span></div>
+        <div class="bk-fact"><span class="l">Helyszín</span><span class="v">Twenty Six, földszint</span></div>
+        <div class="bk-fact"><span class="l">Stílus</span><span class="v"><em>À la carte</em></span></div>
+        <div class="bk-fact"><span class="l">Ár</span><span class="v">Kérdezze a recepciót</span></div>
       </div>
     </div>
 
-    <div class="section-label">V · Extended list — by category</div>
+    <div class="section-label">IV · Étlap — Válogatás</div>
 
-    <div class="place-cats">
-      <div class="place-cat">
-        <h3>Coffee &amp; <em>bakeries</em></h3>
-        <div class="place-item"><div class="place-name">Gerbeaud</div><div class="place-note">Historic coffeehouse, Vörösmarty tér · 8 min</div></div>
-        <div class="place-item"><div class="place-name">Onyx Coffee</div><div class="place-note">Specialty roaster, District V · 10 min</div></div>
-        <div class="place-item"><div class="place-name">Espresso Embassy</div><div class="place-note">Third-wave, Arany János · 12 min</div></div>
-        <div class="place-item"><div class="place-name">Fekete</div><div class="place-note">Tiny, excellent · 6 min</div></div>
-        <div class="place-item"><div class="place-name">Vian</div><div class="place-note">Liszt Ferenc tér terrace · 8 min</div></div>
+    <div class="menu-grid">
+      <div class="menu-cat">
+        <h3><em>Kezdésnek</em></h3>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Kovászos kenyér és érlelt vaj</div><div class="desc">Melegen tálalva</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Idénygyümölcs-tál</div><div class="desc">Ami azon a héten a legjobb</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Magyar húsválogatás</div><div class="desc">Mangalica, Pick szalámi és füstölt sajt</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Joghurt és granola</div><div class="desc">Helyi méz, magvak</div></div></div>
       </div>
-      <div class="place-cat">
-        <h3>Bars &amp; <em>evening</em></h3>
-        <div class="place-item"><div class="place-name">Szimpla Kert</div><div class="place-note">The original ruin bar · 4 min</div></div>
-        <div class="place-item"><div class="place-name">Gozsdu Udvar</div><div class="place-note">Seven courtyards of bars · 5 min</div></div>
-        <div class="place-item"><div class="place-name">Mazel Tov</div><div class="place-note">Garden bar, Middle-Eastern · 4 min</div></div>
-        <div class="place-item"><div class="place-name">Dobrumba</div><div class="place-note">Levantine, Dob utca · 7 min</div></div>
-        <div class="place-item"><div class="place-name">Spíler</div><div class="place-note">Gozsdu Udvar corner · 5 min</div></div>
+      <div class="menu-cat">
+        <h3>Tojás és <em>főételek</em></h3>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Tojás, ahogy szereti</div><div class="desc">Tükör-, rántotta vagy buggyantott</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Shakshuka</div><div class="desc">Sült paprika, fűszeres paradicsom</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Avokádós pirítós</div><div class="desc">Kovászos kenyér, buggyantott tojás, chili</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Omlett</div><div class="desc">Friss fűszernövénnyel, sajttal vagy sonkával</div></div></div>
       </div>
-      <div class="place-cat">
-        <h3>Culture &amp; <em>sights</em></h3>
-        <div class="place-item"><div class="place-name">Opera House</div><div class="place-note">Andrássy út, restored 2022 · 6 min</div></div>
-        <div class="place-item"><div class="place-name">Rumbach Synagogue</div><div class="place-note">Jewish Quarter, 1872 · 3 min</div></div>
-        <div class="place-item"><div class="place-name">Dohány Street Synagogue</div><div class="place-note">Largest in Europe · 8 min</div></div>
-        <div class="place-item"><div class="place-name">Museum of Fine Arts</div><div class="place-note">Heroes' Square · 18 min</div></div>
-        <div class="place-item"><div class="place-name">Andrássy Avenue</div><div class="place-note">UNESCO boulevard · 8 min</div></div>
+      <div class="menu-cat">
+        <h3><em>Kávé</em> &amp; drinks</h3>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Eszpresszó</div><div class="desc">Single origin, idényjellegű</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Filteres kávé</div><div class="desc">Batch brew</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Frissen facsart narancslé</div><div class="desc">Rendelésre facsarva</div></div></div>
+        <div class="menu-item"><div class="menu-item-inner"><div class="name">Cold brew</div><div class="desc">12 órán át áztatva</div></div></div>
       </div>
     </div>
   </div>
 </section>
+
 
 </main>
 
@@ -593,30 +516,30 @@ body.menu-open nav.top { transform: none !important; }
     <div>
       <h3>Stories</h3>
       <div class="sub">Budapest · Király utca 26</div>
-      <address>Twenty Six Building<br>Király utca 26, 1061 Budapest<br>Hungary</address>
+      <address>Twenty Six épület<br>Király utca 26, 1061 Budapest<br>Magyarország</address>
       <a href="tel:+3618080981" class="ph">+36 1 808 0981</a><br>
       <a href="mailto:info@storiesbudapest.com" class="ph">info@storiesbudapest.com</a>
     </div>
     <div>
-      <h4>House</h4>
+      <h4>A ház</h4>
       <ul>
-        <li><a href="rooms.html">Rooms</a></li>
-        <li><a href="breakfast.html">Breakfast</a></li>
-        <li><a href="pleasures.html">Bar &amp; lounge</a></li>
-        <li><a href="pleasures.html#gym">Gym · GoActive</a></li>
+        <li><a href="rooms.html">Szobák</a></li>
+        <li><a href="breakfast.html">Reggeli</a></li>
+        <li><a href="pleasures.html">Bár és lounge</a></li>
+        <li><a href="pleasures.html#gym">Edzőterem · GoActive</a></li>
       </ul>
     </div>
     <div>
-      <h4>Visiting</h4>
+      <h4>Látogatóknak</h4>
       <ul>
-        <li><a href="neighbourhood.html">Neighbourhood</a></li>
-        <li><a href="contact.html">Directions</a></li>
-        <li><a href="faqs.html">FAQ</a></li>
-        <li><a href="contact.html">Press</a></li>
+        <li><a href="neighbourhood.html">A negyed</a></li>
+        <li><a href="contact.html">Megközelítés</a></li>
+        <li><a href="faqs.html">GYIK</a></li>
+        <li><a href="contact.html">Sajtó</a></li>
       </ul>
     </div>
     <div>
-      <h4>Follow</h4>
+      <h4>Kövessen minket</h4>
       <ul>
         <li><a href="https://www.instagram.com/storieshotelbudapest" target="_blank" rel="noopener">Instagram ↗</a></li>
         <li><a href="https://www.facebook.com/storieshotelbudapest" target="_blank" rel="noopener">Facebook ↗</a></li>
@@ -626,7 +549,7 @@ body.menu-open nav.top { transform: none !important; }
   </div>
   <div class="foot-bar">
     <span>© 2026 Stories Hotel Budapest</span>
-    <span class="foot-lang"><a href="neighbourhood.html" hreflang="en" aria-current="true">English</a><span class="sep">·</span><a href="hu/neighbourhood.html" hreflang="hu">Magyar</a></span>
+    <span class="foot-lang"><a href="../breakfast.html" hreflang="en">English</a><span class="sep">·</span><a href="breakfast.html" hreflang="hu" aria-current="true">Magyar</a></span>
   </div>
 </footer>
 </div>
@@ -634,7 +557,7 @@ body.menu-open nav.top { transform: none !important; }
 
 
 <!-- Lenis smooth-scroll: more distance per wheel tick + buttery easing. Skipped under prefers-reduced-motion. -->
-<script src="assets/vendor/lenis.min.js" defer></script>
+<script src="../assets/vendor/lenis.min.js" defer></script>
 <script>
 (function () {
   function start () {
@@ -656,8 +579,6 @@ body.menu-open nav.top { transform: none !important; }
   else start();
 })();
 </script>
-
-<!-- Leaflet library — must load before the init IIFE below uses global L. -->
 
 <script>
 (function () {
@@ -690,126 +611,12 @@ body.menu-open nav.top { transform: none !important; }
     });
   }, { threshold: [0.35, 0.6] });
   sections.forEach(function (s) { obs.observe(s); });
-
-// Neighbourhood map — real Leaflet map of District VI with custom markers.
-// Tile provider is CARTO Dark Matter (no key) for now; swap the tile URL for
-// a keyed Stadia/Mapbox layer before a high-traffic commercial launch.
-(function () {
-  var el = document.getElementById('neighMap');
-  if (!el) return;
-
-  /* Leaflet's CSS + JS (~45 KB, third-party CDN) used to block first paint for
-     a map that sits far below the fold on both pages. They now land only once
-     the section is within two viewports, then the map builds. */
-  function loadLeaflet (done) {
-    if (typeof L !== 'undefined') { done(); return; }
-    if (window.__leafletQueue) { window.__leafletQueue.push(done); return; }
-    window.__leafletQueue = [done];
-    var css = document.createElement('link');
-    css.rel = 'stylesheet';
-    css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-    css.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
-    css.crossOrigin = '';
-    document.head.appendChild(css);
-    var js = document.createElement('script');
-    js.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-    js.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
-    js.crossOrigin = '';
-    js.onload = js.onerror = function () {
-      var q = window.__leafletQueue || [];
-      window.__leafletQueue = null;
-      q.forEach(function (f) { f(); });
-    };
-    document.head.appendChild(js);
-  }
-
-  var mapWarm = new IntersectionObserver(function (entries) {
-    if (!entries[0].isIntersecting) return;
-    mapWarm.disconnect();
-    loadLeaflet(initMap);
-  }, { rootMargin: '200% 0px' });
-  mapWarm.observe(el);
-
-  function initMap () {
-  if (typeof L === 'undefined') return;
-
-  var HOTEL = [47.4988, 19.0598];
-  var places = [
-    { name: 'Stories Hotel',         tag: 'Király utca 26',  walk: 'You are here', hotel: true, ll: HOTEL,             desc: 'The Twenty Six building — your base in District VI.' },
-    { name: 'Gerbeaud',              tag: 'Coffeehouse',     walk: '8 min walk',   ll: [47.4965, 19.0508], desc: 'Vörösmarty tér · 1858. The grand café of the Pest side.' },
-    { name: 'Hungarian State Opera', tag: 'Culture',         walk: '6 min walk',   ll: [47.5025, 19.0577], desc: 'Andrássy út 22. Neo-Renaissance interior, restored 2022.' },
-    { name: 'Szimpla Kert',          tag: 'Ruin bar',        walk: '4 min walk',   ll: [47.4972, 19.0640], desc: 'The original ruin bar. Kazinczy utca 14.' },
-    { name: 'Rumbach Synagogue',     tag: 'Jewish Quarter',  walk: '3 min walk',   ll: [47.4975, 19.0583], desc: 'Moorish revival, restored 2021 — the smaller of the three.' },
-    { name: 'Gozsdu Udvar',          tag: 'Courtyards',      walk: '5 min walk',   ll: [47.4974, 19.0601], desc: 'Seven connected courtyards between Király and Dob utca.' },
-    { name: 'Dobrumba',              tag: 'Levantine',       walk: '7 min walk',   ll: [47.4968, 19.0579], desc: 'Levantine cooking, Dob utca 5. Book ahead on weekends.' },
-    { name: 'Mazel Tov',             tag: 'Garden bar',      walk: '4 min walk',   ll: [47.5000, 19.0670], desc: 'Akácfa utca 47. Middle-Eastern food, glass-roofed garden.' }
-  ];
-
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var map = L.map(el, {
-    center: HOTEL, zoom: 15,
-    scrollWheelZoom: false,        // never hijack page scroll
-    fadeAnimation: !reduce, zoomAnimation: !reduce
-  });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    subdomains: 'abcd', maxZoom: 19,
-    attribution: '&copy; OpenStreetMap &middot; CARTO'
-  }).addTo(map);
-
-  // Popup body built with DOM nodes + textContent (project rule: no raw markup).
-  function popupEl(p) {
-    var w = document.createElement('div');
-    [['np-tag', p.tag], ['np-name', p.name], ['np-desc', p.desc], ['np-walk', p.walk]]
-      .forEach(function (row) {
-        var d = document.createElement('div');
-        d.className = row[0];
-        d.textContent = row[1];
-        w.appendChild(d);
-      });
-    return w;
-  }
-
-  var bounds = [];
-  places.forEach(function (p) {
-    // Built as DOM nodes, not a markup string — Leaflet's divIcon accepts an
-    // element and assigns strings via innerHTML, which the project forbids.
-    var mark = document.createElement('div');
-    mark.className = 'nmark' + (p.hotel ? ' is-hotel' : '');
-    var lab = document.createElement('span');
-    lab.className = 'lab';
-    lab.textContent = p.hotel ? 'Stories · 26' : p.name;
-    var dot = document.createElement('span');
-    dot.className = 'dot';
-    mark.appendChild(lab);
-    mark.appendChild(dot);
-    var icon = L.divIcon({
-      className: '',
-      html: mark,
-      iconSize: [14, 14], iconAnchor: [7, 7], popupAnchor: [0, -12]
-    });
-    L.marker(p.ll, { icon: icon, title: p.name, riseOnHover: true })
-      .addTo(map)
-      .bindPopup(popupEl(p), { closeButton: true, offset: [0, -2] });
-    bounds.push(p.ll);
-  });
-
-  map.fitBounds(bounds, { padding: [42, 42] });
-  if (map.getZoom() > 16) map.setZoom(16);
-
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) { map.invalidateSize(); io.disconnect(); }
-    });
-  }, { threshold: 0.1 });
-  io.observe(el);
-  }
-})();
 }());
 </script>
 
 <!-- GSAP + ScrollTrigger (vendored, free for commercial use) -->
-<script src="assets/vendor/gsap.min.js" defer></script>
-<script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+<script src="../assets/vendor/gsap.min.js" defer></script>
+<script src="../assets/vendor/ScrollTrigger.min.js" defer></script>
 <script>
 /* Shared GSAP reveals — heading rise + block fade-up, Lenis-synced, motion-safe.
    Hard-skips every zone the site already animates so nothing double-fires. */
