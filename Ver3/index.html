@@ -2146,6 +2146,11 @@ body.menu-open nav.top { transform: none !important; }
 .mnav-lang a { color: rgba(237,231,218,0.6); min-height: 44px; display: inline-flex; align-items: center; }
 .mnav-lang a[aria-current="true"] { color: var(--accent); }
 @media (max-width: 520px) { .foot-bar { flex-wrap: wrap; gap: 10px; } }
+.foot-legal { display: inline-flex; gap: 10px; align-items: center; }
+.foot-legal a { color: rgba(255,255,255,0.35); border-bottom: 1px solid transparent; transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.foot-legal a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.foot-legal a[aria-current="true"] { color: rgba(255,255,255,0.82); }
+.foot-legal .sep { opacity: 0.4; }
 </style>
 <script type="application/ld+json">
 {
@@ -2691,6 +2696,7 @@ body.menu-open nav.top { transform: none !important; }
   <div class="foot-bar">
     <span>© 2026 Stories Hotel Budapest</span>
     <span class="foot-lang"><a href="index.html" hreflang="en" aria-current="true">English</a><span class="sep">·</span><a href="hu/index.html" hreflang="hu">Magyar</a></span>
+    <span class="foot-legal"><a href="terms.html">General Terms &amp; Conditions</a><span class="sep">·</span><a href="privacy.html">Privacy Policy</a></span>
   </div>
 </footer>
 </div>

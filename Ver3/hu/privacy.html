@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAQ — Stories Budapest</title>
-<meta name="description" content="Answers to common questions about staying at Stories Hotel Budapest — booking, breakfast, rooms, and the neighbourhood on Király utca.">
+<title>Adatvédelmi tájékoztató — Stories Budapest</title>
+<meta name="description" content="Hogyan gyűjti, használja és védi a Stories Hotel Budapest a személyes adatokat — foglalás, bejelentkezés, kapcsolatfelvétel és sütik, a GDPR szerint.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://secrethotel.netlify.app/faqs.html">
-<link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/faqs.html">
-<link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/faqs.html">
-<link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/faqs.html">
+<link rel="canonical" href="https://secrethotel.netlify.app/hu/privacy.html">
+<link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/privacy.html">
+<link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/privacy.html">
+<link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/privacy.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Stories Hotel Budapest">
-<meta property="og:title" content="FAQ — Stories Budapest">
-<meta property="og:description" content="Answers to common questions about staying at Stories Hotel Budapest — booking, breakfast, rooms, and the neighbourhood on Király utca.">
-<meta property="og:url" content="https://secrethotel.netlify.app/faqs.html">
+<meta property="og:title" content="Adatvédelmi tájékoztató — Stories Budapest">
+<meta property="og:description" content="Hogyan gyűjti, használja és védi a Stories Hotel Budapest a személyes adatokat — foglalás, bejelentkezés, kapcsolatfelvétel és sütik, a GDPR szerint.">
+<meta property="og:url" content="https://secrethotel.netlify.app/hu/privacy.html">
 <meta property="og:image" content="https://secrethotel.netlify.app/assets/brand/facade-warm.jpg">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="hu_HU">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="FAQ — Stories Budapest">
-<meta name="twitter:description" content="Answers to common questions about staying at Stories Hotel Budapest — booking, breakfast, rooms, and the neighbourhood on Király utca.">
+<meta name="twitter:title" content="Adatvédelmi tájékoztató — Stories Budapest">
+<meta name="twitter:description" content="Hogyan gyűjti, használja és védi a Stories Hotel Budapest a személyes adatokat — foglalás, bejelentkezés, kapcsolatfelvétel és sütik, a GDPR szerint.">
 <meta name="twitter:image" content="https://secrethotel.netlify.app/assets/brand/facade-warm.jpg">
 <script>
 /* Page-transition entry: if the previous page set the flag, start covered
@@ -67,41 +67,10 @@ nav.top { position: sticky; top: 0; left: 0; right: 0; z-index: 80; padding: 22p
 .page-header p { font-size: 17px; line-height: 1.55; color: var(--text-2); max-width: 560px; font-weight: 300; }
 
 /* FAQ */
-.faq-body { padding: 0 clamp(40px, 6vw, 96px) clamp(80px, 10vw, 120px); }
-.faq-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: clamp(48px, 6vw, 96px); align-items: start; }
-.faq-nav { position: sticky; top: 96px; }
-.faq-nav-item { display: block; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3); padding: 10px 0; border-top: 1px solid var(--rule); transition: color 0.3s var(--ease); cursor: pointer; }
-.faq-nav-item:first-child { border-top: none; }
-.faq-nav-item:hover { color: var(--ink); }
-.faq-nav-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.faq-nav-item.active { color: var(--ink); font-weight: 500; }
-.faq-group { margin-bottom: 56px; }
-.faq-group-title { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(20px, 2.2vw, 28px); color: var(--ink); margin-bottom: 24px; letter-spacing: -0.005em; }
-.faq-group-title em { font-style: italic; color: var(--primary); }
 
-.faq-item { border-top: 1px solid var(--rule); }
-.faq-item:last-child { border-bottom: 1px solid var(--rule); }
-.faq-q { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; cursor: pointer; gap: 24px; user-select: none;
   width: 100%; background: none; border: none; text-align: left; font: inherit; color: inherit; }
-.faq-q:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.faq-q-text { font-family: 'Libre Caslon Text', serif; font-size: 17px; color: var(--ink); font-weight: 400; line-height: 1.3; }
-.faq-icon { font-family: 'JetBrains Mono', monospace; font-size: 18px; color: var(--text-3); transition: transform 0.3s var(--ease), color 0.3s var(--ease); flex-shrink: 0; }
-.faq-item.open .faq-icon { transform: rotate(45deg); color: var(--accent-ink); }
-.faq-a { display: none; padding-bottom: 20px; }
-.faq-item.open .faq-a { display: block; }
-.faq-a p { font-size: 15px; line-height: 1.7; color: var(--text-2); font-weight: 300; max-width: 600px; }
-.faq-a p + p { margin-top: 12px; }
-.faq-a a { color: var(--primary); border-bottom: 1px solid rgba(42, 92, 69, 0.3); transition: border-color 0.3s; }
-.faq-a a:hover { border-bottom-color: var(--primary); }
 
 /* CTA */
-.faq-cta { background: var(--ink-2); padding: clamp(48px, 6vw, 80px) clamp(40px, 6vw, 96px); text-align: center; }
-.faq-cta-inner { max-width: 640px; margin: 0 auto; }
-.faq-cta h2 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); color: #fff; margin-bottom: 12px; letter-spacing: -0.01em; }
-.faq-cta h2 em { font-style: italic; color: var(--accent); }
-.faq-cta p { font-size: 16px; color: rgba(255,255,255,0.65); font-weight: 300; margin-bottom: 28px; }
-.faq-cta a { display: inline-flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); background: var(--accent); padding: 14px 28px; transition: background 0.3s var(--ease); }
-.faq-cta a:hover { background: #fff; }
 
 /* FOOTER — oversized (~75vh), rounded top, photo + dark scrim, slide-up reveal. Shared site-wide. */
 footer {
@@ -119,7 +88,7 @@ footer {
 }
 footer.foot-armed { transform: translate3d(0, 84px, 0); opacity: 0; }
 footer.foot-armed.foot-revealed { transform: none; opacity: 1; }
-footer::before { content: ""; position: absolute; inset: 0; background: url('assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.webp') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
+footer::before { content: ""; position: absolute; inset: 0; background: url('../assets/brand/zoltan-tasi-FHbPlnJBhT0-unsplash.webp') center / cover no-repeat; opacity: 0.52; filter: grayscale(0.12) contrast(1.06); z-index: -2; }
 footer::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9,11,10,0.4) 0%, rgba(8,10,9,0.84) 100%); z-index: -1; }
 .foot-grid { position: relative; width: 100%; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .foot-grid h3 { font-family: 'Libre Caslon Text', serif; font-size: 28px; color: #fff; font-weight: 500; }
@@ -135,8 +104,6 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
 
 @media (max-width: 1024px) {
   .nav-links { display: none; }
-  .faq-inner { grid-template-columns: 1fr; }
-  .faq-nav {
     position: sticky; top: 86px; z-index: 20;
     display: flex; gap: 22px; overflow-x: auto; -webkit-overflow-scrolling: touch;
     margin: 0 calc(-1 * clamp(24px, 6vw, 96px)) 32px;
@@ -144,8 +111,6 @@ footer::after { content: ""; position: absolute; inset: 0; background: linear-gr
     background: var(--paper); border-bottom: 1px solid var(--rule);
     scrollbar-width: none;
   }
-  .faq-nav::-webkit-scrollbar { display: none; }
-  .faq-nav-item { border-top: none; padding: 6px 0; white-space: nowrap; flex: 0 0 auto; }
   .foot-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) { .foot-grid { grid-template-columns: 1fr; } }
@@ -383,6 +348,43 @@ body.menu-open nav.top { transform: none !important; }
 .mnav-lang a { color: rgba(237,231,218,0.6); min-height: 44px; display: inline-flex; align-items: center; }
 .mnav-lang a[aria-current="true"] { color: var(--accent); }
 @media (max-width: 520px) { .foot-bar { flex-wrap: wrap; gap: 10px; } }
+
+/* LEGAL PAGES */
+.legal-body { padding: 0 clamp(40px, 6vw, 96px) clamp(72px, 9vw, 110px); }
+.legal-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: clamp(48px, 6vw, 96px); align-items: start; }
+.legal-nav { position: sticky; top: 96px; }
+.legal-nav a { display: block; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); padding: 9px 0; border-top: 1px solid var(--rule); transition: color 0.3s var(--ease); }
+.legal-nav a:first-child { border-top: none; }
+.legal-nav a:hover { color: var(--ink); }
+.legal-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.legal-doc { min-width: 0; max-width: 760px; }
+.legal-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); padding-bottom: 18px; margin-bottom: 30px; border-bottom: 1px solid var(--rule); }
+.legal-sec { margin-bottom: 40px; scroll-margin-top: 110px; }
+.legal-sec > h2 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: clamp(20px, 2.2vw, 27px); color: var(--ink); letter-spacing: -0.005em; margin-bottom: 14px; }
+.legal-sec > h2 .n { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-ink); letter-spacing: 0.16em; margin-right: 12px; vertical-align: 3px; }
+.legal-sec h3 { font-family: 'Libre Caslon Text', serif; font-weight: 400; font-size: 17px; color: var(--ink); margin: 22px 0 8px; }
+.legal-sec p { font-size: 15px; line-height: 1.72; color: var(--text-2); font-weight: 300; margin-bottom: 12px; }
+.legal-sec ul, .legal-sec ol { margin: 0 0 14px 20px; }
+.legal-sec li { font-size: 15px; line-height: 1.68; color: var(--text-2); font-weight: 300; margin-bottom: 6px; }
+.legal-sec a { color: var(--primary); border-bottom: 1px solid rgba(18,53,36,0.28); transition: border-color 0.3s; word-break: break-word; }
+.legal-sec a:hover { border-bottom-color: var(--primary); }
+.legal-sec strong { font-weight: 500; color: var(--text); }
+.legal-card { background: var(--paper-2); border: 1px solid var(--rule); padding: 20px 22px; margin-bottom: 16px; }
+.legal-card p:last-child { margin-bottom: 0; }
+.legal-card .k { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); display: block; margin-bottom: 4px; }
+.legal-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 14px; }
+.legal-table th { text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3); font-weight: 400; border-bottom: 1px solid var(--rule); padding: 8px 12px 8px 0; vertical-align: bottom; }
+.legal-table td { border-bottom: 1px solid var(--rule); padding: 11px 12px 11px 0; color: var(--text-2); font-weight: 300; line-height: 1.6; vertical-align: top; }
+.legal-table td:first-child { color: var(--text); width: 34%; }
+.legal-scroll { overflow-x: auto; }
+.legal-todo { display: inline-block; background: #FBEAEA; border: 1px dashed #C0392B; color: #9B2C2C; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; padding: 2px 8px; }
+.legal-draft { background: #FBEAEA; border: 1px solid #C0392B; padding: 16px 20px; margin-bottom: 30px; }
+.legal-draft p { color: #9B2C2C; font-size: 14px; margin: 0; font-weight: 400; }
+@media (max-width: 900px) {
+  .legal-inner { grid-template-columns: 1fr; }
+  .legal-nav { position: static; display: flex; flex-wrap: wrap; gap: 0 18px; border-bottom: 1px solid var(--rule); padding-bottom: 10px; margin-bottom: 26px; }
+  .legal-nav a { border-top: none; padding: 6px 0; }
+}
 .foot-legal { display: inline-flex; gap: 10px; align-items: center; }
 .foot-legal a { color: rgba(255,255,255,0.35); border-bottom: 1px solid transparent; transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
 .foot-legal a:hover { color: var(--accent); border-bottom-color: var(--accent); }
@@ -391,7 +393,7 @@ body.menu-open nav.top { transform: none !important; }
 </style>
 </head>
 <body>
-<a href="#main" class="skip-link">Skip to content</a>
+<a href="#main" class="skip-link">Ugrás a tartalomra</a>
 
 <div class="page-sweep" aria-hidden="true">
   <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 406 173" focusable="false" aria-hidden="true">
@@ -411,14 +413,14 @@ body.menu-open nav.top { transform: none !important; }
 <nav class="top" id="topnav">
   <span class="nav-brand-slot" aria-hidden="true"></span>
   <div class="nav-links">
-    <a href="rooms.html">Rooms</a>
-    <a href="pleasures.html">Pleasures</a>
-    <a href="breakfast.html">Breakfast</a>
-    <a href="neighbourhood.html">Neighbourhood</a>
-    <a href="contact.html">Contact</a>
+    <a href="rooms.html">Szobák</a>
+    <a href="pleasures.html">Élmények</a>
+    <a href="breakfast.html">Reggeli</a>
+    <a href="neighbourhood.html">A negyed</a>
+    <a href="contact.html">Kapcsolat</a>
   </div>
-  <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="nav-cta magnet" target="_blank" rel="noopener">Reserve</a>
-    <button type="button" class="m-burger" id="mnavBtn" aria-expanded="false" aria-controls="mnav" aria-label="Menu">
+  <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="nav-cta magnet" target="_blank" rel="noopener">Foglalás</a>
+    <button type="button" class="m-burger" id="mnavBtn" aria-expanded="false" aria-controls="mnav" aria-label="Menü">
       <span></span><span></span>
     </button>
 </nav>
@@ -426,18 +428,18 @@ body.menu-open nav.top { transform: none !important; }
 <div class="mnav" id="mnav" aria-hidden="true">
   <div class="mnav-inner">
     <nav class="mnav-links" aria-label="Site">
-      <a href="index.html"><span class="n">01</span>Home</a>
-      <a href="rooms.html"><span class="n">02</span>Rooms</a>
-      <a href="pleasures.html"><span class="n">03</span>Pleasures</a>
-      <a href="breakfast.html"><span class="n">04</span>Breakfast</a>
-      <a href="neighbourhood.html"><span class="n">05</span>Neighbourhood</a>
-      <a href="contact.html"><span class="n">06</span>Contact</a>
-      <a href="faqs.html" class="active" aria-current="page"><span class="n">07</span>FAQ</a>
+      <a href="index.html"><span class="n">01</span>Főoldal</a>
+      <a href="rooms.html"><span class="n">02</span>Szobák</a>
+      <a href="pleasures.html"><span class="n">03</span>Élmények</a>
+      <a href="breakfast.html"><span class="n">04</span>Reggeli</a>
+      <a href="neighbourhood.html"><span class="n">05</span>A negyed</a>
+      <a href="contact.html"><span class="n">06</span>Kapcsolat</a>
+      <a href="faqs.html" class="active" aria-current="page"><span class="n">07</span>GYIK</a>
     </nav>
     <div class="mnav-foot">
-      <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Reserve a stay</a>
+      <a class="mnav-cta" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Foglaljon szobát</a>
       <div class="mnav-meta">Király utca 26 · Budapest VI<br><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></div>
-      <div class="mnav-lang"><a href="faqs.html" hreflang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="hu/faqs.html" hreflang="hu">Magyar</a></div>
+      <div class="mnav-lang"><a href="../privacy.html" hreflang="en">English</a><span aria-hidden="true">·</span><a href="privacy.html" hreflang="hu" aria-current="true">Magyar</a></div>
     </div>
   </div>
 </div>
@@ -460,128 +462,70 @@ body.menu-open nav.top { transform: none !important; }
 <div class="page-view">
 <main id="main">
 
-
 <div class="page-header">
-  <div class="page-over">FAQ · Frequently asked</div>
-  <h1>Questions, <em>answered.</em></h1>
-  <p>Everything guests usually want to know before they arrive. If yours isn't here, write to us — we're quick.</p>
+  <div class="page-over">Jogi · Adatvédelem</div>
+  <h1>Adatvédelmi <em>tájékoztató.</em></h1>
+  <p>Milyen személyes adatot kezelünk, miért, meddig őrizzük, és Ön mit kérhet ezzel kapcsolatban.</p>
 </div>
 
-<div class="faq-body">
-  <div class="faq-inner">
-    <nav class="faq-nav" aria-label="FAQ categories">
-      <a class="faq-nav-item active" href="#arrival">Arrival &amp; stay</a>
-      <a class="faq-nav-item" href="#rooms">Rooms</a>
-      <a class="faq-nav-item" href="#food">Food &amp; drink</a>
-      <a class="faq-nav-item" href="#access">Access &amp; location</a>
-      <a class="faq-nav-item" href="#booking">Booking &amp; policies</a>
-    </nav>
-
-    <div class="faq-content">
-      <div class="faq-group" id="arrival">
-        <h2 class="faq-group-title">Arrival &amp; <em>stay</em></h2>
-        <div class="faq-item open">
-          <button type="button" class="faq-q" aria-expanded="true" aria-controls="faq-a-1"><span class="faq-q-text">What are the check-in and check-out times?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-1"><p>Check-in is from 15:00. Check-out is by 11:00. If you're arriving earlier or need a late checkout, tell us when you book — we'll do what we can, subject to availability.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-2"><span class="faq-q-text">Is there someone at the hotel around the clock?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-2"><p>Yes — reception is staffed 24 hours a day, every day. Check-in opens at 15:00, but arrive whenever your journey gets you here; someone will be at the desk.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-3"><span class="faq-q-text">Can I store luggage before check-in or after check-out?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-3"><p>Yes, luggage storage is available on request. Drop it off and go explore — we'll look after it.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-4"><span class="faq-q-text">What is included in the stay?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-4"><p>High-speed WiFi throughout the building, and luggage storage before check-in or after check-out. The GoActive gym and the Create 26 coworking floor are run by neighbours rather than by us — they are not part of the rate, but reception is glad to arrange access to either. Breakfast at Twenty Six is à la carte — ask reception for the current price — and not bundled into the room rate; we'd rather you pay only for what you order.</p></div>
-        </div>
-      </div>
-
-      <div class="faq-group" id="rooms">
-        <h2 class="faq-group-title">The <em>rooms</em></h2>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-5"><span class="faq-q-text">How many rooms are in the hotel?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-5"><p>Six characters — from the Presidential Suite (165–180 m², three floors) to the Superior Room (17 m², deliberately cosy) — across 44 rooms in the house. See the <a href="rooms.html">Rooms page</a> for the full list.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-6"><span class="faq-q-text">Do any rooms have a Jacuzzi or sauna?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-6"><p>Yes. The Presidential Suite and the King Suite each have a private Jacuzzi and a private sauna.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-7"><span class="faq-q-text">Can rooms accommodate more than two guests?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-7"><p>The Junior Suite sleeps up to four with its sofa-bed arrangement. The Presidential Suite accommodates up to six. Please enquire for specific room configurations.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-8"><span class="faq-q-text">Are pets allowed?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-8"><p>We love the idea but the building doesn't allow it. We're sorry.</p></div>
-        </div>
-      </div>
-
-      <div class="faq-group" id="food">
-        <h2 class="faq-group-title">Food &amp; <em>drink</em></h2>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-9"><span class="faq-q-text">What time is breakfast served?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-9"><p>07:30 to 11:00, Monday through Sunday, in the Twenty Six restaurant on the ground floor. If you have an early flight or need something before 07:30, speak to us the night before.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-10"><span class="faq-q-text">Is breakfast included in the room rate?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-10"><p>No — breakfast is charged separately, à la carte; ask reception for the current price. We kept it off the rate on purpose: you order what you actually want in the morning, not a buffet you didn't ask for. Add it when you check in, or skip it and walk five minutes to the bakeries on Klauzál tér.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-11"><span class="faq-q-text">When does the bar open?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-11"><p>The bar is open from 17:00 to midnight, every day. On warm evenings it spills into the Twenty Six courtyard. Guests are welcome at any time — it's your living room too.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-12"><span class="faq-q-text">Can you accommodate dietary requirements?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-12"><p>Usually, yes — subject to what the kitchen has in that morning. Ask in the restaurant and they will tell you what they can do.</p></div>
-        </div>
-      </div>
-
-      <div class="faq-group" id="access">
-        <h2 class="faq-group-title">Access &amp; <em>location</em></h2>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-13"><span class="faq-q-text">How do I get to the hotel from the airport?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-13"><p>Budapest Liszt Ferenc Airport is about 35 minutes by taxi, typically €30–35. The 100E airport express bus goes to Deák Ferenc tér, a short walk away. We also work with a transfer partner and can book a car for you — just ask.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-14"><span class="faq-q-text">Is there parking at the hotel?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-14"><p>We don't have a car park of our own. There is a wide choice of paid parking in the area, and reception will point you to whichever suits your car and your stay.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-15"><span class="faq-q-text">Is the hotel accessible for guests with mobility needs?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-15"><p>There is a lift. The building is a historic townhouse, so a few rooms still have steps of their own — if you need a room reachable without stairs, contact reception before booking and we'll hold one for you, subject to availability.</p></div>
-        </div>
-      </div>
-
-      <div class="faq-group" id="booking">
-        <h2 class="faq-group-title">Booking &amp; <em>policies</em></h2>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-16"><span class="faq-q-text">What is the cancellation policy?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-16"><p>Free cancellation up to 5 days before check-in. Cancellations within 5 days are charged in full, as are no-shows. We can make exceptions for genuine emergencies — just call us.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-17"><span class="faq-q-text">Why book directly rather than through an OTA?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-17"><p>You get our best rate here — booking direct is the cheapest way to stay with us. We also know who you are before you arrive, which means we can prepare better, and anything you need changing goes straight to the person who can change it.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-18"><span class="faq-q-text">Do you accept group bookings?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-18"><p>Subject to availability — a single room type for a closed group, or the whole 44-room house. Tell us the dates and the size of the party. <a href="contact.html">Get in touch</a> and we'll talk through what's possible.</p></div>
-        </div>
-        <div class="faq-item">
-          <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-19"><span class="faq-q-text">Is there a minimum stay?</span><span class="faq-icon" aria-hidden="true">+</span></button>
-          <div class="faq-a" id="faq-a-19"><p>No minimum stay. The booking form will show what applies to your dates.</p></div>
-        </div>
-      </div>
+<div class="legal-body">
+  <div class="legal-inner">
+    <nav class="legal-nav" aria-label="Sections"><a href="#s1">Kik vagyunk</a><a href="#s2">Alapfogalmak</a><a href="#s3">Alapelvek</a><a href="#s4">Mit kezelünk</a><a href="#s5">Címzettek</a><a href="#s6">EGT-n kívülre</a><a href="#s7">Sütik</a><a href="#s8">Gyermekek</a><a href="#s9">Adatbiztonság</a><a href="#s10">Az Ön jogai</a><a href="#s11">Panaszok</a></nav>
+    <div class="legal-doc">
+      <div class="legal-draft"><p>Jogi ellenőrzésre váró tervezet. A cégadatok még kitöltendők, és a közzététel előtt jogásznak kell átnéznie ezt az oldalt.</p></div>
+      <div class="legal-meta">Hatályos 2026. augusztus 24-től · 1.0 verzió</div>
+      <section class="legal-sec" id="s1">
+        <h2><span class="n">01</span>Kik vagyunk</h2>
+      <p>A Stories Hotel Budapest a Twenty Six épületben, a Király utca 26. szám alatt működik, 1061 Budapest. Komolyan vesszük a személyes adatok védelmét, és ez a tájékoztató elmondja, milyen adatot kezelünk, miért, milyen jogalapon, meddig, és Ön mit kérhet ezzel kapcsolatban.</p><div class="legal-card"><p><span class="k">Üzemeltető / Adatkezelő</span><span class="legal-todo">[ TO BE SUPPLIED ]</span></p><p><span class="k">Cégjegyzékszám</span><span class="legal-todo">[ TO BE SUPPLIED ]</span></p><p><span class="k">Adószám</span><span class="legal-todo">[ TO BE SUPPLIED ]</span></p><p><span class="k">Közösségi adószám</span><span class="legal-todo">[ TO BE SUPPLIED ]</span></p><p><span class="k">Székhely</span>Király utca 26, 1061 Budapest</p><p><span class="k">E-mail</span><a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a></p><p><span class="k">Telefon</span><a href="tel:+3618080981">+36 1 808 0981</a></p><p><span class="k">Képviselő</span><span class="legal-todo">[ TO BE SUPPLIED ]</span></p></div><p>A tájékoztató a weboldalunkra, az online foglalási folyamatra, a foglalási és vendégkiszolgáló rendszereinkre, valamint a velünk folytatott levelezésre vonatkozik.</p>
+      <p>A tájékoztatót módosíthatjuk. Mindig az ezen az oldalon közzétett változat van hatályban. Ha ismerjük az e-mail-címét, és a változás lényeges, értesítjük.</p>
+      <p>Adatkezelésünk megfelel az (EU) 2016/679 rendeletnek (GDPR), az információs önrendelkezési jogról és az információszabadságról szóló 2011. évi CXII. törvénynek, a Polgári Törvénykönyvről szóló 2013. évi V. törvénynek, valamint a fogyasztóvédelemről szóló 1997. évi CLV. törvénynek.</p>
+      </section>
+      <section class="legal-sec" id="s2">
+        <h2><span class="n">02</span>Alapfogalmak</h2>
+      <p><strong>Személyes adat</strong> — azonosított vagy azonosítható természetes személyre vonatkozó bármely információ.</p>
+      <p><strong>Adatkezelés</strong> — a személyes adatokon végzett bármely művelet: gyűjtés, rögzítés, tárolás, módosítás, felhasználás, továbbítás, törlés.</p>
+      <p><strong>Adatkezelő</strong> — aki az adatkezelés céljait és eszközeit meghatározza. Az itt leírt tevékenységek esetében ez mi vagyunk.</p>
+      <p><strong>Adatfeldolgozó</strong> — aki a mi utasításunkra kezel személyes adatot, például a foglalási rendszerünk szolgáltatója.</p>
+      <p><strong>Érintett</strong> — Ön: vendég, szerződéses partner, hozzánk forduló személy vagy álláspályázó.</p>
+      </section>
+      <section class="legal-sec" id="s3">
+        <h2><span class="n">03</span>Alapelvek</h2>
+      <p>A személyes adatokat jogszerűen, tisztességesen és átlátható módon kezeljük; kizárólag meghatározott és jogszerű célból; csak a szükséges mértékben; pontosan és naprakészen tartva; a szükségesnél nem hosszabb ideig; és megfelelő biztonság mellett.</p>
+      </section>
+      <section class="legal-sec" id="s4">
+        <h2><span class="n">04</span>Mit kezelünk, és miért</h2>
+      <h3>4.1 Szobafoglalás</h3><p>A foglalás létrehozásához és teljesítéséhez kezeljük a nevét, e-mail-címét, telefonszámát, címét, számlázási adatait, az érkezés és távozás dátumát, a szobatípust, a vendégek számát, a fizetési módot, valamint minden olyan kérését, amelyet megoszt velünk (étrend, érkezési idő, akadálymentességi igény).</p><p>Ha utazási irodán vagy online foglalási felületen keresztül foglal, a foglalási adatokat az adott fél továbbítja hozzánk.</p><p><strong>Jogalap:</strong> szerződés teljesítése, GDPR 6. cikk (1) b).<br><strong>Megőrzés:</strong> a kapcsolat megszűnése után öt év, a Ptk. 6:22. § alapján. Ha az adat a számviteli bizonylat része, a számvitelről szóló 2000. évi C. törvény 169. §-a szerint nyolc év.</p><h3>4.2 A foglalási motor</h3><p>Az online foglalás a <strong>SabeeApp</strong> rendszerében történik, amelyet a thePass Kft. üzemeltet. Amikor az oldalunkról megnyitja a foglalási felületet, a megadott dátumok és a létszám átadásra kerülhetnek, hogy ne kelljen újra beírnia őket. Maga a foglalás a SabeeApp saját feltételei szerint zárul le.</p><p><strong>Jogalap:</strong> szerződés teljesítése, 6. cikk (1) b).</p><h3>4.3 Kötelező vendégadat-rögzítés (VIZA)</h3><p>A magyar jog minden szálláshely-szolgáltató számára előírja, hogy bejelentkezéskor rögzítse a vendég okmányadatait, és továbbítsa azokat a <strong>VIZA</strong> zárt vendéginformációs rendszerbe. Ehhez okmányolvasót használunk. Fényképes igazolvány nélkül nem tudjuk elszállásolni.</p><p>A rögzített adatok: családi és utónév, születési név, születési hely és idő, neme, állampolgársága, anyja születési neve, a személyazonosító vagy úti okmány adatai és annak beolvasott képe, harmadik országbeli állampolgár esetén a vízum vagy tartózkodási engedély száma, a beutazás helye és ideje, a szálláshely címe, valamint a tartózkodás kezdő és záró időpontja.</p><p><strong>Jogalap:</strong> jogi kötelezettség teljesítése, 6. cikk (1) c), a 2016. évi CLVI. törvény alapján.<br><strong>Megőrzés:</strong> a rögzítést követő első év utolsó napjáig; a VIZA rendszer a továbbított adatot legfeljebb két évig őrzi.</p><h3>4.4 Fizetési és kártyaadatok</h3><p>A foglalás garantálásához vagy a fizetéshez kezeljük a kártyabirtokos nevét, a kártyaszámot és a lejárati dátumot. A foglalási felületen megadott kártyaadatot a fizetési szolgáltató kezeli — teljes kártyaszámot a weboldalunkon nem tárolunk.</p><p><strong>Jogalap:</strong> szerződés teljesítése, 6. cikk (1) b).<br><strong>Megőrzés:</strong> a kártyagarancia adatait legkésőbb a távozást követő nyolc naptári napon belül töröljük.</p><h3>4.5 Kapcsolatfelvétel</h3><p>Ha a kapcsolati űrlapon, e-mailben, telefonon vagy WhatsAppon ír nekünk, kezeljük a nevét, e-mail-címét, megadott telefonszámát, a választott témát és az üzenet tartalmát, hogy válaszolni tudjunk. Az űrlap azt is rögzíti, melyik nyelvi változatot használta, hogy azon a nyelven válaszolhassunk.</p><p><strong>Jogalap:</strong> az Ön hozzájárulása, 6. cikk (1) a), illetve a szerződéskötést megelőzően az Ön kérésére tett lépések, 6. cikk (1) b).<br><strong>Megőrzés:</strong> a hozzájárulás visszavonásáig, illetve ameddig a megkeresés kezeléséhez szükséges. A visszavonáshoz írjon az <a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a> címre.</p><h3>4.6 Számlázás</h3><p>A magyar adójog szerint állítunk ki számlát, és az ehhez szükséges adatokat kezeljük: név, számlázási cím, céges számla esetén adószám.</p><p><strong>Jogalap:</strong> jogi kötelezettség teljesítése, 6. cikk (1) c).<br><strong>Megőrzés:</strong> nyolc év, a számviteli törvény 169. §-a alapján.</p><h3>4.7 Panaszok</h3><p>Panasz esetén rögzítjük a nevét, elérhetőségét, a panasz tartalmát és a válaszunkat.</p><p><strong>Jogalap:</strong> jogi kötelezettség teljesítése, 6. cikk (1) c), a fogyasztóvédelmi törvény alapján.<br><strong>Megőrzés:</strong> öt év.</p><h3>4.8 Kamerarendszer</h3><p>Az épület közösségi tereiben kamerák működnek, személy- és vagyonvédelmi célból. A vendégszobákban, fürdőszobákban és öltözőkben nincs kamera. A megfigyelt területeket tábla jelöli.</p><p><strong>Jogalap:</strong> jogos érdekünk, 6. cikk (1) f), a vendégek, a munkatársak és a vagyon védelme.<br><strong>Megőrzés:</strong> a jogszabály által engedett ideig; a felvételek a határidő lejártakor automatikusan törlődnek, kivéve ha konkrét ügy miatt szükségesek.</p><h3>4.9 Talált tárgyak</h3><p>Ha talált tárgy tulajdonosa azonosítható, kezeljük a visszajuttatáshoz szükséges nevet és elérhetőséget.</p><p><strong>Jogalap:</strong> jogos érdek, 6. cikk (1) f).</p>
+      </section>
+      <section class="legal-sec" id="s5">
+        <h2><span class="n">05</span>Ki fér hozzá az adataihoz</h2>
+      <p>Az alábbi adatfeldolgozókat vesszük igénybe. Kizárólag a mi utasításunkra járnak el, és saját célra nem használhatják az adatokat.</p><div class="legal-scroll"><table class="legal-table"><thead><tr><th>Adatfeldolgozó</th><th>Szerepe</th></tr></thead><tbody><tr><td><strong>thePass Kft.</strong><br>1053 Budapest, Reáltanoda utca 5. 4. emelet<br><a href="https://www.sabeeapp.com" target="_blank" rel="noopener">sabeeapp.com</a></td><td>SabeeApp — foglalások tárolása, foglaláskezelés és számlázás</td></tr><tr><td><strong>Netlify, Inc.</strong><br>512 2nd Street, San Francisco, CA 94107, USA<br><a href="https://www.netlify.com" target="_blank" rel="noopener">netlify.com</a></td><td>A weboldal tárhelye, valamint a kapcsolati űrlapon küldött üzenetek fogadása</td></tr><tr><td><strong>Könyvelési szolgáltató</strong><br><span class="legal-todo">[ TO BE SUPPLIED ]</span></td><td>Könyvelés és számlázási támogatás</td></tr><tr><td>Utazási irodák és szálláshely-közvetítők</td><td>Ha rajtuk keresztül foglalt, továbbítják hozzánk a foglalási adatokat, és visszajelzést kaphatnak a tartózkodásról</td></tr></tbody></table></div><p>Jogszabály alapján az alábbi szervek felé kötelesek vagyunk vendégadatot továbbítani:</p><div class="legal-scroll"><table class="legal-table"><thead><tr><th>Címzett</th><th>Cél</th></tr></thead><tbody><tr><td><strong>VIZA</strong> — Vendég Információs Zárt Adatbázis<br>Magyar Turisztikai Ügynökség Zrt., 1027 Budapest, Kacsa u. 15–23.</td><td>A vendég okmányadatainak törvényben előírt rögzítése bejelentkezéskor</td></tr><tr><td><strong>NTAK</strong> — Nemzeti Turisztikai Adatszolgáltató Központ<br>Magyar Turisztikai Ügynökség Zrt., 1027 Budapest, Kacsa u. 15–23.</td><td>A szálláskezelő szoftverből szolgáltatott, jogszabályban előírt turisztikai statisztikai adatok</td></tr><tr><td>Illetékes hatóságok — adóhatóság, önkormányzat, rendőrség, ügyészség, bíróság</td><td>Kizárólag ha jogszabály írja elő, vagy konkrét eljárásban jogszerű megkeresésre. Minden ilyen továbbításról feljegyzést készítünk.</td></tr></tbody></table></div>
+      </section>
+      <section class="legal-sec" id="s6">
+        <h2><span class="n">06</span>Adattovábbítás az EGT-n kívülre</h2>
+      <p>Saját célból nem továbbítunk személyes adatot az Európai Gazdasági Térségen kívülre.</p>
+      <p>Két technikai kivételt érdemes néven nevezni. A weboldalunk tárhelyét a Netlify, egy egyesült államokbeli vállalat biztosítja, amely az EU–USA adatvédelmi keret és általános szerződési feltételek alapján kezel adatot. A betűtípusok a Google Fontsból, a negyed térképe a CARTO és az unpkg szolgáltatásból töltődik be; mindegyik esetben az Ön böngészője közvetlenül fordul ezekhez a szolgáltatásokhoz, amelyek így látják az IP-címét. Foglalási, vendég- vagy kapcsolatfelvételi adatot nem küldünk nekik.</p>
+      </section>
+      <section class="legal-sec" id="s7">
+        <h2><span class="n">07</span>Sütik és a weboldal</h2>
+      <p><strong>Ezen az oldalon nincs analitika és nincs hirdetés.</strong> Nincs Google Analytics, nincs Facebook-pixel, nincs remarketingkód és nincs harmadik féltől származó nyomkövető süti sehol az oldalon. Nem építünk profilt, és automatizált döntéshozatal sem történik.</p><p>Az oldal pontosan két értéket tárol a böngészőjében, mindkettőt kizárólag működési célból:</p><div class="legal-scroll"><table class="legal-table"><thead><tr><th>Mi</th><th>Hol</th><th>Miért</th></tr></thead><tbody><tr><td><code>storiesWelcomed</code></td><td>localStorage</td><td>Megjegyzi, hogy már látta a nyitóanimációt, így a visszatérő látogató átugorja. Személyes adatot nem tartalmaz.</td></tr><tr><td><code>pt</code></td><td>sessionStorage</td><td>Egy látogatáson belül átviszi az oldalátmenet állapotát egyik oldalról a másikra. A fül bezárásakor törlődik.</td></tr></tbody></table></div><p>Mivel egyik sem szolgál nyomkövetést, hirdetést vagy profilalkotást, nem esnek a hozzájárulási kötelezettség alá, és sütisáv sem jelenik meg.</p><p>Az oldal megjelenítése közben a böngészője három külső szolgáltatáshoz is fordul: a Google Fontshoz a betűtípusokért, az unpkghez a térképkönyvtárért, és a CARTO-hoz a térképcsempékért a negyed oldalán — az utóbbi kettőhöz csak akkor, ha a térképig görget. Ezek a szolgáltatások egy szokásos webes kérés részeként megkapják az IP-címét, és a saját adatvédelmi feltételeik érvényesek. Böngészőjében letilthatja őket; az oldal használható marad.</p><p>A foglalási felület megnyitása a SabeeApphoz, a közösségi vagy értékelési link az adott platformra visz. Ezek külön szolgáltatások, saját sütikkel és adatvédelmi tájékoztatóval.</p>
+      </section>
+      <section class="legal-sec" id="s8">
+        <h2><span class="n">08</span>Gyermekek</h2>
+      <p>Tudatosan nem kezeljük 16 év alatti személy adatát a saját hozzájárulása alapján. 14 év alatti személyt kizárólag törvényes képviselője vagy gyámja képviselhet; 14 és 18 év között a törvényes képviselő hozzájárulása szükséges. Ha gyermek száll meg nálunk, a jogszabály által előírt adatokat a kísérő felnőtt nyilatkozata alapján rögzítjük.</p>
+      </section>
+      <section class="legal-sec" id="s9">
+        <h2><span class="n">09</span>Adatbiztonság</h2>
+      <p>A kockázattal arányos technikai és szervezési intézkedéseket alkalmazunk: titkosított adattovábbítás, hozzáférés csak azoknak a munkatársaknak, akiknek szükséges, és képzés azoknak, akik vendégadatot kezelnek. Weboldalunk HTTPS-en keresztül érhető el. Tökéletesen biztonságos rendszer nincs, de komolyan vesszük az adatai védelmét, és rendszeresen felülvizsgáljuk az intézkedéseinket.</p>
+      </section>
+      <section class="legal-sec" id="s10">
+        <h2><span class="n">10</span>Az Ön jogai</h2>
+      <p>A GDPR alapján kérheti, hogy:</p><ul><li>erősítsük meg, kezelünk-e Önről adatot, és adjunk másolatot — <strong>hozzáférés joga</strong> (15. cikk)</li><li>javítsuk a pontatlan vagy hiányos adatot — <strong>helyesbítés</strong> (16. cikk)</li><li>töröljük az adatot, ha már nincs jogszerű ok a megőrzésére — <strong>törlés</strong> (17. cikk). Ez nem írja felül a jogszabályi megőrzési kötelezettséget, például a számviteli vagy VIZA-adatokét</li><li>korlátozzuk az adatkezelést, amíg egy kérdés tisztázódik — <strong>korlátozás</strong> (18. cikk)</li><li>adjuk ki az adatot hordozható, géppel olvasható formában — <strong>adathordozhatóság</strong> (20. cikk)</li><li>szüntessük meg a jogos érdeken alapuló adatkezelést — <strong>tiltakozás</strong> (21. cikk)</li><li>bármikor visszavonja a hozzájárulását, ami nem érinti a visszavonás előtti adatkezelés jogszerűségét (7. cikk)</li></ul><p>Írjon az <a href="mailto:info@storiesbudapest.com">info@storiesbudapest.com</a> címre vagy a Király utca 26, 1061 Budapest címre. Egy hónapon belül válaszolunk; összetett kérés esetén ezt további két hónappal meghosszabbíthatjuk, és ennek okáról tájékoztatjuk.</p>
+      </section>
+      <section class="legal-sec" id="s11">
+        <h2><span class="n">11</span>Panaszok</h2>
+      <p>Ha valami nincs rendben, először szóljon nekünk — általában ez a leggyorsabb út. Az írásbeli panaszra 30 napon belül válaszolunk, és öt évig megőrizzük a nyilvántartást.</p><p>Joga van a magyar felügyeleti hatósághoz fordulni, vagy bírósági eljárást kezdeményezni:</p><div class="legal-card"><p><span class="k">Felügyeleti hatóság</span>Nemzeti Adatvédelmi és Információszabadság Hatóság (NAIH)</p><p><span class="k">Cím</span>1055 Budapest, Falk Miksa utca 9–11.</p><p><span class="k">Postacím</span>1363 Budapest, Pf. 9.</p><p><span class="k">Telefon</span>+36 1 391 1400</p><p><span class="k">E-mail</span><a href="mailto:ugyfelszolgalat@naih.hu">ugyfelszolgalat@naih.hu</a></p><p><span class="k">Weboldal</span><a href="https://naih.hu" target="_blank" rel="noopener">naih.hu</a></p></div>
+      </section>
     </div>
-  </div>
-</div>
-
-<div class="faq-cta">
-  <div class="faq-cta-inner">
-    <h2>Still have a <em>question?</em></h2>
-    <p>Write to us or call. We're a small team and we read everything — usually within a few hours.</p>
-    <a href="contact.html">Get in touch →</a>
   </div>
 </div>
 
@@ -592,30 +536,30 @@ body.menu-open nav.top { transform: none !important; }
     <div>
       <h3>Stories</h3>
       <div class="sub">Budapest · Király utca 26</div>
-      <address>Twenty Six Building<br>Király utca 26, 1061 Budapest<br>Hungary</address>
+      <address>Twenty Six épület<br>Király utca 26, 1061 Budapest<br>Magyarország</address>
       <a href="tel:+3618080981" class="ph">+36 1 808 0981</a><br>
       <a href="mailto:info@storiesbudapest.com" class="ph">info@storiesbudapest.com</a>
     </div>
     <div>
-      <h4>House</h4>
+      <h4>A ház</h4>
       <ul>
-        <li><a href="rooms.html">Rooms</a></li>
-        <li><a href="breakfast.html">Breakfast</a></li>
-        <li><a href="pleasures.html">Bar &amp; lounge</a></li>
-        <li><a href="pleasures.html#gym">Gym · GoActive</a></li>
+        <li><a href="rooms.html">Szobák</a></li>
+        <li><a href="breakfast.html">Reggeli</a></li>
+        <li><a href="pleasures.html">Bár és lounge</a></li>
+        <li><a href="pleasures.html#gym">Edzőterem · GoActive</a></li>
       </ul>
     </div>
     <div>
-      <h4>Visiting</h4>
+      <h4>Látogatóknak</h4>
       <ul>
-        <li><a href="neighbourhood.html">Neighbourhood</a></li>
-        <li><a href="contact.html">Directions</a></li>
-        <li><a href="faqs.html">FAQ</a></li>
-        <li><a href="contact.html">Press</a></li>
+        <li><a href="neighbourhood.html">A negyed</a></li>
+        <li><a href="contact.html">Megközelítés</a></li>
+        <li><a href="faqs.html">GYIK</a></li>
+        <li><a href="contact.html">Sajtó</a></li>
       </ul>
     </div>
     <div>
-      <h4>Follow</h4>
+      <h4>Kövessen minket</h4>
       <ul>
         <li><a href="https://www.instagram.com/storieshotelbudapest" target="_blank" rel="noopener">Instagram ↗</a></li>
         <li><a href="https://www.facebook.com/storieshotelbudapest" target="_blank" rel="noopener">Facebook ↗</a></li>
@@ -625,8 +569,8 @@ body.menu-open nav.top { transform: none !important; }
   </div>
   <div class="foot-bar">
     <span>© 2026 Stories Hotel Budapest</span>
-    <span class="foot-lang"><a href="faqs.html" hreflang="en" aria-current="true">English</a><span class="sep">·</span><a href="hu/faqs.html" hreflang="hu">Magyar</a></span>
-    <span class="foot-legal"><a href="terms.html">General Terms &amp; Conditions</a><span class="sep">·</span><a href="privacy.html">Privacy Policy</a></span>
+    <span class="foot-lang"><a href="../privacy.html" hreflang="en">English</a><span class="sep">·</span><a href="privacy.html" hreflang="hu" aria-current="true">Magyar</a></span>
+    <span class="foot-legal"><a href="terms.html">ÁSZF</a><span class="sep">·</span><a href="privacy.html" aria-current="true">Adatvédelem</a></span>
   </div>
 </footer>
 </div>
@@ -634,7 +578,7 @@ body.menu-open nav.top { transform: none !important; }
 
 
 <!-- Lenis smooth-scroll: more distance per wheel tick + buttery easing. Skipped under prefers-reduced-motion. -->
-<script src="assets/vendor/lenis.min.js" defer></script>
+<script src="../assets/vendor/lenis.min.js" defer></script>
 <script>
 (function () {
   function start () {
@@ -669,38 +613,24 @@ body.menu-open nav.top { transform: none !important; }
   document.body.classList.add('logo-on-light');
 }());
 (function () {
-  var items = document.querySelectorAll('.faq-item');
-  items.forEach(function (item) {
-    var q = item.querySelector('.faq-q');
-    // Independent toggles: opening one no longer closes the rest, so a guest
-    // can hold the cancellation answer and the direct-booking answer open
-    // side by side. State is mirrored onto the button for assistive tech.
-    q.addEventListener('click', function () {
-      var open = !item.classList.contains('open');
-      item.classList.toggle('open', open);
-      q.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-  });
-
-  var navItems = document.querySelectorAll('.faq-nav-item');
-  navItems.forEach(function (ni) {
-    ni.addEventListener('click', function (e) {
-      var target = document.querySelector(ni.getAttribute('href'));
-      if (!target) return;                       // let the browser handle it
+  // Section links scroll through Lenis — native scrollIntoView fights it.
+  var links = document.querySelectorAll('.legal-nav a');
+  links.forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
       e.preventDefault();
-      // Lenis owns the scroll position on this page; scrollIntoView fights it.
       if (window.__lenis && window.__lenis.scrollTo) window.__lenis.scrollTo(target, { offset: -110 });
-      else window.scrollTo({ top: target.offsetTop - 110, behavior: 'smooth' });
-      navItems.forEach(function (n) { n.classList.remove('active'); });
-      ni.classList.add('active');
+      else target.scrollIntoView({ behavior: 'smooth' });
+      history.replaceState(null, '', a.getAttribute('href'));
     });
   });
 }());
 </script>
 
 <!-- GSAP + ScrollTrigger (vendored, free for commercial use) -->
-<script src="assets/vendor/gsap.min.js" defer></script>
-<script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+<script src="../assets/vendor/gsap.min.js" defer></script>
+<script src="../assets/vendor/ScrollTrigger.min.js" defer></script>
 <script>
 /* Shared GSAP reveals — heading rise + block fade-up, Lenis-synced, motion-safe.
    Hard-skips every zone the site already animates so nothing double-fires. */

@@ -23,8 +23,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Open / not-yet-done:**
 - **Booking runs through SabeeApp** — all 21 booking CTAs and the homepage reserve form open `https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951` in a new tab. The form opens it via JS, **not** a GET action: the inputs carry no `name`, and a GET submit would rebuild the query string and drop the engine's own `?p=` token. Dates and the chosen room are **not** passed through yet — that needs SabeeApp's parameter names.
-- **contact.html's form is still inert** — `onsubmit="event.preventDefault()"`, posts nowhere, while its copy promises a same-day reply. Netlify Forms is the obvious destination.
+- **contact.html now posts to Netlify Forms** (2026-08-24) — real `<form data-netlify>` with a honeypot and a hidden `language` field; it submits natively with JS off, and the inline script only upgrades it to an in-page confirmation. Netlify strips `data-netlify` from the served HTML once it has parsed the form, so its absence in the deployed source is the sign that detection worked. **Delivery still needs the email notification configured** in Netlify → Forms → contact → Settings & usage.
 - contact: optional left-edge runlabel + a mini SVG map inset (rhymes with M3.1).
+- **Legal pages are DRAFTS** — `privacy.html` / `terms.html` (+ `hu/`) carry a red banner and `.legal-todo` markers wherever a company identifier is missing: legal entity name, company registration number, tax number, EU VAT number, representative, and the accounting provider. **They must not be treated as published until those are filled and a lawyer has read them.** Structure follows the group's Wonder Budapest documents, but every factual statement was written for this hotel — in particular the cookie section describes what Ver3 actually does (no analytics, no pixel, two functional storage keys), not what the sister site does.
 - **Fact-check outstanding** — see [FACT-CHECK.md](FACT-CHECK.md), a full audit of every claim on the site with the open questions numbered. The invented ones (review score, stay count, transfer price, best-rate guarantee) were **removed 2026-08-06** and only return if the client confirms real figures. Two internal contradictions are still unresolved and flagged there: whether the King Suite has a private sauna (`rooms.html` says yes, `faqs.html` implies only the Presidential does), and whether GoActive is in the building or a five-minute walk away.
 - Homepage frame sets are 1280×720 sources — slightly soft on large retina screens (grain + vignette mask it). Re-generate at 1080p if the client complains.
 
@@ -58,10 +59,12 @@ Per user preference, ask Claude to start the server rather than running it yours
 │   ├── index.html        Homepage: loader + hero + intro-strip + luxuries + rooms rail + coffee→Danube scene + neighbourhood + reserve
 │   ├── rooms.html        6 rooms, top-nav + sticky info, 5–6 photos per room
 │   ├── pleasures.html    Bar & Lounge, Gym (GoActive), Coworking as full-width feature sections
-│   ├── breakfast.html    Plate + intro grid + 3-column menu + sourcing block
+│   ├── breakfast.html    Plate + intro grid + 3-column menu (no prices — see fact-check)
 │   ├── neighbourhood.html  Plate + neighbourhood list + interactive SVG map (M3.1)
 │   ├── contact.html      60vh hero + 2-column contact info/form
 │   ├── faqs.html         Paper bg (no plate), sticky nav sidebar, accordion FAQ
+│   ├── privacy.html      Privacy Policy — paper bg, sticky section rail (faqs shell)
+│   ├── terms.html        General Terms & Conditions — same shell as privacy
 │   └── assets/
 │       ├── brand/        Hero/plate backgrounds, logos, danube-budapest.webp, sky-evening.webp, sky-rise.mp4 (crane to sky)
 │       ├── coffee/       frame_001…120.webp (the scrubbed pour) + coffee-loop.mp4 (ping-pong surface)
@@ -79,7 +82,7 @@ Asset URLs in the HTML use `assets/...` (relative from `Ver3/`). When adding pho
 - **`hu/` pages reference assets one level up** (`../assets/…`). Absolute `https://…/assets/…` URLs inside `og:image`/`twitter:image`/JSON-LD stay absolute — don't rewrite those.
 - Internal page links inside `hu/` stay bare (`rooms.html`), so HU pages link to HU pages.
 - Each page declares `hreflang` **en / hu / x-default** and a per-language `canonical`; index carries `inLanguage` in its JSON-LD. Adding a page means adding both copies plus the hreflang pair.
-- The language switch is real in three places: the nav `.lang-toggle` (index only, hidden ≤560px), the `.mnav-lang` line in the mobile menu, and `.foot-lang` in the shared footer — the footer one is the only switch the six subpages have on desktop.
+- The language switch is real in three places: the nav `.lang-toggle` (index only, hidden ≤560px), the `.mnav-lang` line in the mobile menu, and `.foot-lang` in the shared footer — the footer one is the only switch the subpages have on desktop. `.foot-legal` sits beside it with the two legal pages.
 - Room type names (Presidential Suite, King Suite, …), "Twenty Six", "Create 26", "GoActive" and "Onyx" are treated as proper nouns and stay untranslated in HU.
 
 **Images** — every gallery photo ships as `NAME.webp` (1600w) plus generated `NAME-800.webp` and `NAME-1200.webp`, wired through `<picture><source srcset="… 800w, … 1200w, … 1600w" sizes="(max-width: 880px) 100vw, 50vw">` with a single-size `.jpg` fallback on the `<img>`. **Regenerate the variants whenever a source photo is replaced** (Pillow, quality 74/76, `method=6`) or the `srcset` will 404. Every image on every page is `loading="lazy"` — there are no eager images left.
