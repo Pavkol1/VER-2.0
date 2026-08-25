@@ -87,7 +87,7 @@ Asset URLs in the HTML use `assets/...` (relative from `Ver3/`). When adding pho
 
 **Images** — every gallery photo ships as `NAME.webp` (1600w) plus generated `NAME-800.webp` and `NAME-1200.webp`, wired through `<picture><source srcset="… 800w, … 1200w, … 1600w" sizes="(max-width: 880px) 100vw, 50vw">` with a single-size `.jpg` fallback on the `<img>`. **Regenerate the variants whenever a source photo is replaced** (Pillow, quality 74/76, `method=6`) or the `srcset` will 404. Every image on every page is `loading="lazy"` — there are no eager images left.
 
-Favicon is suppressed with `<link rel="icon" href="data:,">` on every page (no favicon file exists — this silences the 404).
+**Favicon** — a monogram S in gold `#B9904E` on the emerald tile `#123524`, drawn from the Palatino Bold outline (Palatino and the brand's referenced Optima are both Zapf faces, so the warmth matches). Cap height 66% of the tile, nudged up 1% for optical centring, corner radius 18%. It was chosen by rasterising every candidate at **16px** and judging there — the address mark "26" and every regular-weight serif failed at that size, and a circular tile needs transparent corners and so picks up the tab background. Files live at the site root: `favicon.svg`, `favicon.ico` (16/32/48), `apple-touch-icon.png` (**full bleed, no rounding** — iOS applies its own mask), `icon-192/512.png`, `icon-maskable-512.png` (mark pulled in to survive Android's circular crop) and `site.webmanifest`. Declared with root-absolute paths so `hu/` shares them. Regenerate from the outline rather than editing the raster files.
 
 ---
 
