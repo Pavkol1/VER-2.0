@@ -185,6 +185,12 @@ Recorded here so nobody re-asks:
 - Star rating: 4 stars ✅ (confirmed 2026-08-06)
 - Socials: Instagram / Facebook / TripAdvisor ✅ (confirmed 2026-08-06)
 - Booking runs through SabeeApp ✅
+- CCTV operates in the common areas ✅ (confirmed 2026-08-24) — stated in the
+  Privacy Policy, section 4.8, together with the fact that there are none in
+  rooms, bathrooms or changing areas
+- M2 walk: **5 minutes** to Deák Ferenc tér ✅ (confirmed 2026-08-24)
+- Netlify form detection is enabled ✅ (confirmed 2026-08-24); the email
+  notification still has to be added once the form appears after a deploy
 
 
 ---

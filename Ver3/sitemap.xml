@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://secrethotel.netlify.app/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/hu/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/rooms.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/rooms.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/rooms.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/rooms.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/hu/rooms.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/rooms.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/rooms.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/rooms.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/pleasures.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/pleasures.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/pleasures.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/pleasures.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/hu/pleasures.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/pleasures.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/pleasures.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/pleasures.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/breakfast.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/breakfast.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/breakfast.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/breakfast.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/hu/breakfast.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/breakfast.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/breakfast.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/breakfast.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/neighbourhood.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/neighbourhood.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/neighbourhood.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/neighbourhood.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/hu/neighbourhood.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/neighbourhood.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/neighbourhood.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/neighbourhood.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/contact.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/contact.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/hu/contact.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/contact.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/faqs.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/faqs.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/faqs.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/faqs.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/hu/faqs.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/faqs.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/faqs.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/faqs.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/privacy.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/hu/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/privacy.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/terms.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/terms.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://secrethotel.netlify.app/hu/terms.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://secrethotel.netlify.app/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://secrethotel.netlify.app/hu/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/terms.html"/>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>
