@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
-## Current Status — Handoff (last updated 2026-07-20)
+## Current Status — Handoff (last updated 2026-11-03)
 
 **The live site is now Ver3.** The active, deployable site root is **`Ver3/`** (not `Ver2/`). `netlify.toml` publishes `Ver3`. `Ver2/` is kept as legacy/reference only — do not edit it.
 
@@ -24,6 +24,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Open / not-yet-done:**
 - **Booking runs through SabeeApp** — all 21 booking CTAs and the homepage reserve form open `https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951` in a new tab. The form opens it via JS, **not** a GET action: the inputs carry no `name`, and a GET submit would rebuild the query string and drop the engine's own `?p=` token. Dates and the chosen room are **not** passed through yet — that needs SabeeApp's parameter names.
 - **contact.html now posts to Netlify Forms** (2026-08-24) — real `<form data-netlify>` with a honeypot and a hidden `language` field; it submits natively with JS off, and the inline script only upgrades it to an in-page confirmation. Netlify strips `data-netlify` from the served HTML once it has parsed the form, so its absence in the deployed source is the sign that detection worked. **Delivery still needs the email notification configured** in Netlify → Forms → contact → Settings & usage.
+- **Room service page is live, English only** (`Ver3/room-service.html`, shipped 2026-11-03) — the in-house ordering page for Twenty Six room service; full notes under **Room service** in Architecture Notes. Still open: the **Hungarian copy** (`hu/room-service.html` does not exist yet), the **Netlify email notification** for the `room-service` form (same gap as contact — without it orders only sit in the Netlify dashboard), the **payment wording** (the page deliberately says nothing about how guests pay — not confirmed), and confirmation that "reception will call your room" on the sent screen is true. The Wix room-service form is still the one in use until the hotel switches the QR card.
 - contact: optional left-edge runlabel + a mini SVG map inset (rhymes with M3.1).
 - **Legal pages are DRAFTS** — `privacy.html` / `terms.html` (+ `hu/`) carry a red banner and `.legal-todo` markers wherever a company identifier is missing: legal entity name, company registration number, tax number, EU VAT number, representative, and the accounting provider. **They must not be treated as published until those are filled and a lawyer has read them.** Structure follows the group's Wonder Budapest documents, but every factual statement was written for this hotel — in particular the cookie section describes what Ver3 actually does (no analytics, no pixel, two functional storage keys), not what the sister site does.
 - **Fact-check outstanding** — see [FACT-CHECK.md](FACT-CHECK.md), a full audit of every claim on the site with the open questions numbered. The invented ones (review score, stay count, transfer price, best-rate guarantee) were **removed 2026-08-06** and only return if the client confirms real figures. Two internal contradictions are still unresolved and flagged there: whether the King Suite has a private sauna (`rooms.html` says yes, `faqs.html` implies only the Presidential does), and whether GoActive is in the building or a five-minute walk away.
@@ -65,6 +66,7 @@ Per user preference, ask Claude to start the server rather than running it yours
 │   ├── faqs.html         Paper bg (no plate), sticky nav sidebar, accordion FAQ
 │   ├── privacy.html      Privacy Policy — paper bg, sticky section rail (faqs shell)
 │   ├── terms.html        General Terms & Conditions — same shell as privacy
+│   ├── room-service.html In-house room-service ordering (menu → tray → details → sent); noindex, not in nav, EN only
 │   └── assets/
 │       ├── brand/        Hero/plate backgrounds, logos, danube-budapest.webp, sky-evening.webp, sky-rise.mp4 (crane to sky)
 │       ├── coffee/       frame_001…120.webp (the scrubbed pour) + coffee-loop.mp4 (ping-pong surface)
@@ -191,6 +193,16 @@ Note: `.room-rail` (a horizontal `scroll-snap-type: x mandatory` strip) is **dea
 
 **Breakfast pricing**: à la carte, **not included** in any room rate — never reintroduce "included" wording. **The price is not published on the site** (client decision 2026-08-06): every mention reads **"ask reception"**, and the old "€18 per person" wording is retired — don't bring it back. **Hours are 07:30 — 11:00** on every page (the 07:00 that used to sit in `breakfast.html`'s body and `faqs.html` was wrong; confirmed 2026-08-06).
 
+**Room service** (`room-service.html`) — a shop-style ordering page for guests already in the house. Reached **only by a QR card in the rooms** (client decision 2026-11-03): `noindex, nofollow`, not in the nav, mobile menu, footer or sitemap — don't add it to any of them. It replaces the Wix Forms form "Guest - 26 Menu" on the hotel's Wix site; keep the two in step until Wix is retired.
+- **Menu data** is the `MENU` array in the page's last `<script>`. Prices are stored in **forint exactly as printed on the Twenty Six menu** and converted at **360 Ft = €1, rounded UP to the next €0.10** (`eur()`); the page shows **euro only** (client decision — no Ft on screen). A new menu = edit `MENU` (and `AFTERNOON_ORDER`), nothing else. Room-service prices equal restaurant prices; the only extra is a flat **€6 room service charge per order** (`FEE_EUR`). The printed menu's "+15% service charge" is **not** applied to room service.
+- **Two menus**, switched in the hero: *Lunch & dinner* (12:30–15:00, 17:00–22:30: cold mezze, hot mezze incl. "Choose 4", signature plates, mains, bread, desserts) and *Afternoon* (15:00–17:00: the sharing plates flagged `aft: true` in `AFTERNOON_ORDER`'s order, plus bread and desserts). Hours live in `HOURS`, evaluated in **Europe/Budapest** time; the page opens on whichever menu is being served now.
+- **No delivery time** (client removed it 2026-11-03): an order means "now", so the send button is disabled while the chosen menu is not being served, with the next start time shown underneath. Dishes not on the afternoon menu are flagged in the tray and block checkout until removed.
+- **No dish pictures** (client decision 2026-11-03 — neither the hotel nor the restaurant has photos of every dish). Cards are text-only; don't add illustrations or stock food photos. The hero uses the existing restaurant/lounge photos, crossfading per menu.
+- **"Choose 4"** opens a picker of the cold + hot mezze; each chosen set is its own tray line (`choose4:<sorted ids>`), and its four dishes go into the order text.
+- **Order delivery**: the details step is a real `<form name="room-service" data-netlify>` (room, name, cutlery count, notes, plus hidden `menu`, `order` — a plain-text list of lines — `total` and `language`). JS posts it to Netlify Forms; **on localhost the send is simulated** because `python -m http.server` cannot take a POST. Netlify email notification for this form is **not configured yet**.
+- **Motion**: "+1" chip flies from the Add button into the tray button, tray bumps, totals tween, drawer steps slide, the sent screen draws a check and "prints" a ticket. All skipped under reduced motion. The tray is not persisted in storage on purpose — the privacy page promises only two functional storage keys.
+- Drawer and picker are `role="dialog"` with focus trap, Esc to close, Lenis stopped while open (`data-lenis-prevent` on their scroll areas). The generic GSAP reveal pass is deliberately not loaded on this page.
+
 **DOM safety**: always use `textContent`, never `innerHTML`. This is a hard rule across all inline JS (Ver2 and Ver3) and is currently enforced (grep finds zero occurrences).
 
 ---
@@ -221,7 +233,7 @@ These cost real time more than once — the animations are fine, the *measuremen
 
 **ALWAYS invoke the `impeccable` skill FIRST** — before writing or editing any frontend code, every session, no exceptions. It replaced `frontend-design:frontend-design` as the lead skill on 2026-08-05; don't run both.
 
-It is installed globally at `~/.claude/skills/impeccable/`, so it travels with the machine, **not** with this repo — a fresh clone on another machine needs `npx impeccable install` first. It also installs a detector hook (`~/.claude/settings.local.json`) that checks UI files after each edit and does a deeper pass at the end of a turn; `/impeccable hooks off` disables it.
+It is installed globally at `~/.claude/skills/impeccable/`, so it travels with the machine, **not** with this repo — a fresh clone on another machine needs `npx impeccable install` first. **The reception PC (user `Recepcio-2`) does not have it, nor Node.js** — the client chose on 2026-11-03 not to install it for now; `room-service.html` was built there without it, following this file's design system. Offer `/impeccable audit` / `polish` on that page once it is available. It also installs a detector hook (`~/.claude/settings.local.json`) that checks UI files after each edit and does a deeper pass at the end of a turn; `/impeccable hooks off` disables it.
 
 Useful sub-commands: `/impeccable document` records the incumbent design system into DESIGN.md, `/impeccable audit <target>` runs accessibility/performance/responsive checks, `/impeccable critique <target>` is a UX review, `/impeccable polish <target>` is a pre-ship pass.
 

@@ -32,6 +32,7 @@ The site already carries this as an editorial claim ("a quarter worth the walk",
 The hotel occupies the **Twenty Six building**, and the building — not just the bedrooms — is the product:
 
 - **Twenty Six restaurant**, ground floor. Breakfast is served 07:30–11:00, à la carte, ordered at table. Menu prices are **not published** — sourcing claims (named suppliers, Hunyadi tér, "baked at dawn") were removed 2026-08-24 as unverified.
+- **Room service** from the Twenty Six menu, 12:30–15:00 and 17:00–22:30 (plus an afternoon sharing menu 15:00–17:00), at restaurant prices plus a flat €6 per order — confirmed 2026-11-03. Guests order on `room-service.html`, reached only from a QR card in the room; it is a tool for in-house guests, not a selling page, and is kept out of navigation and search.
 - **Bar and lounge**, 17:00–00:00 daily, positioned as a living room for the district rather than a hotel bar.
 - **GoActive gym** (five minutes' walk) and **Create 26 coworking** (in the building), which carry the business and longer-stay case. **Neither is included in any rate** — they are neighbours' businesses and reception arranges access. Confirmed 2026-08-24; the site had wrongly promised both free with every stay.
 
