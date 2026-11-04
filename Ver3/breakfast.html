@@ -756,32 +756,65 @@ body.menu-open nav.top { transform: none !important; }
 })();
 </script>
 <script>
-/* MOBILE MENU — toggle, scroll lock (Lenis-aware), Esc + bfcache close.
-   Menu links stay interceptable by the page-sweep layer (z 190 covers z 78). */
+/* MOBILE MENU - focus containment and background isolation. */
 (function () {
   var burger = document.getElementById('mnavBtn');
   var overlay = document.getElementById('mnav');
   if (!burger || !overlay) return;
+  var opened = false, previousFocus = null, isolated = [];
+  overlay.inert = true;
+  function controls () {
+    return [burger].concat(Array.prototype.slice.call(overlay.querySelectorAll('a[href], button:not([disabled]), [tabindex="0"]')))
+      .filter(function (el) { return el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden'; });
+  }
   function setOpen (open) {
+    if (open === opened) return;
+    opened = open;
+    if (open) previousFocus = document.activeElement;
     document.body.classList.toggle('menu-open', open);
     burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    overlay.setAttribute('aria-hidden', open ? 'false' : 'true');
-    if (window.__lenis) { if (open) { window.__lenis.stop(); } else { window.__lenis.start(); } }
+    if (open) {
+      overlay.inert = false;
+      overlay.setAttribute('aria-hidden', 'false');
+      // Isolate siblings along the burger's ancestor path without disabling it.
+      for (var branch = burger; branch && branch !== document.body; branch = branch.parentElement) {
+        Array.prototype.forEach.call(branch.parentElement.children, function (el) {
+          if (el === branch || el === overlay || el.contains(overlay) || /^(SCRIPT|STYLE|LINK)$/.test(el.tagName)) return;
+          isolated.push([el, el.inert]);
+          el.inert = true;
+        });
+      }
+      (controls()[1] || burger).focus({ preventScroll: true });
+    } else {
+      isolated.forEach(function (entry) { entry[0].inert = entry[1]; });
+      isolated = [];
+      var target = previousFocus && previousFocus.isConnected ? previousFocus : burger;
+      if (overlay.contains(document.activeElement)) target.focus({ preventScroll: true });
+      overlay.inert = true;
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+    if (window.__lenis) { if (open) window.__lenis.stop(); else window.__lenis.start(); }
   }
-  burger.addEventListener('click', function () {
-    setOpen(!document.body.classList.contains('menu-open'));
-  });
-  // Close instantly on tap so the page-transition panel doesn't animate in
-  // over a still-open menu — it closes first, then the transition plays.
-  overlay.querySelectorAll('.mnav-links a, .mnav-cta').forEach(function (a) {
+  burger.addEventListener('click', function () { setOpen(!opened); });
+  overlay.querySelectorAll('a[href]').forEach(function (a) {
     a.addEventListener('click', function () { setOpen(false); });
   });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && document.body.classList.contains('menu-open')) setOpen(false);
+    if (!opened) return;
+    if (e.key === 'Escape') { e.preventDefault(); setOpen(false); return; }
+    if (e.key !== 'Tab') return;
+    var list = controls(), i = list.indexOf(document.activeElement);
+    if (!list.length) return;
+    e.preventDefault();
+    list[(i + (e.shiftKey ? -1 : 1) + list.length) % list.length].focus({ preventScroll: true });
   });
-  window.addEventListener('pageshow', function (e) {
-    if (e.persisted) setOpen(false);
+  document.addEventListener('focusin', function (e) {
+    if (opened && e.target !== burger && !overlay.contains(e.target)) burger.focus({ preventScroll: true });
   });
+  window.matchMedia('(min-width: 1025px)').addEventListener('change', function (e) {
+    if (e.matches) setOpen(false);
+  });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) setOpen(false); });
 })();
 </script>
 </body>

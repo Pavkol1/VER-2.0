@@ -51,7 +51,7 @@ Guests evaluate the hotel from a phone or laptop before arrival, and the neighbo
 - **Typography licences are an open commitment.** The design references the commercial *Gangster* and *ABC Monument Grotesk*; the site currently ships free stand-ins (Libre Caslon Text, Schibsted Grotesk). If the licences are bought, the originals replace the stand-ins.
 - **WCAG AA is a requirement**, not an aspiration. See Accessibility & Inclusion.
 
-**Technical** — static multi-page site, no build step, framework or package manager; each page is self-contained with its CSS and JS inline. `Ver3/` is the live root and `Ver2/` is frozen legacy. Deployed on Netlify; a push to `main` is a production deploy.
+**Technical** — static multi-page site, no build step, framework or package manager; each page is self-contained with its CSS and JS inline. `Ver3/` is the live root and `archive/legacy/Ver2/` is frozen legacy. Deployed on Netlify; a push to `main` is a production deploy.
 
 **Undecided, not to be invented:** room rates and cancellation terms beyond what `faqs.html` already states.
 

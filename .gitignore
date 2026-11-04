@@ -1,3 +1,14 @@
 # macOS metadata
 .DS_Store
 **/.DS_Store
+*.log
+node_modules/
+.env
+.env.*
+!.env.example
+
+# Local agent worktrees and preserved source material are not deploy inputs.
+.claude/
+archive/local-state-*/
+archive/source-assets/
+archive/legacy/Ver1/
