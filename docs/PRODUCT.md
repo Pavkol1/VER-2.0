@@ -35,6 +35,10 @@ Room-service form handoff, verified 2026-11-04: Netlify Forms has a registered
 Netlify dashboard; actual inbox delivery has not been tested in this pass.
 Room-service requests go to reception, rather than claiming direct kitchen
 acceptance. Localhost is an explicit preview and sends no request.
+The chosen notification format is Netlify's standard email with a single
+plain-text order summary. It includes room, guest, menu, cutlery, dishes,
+subtotal, service charge, total, and guest notes. No custom email service or
+guest-facing order reference is used. The subject identifies the room and total.
 
 The hotel occupies the **Twenty Six building**, and the building — not just the bedrooms — is the product:
 

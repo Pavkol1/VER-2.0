@@ -264,7 +264,6 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 .recap .tk-l, .ticket .tk-l { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; }
 .tk-l > span:last-child { white-space: nowrap; }
 .tk-detail { font-size: 13px; line-height: 1.5; color: var(--text-2); margin-bottom: 8px; overflow-wrap: anywhere; white-space: pre-wrap; }
-.tk-reference { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--primary); margin: 14px 0; overflow-wrap: anywhere; }
 .recap .tk-t { display: flex; justify-content: space-between; padding-top: 14px; margin-top: 12px; border-top: 1px solid var(--rule); font-size: 18px; color: var(--ink); }
 .recap b { font-weight: 500; color: var(--ink); }
 
@@ -662,22 +661,18 @@ body.menu-open nav.top { transform: none !important; }
     <div class="step" data-step="details">
       <form class="f" id="orderForm" name="room-service" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
         <input type="hidden" name="form-name" value="room-service">
-        <input type="hidden" name="language" value="en">
-        <input type="hidden" name="order-reference" id="fReference">
         <input type="hidden" name="subject" value="Room service request for reception">
-        <input type="hidden" name="menu" id="fMenu">
-        <input type="hidden" name="order" id="fOrder">
-        <input type="hidden" name="total" id="fTotal">
+        <textarea name="order" id="fOrder" hidden></textarea>
         <p hidden><label>Leave this empty: <input name="bot-field"></label></p>
         <div class="fld-row">
           <div class="fld" id="fldRoom">
             <label for="fRoom">Room number</label>
-            <input id="fRoom" name="room" inputmode="numeric" autocomplete="off" placeholder="e.g. 204" maxlength="6" required>
+            <input id="fRoom" inputmode="numeric" autocomplete="off" placeholder="e.g. 204" maxlength="6" required>
             <span class="msg">Add your room number so we know where to bring it.</span>
           </div>
           <div class="fld" id="fldName">
             <label for="fName">Name on the booking</label>
-            <input id="fName" name="name" autocomplete="name" placeholder="Your name" maxlength="100" required>
+            <input id="fName" autocomplete="name" placeholder="Your name" maxlength="100" required>
             <span class="msg">Add the name the room is booked under.</span>
           </div>
         </div>
@@ -691,11 +686,11 @@ body.menu-open nav.top { transform: none !important; }
               <button type="button" id="cutPlus" aria-label="More"><svg viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.6"><path d="M2 7h10M7 2v10"/></svg></button>
             </span>
           </div>
-          <input type="hidden" name="cutlery" id="fCut" value="1">
+          <input type="hidden" id="fCut" value="1">
         </div>
         <div class="fld">
           <label for="fNotes">Allergies or requests</label>
-          <textarea id="fNotes" name="notes" maxlength="2000" placeholder="No onion, extra pita, ring the bell softly…"></textarea>
+          <textarea id="fNotes" maxlength="2000" placeholder="No onion, extra pita, ring the bell softly…"></textarea>
         </div>
       </form>
       <div class="recap" id="recap"></div>
@@ -1328,7 +1323,6 @@ body.menu-open nav.top { transform: none !important; }
   /* ── Details ──────────────────────────────────────────────── */
   function captureOrder () {
     return {
-      reference: 'RS-' + crypto.randomUUID().replace(/-/g, '').slice(0, 12).toUpperCase(),
       room: document.getElementById('fRoom').value.trim(),
       name: document.getElementById('fName').value.trim(),
       notes: document.getElementById('fNotes').value.trim(),
@@ -1342,6 +1336,7 @@ body.menu-open nav.top { transform: none !important; }
         };
       }),
       fee: FEE_EUR,
+      subtotal: subtotal(),
       total: total()
     };
   }
@@ -1391,10 +1386,27 @@ body.menu-open nav.top { transform: none !important; }
   });
 
   function orderText (order) {
-    return order.lines.map(function (line) {
+    var dishes = order.lines.map(function (line) {
       return line.qty + ' × ' + line.name +
         (line.picks.length ? ' (' + line.picks.join(', ') + ')' : '') + ' — ' + fmtE(line.amount);
-    }).join('\n') + '\nRoom service — ' + fmtE(order.fee);
+    }).join('\n');
+    return [
+      'ROOM SERVICE · ROOM ' + order.room,
+      '',
+      'Guest: ' + order.name,
+      'Menu: ' + order.menu,
+      'Cutlery: ' + order.cutlery + (order.cutlery === 1 ? ' person' : ' people'),
+      '',
+      'ORDER',
+      dishes,
+      '',
+      'Dishes: ' + fmtE(order.subtotal),
+      'Room service: ' + fmtE(order.fee),
+      'TOTAL: ' + fmtE(order.total),
+      '',
+      'ALLERGIES / REQUESTS',
+      order.notes || 'Not provided'
+    ].join('\n');
   }
 
   var form = document.getElementById('orderForm');
@@ -1433,11 +1445,8 @@ body.menu-open nav.top { transform: none !important; }
     }
     if (!validate()) return;
     var order = captureOrder();
-    document.getElementById('fMenu').value = order.menu;
     document.getElementById('fOrder').value = orderText(order);
-    document.getElementById('fTotal').value = fmtE(order.total);
-    document.getElementById('fReference').value = order.reference;
-    form.elements.namedItem('subject').value = 'Room service · Room ' + order.room + ' · ' + order.reference;
+    form.elements.namedItem('subject').value = 'Room ' + order.room + ' · Room service · ' + fmtE(order.total);
     // Serialize before disabling controls: disabled inputs are omitted from FormData.
     var data = new URLSearchParams(new FormData(form)).toString();
     if (previewOnly) {
@@ -1474,7 +1483,7 @@ body.menu-open nav.top { transform: none !important; }
       refreshCta();
       ctaBtn.querySelector('.lbl').textContent = 'Try again';
       document.getElementById('drawerFine').textContent =
-        'We could not confirm delivery. Before retrying, call reception on +36 1 808 0981 and quote ' + order.reference + ' to avoid a duplicate request.';
+        'We could not confirm delivery. Before retrying, call reception on +36 1 808 0981 and give your room number to avoid a duplicate request.';
       say('Delivery could not be confirmed. Please contact reception.');
       ctaBtn.focus({ preventScroll: true });
     });
@@ -1495,7 +1504,6 @@ body.menu-open nav.top { transform: none !important; }
     ticket.appendChild(header);
     ticket.appendChild(h('div', 'tk-room', 'Room ' + order.room));
     ticket.appendChild(h('div', 'tk-when', order.name + ' · Cutlery for ' + order.cutlery));
-    ticket.appendChild(h('div', 'tk-reference', order.reference));
     appendSummary(ticket, order);
     if (order.notes) {
       ticket.appendChild(h('div', 'recap-title', 'Allergies or requests'));

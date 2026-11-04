@@ -1,0 +1,16 @@
+ROOM SERVICE · ROOM 999
+
+Guest: Test guest
+Menu: Lunch & dinner
+Cutlery: 1 person
+
+ORDER
+1 × Beetroot carpaccio — €8.00
+1 × Marinated olives — €8.00
+
+Dishes: €16.00
+Room service: €6.00
+TOTAL: €22.00
+
+ALLERGIES / REQUESTS
+No onion, please. Extra napkins.
