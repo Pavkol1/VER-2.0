@@ -259,7 +259,13 @@ nav.top.scrolled { background: rgba(13, 11, 8, 0.85); backdrop-filter: blur(14px
 .cutlery { display: flex; align-items: center; justify-content: space-between; }
 .cutlery .stepper { background: var(--ink); height: 40px; }
 .cutlery .stepper button { width: 40px; height: 40px; }
-.recap { margin-top: 20px; padding: 16px 18px; border-radius: 14px; background: var(--paper-2); font-size: 14px; color: var(--text-2); }
+.recap { margin-top: 28px; padding: 22px 0 0; border-top: 1px solid var(--rule); font-size: 14px; color: var(--text-2); }
+.recap-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--primary); margin-bottom: 16px; }
+.recap .tk-l, .ticket .tk-l { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; }
+.tk-l > span:last-child { white-space: nowrap; }
+.tk-detail { font-size: 13px; line-height: 1.5; color: var(--text-2); margin-bottom: 8px; overflow-wrap: anywhere; white-space: pre-wrap; }
+.tk-reference { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--primary); margin: 14px 0; overflow-wrap: anywhere; }
+.recap .tk-t { display: flex; justify-content: space-between; padding-top: 14px; margin-top: 12px; border-top: 1px solid var(--rule); font-size: 18px; color: var(--ink); }
 .recap b { font-weight: 500; color: var(--ink); }
 
 /* Sent — the ticket */
@@ -657,6 +663,8 @@ body.menu-open nav.top { transform: none !important; }
       <form class="f" id="orderForm" name="room-service" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
         <input type="hidden" name="form-name" value="room-service">
         <input type="hidden" name="language" value="en">
+        <input type="hidden" name="order-reference" id="fReference">
+        <input type="hidden" name="subject" value="Room service request for reception">
         <input type="hidden" name="menu" id="fMenu">
         <input type="hidden" name="order" id="fOrder">
         <input type="hidden" name="total" id="fTotal">
@@ -669,7 +677,7 @@ body.menu-open nav.top { transform: none !important; }
           </div>
           <div class="fld" id="fldName">
             <label for="fName">Name on the booking</label>
-            <input id="fName" name="name" autocomplete="name" placeholder="Your name" required>
+            <input id="fName" name="name" autocomplete="name" placeholder="Your name" maxlength="100" required>
             <span class="msg">Add the name the room is booked under.</span>
           </div>
         </div>
@@ -687,7 +695,7 @@ body.menu-open nav.top { transform: none !important; }
         </div>
         <div class="fld">
           <label for="fNotes">Allergies or requests</label>
-          <textarea id="fNotes" name="notes" placeholder="No onion, extra pita, ring the bell softly…"></textarea>
+          <textarea id="fNotes" name="notes" maxlength="2000" placeholder="No onion, extra pita, ring the bell softly…"></textarea>
         </div>
       </form>
       <div class="recap" id="recap"></div>
@@ -697,7 +705,7 @@ body.menu-open nav.top { transform: none !important; }
       <div class="sent">
         <svg class="check" viewBox="0 0 84 84" fill="none" aria-hidden="true"><circle cx="42" cy="42" r="40" stroke="#123524" stroke-width="2"/><path d="M27 43l10 10 20-22" stroke="#123524" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <h3 id="sentTitle">Order sent</h3>
-        <p>Your order is with the Twenty Six team. If anything needs checking, reception will call your room.</p>
+        <p id="sentNote">Your request has been submitted. For confirmation or changes, call reception on +36 1 808 0981.</p>
         <div class="ticket" id="ticket" aria-label="Order summary"></div>
         <button type="button" class="cta ghost" id="orderMore">Back to the menu</button>
       </div>
@@ -711,7 +719,7 @@ body.menu-open nav.top { transform: none !important; }
       <div class="row grand"><span>Total</span><span id="tTotal">€0.00</span></div>
     </div>
     <button type="button" class="cta" id="drawerCta"><span class="lbl">Continue</span></button>
-    <p class="fine" id="drawerFine">Prices include VAT. The room service charge is added once per order.</p>
+    <p class="fine" id="drawerFine" role="status" aria-live="polite">Prices include VAT. The room service charge is added once per order.</p>
   </div>
 </aside>
 
@@ -1100,6 +1108,7 @@ body.menu-open nav.top { transform: none !important; }
   function say (t) { announce.textContent = ''; setTimeout(function () { announce.textContent = t; }, 30); }
 
   function addItem (id, fromEl, picks) {
+    if (sending) return;
     var key = picks ? id + ':' + picks.slice().sort().join(',') : id;
     var l = lineFor(key);
     if (l) l.qty += 1; else state.lines.push({ key: key, id: id, qty: 1, picks: picks || null });
@@ -1111,6 +1120,7 @@ body.menu-open nav.top { transform: none !important; }
     update();
   }
   function change (key, delta) {
+    if (sending) return;
     var l = lineFor(key);
     if (!l) { /* card steppers pass the dish id; act on its most recent line */
       for (var i = state.lines.length - 1; i >= 0; i--) if (state.lines[i].id === key) { l = state.lines[i]; break; }
@@ -1240,6 +1250,8 @@ body.menu-open nav.top { transform: none !important; }
     setTimeout(function () { document.getElementById('drawerClose').focus(); }, 60);
   }
   function closeDrawer () {
+    if (sending) return;
+    successHapticPending = false;
     drawer.classList.remove('on'); scrim.classList.remove('on');
     fab.setAttribute('aria-expanded', 'false');
     lockScroll(false);
@@ -1247,6 +1259,7 @@ body.menu-open nav.top { transform: none !important; }
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   function go (next) {
+    if (sending) return;
     var order = ['tray', 'details', 'sent'];
     var back = order.indexOf(next) < order.indexOf(step);
     step = next;
@@ -1262,6 +1275,7 @@ body.menu-open nav.top { transform: none !important; }
     refreshCta();
   }
   var sending = false;
+  var previewOnly = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
   function refreshCta () {
     if (sending) {
       ctaBtn.disabled = true;
@@ -1272,16 +1286,16 @@ body.menu-open nav.top { transform: none !important; }
     var bad = state.lines.some(function (l) { return !available(l.id); });
     /* No delivery time is asked for, so an order means "now": it can only
        be sent while the chosen menu is being served. */
-    var m = nowMin(), open = openNow(state.menu, m);
+    var m = nowMin(), open = previewOnly || openNow(state.menu, m);
     var next = HOURS[state.menu].filter(function (x) { return x[0] > m; })[0];
     var fine = document.getElementById('drawerFine');
-    fine.textContent = open ? FINE
+    fine.textContent = previewOnly ? 'Preview only. Requests are not sent from this local site.' : open ? FINE
       : 'The kitchen is not serving this menu right now' + (next ? '. It starts at ' + hhmm(next[0]) + '.' : ' and has finished for today.');
     if (step === 'tray') {
       lbl.textContent = 'Continue to delivery details';
       ctaBtn.disabled = state.lines.length === 0 || bad || !open;
     } else if (step === 'details') {
-      lbl.textContent = 'Send order';
+      lbl.textContent = previewOnly ? 'Preview request' : 'Send to reception';
       ctaBtn.appendChild(h('span', 'amt', fmtE(total())));
       ctaBtn.disabled = state.lines.length === 0 || bad || !open;
     }
@@ -1312,12 +1326,47 @@ body.menu-open nav.top { transform: none !important; }
   });
 
   /* ── Details ──────────────────────────────────────────────── */
+  function captureOrder () {
+    return {
+      reference: 'RS-' + crypto.randomUUID().replace(/-/g, '').slice(0, 12).toUpperCase(),
+      room: document.getElementById('fRoom').value.trim(),
+      name: document.getElementById('fName').value.trim(),
+      notes: document.getElementById('fNotes').value.trim(),
+      cutlery: cutlery,
+      menu: state.menu === 'day' ? 'Lunch & dinner' : 'Afternoon',
+      lines: state.lines.map(function (line) {
+        return {
+          name: ITEMS[line.id].name, qty: line.qty,
+          picks: line.picks ? line.picks.map(function (id) { return ITEMS[id].name; }) : [],
+          amount: eur(ITEMS[line.id].ft) * line.qty
+        };
+      }),
+      fee: FEE_EUR,
+      total: total()
+    };
+  }
+  function appendSummary (target, order) {
+    order.lines.forEach(function (line) {
+      var row = h('div', 'tk-l');
+      row.appendChild(h('span', null, line.qty + ' × ' + line.name));
+      row.appendChild(h('span', null, fmtE(line.amount)));
+      target.appendChild(row);
+      if (line.picks.length) target.appendChild(h('div', 'tk-detail', line.picks.join(', ')));
+    });
+    var fee = h('div', 'tk-l');
+    fee.appendChild(h('span', null, 'Room service'));
+    fee.appendChild(h('span', null, fmtE(order.fee)));
+    target.appendChild(fee);
+    var totalRow = h('div', 'tk-t');
+    totalRow.appendChild(h('span', null, 'Total'));
+    totalRow.appendChild(h('span', null, fmtE(order.total)));
+    target.appendChild(totalRow);
+  }
   function renderRecap () {
-    var r = document.getElementById('recap');
-    while (r.firstChild) r.removeChild(r.firstChild);
-    var n = count();
-    r.appendChild(h('b', null, n + (n === 1 ? ' dish' : ' dishes')));
-    r.appendChild(document.createTextNode(' from the ' + (state.menu === 'day' ? 'lunch and dinner' : 'afternoon') + ' menu, ' + fmtE(total()) + ' including the ' + fmtE(FEE_EUR) + ' room service charge.'));
+    var recap = document.getElementById('recap');
+    while (recap.firstChild) recap.removeChild(recap.firstChild);
+    recap.appendChild(h('div', 'recap-title', 'Your request · ' + (state.menu === 'day' ? 'Lunch & dinner' : 'Afternoon')));
+    appendSummary(recap, captureOrder());
   }
   function setCut (n) {
     cutlery = Math.max(1, Math.min(10, n));
@@ -1341,63 +1390,124 @@ body.menu-open nav.top { transform: none !important; }
     document.getElementById(id).addEventListener('input', function () { this.closest('.fld').classList.remove('err'); });
   });
 
-  function orderText () {
-    return state.lines.map(function (l) {
-      var it = ITEMS[l.id];
-      return l.qty + ' × ' + it.name + (l.picks ? ' (' + l.picks.map(function (p) { return ITEMS[p].name; }).join(', ') + ')' : '') + ' — ' + fmtE(eur(it.ft) * l.qty);
-    }).join('\n') + '\nRoom service — ' + fmtE(FEE_EUR);
+  function orderText (order) {
+    return order.lines.map(function (line) {
+      return line.qty + ' × ' + line.name +
+        (line.picks.length ? ' (' + line.picks.join(', ') + ')' : '') + ' — ' + fmtE(line.amount);
+    }).join('\n') + '\nRoom service — ' + fmtE(order.fee);
   }
 
   var form = document.getElementById('orderForm');
+  var successHapticPending = false;
+  var checkMark = drawer.querySelector('.check path');
+  if (checkMark) checkMark.addEventListener('animationend', function (event) {
+    if (event.target !== checkMark || event.animationName !== 'draw' || !successHapticPending) return;
+    successHapticPending = false;
+    if (step !== 'sent' || !drawer.classList.contains('on') ||
+        document.visibilityState !== 'visible' ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+        typeof navigator.vibrate !== 'function') return;
+    try { navigator.vibrate(25); } catch (e) { /* Optional device feedback must not affect the receipt. */ }
+  });
+  var lockedControls = [];
+  function lockOrder (on) {
+    drawer.setAttribute('aria-busy', on ? 'true' : 'false');
+    if (on) {
+      lockedControls = Array.prototype.map.call(drawer.querySelectorAll('input, textarea, button'), function (el) {
+        var entry = [el, el.disabled];
+        el.disabled = true;
+        return entry;
+      });
+    } else {
+      lockedControls.forEach(function (entry) { entry[0].disabled = entry[1]; });
+      lockedControls = [];
+    }
+  }
+  form.addEventListener('submit', function (e) { e.preventDefault(); submit(); });
   function submit () {
-    if (sending || !validate()) return;
-    sending = true;
-    document.getElementById('fMenu').value = state.menu === 'day' ? 'Lunch & dinner' : 'Afternoon';
-    document.getElementById('fOrder').value = orderText();
-    document.getElementById('fTotal').value = fmtE(total());
-    ctaBtn.disabled = true; ctaBtn.classList.add('sending');
-    ctaBtn.querySelector('.lbl').textContent = 'Sending';
+    if (sending) return;
+    if (!state.lines.length || state.lines.some(function (line) { return !available(line.id); }) ||
+        (!previewOnly && !openNow(state.menu, nowMin()))) {
+      refreshCta();
+      return;
+    }
+    if (!validate()) return;
+    var order = captureOrder();
+    document.getElementById('fMenu').value = order.menu;
+    document.getElementById('fOrder').value = orderText(order);
+    document.getElementById('fTotal').value = fmtE(order.total);
+    document.getElementById('fReference').value = order.reference;
+    form.elements.namedItem('subject').value = 'Room service · Room ' + order.room + ' · ' + order.reference;
+    // Serialize before disabling controls: disabled inputs are omitted from FormData.
     var data = new URLSearchParams(new FormData(form)).toString();
-    /* Local prototype: python's http.server cannot take a POST, so on
-       localhost the send is simulated. On Netlify it posts to Forms. */
-    var local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
-    var req = local
-      ? new Promise(function (res) { setTimeout(res, 1100); })
-      : fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: data }).then(function (r) { if (!r.ok) throw new Error(r.status); });
-    req.then(function () {
-      sending = false;
-      ctaBtn.classList.remove('sending');
-      renderTicket();
+    if (previewOnly) {
+      renderTicket(order, true);
       go('sent');
-      say('Order sent.');
-    }).catch(function () {
+      say('Preview only. No request was sent.');
+      return;
+    }
+    sending = true;
+    lockOrder(true);
+    ctaBtn.classList.add('sending');
+    ctaBtn.querySelector('.lbl').textContent = 'Sending';
+    var controller = new AbortController();
+    var timeout = setTimeout(function () { controller.abort(); }, 30000);
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: data,
+      signal: controller.signal
+    }).then(function (response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      clearTimeout(timeout);
       sending = false;
+      lockOrder(false);
+      ctaBtn.classList.remove('sending');
+      renderTicket(order, false);
+      go('sent');
+      say('Request submitted.');
+    }).catch(function () {
+      clearTimeout(timeout);
+      sending = false;
+      lockOrder(false);
       ctaBtn.classList.remove('sending');
       refreshCta();
-      ctaBtn.querySelector('.lbl').textContent = 'Not sent. Try again';
-      document.getElementById('drawerFine').textContent = 'The order did not reach us. Try again, or call reception on +36 1 808 0981.';
+      ctaBtn.querySelector('.lbl').textContent = 'Try again';
+      document.getElementById('drawerFine').textContent =
+        'We could not confirm delivery. Before retrying, call reception on +36 1 808 0981 and quote ' + order.reference + ' to avoid a duplicate request.';
+      say('Delivery could not be confirmed. Please contact reception.');
+      ctaBtn.focus({ preventScroll: true });
     });
   }
 
-  function renderTicket () {
-    var t = document.getElementById('ticket');
-    while (t.firstChild) t.removeChild(t.firstChild);
-    var hd = h('div', 'tk-h');
-    hd.appendChild(h('span', null, 'Twenty Six'));
-    hd.appendChild(h('span', null, 'Room service'));
-    t.appendChild(hd);
-    t.appendChild(h('div', 'tk-room', 'Room ' + document.getElementById('fRoom').value.trim()));
-    t.appendChild(h('div', 'tk-when', 'Cutlery for ' + cutlery));
-    state.lines.forEach(function (l) {
-      var row = h('div', 'tk-l');
-      row.appendChild(h('span', null, l.qty + ' × ' + ITEMS[l.id].name));
-      row.appendChild(h('span', null, fmtE(eur(ITEMS[l.id].ft) * l.qty)));
-      t.appendChild(row);
-    });
-    var fee = h('div', 'tk-l'); fee.appendChild(h('span', null, 'Room service')); fee.appendChild(h('span', null, fmtE(FEE_EUR))); t.appendChild(fee);
-    var tot = h('div', 'tk-t'); tot.appendChild(h('span', null, 'Total')); tot.appendChild(h('span', null, fmtE(total()))); t.appendChild(tot);
+  function renderTicket (order, preview) {
+    successHapticPending = !preview;
+    TITLES.sent = preview ? 'Your request' : 'Thank you';
+    document.getElementById('sentTitle').textContent = preview ? 'Request preview' : 'Request submitted';
+    document.getElementById('sentNote').textContent = preview
+      ? 'Preview only. Nothing has been sent to reception.'
+      : 'Your request has been submitted. For confirmation or changes, call reception on +36 1 808 0981.';
+    var ticket = document.getElementById('ticket');
+    while (ticket.firstChild) ticket.removeChild(ticket.firstChild);
+    var header = h('div', 'tk-h');
+    header.appendChild(h('span', null, 'Stories Hotel'));
+    header.appendChild(h('span', null, 'Reception'));
+    ticket.appendChild(header);
+    ticket.appendChild(h('div', 'tk-room', 'Room ' + order.room));
+    ticket.appendChild(h('div', 'tk-when', order.name + ' · Cutlery for ' + order.cutlery));
+    ticket.appendChild(h('div', 'tk-reference', order.reference));
+    appendSummary(ticket, order);
+    if (order.notes) {
+      ticket.appendChild(h('div', 'recap-title', 'Allergies or requests'));
+      ticket.appendChild(h('div', 'tk-detail', order.notes));
+    }
+    var title = document.getElementById('sentTitle');
+    title.tabIndex = -1;
+    // Wait for go('sent') to reveal the panel before moving keyboard focus.
+    requestAnimationFrame(function () { title.focus({ preventScroll: true }); });
   }
   function reset () {
+    successHapticPending = false;
     state.lines = []; form.reset(); setCut(1);
     document.getElementById('drawerFine').textContent = FINE;
     go('tray'); update();
@@ -1471,6 +1581,7 @@ body.menu-open nav.top { transform: none !important; }
   /* ── Menu switch & kitchen status ─────────────────────────── */
   var seg = document.getElementById('menuSeg');
   function setMenu (menu, animate) {
+    if (sending) return;
     state.menu = menu;
     seg.dataset.menu = menu;
     seg.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.menu === menu ? 'true' : 'false'); });

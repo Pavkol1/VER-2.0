@@ -29,6 +29,13 @@ The site already carries this as an editorial claim ("a quarter worth the walk",
 
 ## Operating Context
 
+Room-service form handoff, verified 2026-11-04: Netlify Forms has a registered
+`room-service` form. Its existing submission notification emails
+`info@storiesbudapest.com` for every form. This rule was confirmed in the
+Netlify dashboard; actual inbox delivery has not been tested in this pass.
+Room-service requests go to reception, rather than claiming direct kitchen
+acceptance. Localhost is an explicit preview and sends no request.
+
 The hotel occupies the **Twenty Six building**, and the building — not just the bedrooms — is the product:
 
 - **Twenty Six restaurant**, ground floor. Breakfast is served 07:30–11:00, à la carte, ordered at table. Menu prices are **not published** — sourcing claims (named suppliers, Hunyadi tér, "baked at dawn") were removed 2026-08-24 as unverified.
