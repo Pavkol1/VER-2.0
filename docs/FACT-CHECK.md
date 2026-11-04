@@ -190,7 +190,8 @@ Recorded here so nobody re-asks:
   rooms, bathrooms or changing areas
 - M2 walk: **5 minutes** to Deák Ferenc tér ✅ (confirmed 2026-08-24)
 - Netlify form detection is enabled ✅ (confirmed 2026-08-24); the email
-  notification still has to be added once the form appears after a deploy
+  notification to info@storiesbudapest.com is configured ✅ (checked in the
+  dashboard 2026-11-04, covers every form, room service included)
 
 
 ---
@@ -239,7 +240,8 @@ All answers above are live in both languages. What changed, grouped by consequen
 
 1. ~~2.29, M2 walking time.~~ **Answered 2026-08-24: 5 minutes.** Live in both
    languages.
-2. **Netlify Forms delivery — blocked on a deploy, not on a setting.** Form
+2. **Done 2026-11-04 — the notification is configured.** Original note:
+   **Netlify Forms delivery — blocked on a deploy, not on a setting.** Form
    detection is enabled (client confirmed 2026-08-24), which is the
    prerequisite. Netlify only lists a form after it has parsed it out of a
    *deployed* build, and this work is still uncommitted — so there is nothing

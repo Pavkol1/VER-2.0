@@ -2,13 +2,18 @@
 
 Historical and source files are preserved here, not deleted.
 
-- `legacy/Ver1/`: first website and design experiments (local only).
+In git:
+
 - `legacy/Ver2/`: second website, moved from the repository root.
 - `legacy/AGENTS-before-organization.md`: superseded agent instructions.
-- `source-assets/photos/`: original source photo collection (local only).
-- `source-assets/little-luxuries-transition.png`: superseded transition image.
-- `local-state-2026-11-04/`: pre-cleanup instructions, ignore rules, and binary
-  Git patch preserving the original tracked local changes (local only).
 
-The equivalent tracked local changes also remain in the named Git stash.
+Local only, on Pavlo's MacBook (ignored by git, absent on other machines):
+
+- `legacy/Ver1/`: first website and design experiments.
+- `source-assets/photos/`: original source photo collection.
+- `source-assets/little-luxuries-transition.png`: superseded transition image.
+- `local-state-2026-11-04/`: pre-cleanup instructions, ignore rules, and a
+  binary Git patch of the tracked local changes from before the cleanup. The
+  same changes are in that machine's Git stash.
+
 Archival files are outside the Netlify publish directory `Ver3/`.

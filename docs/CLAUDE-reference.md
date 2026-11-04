@@ -1,14 +1,12 @@
-# CLAUDE.md
+# Technical reference
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+The detailed technical handoff for this repository. Start with `AGENTS.md` and `CLAUDE.md` at the repo root; this file holds the depth behind them.
 
-> **RULE #1: Always invoke the `impeccable` skill before writing or editing any frontend code. Every session. No exceptions.**
->
-> It supersedes `frontend-design:frontend-design`, which is no longer the lead skill here. Product truth lives in [PRODUCT.md](PRODUCT.md) — read it before design decisions, and keep it current rather than re-deriving it.
+> **Frontend skill:** before writing or editing frontend code, invoke `impeccable` **if it is installed on the machine you are on**, otherwise `frontend-design:frontend-design` — never both. See **Frontend Skill** at the end. Product truth lives in [PRODUCT.md](PRODUCT.md) — read it before design decisions, and keep it current rather than re-deriving it.
 
 ---
 
-## Current Status — Handoff (last updated 2026-11-03)
+## Current Status — Handoff (last updated 2026-11-04)
 
 **The live site is now Ver3.** The active, deployable site root is **`Ver3/`** (not `archive/legacy/Ver2/`). `netlify.toml` publishes `Ver3`. `archive/legacy/Ver2/` is kept as legacy/reference only — do not edit it.
 
@@ -18,19 +16,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Production = `main` branch.** A push to `main` is a live deploy to https://secrethotel.netlify.app/ — **always ask first.**
 
 **Branches:**
-- `main` — production (Netlify deploys this).
-- `claude/wonderful-mclaren-d67b3f` — working/feature branch (current work happens here). `main` and this branch are normally kept at the same commit.
+- `main` — production (Netlify deploys this) **and the branch current work happens on**. Since 2026-11-04 work is committed straight to `main`, always after asking.
+- `feature/room-service` (stops at `91b4767`) and `claude/wonderful-mclaren-d67b3f` (stops at `74b300c`) — older working branches, both behind `main`. Don't resume work on them.
+
+**Two machines work on this repo:** Pavlo's MacBook and the hotel's reception PC (Windows, user `Recepcio-2`, checkout in OneDrive). Each has its own local-only files (see **Repository Layout**), so always `git fetch` and check `git status` / `git log origin/main` before starting — the other machine may have pushed.
 
 **Open / not-yet-done:**
 - **Booking runs through SabeeApp** — all 21 booking CTAs and the homepage reserve form open `https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951` in a new tab. The form opens it via JS, **not** a GET action: the inputs carry no `name`, and a GET submit would rebuild the query string and drop the engine's own `?p=` token. Dates and the chosen room are **not** passed through yet — that needs SabeeApp's parameter names.
-- **contact.html now posts to Netlify Forms** (2026-08-24) — real `<form data-netlify>` with a honeypot and a hidden `language` field; it submits natively with JS off, and the inline script only upgrades it to an in-page confirmation. Netlify strips `data-netlify` from the served HTML once it has parsed the form, so its absence in the deployed source is the sign that detection worked. **Delivery still needs the email notification configured** in Netlify → Forms → contact → Settings & usage.
-- **Room service page is live, English only** (`Ver3/room-service.html`, shipped 2026-11-03) — the in-house ordering page for Twenty Six room service; full notes under **Room service** in Architecture Notes. Still open: the **Hungarian copy** (`hu/room-service.html` does not exist yet), the **Netlify email notification** for the `room-service` form (same gap as contact — without it orders only sit in the Netlify dashboard), the **payment wording** (the page deliberately says nothing about how guests pay — not confirmed), and confirmation that "reception will call your room" on the sent screen is true. The Wix room-service form is still the one in use until the hotel switches the QR card.
+- **contact.html now posts to Netlify Forms** (2026-08-24) — real `<form data-netlify>` with a honeypot and a hidden `language` field; it submits natively with JS off, and the inline script only upgrades it to an in-page confirmation. Netlify strips `data-netlify` from the served HTML once it has parsed the form, so its absence in the deployed source is the sign that detection worked. **Email delivery is configured**: the site's Netlify form notification sends every form's submissions to info@storiesbudapest.com (checked in the dashboard 2026-11-04).
+- **Room service page is live, English only** (`Ver3/room-service.html`, shipped 2026-11-03, reworked 2026-11-04) — the in-house ordering page for Twenty Six room service; full notes under **Room service** in Architecture Notes. Orders arrive at info@storiesbudapest.com — the client confirmed on 2026-11-04 that real order emails arrive, including the simplified single-summary format, and that it reads well. Still open: the **Hungarian copy** (`hu/room-service.html` does not exist yet), the **payment wording** (the page deliberately says nothing about how guests pay — not confirmed), and **switching the room QR cards** from the Wix form "Guest - 26 Menu" to this page — until then Wix stays the one in use.
 - contact: optional left-edge runlabel + a mini SVG map inset (rhymes with M3.1).
 - **Legal pages are DRAFTS** — `privacy.html` / `terms.html` (+ `hu/`) carry a red banner and `.legal-todo` markers wherever a company identifier is missing: legal entity name, company registration number, tax number, EU VAT number, representative, and the accounting provider. **They must not be treated as published until those are filled and a lawyer has read them.** Structure follows the group's Wonder Budapest documents, but every factual statement was written for this hotel — in particular the cookie section describes what Ver3 actually does (no analytics, no pixel, two functional storage keys), not what the sister site does.
 - **Fact-check outstanding** — see [FACT-CHECK.md](FACT-CHECK.md), a full audit of every claim on the site with the open questions numbered. The invented ones (review score, stay count, transfer price, best-rate guarantee) were **removed 2026-08-06** and only return if the client confirms real figures. Two internal contradictions are still unresolved and flagged there: whether the King Suite has a private sauna (`rooms.html` says yes, `faqs.html` implies only the Presidential does), and whether GoActive is in the building or a five-minute walk away.
 - Homepage frame sets are 1280×720 sources — slightly soft on large retina screens (grain + vignette mask it). Re-generate at 1080p if the client complains.
 
-**To resume on a fresh machine / account:** `git clone https://github.com/Pavkol1/VER-2.0.git`, `git checkout claude/wonderful-mclaren-d67b3f`, then `python3 -m http.server 8000` → http://localhost:8000/Ver3/. Note: chat history and Claude memory do NOT transfer between accounts — only the code (and this file) travels via git.
+**To resume on a fresh machine / account:** `git clone https://github.com/Pavkol1/VER-2.0.git` (lands on `main`), then `./start-server.sh` (or `python3 -m http.server 8000`; on the reception PC `python`) → http://localhost:8000/Ver3/. Note: chat history and Claude memory do NOT transfer between accounts or machines — only the code (and these notes) travel via git.
 
 ---
 
@@ -43,8 +43,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **To run locally** (Safari blocks `file://` with relative asset paths, so an HTTP server is required):
 
 ```bash
-python3 -m http.server 8000
-# then open http://localhost:8000/Ver3/   (Ver3 is the live site; Ver2 is legacy)
+./start-server.sh        # = python3 -m http.server 8000 from the repo root
+# then open http://localhost:8000/Ver3/
 ```
 
 Per user preference, ask Claude to start the server rather than running it yourself.
@@ -55,6 +55,8 @@ Per user preference, ask Claude to start the server rather than running it yours
 
 ```
 .
+├── AGENTS.md / CLAUDE.md / README.md   short entry points for agents and people
+├── start-server.sh       local preview server on port 8000
 ├── netlify.toml          publish = "Ver3"  (the only config — no build command)
 ├── Ver3/                 ← ACTIVE, deployable site root (edit here)
 │   ├── index.html        Homepage: loader + hero + intro-strip + luxuries + rooms rail + coffee→Danube scene + neighbourhood + reserve
@@ -73,8 +75,18 @@ Per user preference, ask Claude to start the server rather than running it yours
 │       │                 + coffee-danube.mp4 (the morph, plays once)
 │       ├── photos/       Per-room and amenity galleries (presidential-suite/, king-suite/, …)
 │       └── vendor/       lenis.min.js · gsap.min.js · ScrollTrigger.min.js
-└── archive/legacy/Ver2/                 legacy / reference only — do NOT edit
+├── docs/                 PRODUCT.md, FACT-CHECK.md, this file, client .docx documents,
+│   └── email/            room-service email design (an unused HTML alternative + text sample)
+└── archive/
+    ├── README.md
+    └── legacy/           Ver2/ and the pre-2026-11-04 agent notes — reference only, do NOT edit
 ```
+
+**In git vs. local only.** Everything above is in git. A few things are deliberately **not** (see `.gitignore`) and exist only on the machine that made them:
+- **MacBook only:** `archive/legacy/Ver1/`, `archive/source-assets/` (original photos, incl. the source logo), `archive/local-state-2026-11-04/`, the git stash "Before repository organization 2026-11-04", and `.claude/worktrees/`.
+- **Reception PC only:** `.claude/launch.json` (preview config) and `.claude/settings.local.json`.
+
+If a note points at one of these and it isn't there, you are on the other machine — don't recreate it.
 
 Asset URLs in the HTML use `assets/...` (relative from `Ver3/`). When adding photos, place them inside `Ver3/assets/`.
 
@@ -161,9 +173,9 @@ Old tokens were `--ivory #F2EDE4 / --ink #0D0B08 / --gold #B9904E / --green #2A5
 
 ## Architecture Notes
 
-**Navigation** — fixed; `rgba(13,11,8,0.85)` + `backdrop-filter: blur(14px)` activated by adding `.scrolled` once `window.scrollY > 40`. Nav height is ~92px; other sticky UI docks below that. **Mobile menu** (≤1024px, all pages): `.nav-links` hides and a `.m-burger` button (44×44, morphs to an X) opens the `.mnav` full-screen emerald overlay — numbered serif links with staggered rise-in, gold active/current page, Reserve CTA + contact meta at the bottom. `body.menu-open` locks scroll (`overflow: hidden` + `__lenis.stop()`) and forces the nav visible over the index auto-hide. Closes instantly on tap of any `.mnav-links`/`.mnav-cta` link (so the transition panel doesn't animate in over a still-open menu) and on Esc/bfcache `pageshow`; menu links are also intercepted by the page-sweep layer like any internal link (sweep z 190 covers overlay z 78). Burger is paper-colored; `faqs.html` overrides it to ink (paper nav).
+**Navigation** — fixed; `rgba(13,11,8,0.85)` + `backdrop-filter: blur(14px)` activated by adding `.scrolled` once `window.scrollY > 40`. Nav height is ~92px; other sticky UI docks below that. **Mobile menu** (≤1024px, all pages): `.nav-links` hides and a `.m-burger` button (44×44, morphs to an X) opens the `.mnav` full-screen emerald overlay — numbered serif links with staggered rise-in, gold active/current page, Reserve CTA + contact meta at the bottom. `body.menu-open` locks scroll (`overflow: hidden` + `__lenis.stop()`) and forces the nav visible over the index auto-hide. **Focus is contained** (2026-11-04): the overlay is `inert` while closed; on open, every sibling along the burger's ancestor path (skip link, page sweep, `.page-view`…) is made `inert`, Tab/Shift+Tab cycle between the burger and the overlay's links, and focus returns to where it was on close. Closes instantly on tap of any overlay link (so the transition panel doesn't animate in over a still-open menu), on Esc, on bfcache `pageshow`, and when the viewport widens past 1024px; menu links are also intercepted by the page-sweep layer like any internal link (sweep z 190 covers overlay z 78). The same block is copied into every page, `hu/` and `404.html` included — change it everywhere at once. Burger is paper-colored; `faqs.html` overrides it to ink (paper nav).
 
-**Reserve** — an inline `.reserve-plate` section at the bottom of `index.html` (anchor `#reserve`), **not** a slide-out panel. Its `.reserve-form` is currently a **non-functional mock**: `onsubmit="event.preventDefault()"` and no action/endpoint. The only real contact route on the page is the footer `mailto:hello@storiesbudapest.com`.
+**Reserve** — an inline `.reserve-plate` section at the bottom of `index.html` (anchor `#reserve`), **not** a slide-out panel. Its `.reserve-form` opens the SabeeApp booking engine in a new tab via JS (see Current Status) — it is no longer a mock.
 
 **Rooms** (6 total, in display order):
 1. Presidential Suite — 165–180 m², 2 bed/2.5 bath, Jacuzzi & Sauna
@@ -185,7 +197,7 @@ Old tokens were `--ivory #F2EDE4 / --ink #0D0B08 / --gold #B9904E / --green #2A5
 
 Note: `.room-rail` (a horizontal `scroll-snap-type: x mandatory` strip) is **dead CSS** — no markup uses it. It's a leftover of the pre-cinema design; don't extend it.
 
-**Homepage coffee→Danube scene** (`.bk-coffee-scene`, `index.html`): one 430vh sticky scene, one `ScrollTrigger` with `scrub: 0.85` (inertial catch-up). Timeline: breakfast photo → coffee spill (120 webp frames) → breakfast-facts plateau → coffee swirl morphs into the Danube (60 webp frames) → crossfade into `danube-budapest.jpg` (real photo replaces the AI-looking last frames) → neighbourhood titles (`.dn-content`, holds `id="neigh"`). Both frame sets share one `<canvas>`; fractional frame indices are blended via `globalAlpha` so the scrub never steps. A single `.bk-scene-veil` vignette sits above all media layers (no brightness jump between photo/canvas/final). Frames preload via IO at `rootMargin: 300%`; a `painted` flag stops the (black, `alpha:false`) canvas from being revealed before its first draw. On reduced-motion or ≤860px, `body.bk-static` collapses the scene into two static blocks (the whole page gets much shorter on mobile as a result — worth knowing when computing scroll positions). The Breakfast→Neighbourhood handover sits at internal `p=0.62`; the chapter rail reuses that exact split for its 04→05 boundary.
+**Homepage coffee→Danube scene** (`.bk-coffee-scene`, `index.html`): one 430vh sticky scene, driven by a GSAP tween of a `playhead` object whose ScrollTrigger has `scrub: 0.85` (inertial catch-up; since 2026-11-04 — before, `onUpdate` read the raw, unsmoothed progress). `setSceneProgress` first remaps progress so the opening copy holds still for the first 6% of the scene (about two-thirds of a viewport of scroll). Timeline: breakfast photo → coffee spill (120 webp frames) → breakfast-facts plateau → coffee swirl morphs into the Danube (60 webp frames) → crossfade into `danube-budapest.jpg` (real photo replaces the AI-looking last frames) → neighbourhood titles (`.dn-content`, holds `id="neigh"`). Both frame sets share one `<canvas>`; fractional frame indices are blended via `globalAlpha` so the scrub never steps. A single `.bk-scene-veil` vignette sits above all media layers (no brightness jump between photo/canvas/final). Frames preload via IO at `rootMargin: 300%`; a `painted` flag stops the (black, `alpha:false`) canvas from being revealed before its first draw. On reduced-motion or ≤860px, `body.bk-static` collapses the scene into two static blocks (the whole page gets much shorter on mobile as a result — worth knowing when computing scroll positions). The Breakfast→Neighbourhood handover sits at internal `p=0.62`; the chapter rail reuses that exact split for its 04→05 boundary.
 
 **Homepage intro scroll-fill** (`.intro-strip`, tresmarescapital.com-style) — the headline and both deck paragraphs start dim and **fill word by word, top to bottom, scrubbed to scroll**, staying lit once passed. One ordered GSAP tween over `h1 .w` then `.deck .rw` (65 words), scrubbed off a ScrollTrigger on `.intro-text` (`start: 'top 96%'`, `end: 'bottom 60%'`, `scrub: 1.1`); per-word `sine.inOut` with `duration: 1.4` / `stagger: 0.32` deliberately overlaps ~3 words so the fill front is a soft gradient, not a hard edge. The gold `stories,` underline lights via `--underline` past 30% progress. **Progressive enhancement**: CSS base is `opacity: 1` and GSAP dims to `0.16` at runtime, so with no JS or under reduced motion the text is simply fully readable. This replaced both the old focal-line spotlight (`--reveal`) and the headline rise-in entrance; `.revealed` is still added by an IntersectionObserver because it drives the photo curtain reveals.
 
@@ -199,7 +211,10 @@ Note: `.room-rail` (a horizontal `scroll-snap-type: x mandatory` strip) is **dea
 - **No delivery time** (client removed it 2026-11-03): an order means "now", so the send button is disabled while the chosen menu is not being served, with the next start time shown underneath. Dishes not on the afternoon menu are flagged in the tray and block checkout until removed.
 - **No dish pictures** (client decision 2026-11-03 — neither the hotel nor the restaurant has photos of every dish). Cards are text-only; don't add illustrations or stock food photos. The hero uses the existing restaurant/lounge photos, crossfading per menu.
 - **"Choose 4"** opens a picker of the cold + hot mezze; each chosen set is its own tray line (`choose4:<sorted ids>`), and its four dishes go into the order text.
-- **Order delivery**: the details step is a real `<form name="room-service" data-netlify>` (room, name, cutlery count, notes, plus hidden `menu`, `order` — a plain-text list of lines — `total` and `language`). JS posts it to Netlify Forms; **on localhost the send is simulated** because `python -m http.server` cannot take a POST. Netlify email notification for this form is **not configured yet**.
+- **Order delivery** (reworked 2026-11-04): the details step is a real `<form name="room-service" data-netlify>`, but it submits **only two fields**: `subject` and `order`. The visible inputs (room, name, notes, cutlery `fCut`) deliberately have **no `name`** — `orderText()` folds them into the one plain-text `order` summary (room, guest, menu, cutlery, dishes with Choose-4 picks, dishes subtotal, €6 room service, total, allergies/requests), so the email reads as a single block. The hidden `subject` is rewritten on send to `Room 204 · Room service · €22.00`; Netlify uses it as the email subject. Sample body: `docs/email/room-service.txt`. If you add a field, give it a `name` only if it should appear in the email as its own row. There is **no order reference** (dropped on purpose).
+- **Sending**: JS posts the form to `/` (Netlify Forms) with a 30 s timeout. While it is sending, `sending` locks the whole drawer (adding dishes, steps, menu switch, close). If the post fails, the button reads "Try again" and the guest is told to call reception first and give the room number, so a retry doesn't make a duplicate order. On success the sent screen says "Request submitted… For confirmation or changes, call reception on +36 1 808 0981". It makes no promise that reception will call the guest. There is also a 25 ms phone vibration when the check finishes drawing, skipped under reduced motion.
+- **Localhost is a preview** (`previewOnly`): nothing is posted, the menu-hours lock is lifted so any time can be tested, and every label says "Preview". Test a real send only on the live site, and only with the hotel's knowledge — it lands in the real inbox.
+- **Email design**: the built-in Netlify email can't be styled. `docs/email/room-service.html` is a branded HTML design kept as an **unused alternative**. Using it would need a Netlify Function plus an email provider (account and API key), and turning off the standard notification.
 - **Motion**: "+1" chip flies from the Add button into the tray button, tray bumps, totals tween, drawer steps slide, the sent screen draws a check and "prints" a ticket. All skipped under reduced motion. The tray is not persisted in storage on purpose — the privacy page promises only two functional storage keys.
 - Drawer and picker are `role="dialog"` with focus trap, Esc to close, Lenis stopped while open (`data-lenis-prevent` on their scroll areas). The generic GSAP reveal pass is deliberately not loaded on this page.
 
@@ -231,9 +246,9 @@ These cost real time more than once — the animations are fine, the *measuremen
 
 ## Frontend Skill
 
-**ALWAYS invoke the `impeccable` skill FIRST** — before writing or editing any frontend code, every session, no exceptions. It replaced `frontend-design:frontend-design` as the lead skill on 2026-08-05; don't run both.
+**Invoke a design skill first** — before writing or editing any frontend code, every session. Use `impeccable` where it is installed (it became the lead skill on 2026-08-05); where it isn't, use `frontend-design:frontend-design`. Never run both.
 
-It is installed globally at `~/.claude/skills/impeccable/`, so it travels with the machine, **not** with this repo — a fresh clone on another machine needs `npx impeccable install` first. **The reception PC (user `Recepcio-2`) does not have it, nor Node.js** — the client chose on 2026-11-03 not to install it for now; `room-service.html` was built there without it, following this file's design system. Offer `/impeccable audit` / `polish` on that page once it is available. It also installs a detector hook (`~/.claude/settings.local.json`) that checks UI files after each edit and does a deeper pass at the end of a turn; `/impeccable hooks off` disables it.
+`impeccable` is installed per machine in `~/.claude/skills/impeccable/`, **not** in this repo; a fresh machine needs `npx impeccable install` first. **The reception PC (user `Recepcio-2`) has neither it nor Node.js.** The client chose on 2026-11-03 not to install them for now, so use `frontend-design` there. `room-service.html` was built on that PC to this file's design system. Offer `/impeccable audit` / `polish` on that page once impeccable is available. It also installs a detector hook (`~/.claude/settings.local.json`) that checks UI files after each edit and does a deeper pass at the end of a turn; `/impeccable hooks off` disables it.
 
 Useful sub-commands: `/impeccable document` records the incumbent design system into DESIGN.md, `/impeccable audit <target>` runs accessibility/performance/responsive checks, `/impeccable critique <target>` is a UX review, `/impeccable polish <target>` is a pre-ship pass.
 

@@ -5,14 +5,20 @@ order summary and no order reference. See `room-service.txt` for sample content;
 Netlify still adds its own email wrapper and field labels. The HTML below is
 retained as an unused design alternative, not the active notification template.
 
+The live subject is `Room 204 · Room service · €22.00`, set by the page's
+hidden `subject` field.
+
 Open `room-service.html` directly in a browser. It contains clearly marked
 sample data and does not send email or change Netlify notification settings.
-The subject for this sample is `Room service - Room 999 - RS-DEMO00000001`.
+It was drawn while orders still carried a reference (`RS-DEMO00000001` in the
+sample). The live page has since dropped references, so remove that line if
+this design is ever used.
 
 The design uses a 600px table layout, inline core styles, system fonts, and an
-Outlook desktop width wrapper. The header uses the original Stories logo from
-`archive/source-assets/photos/LOGO/stories logo.jpg`, copied into
-`assets/stories-logo.jpg`. The email uses its monochrome dark derivative,
+Outlook desktop width wrapper. The header uses the original Stories logo,
+copied into `assets/stories-logo.jpg`. The source,
+`archive/source-assets/photos/LOGO/stories logo.jpg`, exists only on the
+MacBook. The email uses its monochrome dark derivative,
 `assets/stories-logo-dark.png`, rendered at double resolution.
 It does not depend on SVG support, scripts, or external fonts.
 The small-screen media query adjusts spacing; the fluid table remains usable
@@ -22,7 +28,8 @@ Before integration:
 
 - Replace sample values with HTML-escaped order snapshot values.
 - Render every requested dish, quantity, selected options, and line amount.
-- Keep the order reference identical in the subject, email, and guest receipt.
+- Match the subject to the live one (room · Room service · total), unless order
+  references are brought back on the page and the guest receipt as well.
 - Format the submitted timestamp in Europe/Budapest, including the zone.
 - Render guest notes as escaped text with preserved line breaks; omit the notes
   band for an empty value rather than inventing an allergy status.

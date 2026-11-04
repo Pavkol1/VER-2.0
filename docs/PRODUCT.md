@@ -29,21 +29,10 @@ The site already carries this as an editorial claim ("a quarter worth the walk",
 
 ## Operating Context
 
-Room-service form handoff, verified 2026-11-04: Netlify Forms has a registered
-`room-service` form. Its existing submission notification emails
-`info@storiesbudapest.com` for every form. This rule was confirmed in the
-Netlify dashboard; actual inbox delivery has not been tested in this pass.
-Room-service requests go to reception, rather than claiming direct kitchen
-acceptance. Localhost is an explicit preview and sends no request.
-The chosen notification format is Netlify's standard email with a single
-plain-text order summary. It includes room, guest, menu, cutlery, dishes,
-subtotal, service charge, total, and guest notes. No custom email service or
-guest-facing order reference is used. The subject identifies the room and total.
-
 The hotel occupies the **Twenty Six building**, and the building — not just the bedrooms — is the product:
 
 - **Twenty Six restaurant**, ground floor. Breakfast is served 07:30–11:00, à la carte, ordered at table. Menu prices are **not published** — sourcing claims (named suppliers, Hunyadi tér, "baked at dawn") were removed 2026-08-24 as unverified.
-- **Room service** from the Twenty Six menu, 12:30–15:00 and 17:00–22:30 (plus an afternoon sharing menu 15:00–17:00), at restaurant prices plus a flat €6 per order — confirmed 2026-11-03. Guests order on `room-service.html`, reached only from a QR card in the room; it is a tool for in-house guests, not a selling page, and is kept out of navigation and search.
+- **Room service** from the Twenty Six menu, 12:30–15:00 and 17:00–22:30 (plus an afternoon sharing menu 15:00–17:00), at restaurant prices plus a flat €6 per order — confirmed 2026-11-03. Guests order on `room-service.html`, reached only from a QR card in the room; it is a tool for in-house guests, not a selling page, and is kept out of navigation and search. Orders are **requests to reception**: the page does not claim the kitchen has accepted them, and it does not promise that reception will call back. It tells guests to call reception to confirm or change an order. Each order arrives as Netlify's standard email to info@storiesbudapest.com. The subject carries the room and the total; the body is one plain-text summary with room, guest, menu, cutlery, dishes, subtotal, the €6 charge, total and notes. There is no order reference and no custom email service. The Netlify notification covering every form was confirmed in the dashboard on 2026-11-04, and the client confirmed the same day that real order emails in this format arrive and read well. Localhost is a preview and sends nothing. Still to do: a Hungarian version, payment wording (not confirmed, so the page says nothing about payment), and moving the room QR cards from the Wix form to this page.
 - **Bar and lounge**, 17:00–00:00 daily, positioned as a living room for the district rather than a hotel bar.
 - **GoActive gym** (five minutes' walk) and **Create 26 coworking** (in the building), which carry the business and longer-stay case. **Neither is included in any rate** — they are neighbours' businesses and reception arranges access. Confirmed 2026-08-24; the site had wrongly promised both free with every stay.
 
@@ -57,7 +46,7 @@ Guests evaluate the hotel from a phone or laptop before arrival, and the neighbo
 
 **Confirmed constraints for all future work:**
 
-- ~~A real reservation destination is required before launch.~~ **Done** — booking runs through SabeeApp, and `contact.html` posts to Netlify Forms as of 2026-08-24 (delivery to info@storiesbudapest.com still needs the notification configured in the Netlify dashboard).
+- ~~A real reservation destination is required before launch.~~ **Done** — booking runs through SabeeApp, and `contact.html` posts to Netlify Forms as of 2026-08-24, and the form notification to info@storiesbudapest.com is configured (confirmed 2026-11-04).
 - ~~A Hungarian version is required.~~ **Done 2026-08-06** — `Ver3/hu/` carries a full translation of all seven pages, with `hreflang` en/hu/x-default, per-language canonicals and a working EN|HU switch in the nav, mobile menu and footer. The trade-off accepted: two copies of every page, kept in sync by hand (no build step). Register is *magázó* throughout.
 - **Typography licences are an open commitment.** The design references the commercial *Gangster* and *ABC Monument Grotesk*; the site currently ships free stand-ins (Libre Caslon Text, Schibsted Grotesk). If the licences are bought, the originals replace the stand-ins.
 - **WCAG AA is a requirement**, not an aspiration. See Accessibility & Inclusion.
