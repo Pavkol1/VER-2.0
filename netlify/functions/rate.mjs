@@ -6,20 +6,43 @@
  * means a guest's browser makes no third-party request — the room-service
  * page talks to this domain and nothing else.
  *
- * Source order, and why:
- *   1. MNB (Magyar Nemzeti Bank). SabeeApp converts at the MNB rate, so the
- *      price a guest sees here matches what the booking system charges.
- *      Reachable over plain http:// ONLY — the same POST to https:// answers
- *      404. Unencrypted, hence the sanity check on the parsed number below.
- *   2. ECB. Published once a day around 16:00 CET, within ~0.1% of MNB.
- *   3. Neither answered: return rate null. The page then keeps its own
- *      hardcoded fallback, so a guest never sees a broken price.
+ * Both sources are fetched every time, and that is deliberate:
+ *
+ *   MNB (Magyar Nemzeti Bank) is the rate we want. SabeeApp converts at it,
+ *   so the price a guest sees here matches what the booking system charges.
+ *   But it is reachable over plain http:// ONLY — the same POST to https://
+ *   answers 404 — so the number arrives over a channel nobody can vouch for.
+ *   A tampered rate would quietly misprice every dish on the page: at the
+ *   outer sanity bound alone, euro prices could move by a third.
+ *
+ *   The ECB is served over https:// and publishes the same pair daily. It
+ *   therefore acts as the witness: MNB is used only when the ECB corroborates
+ *   it within TOLERANCE. The two normally sit about 0.05% apart (they were
+ *   363.18 and 362.99 on 2026-11-09), so 2% is loose enough to survive a
+ *   volatile day — they are fixed at different hours — and tight enough that
+ *   a forged rate cannot pass.
+ *
+ * Decision order:
+ *   1. Both agree          → MNB. What we actually want.
+ *   2. They disagree       → ECB. Trust the channel that can be verified.
+ *   3. ECB alone           → ECB.
+ *   4. MNB alone           → only if it sits within REFERENCE_BAND of
+ *                            REFERENCE, because nothing can corroborate it.
+ *   5. Neither             → rate null. The page keeps its own hardcoded
+ *                            fallback, so a guest never sees a broken price.
  *
  * No dependencies, no build step: Netlify runs this file as it is.
  */
 
-const BOUNDS = [250, 500];   /* HUF per EUR. Anything outside is a parse error
-                                or a corrupted response, not a real rate. */
+const BOUNDS = [250, 500];      /* HUF per EUR. A first filter: anything outside
+                                   is a parse error or a corrupted response. */
+const TOLERANCE = 0.02;         /* how far MNB may sit from the ECB and still
+                                   be believed. See the note above. */
+const REFERENCE = 363;          /* MNB on 2026-11-09. Used ONLY to bound an
+                                   uncorroborated MNB rate when the ECB cannot
+                                   be reached. Refresh it when the page's own
+                                   FALLBACK is refreshed — they drift together. */
+const REFERENCE_BAND = 0.05;
 const TIMEOUT = 4000;
 
 const MNB_URL = 'http://www.mnb.hu/arfolyamok.asmx';
@@ -78,23 +101,39 @@ async function fromEcb () {
   return parseEcb(await text(ECB_URL));
 }
 
-export default async function handler () {
-  let out = null;
-  for (const get of [fromMnb, fromEcb]) {
-    try {
-      out = await get();
-      if (out) break;
-    } catch (e) {
-      /* Fall through to the next source. Nothing is logged with guest data in
-         it; the message is ours. */
-      console.warn('rate: ' + (e && e.message ? e.message : 'source failed'));
-    }
+/* Which of the two to believe. Exported for the offline test. */
+export function pick (mnb, ecb) {
+  if (mnb && ecb) {
+    if (Math.abs(mnb.rate / ecb.rate - 1) <= TOLERANCE) return mnb;
+    console.warn('rate: MNB ' + mnb.rate + ' disagrees with ECB ' + ecb.rate + ', using ECB');
+    return ecb;
   }
+  if (ecb) return ecb;
+  if (mnb) {
+    if (Math.abs(mnb.rate / REFERENCE - 1) <= REFERENCE_BAND) return mnb;
+    console.warn('rate: MNB ' + mnb.rate + ' is uncorroborated and far from ' + REFERENCE + ', refusing');
+  }
+  return null;
+}
+
+async function attempt (get) {
+  try {
+    return await get();
+  } catch (e) {
+    /* Fall through. Nothing is logged with guest data in it; the message is ours. */
+    console.warn('rate: ' + (e && e.message ? e.message : 'source failed'));
+    return null;
+  }
+}
+
+export default async function handler () {
+  const pair = await Promise.all([attempt(fromMnb), attempt(fromEcb)]);
+  const out = pick(pair[0], pair[1]);
 
   /* On success the answer is cached for an hour at the edge and may be served
-     stale for a day while it refreshes, so MNB is hit roughly once a day and a
-     guest never waits on it. On failure it is cached for a minute only, so a
-     blip does not freeze a wrong answer in place. */
+     stale for a day while it refreshes, so the sources are hit roughly once a
+     day and a guest never waits on them. On failure it is cached for a minute
+     only, so a blip does not freeze a wrong answer in place. */
   const cache = out
     ? 'public, max-age=900, stale-while-revalidate=86400'
     : 'public, max-age=60';
