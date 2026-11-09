@@ -274,14 +274,75 @@ All answers above are live in both languages. What changed, grouped by consequen
    legal reader.** A note in the banner slot tells guests the English version
    governs in case of a discrepancy. If management has a Hungarian original,
    send it and it replaces my translation.
-7. **Privacy Policy — two details still missing.** The company identity is now
-   filled in on both privacy pages from the Terms document (Secret Hotel Kft.,
-   01-09-304850, 26155021-2-42, HU26155021). Still blank, because the document
-   does not state them:
-   - the **representative** (`Képviselő`) — the name and position of the person
-     who signs for the company;
-   - the **accounting service provider** — company name and registered address,
-     listed in section 5 as a data processor.
-   The privacy pages keep their draft banner until these are supplied **and** a
-   lawyer has read them. The 31- and 32-page privacy PDFs management sent on
-   2026-11-09 have **not** been applied yet — that is a separate pass.
+7. **Privacy Policy — reconciled with management's document, with omissions
+   that need confirming.** Management sent `01_Privacy_Policy_Stories.pdf` and
+   `Adatkezelesi_Tajekoztato_Stories.pdf` on 2026-11-09. They are **the same
+   document**: the Hungarian is the original, the English a translation of it,
+   and both are **effective 1 August 2020**. Its legal substance was taken
+   into the pages; its description of the *website* was not, because it
+   describes a different operation. Both pages are now Version 1.1, effective
+   9 November 2026, and the draft banners are off.
+
+   **Taken from the document:** the privacy officer (Marton Andrea,
+   administration@storiesbudapest.com), the accounting processor (K+J
+   Számviteli Szolgáltató Kft., 1139 Budapest, Forgách u. 37.), the fuller
+   data-security section (technical vs organisational measures, home working),
+   the full rights section (what access delivers, the notification duty,
+   direct controller-to-controller transfer, the objection test), the
+   oral-complaint procedure and the rejection-routing duty, the camera
+   retention of **8 days**, the complaint reference **Act CLV of 1997 §
+   17/A(7)**, and the promise to send a copy of the policy on request.
+
+   **⚠️ Deliberately NOT published — each needs a yes or a correction:**
+   - **Section 11, analytics and cookies.** The document says the site uses
+     **Google Analytics, a Facebook pixel and Facebook remarketing**, sets
+     cookies and web beacons, shows personalised ads, and displays a cookie
+     consent banner with an "Allow" button. **None of that exists on Ver3** —
+     it has no analytics, no pixel and no cookies, only three functional
+     localStorage keys. Publishing this section would have the site claim
+     tracking it does not do. The pages keep their accurate cookie section.
+   - **ROOMZ (Confhotel Development Kft.) as the booking engine.** The site
+     uses SabeeApp. Is ROOMZ still involved at all?
+   - **Netlify is absent from the document** but hosts the site and receives
+     every contact-form and room-service submission. The pages list it as a
+     processor. This is a real gap in the document, not in the pages.
+   - **Global Payments / Erste Bank** as the payment processor. Still current?
+     The pages say "the payment provider" without naming one.
+   - **Section 4.6, body-temperature measurement at check-in**, and **4.5,
+     vaccination certificates**. Covid-era. Still practised?
+   - **The camera inventory — 16 positions listed by room number** ("hallway,
+     corner room 5", "corridor, rooms 6–10", three staff rooms, laundry,
+     kitchen, office, luggage room). Publishing a camera map tied to room
+     numbers is a security disclosure and goes well beyond the current
+     "cameras in the common areas". Does management want it published?
+   - **Ten named service providers** given with addresses and phone numbers:
+     hairdresser (Parag Ákos), massage (Voltig Med, Vanó Tünde), healthcare
+     (Kris Med), hand and foot care (Abergel Andrea), personal training (Go
+     Active), **tattoo (Schopper Solution)**, photography (Photon
+     Technologies), taxi (6x6), plus **Invitech** and **GRAPHAX.HU** for
+     telecoms and IT. Which of these are still engaged? Only the ones the
+     hotel actually passes guest data to belong on the page.
+   - **Newsletter, direct marketing and the Facebook page** (sections 4.13,
+     4.14). The site has no newsletter signup. Is there a mailing list?
+   - **Careers / job applicants** (4.12), **events and public documentation**
+     (4.15), **restaurant service** (4.10), **ratings** (4.11), **partner
+     contracting** (4.8). Plausible, but the pages do not claim them because
+     they could not be verified from the site.
+
+   **Three conflicts inside the document itself:**
+   - **Telephone.** The document says **+36 1 80 80 980**; the whole site, and
+     the Terms management just approved, say **+36 1 808 0981**, confirmed by
+     the client 2026-08-06. The newer answer was kept. Which is right?
+   - **Camera retention** reads "8 days" and then "more than 3 days" in
+     consecutive sentences. 8 days was published.
+   - **NAIH's address** in the document is the authority's **former** seat
+     (1125 Budapest, Szilágyi Erzsébet fasor 22/C). The pages already carry
+     the current one (1055 Budapest, Falk Miksa utca 9–11) and keep it. The
+     document's named NAIH president was not published either — office
+     holders change.
+   - The English translation also calls Secret Hotel Kft. the "**Data
+     Processor**" in section 1 where it means Data Controller (the Hungarian
+     original says "Adatkezelő" correctly), renders NTAK as "the system
+     operated by the NGO", and prints the word "obsession" where "or" belongs.
+     If the English PDF is ever given to a guest or an authority, it needs
+     retranslating.
