@@ -230,6 +230,18 @@ img { filter: var(--film-grade); }
 .leaflet-container img { filter: none; }
 
 /* MOBILE MENU — full-screen emerald overlay (nav-links are display:none ≤1024px) */
+.nav-right { justify-self: end; display: inline-flex; align-items: center; gap: 16px; }
+.lang-toggle { display: inline-flex; border: 1px solid rgba(237,231,218,0.28); border-radius: 999px; overflow: hidden; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; }
+.lang-toggle a { appearance: none; background: none; border: 0; cursor: pointer; color: rgba(237,231,218,0.6); font: inherit; padding: 7px 12px; min-height: 34px; display: inline-flex; align-items: center; transition: 0.25s var(--ease); }
+.lang-toggle a:hover { color: rgba(237,231,218,0.95); }
+.lang-toggle a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.lang-toggle a.active { background: var(--accent); color: #0B1410; }
+@media (max-width: 560px) { .lang-toggle { display: none; } }
+/* Paper nav: the toggle inherits the page's ink palette, not the dark one. */
+.lang-toggle { border-color: rgba(42, 42, 34, 0.26); }
+.lang-toggle a { color: var(--text-2); }
+.lang-toggle a:hover { color: var(--ink); }
+.lang-toggle a.active { background: var(--accent); color: var(--ink); }
 .m-burger {
   display: none;
   width: 44px; height: 44px;
@@ -424,10 +436,13 @@ body.menu-open nav.top { transform: none !important; }
     <a href="neighbourhood.html">Neighbourhood</a>
     <a href="contact.html">Contact</a>
   </div>
-  <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="nav-cta magnet" target="_blank" rel="noopener">Reserve</a>
+  <div class="nav-right">
+    <div class="lang-toggle"><a href="privacy.html" hreflang="en" class="active" aria-current="true" lang="en">EN</a><a href="hu/privacy.html" hreflang="hu" lang="hu">HU</a></div>
+    <a href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" class="nav-cta magnet" target="_blank" rel="noopener">Reserve</a>
     <button type="button" class="m-burger" id="mnavBtn" aria-expanded="false" aria-controls="mnav" aria-label="Menu">
       <span></span><span></span>
     </button>
+  </div>
 </nav>
 <!-- MOBILE MENU OVERLAY -->
 <div class="mnav" id="mnav" aria-hidden="true">
