@@ -920,7 +920,14 @@ body.menu-open nav.top { transform: none !important; }
      under a guest mid-order would be worse than a rate a few hours old. */
   var CACHE_KEY = 'rs-eur-rate';
   var CACHE_MAX_DAYS = 7;
+  var BOUNDS = [250, 500];   /* Ft per €. The same guard the function applies,
+                                repeated here because a rate also arrives from
+                                localStorage, which the page does not control:
+                                a corrupted entry would otherwise price every
+                                dish from a nonsense number. */
   var rate = FALLBACK, rateInfo = null, rateLocked = false;
+
+  function sane (n) { return typeof n === 'number' && isFinite(n) && n >= BOUNDS[0] && n <= BOUNDS[1]; }
 
   function budapestDay () {
     try {
@@ -935,12 +942,12 @@ body.menu-open nav.top { transform: none !important; }
     /* A rate from months back could be far out, and correcting it would make
        every price visibly jump. Past a week, start from FALLBACK instead. */
     if (c && c.day && (Date.now() - Date.parse(c.day)) / 86400000 > CACHE_MAX_DAYS) c = null;
-    if (c && c.rate > 0) { rate = c.rate; rateInfo = c; }
+    if (c && sane(c.rate)) { rate = c.rate; rateInfo = c; }
     if (c && c.day === today) return;   /* today's rate already known */
     fetch('/api/rate', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {
-        if (!d || !(d.rate > 0)) return;
+        if (!d || !sane(d.rate)) return;
         d.day = budapestDay();
         try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch (e) {}
         /* Prices already committed keep the rate that produced them, and
