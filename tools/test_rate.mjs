@@ -7,7 +7,7 @@
  * the MNB payload (XML escaped as text, Hungarian decimal comma) and the
  * refusal to trust a number outside sane bounds.
  */
-import { parseMnb, parseEcb } from '../netlify/functions/rate.mjs';
+import { parseMnb, parseEcb, pick } from '../netlify/functions/rate.mjs';
 
 let pass = 0, fail = 0;
 function is (label, got, want) {
@@ -47,6 +47,23 @@ is('single-quoted attributes', parseEcb(ECB), { rate: 362.99, date: '2026-11-09'
 is('double-quoted attributes', parseEcb(ECB.replace(/'/g, '"')), { rate: 362.99, date: '2026-11-09', source: 'ECB' });
 is('no HUF row', parseEcb(ECB.replace("currency='HUF'", "currency='XXX'")), null);
 is('empty body', parseEcb(''), null);
+
+/* MNB arrives over unencrypted http, so it counts only when the ECB — which
+   arrives over https — says roughly the same thing. These pin that rule. */
+console.log('\nChoosing between the two');
+const M = function (r) { return { rate: r, date: '2026-11-09', source: 'MNB' }; };
+const E = function (r) { return { rate: r, date: '2026-11-09', source: 'ECB' }; };
+
+is('both agree → MNB wins', pick(M(363.18), E(362.99)), M(363.18));
+is('1.5% apart is still MNB', pick(M(368), E(362.56)), M(368));
+is('5% apart → ECB', pick(M(381), E(363)), E(363));
+is('a forged low rate → ECB', pick(M(260), E(363)), E(363));
+is('a forged high rate → ECB', pick(M(495), E(363)), E(363));
+is('ECB alone → ECB', pick(null, E(363)), E(363));
+is('MNB alone, near reference → MNB', pick(M(370), null), M(370));
+is('MNB alone, 10% off reference → refused', pick(M(400), null), null);
+is('MNB alone, forged low → refused', pick(M(260), null), null);
+is('neither source → null', pick(null, null), null);
 
 if (process.argv.includes('--live')) {
   console.log('\nLive sources');
