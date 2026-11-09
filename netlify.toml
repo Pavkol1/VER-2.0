@@ -1,2 +1,12 @@
 [build]
   publish = "Ver3"
+
+# The room-service page reads the daily MNB euro rate from /api/rate.
+# Source and fallback chain: netlify/functions/rate.mjs
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/api/rate"
+  to = "/.netlify/functions/rate"
+  status = 200

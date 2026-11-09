@@ -27,40 +27,15 @@ The detailed technical handoff for this repository. Start with `AGENTS.md` and `
 - **Room service page is live, English only** (`Ver3/room-service.html`, shipped 2026-11-03, reworked 2026-11-04) — the in-house ordering page for Twenty Six room service; full notes under **Room service** in Architecture Notes. Orders arrive at info@storiesbudapest.com — the client confirmed on 2026-11-04 that real order emails arrive, including the simplified single-summary format, and that it reads well. Still open: the **Hungarian copy** (`hu/room-service.html` does not exist yet), the **payment wording** (the page deliberately says nothing about how guests pay — not confirmed), and **switching the room QR cards** from the Wix form "Guest - 26 Menu" to this page — until then Wix stays the one in use.
 - contact: optional left-edge runlabel + a mini SVG map inset (rhymes with M3.1).
 
-- **Room service euro prices are converted at a hard-coded rate** — `RATE = 360`
-  (Ft per €) in `room-service.html`, rounded up to the next €0.10. Forint is the
-  source of truth (`ft:` on every item, exactly as printed on the Twenty Six
-  menu); euro is derived and is all the page shows. The intention is for this to
-  follow the real rate. Two questions are still open (the source, and where the
-  fetch happens); the two below them the client has already answered:
-  - **Where the rate comes from.** The **MNB** (Magyar Nemzeti Bank) publishes
-    the official daily HUF rate and is what Hungarian accounting refers back to
-    — the defensible choice for a Hungarian business. The **ECB** publishes a
-    daily euro reference rate that includes HUF; **Frankfurter** serves the same
-    ECB data as plain JSON. All three are free and need no key. Paid aggregators
-    (Fixer, Open Exchange Rates) add nothing here — one currency pair, once a day.
-  - **Fetch it server-side, not in the browser.** A client-side call introduces
-    a third party that sees every guest's IP, and `privacy.html` currently states
-    plainly that no such third party exists — it would have to be rewritten, and
-    the page is already waiting on a lawyer. A small scheduled job (Netlify
-    scheduled function, or a GitHub Action committing the file) that writes
-    `Ver3/assets/rate.json` once a day keeps the request off the guest's device,
-    keeps the page same-origin, and leaves every rate change visible in git
-    history. The page reads the file and falls back to the last known rate —
-    never to a blank or a zero price.
-  - **`FEE_EUR = 6` stays euro-native and fixed** (client, 2026-11-09): the flat
-    room-service charge is always €6 and must **not** be derived from the rate,
-    even though every dish price is. It is the one amount on the ticket that is
-    meant not to move.
-  - **Guests are charged in euro** (client, 2026-11-09) — that is the whole
-    reason the conversion exists. The displayed figure is therefore the real
-    price, not an indication, so the page needs **no** "approximate rate"
-    disclaimer. What it does need is care in the other direction: the hotel's
-    cost is in forint while its revenue is fixed in euro, so a strengthening
-    forint quietly eats the margin. Keep `Math.ceil` to €0.10 rather than
-    rounding to the nearest cent, and refresh daily rather than per request —
-    a price that changes while a guest is choosing is worse than one that is a
-    few cents conservative.
+- **The 2% euro buffer on room service is a placeholder** — `SPREAD = 1.02` in
+  `room-service.html` marks every euro price up 2% over the MNB rate. Set
+  2026-11-09 as a stand-in **pending a management decision**. Note the original
+  reason for a buffer does not apply: guests are charged in euro and the euro
+  stays in euro (client, 2026-11-09), so there is no bank spread on converting
+  euro revenue back into forint — what is left is the cost of accepting a card
+  at all. `SPREAD = 1` switches it off. The round-up to €0.10 adds roughly
+  another 0.3% on top, so the real markup over the printed menu is ~2.3%, not 2%.
+  Recorded as an open question in [FACT-CHECK.md](FACT-CHECK.md) § 4.
 - **Legal pages are DRAFTS** — `privacy.html` / `terms.html` (+ `hu/`) carry a red banner and `.legal-todo` markers wherever a company identifier is missing: legal entity name, company registration number, tax number, EU VAT number, representative, and the accounting provider. **They must not be treated as published until those are filled and a lawyer has read them.** Structure follows the group's Wonder Budapest documents, but every factual statement was written for this hotel — in particular the cookie section describes what Ver3 actually does (no analytics, no pixel, two functional storage keys), not what the sister site does.
 - **Fact-check outstanding** — see [FACT-CHECK.md](FACT-CHECK.md), a full audit of every claim on the site with the open questions numbered. The invented ones (review score, stay count, transfer price, best-rate guarantee) were **removed 2026-08-06** and only return if the client confirms real figures. Two internal contradictions are still unresolved and flagged there: whether the King Suite has a private sauna (`rooms.html` says yes, `faqs.html` implies only the Presidential does), and whether GoActive is in the building or a five-minute walk away.
 - Homepage frame sets are 1280×720 sources — slightly soft on large retina screens (grain + vignette mask it). Re-generate at 1080p if the client complains.
@@ -92,7 +67,9 @@ Per user preference, ask Claude to start the server rather than running it yours
 .
 ├── AGENTS.md / CLAUDE.md / README.md   short entry points for agents and people
 ├── start-server.sh       local preview server on port 8000
-├── netlify.toml          publish = "Ver3"  (the only config — no build command)
+├── netlify.toml          publish = "Ver3", functions dir, /api/rate redirect
+├── netlify/functions/
+│   └── rate.mjs          daily MNB euro rate for room service (the only server code)
 ├── Ver3/                 ← ACTIVE, deployable site root (edit here)
 │   ├── index.html        Homepage: loader + hero + intro-strip + luxuries + rooms rail + coffee→Danube scene + neighbourhood + reserve
 │   ├── rooms.html        6 rooms, top-nav + sticky info, 5–6 photos per room
@@ -112,6 +89,7 @@ Per user preference, ask Claude to start the server rather than running it yours
 │       └── vendor/       lenis.min.js · gsap.min.js · ScrollTrigger.min.js
 ├── docs/                 PRODUCT.md, FACT-CHECK.md, this file, client .docx documents,
 │   └── email/            room-service email design (an unused HTML alternative + text sample)
+├── tools/                check_site.py (pre-commit page check) · test_rate.mjs (rate function)
 └── archive/
     ├── README.md
     └── legacy/           Ver2/ and the pre-2026-11-04 agent notes — reference only, do NOT edit
@@ -241,7 +219,15 @@ Note: `.room-rail` (a horizontal `scroll-snap-type: x mandatory` strip) is **dea
 **Breakfast pricing**: à la carte, **not included** in any room rate — never reintroduce "included" wording. **The price is not published on the site** (client decision 2026-08-06): every mention reads **"ask reception"**, and the old "€18 per person" wording is retired — don't bring it back. **Hours are 07:30 — 11:00** on every page (the 07:00 that used to sit in `breakfast.html`'s body and `faqs.html` was wrong; confirmed 2026-08-06).
 
 **Room service** (`room-service.html`) — a shop-style ordering page for guests already in the house. Reached **only by a QR card in the rooms** (client decision 2026-11-03): `noindex, nofollow`, not in the nav, mobile menu, footer or sitemap — don't add it to any of them. It replaces the Wix Forms form "Guest - 26 Menu" on the hotel's Wix site; keep the two in step until Wix is retired.
-- **Menu data** is the `MENU` array in the page's last `<script>`. Prices are stored in **forint exactly as printed on the Twenty Six menu** and converted at **360 Ft = €1, rounded UP to the next €0.10** (`eur()`); the page shows **euro only** (client decision — no Ft on screen). The rate is the constant `RATE`; making it follow the real exchange rate is an open item — see **Open / not-yet-done**. A new menu = edit `MENU` (and `AFTERNOON_ORDER`), nothing else. Room-service prices equal restaurant prices; the only extra is a flat **€6 room service charge per order** (`FEE_EUR`). The printed menu's "+15% service charge" is **not** applied to room service.
+- **Menu data** is the `MENU` array in the page's last `<script>`. Prices are stored in **forint exactly as printed on the Twenty Six menu** and converted to euro by `eur()`, **rounded UP to the next €0.10**; the page shows **euro only** (client decision — no Ft on screen). The rate is live — see **Room service euro rate** below. A new menu = edit `MENU` (and `AFTERNOON_ORDER`), nothing else. Room-service prices equal restaurant prices; the only extra is a flat **€6 room service charge per order** (`FEE_EUR`). The printed menu's "+15% service charge" is **not** applied to room service.
+- **Room service euro rate** (added 2026-11-09) — the euro figure follows the **MNB** daily rate, because **SabeeApp converts at the MNB rate too** (client, 2026-11-09), so the page and the booking system agree. The page fetches **`/api/rate`**, served by **`netlify/functions/rate.mjs`** — the site's only server-side code.
+  - **Why a function and not a fetch from the page**: neither source is reachable from a browser. MNB is SOAP with no CORS header, and the ECB's own XML has no CORS header either. Going through the function also means a guest's browser makes **no third-party request**, which is what `privacy.html` claims and must keep claiming.
+  - **MNB answers over plain `http://` only** — the identical POST to `https://` returns 404. Its payload is a SOAP envelope wrapping **XML escaped as text**, with a **Hungarian decimal comma** and a `unit` attribute. Hence the parse in `parseMnb()` and the 250–500 Ft sanity bound: the transport is unencrypted, so an implausible number is refused rather than priced.
+  - **Chain**: MNB → ECB (within ~0.1% of MNB) → `rate: null`, at which point the page keeps its own `FALLBACK` constant. A guest never sees a blank or a zero price.
+  - **Caching**: a successful answer is held an hour at the Netlify edge and may be served stale for a day while it refreshes, so MNB is hit roughly once a day. A failure is cached for a minute only. In the browser the rate is kept in `localStorage` under **`rs-eur-rate`** keyed by the Budapest date, so a repeat visit paints the right price with no network at all; a cached entry older than a week is ignored.
+  - **The rate freezes once anything is in the tray** (`rateLocked`) — a total that moved under a guest mid-order would be worse than a rate a few hours old. `rate` and `rateInfo` move together or not at all, because `rateInfo` is what the order email reports.
+  - **The order email carries a `PRICING` block** — menu rate, source, date, and the applied rate after the buffer — so reception can reconcile a euro figure against SabeeApp. It is deliberately **not** shown on the page (client, 2026-11-09: no rate wording for guests).
+  - **Test it without deploying**: `node tools/test_rate.mjs` checks the parsing and the sanity bounds offline; `--live` also calls MNB and the ECB for real. On `localhost` there is no function, so `/api/rate` 404s and the page quietly uses `FALLBACK` — that is the fallback path working, not a bug.
 - **Two menus**, switched in the hero: *Lunch & dinner* (12:30–15:00, 17:00–22:30: cold mezze, hot mezze incl. "Choose 4", signature plates, mains, bread, desserts) and *Afternoon* (15:00–17:00: the sharing plates flagged `aft: true` in `AFTERNOON_ORDER`'s order, plus bread and desserts). Hours live in `HOURS`, evaluated in **Europe/Budapest** time; the page opens on whichever menu is being served now.
 - **No delivery time** (client removed it 2026-11-03): an order means "now", so the send button is disabled while the chosen menu is not being served, with the next start time shown underneath. Dishes not on the afternoon menu are flagged in the tray and block checkout until removed.
 - **No dish pictures** (client decision 2026-11-03 — neither the hotel nor the restaurant has photos of every dish). Cards are text-only; don't add illustrations or stock food photos. The hero uses the existing restaurant/lounge photos, crossfading per menu.
@@ -273,6 +259,7 @@ These cost real time more than once — the animations are fine, the *measuremen
 
 - **GitHub remote**: `Pavkol1/VER-2.0` (origin)
 - **Netlify**: `netlify.toml` sets `publish = "Ver3"`. There is no build command — Netlify just serves the directory. Builds finish in seconds.
+- **One serverless function**: `netlify/functions/rate.mjs`, exposed at `/api/rate` by a redirect in `netlify.toml`. No `package.json`, no dependencies, no bundler — Netlify runs the file as it is. It is the only part of the site that is not static, and it cannot be exercised by `start-server.sh`; a deploy preview on a feature branch is the way to check it before `main`.
 - **Production branch is `main`.** Any push to `main` goes **live** on the public hotel site within seconds — there is no staging step. Treat `git push origin main` as a production deploy and ask before pushing.
 - For work-in-progress, use a feature branch and open a PR — Netlify auto-generates a deploy preview at a separate URL, leaving production untouched.
 - To roll back: `git revert <bad-sha>` on `main` and push; Netlify redeploys the reverted state.
