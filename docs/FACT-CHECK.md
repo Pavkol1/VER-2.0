@@ -2,7 +2,7 @@
 
 > **Status: answered by the client 2026-08-24 and implemented the same day.**
 > Everything below is kept as the record of what was asked and what came back.
-> Two items are still open — search for ⚠️ OPEN.
+> Some items are still open — search for ⚠️ OPEN.
 
 
 Compiled 2026-08-06 by auditing all seven pages in both languages. The goal is
@@ -263,3 +263,25 @@ All answers above are live in both languages. What changed, grouped by consequen
    management wants, and does it stay?** `SPREAD = 1` removes it. Note the
    round-up to €0.10 adds roughly another 0.3%, so the markup over the printed
    menu is about 2.3%.
+
+6. **Terms & Conditions — the Hungarian version is my translation, not a
+   verified one.** Management sent the edited Terms on 2026-11-09 as an
+   **English .docx only**. `terms.html` carries that text verbatim and its draft
+   banner is gone. `hu/terms.html` was translated in-house to keep the two
+   languages from stating different conditions — before the update the Hungarian
+   page still said children under **14**, had no **EUR 200** smoking fee, and
+   claimed invoices are issued in forint. **The Hungarian text needs a native
+   legal reader.** A note in the banner slot tells guests the English version
+   governs in case of a discrepancy. If management has a Hungarian original,
+   send it and it replaces my translation.
+7. **Privacy Policy — two details still missing.** The company identity is now
+   filled in on both privacy pages from the Terms document (Secret Hotel Kft.,
+   01-09-304850, 26155021-2-42, HU26155021). Still blank, because the document
+   does not state them:
+   - the **representative** (`Képviselő`) — the name and position of the person
+     who signs for the company;
+   - the **accounting service provider** — company name and registered address,
+     listed in section 5 as a data processor.
+   The privacy pages keep their draft banner until these are supplied **and** a
+   lawyer has read them. The 31- and 32-page privacy PDFs management sent on
+   2026-11-09 have **not** been applied yet — that is a separate pass.
