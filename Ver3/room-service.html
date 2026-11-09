@@ -723,7 +723,7 @@ body.menu-open nav.top { transform: none !important; }
   <div class="picker-head">
     <div>
       <h2 id="pickerTitle">Choose four mezze</h2>
-      <p id="pickerHint">Any four from the cold and hot selection, for €29.40.</p>
+      <p id="pickerHint">Any four from the cold and hot selection.</p>
     </div>
     <button type="button" class="icon-btn" id="pickerClose" aria-label="Close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m3 3 10 10M13 3 3 13"/></svg></button>
   </div>
@@ -890,13 +890,88 @@ body.menu-open nav.top { transform: none !important; }
 <script>
 /* ROOM SERVICE — menu data, plate art, tray, checkout.
    Prices are kept in forint, exactly as printed on the Twenty Six menu, and
-   converted to euro at 360 Ft = €1, rounded UP to the next 10 cents (same
-   rule as the Wix form). Updating the menu = editing MENU below.
+   converted to euro at the live MNB rate, rounded UP to the next 10 cents.
+   Updating the menu = editing MENU below.
    DOM is built with createElement/textContent only (project rule). */
 (function () {
-  var RATE = 360;
+  /* FALLBACK: the MNB euro rate on 2026-11-09. Used only until /api/rate
+     answers, and for good if it never does. Worth refreshing if it drifts far.
+     SPREAD: marks the euro price up to cover what taking a card costs the
+     house. 1.02 = 2%, a placeholder agreed on 2026-11-09 pending a management
+     decision; 1 switches it off. The one number here that is a business call
+     rather than arithmetic.
+     FEE_EUR: the room-service charge. Euro-native, fixed, once per order. */
+  var FALLBACK = 363;
+  var SPREAD = 1.02;
   var FEE_EUR = 6;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Daily euro rate ──────────────────────────────────────── */
+  /* Dish prices are forint. The euro figure is computed from the MNB rate,
+     which /api/rate serves once a day (netlify/functions/rate.mjs). SabeeApp
+     converts at the MNB rate as well, so the page and the booking system
+     agree.
+
+     Preference: today's rate from the API, else one cached on an earlier
+     visit, else FALLBACK. So a price is on screen immediately, and in every
+     failure mode.
+
+     Once anything is in the tray the rate stops moving: a total that shifted
+     under a guest mid-order would be worse than a rate a few hours old. */
+  var CACHE_KEY = 'rs-eur-rate';
+  var CACHE_MAX_DAYS = 7;
+  var rate = FALLBACK, rateInfo = null, rateLocked = false;
+
+  function budapestDay () {
+    try {
+      return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Budapest', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+    } catch (e) { return new Date().toISOString().slice(0, 10); }
+  }
+  function effRate () { return rate / SPREAD; }
+
+  (function resolveRate () {
+    var c = null, today = budapestDay();
+    try { c = JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (e) {}
+    /* A rate from months back could be far out, and correcting it would make
+       every price visibly jump. Past a week, start from FALLBACK instead. */
+    if (c && c.day && (Date.now() - Date.parse(c.day)) / 86400000 > CACHE_MAX_DAYS) c = null;
+    if (c && c.rate > 0) { rate = c.rate; rateInfo = c; }
+    if (c && c.day === today) return;   /* today's rate already known */
+    fetch('/api/rate', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !(d.rate > 0)) return;
+        d.day = budapestDay();
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch (e) {}
+        /* Prices already committed keep the rate that produced them, and
+           rateInfo has to describe that same rate — it is what the order
+           reports to reception. So either both move or neither does. */
+        if (rateLocked) return;
+        rateInfo = d;
+        if (d.rate === rate) return;
+        rate = d.rate;
+        repaint();
+      })
+      .catch(function () { /* cached or fallback rate stands */ });
+  })();
+
+  /* Every euro figure already on screen, rewritten for a new rate. Only ever
+     runs with an empty tray, so there are no tray rows to rebuild. */
+  function repaint () {
+    if (menuEl) {
+      Array.prototype.forEach.call(menuEl.querySelectorAll('.dish'), function (a) {
+        var p = a.querySelector('.price'), it = ITEMS[a.dataset.id];
+        if (p && it) p.textContent = fmtE(eur(it.ft));
+      });
+    }
+    var hint = document.getElementById('pickerHint');
+    if (hint) hint.textContent = hintText();
+    if (picker && picker.classList.contains('on')) syncPicker();
+    update();
+  }
+  function hintText () {
+    return 'Any four from the cold and hot selection, for ' + fmtE(eur(ITEMS.choose4.ft)) + '.';
+  }
 
   /* aft: also on the afternoon (15:00–17:00) sharing menu. */
   var MENU = [
@@ -957,7 +1032,7 @@ body.menu-open nav.top { transform: none !important; }
   MENU.forEach(function (c) { c.items.forEach(function (it) { it.cat = c.id; ITEMS[it.id] = it; }); });
   var MEZZE = MENU[0].items.concat(MENU[1].items.filter(function (i) { return !i.combo; }));
 
-  function eur (ft) { return Math.ceil(ft / RATE * 10 - 1e-9) / 10; }
+  function eur (ft) { return Math.ceil(ft / effRate() * 10 - 1e-9) / 10; }
   function fmtE (v) { return '€' + v.toFixed(2); }
 
   /* ── tiny DOM helpers ─────────────────────────────────────── */
@@ -1172,6 +1247,7 @@ body.menu-open nav.top { transform: none !important; }
   function update () {
     syncCards();
     var n = count();
+    if (n) rateLocked = true;
     fab.classList.toggle('has', n > 0);
     document.getElementById('fabCount').textContent = String(n);
     tween(document.getElementById('fabSum'), total());
@@ -1404,6 +1480,13 @@ body.menu-open nav.top { transform: none !important; }
       'Room service: ' + fmtE(order.fee),
       'TOTAL: ' + fmtE(order.total),
       '',
+      'PRICING',
+      'Menu rate: ' + rate.toFixed(2) + ' Ft/€ · ' + (rateInfo && rateInfo.source
+        ? rateInfo.source + ' ' + (rateInfo.date || rateInfo.day || '')
+        : 'fallback — the live rate was unavailable'),
+      'Applied: ' + effRate().toFixed(2) + ' Ft/€' +
+        (SPREAD === 1 ? '' : ' (buffer +' + Math.round((SPREAD - 1) * 100) + '%)'),
+      '',
       'ALLERGIES / REQUESTS',
       order.notes || 'Not provided'
     ].join('\n');
@@ -1621,6 +1704,7 @@ body.menu-open nav.top { transform: none !important; }
 
   /* ── Boot: open on the menu the kitchen is serving now ────── */
   buildPicker();
+  document.getElementById('pickerHint').textContent = hintText();
   syncNavH();
   var m0 = nowMin();
   setMenu(openNow('afternoon', m0) ? 'afternoon' : 'day', false);

@@ -236,7 +236,7 @@ All answers above are live in both languages. What changed, grouped by consequen
   hidden `language` field, native POST that works with JS off, and an in-page
   confirmation when JS is on.
 
-**⚠️ OPEN — needs one more answer**
+**⚠️ OPEN — needs answers**
 
 1. ~~2.29, M2 walking time.~~ **Answered 2026-08-24: 5 minutes.** Live in both
    languages.
@@ -254,3 +254,12 @@ All answers above are live in both languages. What changed, grouped by consequen
    2022 restoration). They check out historically; the question was only
    whether you were happy to keep quoting them. Left as they were.
 4. **Homepage second paragraph** — you said decide later. Still in place.
+5. **Room service: the 2% euro buffer.** Every euro price on the room-service
+   page is marked up 2% over the MNB rate (`SPREAD = 1.02` in
+   `room-service.html`, set 2026-11-09 as a placeholder). Guests are charged in
+   euro and the euro stays in euro, so the bank's spread on converting euro
+   back into forint — the original reason for the buffer — does not apply; what
+   is left is the cost of accepting a card at all. **Is 2% the number
+   management wants, and does it stay?** `SPREAD = 1` removes it. Note the
+   round-up to €0.10 adds roughly another 0.3%, so the markup over the printed
+   menu is about 2.3%.
