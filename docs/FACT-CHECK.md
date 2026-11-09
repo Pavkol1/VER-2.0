@@ -138,6 +138,10 @@ Vörösmarty tér
 ### Contact
 🔴 **2.32** Phone +36 1 808 0981 and e-mail info@storiesbudapest.com — both correct
 and monitored? yes
+> **Superseded 2026-11-09:** the number is **+36 1 808 0980**. The answer
+> above was given against the digits the site already showed; management's
+> privacy document gives ...0980 and the client confirmed that is the right
+> one. The whole site now says 0980.
 🔴 **2.33** The site promises a reply "the same day" (contact page and trust grid)
 and "usually within a few hours" (FAQ). Is same-day a promise you want to make? yes
 🔴 **2.34** "WhatsApp, email, or a phone call" — is WhatsApp actually offered?
@@ -178,7 +182,8 @@ Mazel Tov at "Akácfa utca 47". Addresses still current? yes
 Recorded here so nobody re-asks:
 
 - Address: Király utca 26, 1061 Budapest (Twenty Six building), District VI ✅
-- Phone: +36 1 808 0981 ✅ (confirmed 2026-08-06)
+- Phone: **+36 1 808 0980** ✅ (corrected 2026-11-09; the 0981 confirmed on
+  2026-08-06 was wrong — see 2.32)
 - E-mail: info@storiesbudapest.com ✅ (confirmed 2026-08-06)
 - Breakfast: 07:30 — 11:00, à la carte, **not** included in any rate,
   **price not published** — "ask reception" ✅ (confirmed 2026-08-06)
@@ -329,10 +334,12 @@ All answers above are live in both languages. What changed, grouped by consequen
      contracting** (4.8). Plausible, but the pages do not claim them because
      they could not be verified from the site.
 
-   **Three conflicts inside the document itself:**
-   - **Telephone.** The document says **+36 1 80 80 980**; the whole site, and
-     the Terms management just approved, say **+36 1 808 0981**, confirmed by
-     the client 2026-08-06. The newer answer was kept. Which is right?
+   **Conflicts in or against the document — how each was resolved:**
+   - **Telephone — answered 2026-11-09.** The document's **+36 1 80 80 980**
+     is the correct number; the site's ...0981 was wrong. All 59 occurrences
+     across 20 pages were changed, printed as **+36 1 808 0980** to keep the
+     site's own grouping, plus the JSON-LD `telephone` fields and the
+     homepage's per-word animation spans.
    - **Camera retention** reads "8 days" and then "more than 3 days" in
      consecutive sentences. 8 days was published.
    - **NAIH's address** in the document is the authority's **former** seat

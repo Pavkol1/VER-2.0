@@ -59,7 +59,7 @@ Guests evaluate the hotel from a phone or laptop before arrival, and the neighbo
 
 - **Name:** Stories Hotel Budapest. The wordmark is a vector lockup — layered "STORIES" with a script "hotel" — used in the nav, the loader and the page-transition panel.
 - **Voice:** editorial, first person plural, understated. Short declarative sentences, concrete detail over adjectives ("You order, you sit, you talk"), and an explicit rejection of anonymity as the recurring theme.
-- **Address and contact** are fixed product facts: Király utca 26, Budapest VI; +36 1 808 0981; WhatsApp +36 20 318 0027; info@storiesbudapest.com. The house opened in **2019**.
+- **Address and contact** are fixed product facts: Király utca 26, Budapest VI; +36 1 808 0980; WhatsApp +36 20 318 0027; info@storiesbudapest.com. The house opened in **2019**.
 
 ## Evidence on Hand
 
