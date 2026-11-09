@@ -10,6 +10,13 @@
 - Preserve DOM safety: use `textContent`, never `innerHTML`.
 - Respect reduced motion, keyboard access, visible focus, and mobile tap targets.
 - Verify frontend changes in a browser. Do not infer success from syntax alone.
+- Run `python3 tools/check_site.py` before committing. It checks facts only —
+  broken links and anchors, duplicate ids, dangling `label for` / `aria-*` /
+  `getElementById`, JSON-LD, tag balance, the `innerHTML` ban, `lang` /
+  canonical / hreflang, English–Hungarian parity, menu and footer drift across
+  all twenty pages, and the sitemap. Exit code 1 means problems. Standard
+  library only, so it runs on both machines; the JavaScript syntax check needs
+  `node` on PATH and says so when it is absent.
 - `archive/` contains historical files and source material, never active code.
 - Two machines (MacBook, reception PC) push to this repo. `git fetch` first.
 - `.claude/worktrees/`, where present, contains independent checkouts. Inspect
