@@ -17,8 +17,10 @@
   all twenty pages, and the sitemap. Exit code 1 means problems. Standard
   library only, so it runs on both machines; the JavaScript syntax check needs
   `node` on PATH and says so when it is absent.
-- Touching the room-service euro rate? Run `node tools/test_rate.mjs` as well
-  (`--live` to call MNB and the ECB for real). The rate comes from
+- Touching the room-service euro rate? Run `node tools/test_rate.mjs` (the
+  function; `--live` calls MNB and the ECB for real) and
+  `node tools/test_rate_client.mjs` (the cache and freeze logic inside
+  `room-service.html`) as well. The rate comes from
   `netlify/functions/rate.mjs`, which `start-server.sh` cannot run — on
   localhost the page falls back to its hardcoded rate by design.
 - `archive/` contains historical files and source material, never active code.

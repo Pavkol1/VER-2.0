@@ -906,20 +906,29 @@ body.menu-open nav.top { transform: none !important; }
   var FEE_EUR = 6;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ── Daily euro rate ──────────────────────────────────────── */
-  /* Dish prices are forint. The euro figure is computed from the MNB rate,
-     which /api/rate serves once a day (netlify/functions/rate.mjs). SabeeApp
-     converts at the MNB rate as well, so the page and the booking system
-     agree.
+  /* rate-layer:begin
+     tools/test_rate_client.mjs lifts everything from here to the matching end
+     marker out of this file and runs it in a sandbox. So this stretch must not
+     touch the DOM: repaint(), defined further down, is its only way out. */
 
-     Preference: today's rate from the API, else one cached on an earlier
-     visit, else FALLBACK. So a price is on screen immediately, and in every
-     failure mode.
+  /* ── Daily euro rate ────────────────────────────────────────
+     Dish prices are forint. The euro figure is computed from the MNB rate,
+     which /api/rate serves (netlify/functions/rate.mjs). SabeeApp converts at
+     the MNB rate as well, so the page and the booking system agree.
+
+     A stored entry that proves itself valid is used for the first paint, so a
+     price is on screen at once and in every failure mode; otherwise FALLBACK
+     is. The request to /api/rate is made regardless of what was stored. It
+     used to be skipped for the rest of the day once an entry carried today's
+     date, which kept a rate read before MNB published until midnight, and let
+     an entry that was rejected for pricing still silence the request.
 
      Once anything is in the tray the rate stops moving: a total that shifted
      under a guest mid-order would be worse than a rate a few hours old. */
   var CACHE_KEY = 'rs-eur-rate';
-  var CACHE_MAX_DAYS = 7;
+  var CACHE_MAX_AGE = 7 * 86400000;   /* ms. A rate older than a week could be
+                                         far out, and correcting it would make
+                                         every price visibly jump. */
   var BOUNDS = [250, 500];   /* Ft per €. The same guard the function applies,
                                 repeated here because a rate also arrives from
                                 localStorage, which the page does not control:
@@ -928,39 +937,69 @@ body.menu-open nav.top { transform: none !important; }
   var rate = FALLBACK, rateInfo = null, rateLocked = false;
 
   function sane (n) { return typeof n === 'number' && isFinite(n) && n >= BOUNDS[0] && n <= BOUNDS[1]; }
-
-  function budapestDay () {
-    try {
-      return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Budapest', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-    } catch (e) { return new Date().toISOString().slice(0, 10); }
-  }
   function effRate () { return rate / SPREAD; }
 
+  /* One rate as the page holds it, built field by field so nothing else that
+     was in the response or in storage rides along.
+       date — the day the source published the rate for. What reception sees.
+       ts   — when this browser received it. Measures the entry's age, nothing
+              else. The two differ every morning and all weekend. */
+  function entry (o, ts) {
+    return {
+      rate: o.rate,
+      date: typeof o.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(o.date) ? o.date : null,
+      source: typeof o.source === 'string' && /^[A-Z]{2,8}$/.test(o.source) ? o.source : null,
+      ts: ts
+    };
+  }
+
+  /* What storage has to prove before it prices anything: a sane rate, and a
+     timestamp that is a real moment, not in the future and not past the age
+     limit. An entry without one — every entry written before 2026-11-10, or a
+     damaged one — is ignored rather than given the benefit of the doubt. */
+  function readCache (raw, now) {
+    var c = null;
+    try { c = JSON.parse(raw); } catch (e) {}
+    if (!c || typeof c !== 'object' || !sane(c.rate)) return null;
+    var ts = c.ts;
+    if (typeof ts !== 'number' || !isFinite(ts) || ts <= 0) return null;
+    if (ts > now || now - ts > CACHE_MAX_AGE) return null;
+    return entry(c, ts);
+  }
+
+  /* The rate as the order reports it to reception: the source and the day it
+     published the rate for. Never the day of the visit, which says nothing
+     about how old the number is. */
+  function rateLabel () {
+    if (!rateInfo) return 'fallback — the live rate was unavailable';
+    return (rateInfo.source || 'unnamed source') + ' rate' +
+      (rateInfo.date ? ' of ' + rateInfo.date : ', date not stated');
+  }
+
   (function resolveRate () {
-    var c = null, today = budapestDay();
-    try { c = JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (e) {}
-    /* A rate from months back could be far out, and correcting it would make
-       every price visibly jump. Past a week, start from FALLBACK instead. */
-    if (c && c.day && (Date.now() - Date.parse(c.day)) / 86400000 > CACHE_MAX_DAYS) c = null;
-    if (c && sane(c.rate)) { rate = c.rate; rateInfo = c; }
-    if (c && c.day === today) return;   /* today's rate already known */
+    var c = null;
+    try { c = readCache(localStorage.getItem(CACHE_KEY), Date.now()); } catch (e) {}
+    if (c) { rate = c.rate; rateInfo = c; }
     fetch('/api/rate', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {
         if (!d || !sane(d.rate)) return;
-        d.day = budapestDay();
-        try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch (e) {}
+        var fresh = entry(d, Date.now());
+        /* Stored even when the tray is in use: it is the next visit's first
+           paint, and has no bearing on this order. */
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(fresh)); } catch (e) {}
         /* Prices already committed keep the rate that produced them, and
            rateInfo has to describe that same rate — it is what the order
            reports to reception. So either both move or neither does. */
         if (rateLocked) return;
-        rateInfo = d;
-        if (d.rate === rate) return;
-        rate = d.rate;
+        rateInfo = fresh;
+        if (fresh.rate === rate) return;
+        rate = fresh.rate;
         repaint();
       })
       .catch(function () { /* cached or fallback rate stands */ });
   })();
+  /* rate-layer:end */
 
   /* Every euro figure already on screen, rewritten for a new rate. Only ever
      runs with an empty tray, so there are no tray rows to rebuild. */
@@ -1488,9 +1527,7 @@ body.menu-open nav.top { transform: none !important; }
       'TOTAL: ' + fmtE(order.total),
       '',
       'PRICING',
-      'Menu rate: ' + rate.toFixed(2) + ' Ft/€ · ' + (rateInfo && rateInfo.source
-        ? rateInfo.source + ' ' + (rateInfo.date || rateInfo.day || '')
-        : 'fallback — the live rate was unavailable'),
+      'Menu rate: ' + rate.toFixed(2) + ' Ft/€ · ' + rateLabel(),
       'Applied: ' + effRate().toFixed(2) + ' Ft/€' +
         (SPREAD === 1 ? '' : ' (buffer +' + Math.round((SPREAD - 1) * 100) + '%)'),
       '',
