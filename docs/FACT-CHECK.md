@@ -366,7 +366,10 @@ All answers above are live in both languages. What changed, grouped by consequen
      operated by the NGO", and prints the word "obsession" where "or" belongs.
      If the English PDF is ever given to a guest or an authority, it needs
      retranslating.
-8. **The FAQ still promises an exception the Terms withdrew.** `faqs.html`
+8. **Answered 2026-11-13: removed from the FAQ in both languages.** The
+   cancellation answer now ends at "as are no-shows" / "a teljes tartózkodás
+   díja fizetendő", matching the Terms and `llms.txt`. Original note:
+   **The FAQ still promises an exception the Terms withdrew.** `faqs.html`
    (and `hu/faqs.html`) answers the cancellation question with "We can make
    exceptions for genuine emergencies — just call us." Management's Terms of
    2026-11-09 removed exactly that sentence from the cancellation section, so
