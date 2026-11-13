@@ -17,7 +17,7 @@ The detailed technical handoff for this repository. Start with `AGENTS.md` and `
 
 **Branches:**
 - `main` — production (Netlify deploys this) **and the branch current work happens on**. Since 2026-11-04 work is committed straight to `main`, always after asking.
-- `feature/room-service` (stops at `91b4767`) and `claude/wonderful-mclaren-d67b3f` (stops at `74b300c`) — older working branches, both behind `main`. Don't resume work on them.
+- No other long-lived branches. `feature/room-service`, `claude/wonderful-mclaren-d67b3f` and `feature/room-service-erste-rate` were checked to be fully contained in `main` and deleted on 2026-11-13. A feature branch, when one is used for a PR with a deploy preview, is merged by fast-forwarding `main` to it — so the commits keep their hashes — and deleted afterwards.
 
 **Two machines work on this repo:** Pavlo's MacBook and the hotel's reception PC (Windows, user `Recepcio-2`, checkout in OneDrive). Each has its own local-only files (see **Repository Layout**), so always `git fetch` and check `git status` / `git log origin/main` before starting — the other machine may have pushed.
 
