@@ -13,9 +13,10 @@
  *
  *   Erste Bank is the rate we use. It comes from the public JSON feed behind
  *   erstebank.hu/hu/arfolyamok-table, served over https:// with no key. The
- *   feed is not documented or offered to third parties, so it can change
- *   shape without notice — which is why its answer is checked from two sides
- *   before it prices anything:
+ *   feed is not formally documented. Management confirmed on 2026-11-13 that
+ *   the hotel may rely on it, but an undocumented feed can still change shape
+ *   without notice — which is why its answer is checked from two sides before
+ *   it prices anything:
  *
  *     - on its own: the buying rate must sit below Erste's middle rate, by no
  *       more than MAX_SPREAD. Erste's cash table runs a steady 3.5% either
@@ -62,9 +63,8 @@ const REFERENCE = 365;          /* a MIDDLE rate: Erste's middle and MNB were
 const REFERENCE_BAND = 0.05;
 const TIMEOUT = 4000;
 
-/* Which Erste table to read. The cash table ("Valuta") is the one
-   erstebank.hu/hu/arfolyamok-table opens on, and the one management looked
-   at. The others, should that change, are the account-conversion table
+/* Which Erste table to read: the cash table ("Valuta"), the lowest of
+   Erste's euro buying rates — confirmed by management on 2026-11-13. The others, should that change, are the account-conversion table
    (type 'ip_banknote', key 'ipInterBank') and the commercial table
    ('ip_exchange', 'ipCommercial'); both quote more than once a day, which
    parseErste() already handles by keeping the latest. */

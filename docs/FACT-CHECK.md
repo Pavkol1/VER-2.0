@@ -261,17 +261,15 @@ All answers above are live in both languages. What changed, grouped by consequen
 4. **Homepage second paragraph** — you said decide later. Still in place.
 5. **Answered 2026-11-13: keep the 2%, and price at Erste Bank's buying
    rate.** Management chose Erste's euro **vétel** rate as the basis and the
-   2% buffer on top. Implemented with the cash table ("Valuta"), the one
-   erstebank.hu/hu/arfolyamok-table opens on — **confirm that is the table
-   meant**: the account-conversion buying rate (353.90 on 2026-11-12) and the
-   commercial one (361.31) are also "vétel". It is one setting to change.
-   Still open from the same question:
-   - **SabeeApp converts at the MNB rate.** The page's euro price now sits
-     ~5.8% above the forint menu price converted at MNB. Can SabeeApp be set
-     to the Erste rate, or is the difference accepted?
-   - **Can the hotel rely on Erste's public rates feed?** It is what the
-     bank's own site uses, but it is not offered to third parties and may
-     change without notice. Worth asking the hotel's contact at Erste.
+   2% buffer on top. Settled the same day:
+   - **Which table:** the cash table, "Valuta" — the lowest of Erste's euro
+     buying rates. Already what was implemented.
+   - **SabeeApp:** it converts at the MNB rate, so the page's euro price sits
+     ~5.8% above the forint menu price converted at MNB. **The difference is
+     accepted.**
+   - **Erste's public feed:** the hotel **may rely on it**. It stays
+     undocumented, so the function still checks every answer before using
+     it.
 
    Original question, kept for the record:
    **Room service: the 2% euro buffer.** Every euro price on the room-service
