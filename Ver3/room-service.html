@@ -927,8 +927,8 @@ body.menu-open nav.top { transform: none !important; }
      price is on screen at once and in every failure mode; otherwise FALLBACK
      is. The request to /api/rate is made regardless of what was stored. It
      used to be skipped for the rest of the day once an entry carried today's
-     date, which kept a rate read before the source published until midnight, and let
-     an entry that was rejected for pricing still silence the request.
+     date, which kept a rate read before the source published until midnight,
+     and let an entry that was rejected for pricing still silence the request.
 
      Once anything is in the tray the rate stops moving: a total that shifted
      under a guest mid-order would be worse than a rate a few hours old. */
@@ -953,7 +953,8 @@ body.menu-open nav.top { transform: none !important; }
                 buying"). Letters, spaces and brackets only: it reaches the
                 order email, and storage is not ours to trust.
        ts     — when this browser received it. Measures the entry's age, nothing
-              else. The two differ every morning and all weekend. */
+                else. date and ts differ before each morning's quote and all
+                weekend. */
   function entry (o, ts) {
     return {
       rate: o.rate,
