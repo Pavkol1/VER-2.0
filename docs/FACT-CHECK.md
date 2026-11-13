@@ -259,7 +259,22 @@ All answers above are live in both languages. What changed, grouped by consequen
    2022 restoration). They check out historically; the question was only
    whether you were happy to keep quoting them. Left as they were.
 4. **Homepage second paragraph** — you said decide later. Still in place.
-5. **Room service: the 2% euro buffer.** Every euro price on the room-service
+5. **Answered 2026-11-13: keep the 2%, and price at Erste Bank's buying
+   rate.** Management chose Erste's euro **vétel** rate as the basis and the
+   2% buffer on top. Implemented with the cash table ("Valuta"), the one
+   erstebank.hu/hu/arfolyamok-table opens on — **confirm that is the table
+   meant**: the account-conversion buying rate (353.90 on 2026-11-12) and the
+   commercial one (361.31) are also "vétel". It is one setting to change.
+   Still open from the same question:
+   - **SabeeApp converts at the MNB rate.** The page's euro price now sits
+     ~5.8% above the forint menu price converted at MNB. Can SabeeApp be set
+     to the Erste rate, or is the difference accepted?
+   - **Can the hotel rely on Erste's public rates feed?** It is what the
+     bank's own site uses, but it is not offered to third parties and may
+     change without notice. Worth asking the hotel's contact at Erste.
+
+   Original question, kept for the record:
+   **Room service: the 2% euro buffer.** Every euro price on the room-service
    page is marked up 2% over the MNB rate (`SPREAD = 1.02` in
    `room-service.html`, set 2026-11-09 as a placeholder). Guests are charged in
    euro and the euro stays in euro, so the bank's spread on converting euro
@@ -353,3 +368,15 @@ All answers above are live in both languages. What changed, grouped by consequen
      operated by the NGO", and prints the word "obsession" where "or" belongs.
      If the English PDF is ever given to a guest or an authority, it needs
      retranslating.
+8. **The FAQ still promises an exception the Terms withdrew.** `faqs.html`
+   (and `hu/faqs.html`) answers the cancellation question with "We can make
+   exceptions for genuine emergencies — just call us." Management's Terms of
+   2026-11-09 removed exactly that sentence from the cancellation section, so
+   the site now states two policies. It was missed when the Terms went live.
+   `llms.txt` (2026-11-13) leaves the sentence out. **Remove it from the FAQ
+   in both languages, or does management want it back in the Terms?**
+9. **Gym and coworking — answered 2026-11-13.** Neither is in the rate, the
+   hotel sells access to both at reception, Create 26 is inside the building
+   and GoActive a five-minute walk away. The homepage JSON-LD used to list
+   them as plain amenities ("GoActive Gym"), which reads as a hotel gym; the
+   qualification is now in the names, and `llms.txt` says the same.

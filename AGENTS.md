@@ -18,7 +18,7 @@
   library only, so it runs on both machines; the JavaScript syntax check needs
   `node` on PATH and says so when it is absent.
 - Touching the room-service euro rate? Run `node tools/test_rate.mjs` (the
-  function; `--live` calls MNB and the ECB for real) and
+  function; `--live` calls Erste, MNB and the ECB for real) and
   `node tools/test_rate_client.mjs` (the cache and freeze logic inside
   `room-service.html`) as well. The rate comes from
   `netlify/functions/rate.mjs`, which `start-server.sh` cannot run — on

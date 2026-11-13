@@ -108,8 +108,12 @@ is('rate on the bounds',                  [used({ ...good, rate: 250 }), used({ 
 
 is('a date that is not a date is dropped, the rate kept',
    read({ ...good, date: '<b>yesterday</b>' }), { ...good, date: null });
-is('a source that is not a short code is dropped',
+is('a source with markup in it is dropped',
    read({ ...good, source: 'MNB <script>' }), { ...good, source: null });
+is('a source longer than forty characters is dropped',
+   read({ ...good, source: 'Erste Bank cash buying rate as published today' }), { ...good, source: null });
+is('the Erste label is kept as written',
+   read({ ...good, source: 'Erste Bank cash buying' }).source, 'Erste Bank cash buying');
 is('fields the page did not write do not ride along',
    read({ ...good, day: '2026-11-10', note: 'x' }), good);
 
@@ -221,6 +225,12 @@ const YDAY_RATE  = { rate: 363.18, date: '2026-11-09', source: 'MNB' };
   const label = p.ctx.rateLabel();
   is('the order names the day the rate was published for', label, 'MNB rate of 2026-11-09');
   is('the order does not name the day of the visit', label.includes('2026-11-10'), false);
+}
+
+{
+  const p = load({ api: { rate: 352.75, date: '2026-11-13', source: 'Erste Bank cash buying' } });
+  await p.answer();
+  is('the Erste rate as reception reads it', p.ctx.rateLabel(), 'Erste Bank cash buying rate of 2026-11-13');
 }
 
 {

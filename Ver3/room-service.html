@@ -890,18 +890,22 @@ body.menu-open nav.top { transform: none !important; }
 <script>
 /* ROOM SERVICE — menu data, plate art, tray, checkout.
    Prices are kept in forint, exactly as printed on the Twenty Six menu, and
-   converted to euro at the live MNB rate, rounded UP to the next 10 cents.
+   converted to euro at Erste Bank's live euro buying rate plus a 2% buffer,
+   rounded UP to the next 10 cents.
    Updating the menu = editing MENU below.
    DOM is built with createElement/textContent only (project rule). */
 (function () {
-  /* FALLBACK: the MNB euro rate on 2026-11-09. Used only until /api/rate
-     answers, and for good if it never does. Worth refreshing if it drifts far.
+  /* FALLBACK: Erste Bank's cash buying rate for the euro on 2026-11-13
+     (352.75). Used only until /api/rate answers, and for good if it never
+     does. Worth refreshing if it drifts far, together with REFERENCE in
+     netlify/functions/rate.mjs, which is a middle rate and so sits ~3.5%
+     higher.
      SPREAD: marks the euro price up to cover what taking a card costs the
-     house. 1.02 = 2%, a placeholder agreed on 2026-11-09 pending a management
-     decision; 1 switches it off. The one number here that is a business call
-     rather than arithmetic.
+     house. 1.02 = 2%, confirmed by management on 2026-11-13 on top of the
+     Erste buying rate; 1 switches it off. The one number here that is a
+     business call rather than arithmetic.
      FEE_EUR: the room-service charge. Euro-native, fixed, once per order. */
-  var FALLBACK = 363;
+  var FALLBACK = 353;
   var SPREAD = 1.02;
   var FEE_EUR = 6;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -912,15 +916,18 @@ body.menu-open nav.top { transform: none !important; }
      touch the DOM: repaint(), defined further down, is its only way out. */
 
   /* ── Daily euro rate ────────────────────────────────────────
-     Dish prices are forint. The euro figure is computed from the MNB rate,
-     which /api/rate serves (netlify/functions/rate.mjs). SabeeApp converts at
-     the MNB rate as well, so the page and the booking system agree.
+     Dish prices are forint. The euro figure is computed from Erste Bank's
+     euro buying rate, which /api/rate serves (netlify/functions/rate.mjs) —
+     management's choice, 2026-11-13. SabeeApp converts at the MNB rate, which
+     is a middle rate, so a euro total converted back to forint there will not
+     land on the menu's forint price; whether SabeeApp can use the same rate
+     is an open question.
 
      A stored entry that proves itself valid is used for the first paint, so a
      price is on screen at once and in every failure mode; otherwise FALLBACK
      is. The request to /api/rate is made regardless of what was stored. It
      used to be skipped for the rest of the day once an entry carried today's
-     date, which kept a rate read before MNB published until midnight, and let
+     date, which kept a rate read before the source published until midnight, and let
      an entry that was rejected for pricing still silence the request.
 
      Once anything is in the tray the rate stops moving: a total that shifted
@@ -941,14 +948,17 @@ body.menu-open nav.top { transform: none !important; }
 
   /* One rate as the page holds it, built field by field so nothing else that
      was in the response or in storage rides along.
-       date — the day the source published the rate for. What reception sees.
-       ts   — when this browser received it. Measures the entry's age, nothing
+       date   — the day the source published the rate for. What reception sees.
+       source — which rate, in words reception can read ("Erste Bank cash
+                buying"). Letters, spaces and brackets only: it reaches the
+                order email, and storage is not ours to trust.
+       ts     — when this browser received it. Measures the entry's age, nothing
               else. The two differ every morning and all weekend. */
   function entry (o, ts) {
     return {
       rate: o.rate,
       date: typeof o.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(o.date) ? o.date : null,
-      source: typeof o.source === 'string' && /^[A-Z]{2,8}$/.test(o.source) ? o.source : null,
+      source: typeof o.source === 'string' && /^[A-Za-z][A-Za-z ()-]{1,39}$/.test(o.source) ? o.source : null,
       ts: ts
     };
   }

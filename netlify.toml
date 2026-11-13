@@ -1,7 +1,7 @@
 [build]
   publish = "Ver3"
 
-# The room-service page reads the daily MNB euro rate from /api/rate.
+# The room-service page reads Erste Bank's euro buying rate from /api/rate.
 # Source and fallback chain: netlify/functions/rate.mjs
 [functions]
   directory = "netlify/functions"
