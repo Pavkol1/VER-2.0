@@ -719,7 +719,7 @@ body.menu-open nav.top { transform: none !important; }
   var el = document.getElementById('neighMap');
   if (!el) return;
 
-  /* Leaflet's CSS + JS (~45 KB, third-party CDN) used to block first paint for
+  /* Leaflet's CSS + JS (~45 KB, served from assets/vendor) used to block first paint for
      a map that sits far below the fold on both pages. They now land only once
      the section is within two viewports, then the map builds. */
   function loadLeaflet (done) {
@@ -728,14 +728,12 @@ body.menu-open nav.top { transform: none !important; }
     window.__leafletQueue = [done];
     var css = document.createElement('link');
     css.rel = 'stylesheet';
-    css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    css.href = 'assets/vendor/leaflet/leaflet.css';
     css.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
-    css.crossOrigin = '';
     document.head.appendChild(css);
     var js = document.createElement('script');
-    js.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    js.src = 'assets/vendor/leaflet/leaflet.js';
     js.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
-    js.crossOrigin = '';
     js.onload = js.onerror = function () {
       var q = window.__leafletQueue || [];
       window.__leafletQueue = null;

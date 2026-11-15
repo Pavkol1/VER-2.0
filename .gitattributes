@@ -1,0 +1,3 @@
+# Third-party files are stored byte for byte. Their integrity hashes in the
+# pages break if Git rewrites line endings (leaflet.css ships with CRLF).
+Ver3/assets/vendor/** -text

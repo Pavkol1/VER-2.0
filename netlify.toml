@@ -10,3 +10,33 @@
   from = "/api/rate"
   to = "/.netlify/functions/rate"
   status = 200
+
+# Security headers for every response.
+#
+# The Content-Security-Policy lists everything the pages load. All CSS and JS
+# is inline, so 'unsafe-inline' has to stay; what the policy does is stop any
+# other host from being pulled in. Outside hosts, and why each is there:
+#   fonts.googleapis.com / fonts.gstatic.com  the typefaces (remove both once
+#                                             the fonts are self-hosted)
+#   *.basemaps.cartocdn.com                   map tiles on index and neighbourhood
+# data: in img-src is Leaflet's own blank-tile placeholder.
+# A new outside script, font, image, form target or API call must be added
+# here first, or the browser will block it and say so in the console.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.basemaps.cartocdn.com; media-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+
+# Photos, video, frames and vendored libraries: the browser may keep them for
+# a week without asking again. Pages themselves are still checked on every
+# visit (Netlify's default), so copy and prices are never stale.
+# File names carry no version, so a file REPLACED under the same name can
+# take up to a week to reach a returning visitor. Give it a new name instead.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
