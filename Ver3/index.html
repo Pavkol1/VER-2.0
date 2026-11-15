@@ -3398,9 +3398,11 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     scrollWheelZoom: false,        // never hijack page scroll
     fadeAnimation: !reduce, zoomAnimation: !reduce
   });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  // CARTO serves tiles only with an API key (free tier, registered to the
+  // hotel). It is public by design: it travels in every tile URL.
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=cb1_59dp_1_81d3668096031e551f337825', {
     subdomains: 'abcd', maxZoom: 19,
-    attribution: '&copy; OpenStreetMap &middot; CARTO'
+    attribution: '&copy; OpenStreetMap contributors, &copy; CARTO'
   }).addTo(map);
 
   // Popup body built with DOM nodes + textContent (project rule: no raw markup).
