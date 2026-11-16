@@ -400,7 +400,7 @@ body.menu-open nav.top { transform: none !important; }
 
 /* ── Emphasis: an underline, not a colour ─────────────────────────────────
    A word marked <em class="u"> keeps the colour of the heading around it and
-   gets the house underline instead: 2px of gold at display sizes, fading to
+   gets the house underline instead: 2px of white at display sizes, fading to
    nothing at its right end, drawn left to right once the word scrolls into
    view. The same line as the intro's "stories" (.intro-strip .em-word).
    Without JavaScript, or with reduced motion, the line is simply there. */
@@ -408,7 +408,7 @@ em.u { color: inherit !important; display: inline-block; }
 em.u::after {
   content: ""; display: block;
   height: max(1px, 0.017em); margin-top: -0.08em;
-  background: linear-gradient(90deg, var(--accent), rgba(185,144,78,0));
+  background: linear-gradient(90deg, rgba(255,255,255,0.92), rgba(255,255,255,0));
   transform-origin: left center; transform: scaleX(1);
   transition: transform 0.9s var(--ease) 0.15s;
 }
@@ -539,7 +539,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
   <div class="pf-info">
     <div class="pf-tag">III · 02 — Body</div>
     <h2 class="hg">Gym, with <em class="u">GoActive</em></h2>
-    <p>We don't run the gym ourselves — our neighbours at GoActive do, and they do it better than we could. Full Technogym equipment, a sauna, and a team that knows the names of regulars. Ask at reception and we'll arrange your access.</p>
+    <p>We don't run the gym ourselves — GoActive do, and they do it better than we could. Full Technogym equipment, a sauna, and a team that knows the names of regulars. Ask at reception and we'll arrange your access.</p>
     <p>A five-minute walk from the hotel. Classes available on their schedule — book ahead, they fill quickly.</p>
     <div class="pf-facts">
       <div class="pf-fact"><span class="l">Hours</span><span class="v">Mon&ndash;Thu 06:30&ndash;22:30</span></div>

@@ -400,7 +400,7 @@ body.menu-open nav.top { transform: none !important; }
 
 /* ── Emphasis: an underline, not a colour ─────────────────────────────────
    A word marked <em class="u"> keeps the colour of the heading around it and
-   gets the house underline instead: 2px of gold at display sizes, fading to
+   gets the house underline instead: 2px of white at display sizes, fading to
    nothing at its right end, drawn left to right once the word scrolls into
    view. The same line as the intro's "stories" (.intro-strip .em-word).
    Without JavaScript, or with reduced motion, the line is simply there. */
@@ -408,7 +408,7 @@ em.u { color: inherit !important; display: inline-block; }
 em.u::after {
   content: ""; display: block;
   height: max(1px, 0.017em); margin-top: -0.08em;
-  background: linear-gradient(90deg, var(--accent), rgba(185,144,78,0));
+  background: linear-gradient(90deg, rgba(255,255,255,0.92), rgba(255,255,255,0));
   transform-origin: left center; transform: scaleX(1);
   transition: transform 0.9s var(--ease) 0.15s;
 }
@@ -539,7 +539,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
   <div class="pf-info">
     <div class="pf-tag">III · 02 — Test</div>
     <h2 class="hg">Edzőterem, <em class="u">GoActive</em></h2>
-    <p>Az edzőtermet nem mi üzemeltetjük — hanem a szomszédunk, a GoActive, és jobban csinálják, mint mi tudnánk. Teljes Technogym felszereltség, szauna, és egy csapat, amely név szerint ismeri a törzsvendégeket. Minden foglalás mellé díjmentes.</p>
+    <p>Az edzőtermet nem mi üzemeltetjük — hanem a GoActive, és jobban csinálják, mint mi tudnánk. Teljes Technogym felszereltség, szauna, és egy csapat, amely név szerint ismeri a törzsvendégeket. Minden foglalás mellé díjmentes.</p>
     <p>Öt perc séta a szállodától. Az órák az alábbi rend szerint érhetők el — foglaljon előre, gyorsan betelnek.</p>
     <div class="pf-facts">
       <div class="pf-fact"><span class="l">Nyitvatartás</span><span class="v">H&ndash;Cs 06:30&ndash;22:30</span></div>
