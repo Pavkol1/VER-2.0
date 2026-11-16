@@ -2155,6 +2155,29 @@ body.menu-open nav.top { transform: none !important; }
 .foot-legal a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .foot-legal a[aria-current="true"] { color: rgba(255,255,255,0.82); }
 .foot-legal .sep { opacity: 0.4; }
+
+/* ── Emphasis: an underline, not a colour ─────────────────────────────────
+   A word marked <em class="u"> keeps the colour of the heading around it and
+   gets the house underline instead: 2px of gold at display sizes, fading to
+   nothing at its right end, drawn left to right once the word scrolls into
+   view. The same line as the intro's "stories" (.intro-strip .em-word).
+   Without JavaScript, or with reduced motion, the line is simply there. */
+em.u { color: inherit !important; display: inline-block; }
+em.u::after {
+  content: ""; display: block;
+  height: max(1px, 0.017em); margin-top: -0.08em;
+  background: linear-gradient(90deg, var(--accent), rgba(185,144,78,0));
+  transform-origin: left center; transform: scaleX(1);
+  transition: transform 0.9s var(--ease) 0.15s;
+}
+html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
+@media (prefers-reduced-motion: reduce) {
+  em.u::after, html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(1); transition: none; }
+}
+/* The hero title is two stacked copies: the outline (.sp-out) and the fill
+   (.sp-fill) that wipes in. Only the fill draws the line, after its wipe. */
+.sp-out em.u::after { visibility: hidden; }
+.sp-fill em.u::after { transition-delay: 1.9s; }
 </style>
 <script type="application/ld+json">
 {
@@ -2208,6 +2231,8 @@ body.menu-open nav.top { transform: none !important; }
   ]
 }
 </script>
+<script>/* emphasis underline: hide until drawn, only where it can be drawn */
+if ('IntersectionObserver' in window) document.documentElement.classList.add('u-armed');</script>
 </head>
 <body class="page-home">
 <a href="#main" class="skip-link">Skip to content</a>
@@ -2316,7 +2341,7 @@ body.menu-open nav.top { transform: none !important; }
 
   <div class="sp-body">
     <div class="sp-kicker"><span class="rule"></span>Budapest VI · Est. 2019<span class="rule"></span></div>
-    <h1 class="sp-ttl"><span class="sp-out">A hotel of <em>stories,</em><br>quietly told.</span><span class="sp-fill" aria-hidden="true">A hotel of <em>stories,</em><br>quietly told.</span></h1>
+    <h1 class="sp-ttl"><span class="sp-out">A hotel of <em class="u">stories,</em><br>quietly told.</span><span class="sp-fill" aria-hidden="true">A hotel of <em class="u">stories,</em><br>quietly told.</span></h1>
     <p class="sp-sub">Forty-four rooms, six characters — a small house on Király utca.</p>
     <div class="sp-acts">
       <a class="sp-btn-solid" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Book a stay <span aria-hidden="true">&rarr;</span></a>
@@ -2343,13 +2368,13 @@ body.menu-open nav.top { transform: none !important; }
   <div class="intro-inner">
     <div class="intro-text">
       <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VI · Király utca 26</span></div>
-      <h2><span class="w">A</span> <span class="w">hotel</span> <span class="w">of</span> <span class="w em-word">stories,</span><br><span class="w">quietly</span> <span class="w">told.</span></h2>
+      <h2><span class="w">Our</span> <span class="w em-word">stories…</span></h2>
       <p class="deck" id="introDeck"><span class="rw">Forty-four</span> <span class="rw">rooms,</span> <span class="rw">six</span> <span class="rw">characters,</span> <span class="rw">one</span> <span class="rw">Twenty</span> <span class="rw">Six</span> <span class="rw">building.</span> <span class="rw">A</span> <span class="rw">small</span> <span class="rw">house</span> <span class="rw">on</span> <span class="rw">Király</span> <span class="rw">utca,</span> <span class="rw">lived-in</span> <span class="rw">and</span> <span class="rw">attentive</span> <span class="rw">—</span> <span class="rw">the</span> <span class="rw">opposite</span> <span class="rw">of</span> <span class="rw">anonymous.</span></p>
       <p class="deck deck--secondary"><span class="rw">Discover</span> <span class="rw">the</span> <span class="rw">epitome</span> <span class="rw">of</span> <span class="rw">uniqueness</span> <span class="rw">at</span> <span class="rw">our</span> <span class="rw">boutique</span> <span class="rw">hotel,</span> <span class="rw">where</span> <span class="rw">every</span> <span class="rw">corner</span> <span class="rw">is</span> <span class="rw">infused</span> <span class="rw">with</span> <span class="rw">design</span> <span class="rw">and</span> <span class="rw">excitement.</span> <span class="rw">Your</span> <span class="rw">search</span> <span class="rw">for</span> <span class="rw">the</span> <span class="rw">perfect</span> <span class="rw">destination</span> <span class="rw">ends</span> <span class="rw">here.</span> <span class="rw">Welcome</span> <span class="rw">to</span> <span class="rw">a</span> <span class="rw">world</span> <span class="rw">where</span> <span class="rw">unforgettable</span> <span class="rw">experiences</span> <span class="rw">await</span> <span class="rw">at</span> <span class="rw">every</span> <span class="rw">turn.</span></p>
     </div>
   </div>
   <div class="intro-meta">
-    <div><span class="l"><span class="rw">Form</span></span><span class="v"><span class="rw">Boutique</span> <span class="rw">&middot;</span> <span class="rw"><em>44</em></span> <span class="rw">rooms</span></span></div>
+    <div><span class="l"><span class="rw">Form</span></span><span class="v"><span class="rw">Boutique</span> <span class="rw">&middot;</span> <span class="rw"><em class="u">44</em></span> <span class="rw">rooms</span></span></div>
     <div><span class="l"><span class="rw">Address</span></span><span class="v"><span class="rw">Király</span> <span class="rw">utca</span> <span class="rw">26</span></span></div>
     <div><span class="l"><span class="rw">Opened</span></span><span class="v"><span class="rw">MMXIX</span></span></div>
     <div><span class="l"><span class="rw">Reservations</span></span><span class="v"><span class="rw">+36</span> <span class="rw">1</span> <span class="rw">808</span> <span class="rw">0980</span></span></div>
@@ -2372,7 +2397,7 @@ body.menu-open nav.top { transform: none !important; }
   <div class="plate-content">
     <div class="plate-id"><span class="n">III</span><span>·</span><span>Rituals of the house</span></div>
     <div class="plate-title-block">
-      <h2>Little <em>luxuries.</em></h2>
+      <h2>Little <em class="u">luxuries.</em></h2>
       <p class="plate-deck">The small things that make a stay feel particular. A bar downstairs, a gym and a desk a short walk away — each with its own rhythm.</p>
     </div>
   </div>
@@ -2386,7 +2411,7 @@ body.menu-open nav.top { transform: none !important; }
         <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/restaurant/restaurant-01-800.webp 800w, assets/photos/restaurant/restaurant-01-1200.webp 1200w, assets/photos/restaurant/restaurant-01.webp 1600w"><img decoding="async" loading="lazy" src="assets/photos/restaurant/restaurant-01.jpg" alt="Bar and lounge"></picture>
         <div class="inner">
           <div class="tag">III · 01 — Social</div>
-          <h3>Bar &amp; social <em>lounge</em></h3>
+          <h3>Bar &amp; social <em class="u">lounge</em></h3>
           <p>Hungarian vermouths, natural wines from Tokaj, classics made slowly. A room that spills into the Twenty Six courtyard every evening after five.</p>
           <a href="pleasures.html#bar" class="more">Read the bar chapter →</a>
         </div>
@@ -2395,7 +2420,7 @@ body.menu-open nav.top { transform: none !important; }
         <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/GYM/GoActive-5-19-800.webp 800w, assets/photos/GYM/GoActive-5-19-1200.webp 1200w, assets/photos/GYM/GoActive-5-19.webp 1600w"><img decoding="async" loading="lazy" src="assets/photos/GYM/GoActive-5-19.jpg" alt="Gym"></picture>
         <div class="inner">
           <div class="tag">III · 02 — Body</div>
-          <h3>Gym, with <em>GoActive</em></h3>
+          <h3>Gym, with <em class="u">GoActive</em></h3>
           <p>Our neighbours at GoActive, five minutes away — Technogym equipment and a sauna. Reception can arrange access.</p>
           <a href="pleasures.html#gym" class="more">See schedule →</a>
         </div>
@@ -2404,7 +2429,7 @@ body.menu-open nav.top { transform: none !important; }
         <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="assets/photos/Coworking/coworking26-800.webp 800w, assets/photos/Coworking/coworking26-1200.webp 1200w, assets/photos/Coworking/coworking26.webp 1600w"><img decoding="async" loading="lazy" src="assets/photos/Coworking/coworking26.jpg" alt="Create 26"></picture>
         <div class="inner">
           <div class="tag">III · 03 — Work</div>
-          <h3>Create 26 <em>coworking</em></h3>
+          <h3>Create 26 <em class="u">coworking</em></h3>
           <p>A quiet floor of private desks and meeting rooms in the Twenty Six building. Ask reception and we'll arrange a desk.</p>
           <a href="pleasures.html#coworking" class="more">Request a desk →</a>
         </div>
@@ -2536,14 +2561,14 @@ body.menu-open nav.top { transform: none !important; }
 
     <div class="bk-hero-copy">
       <div class="plate-id"><span class="n">IV</span><span>·</span><span>Breakfast at Twenty Six</span></div>
-      <h2>A table set<br>with <em>intention.</em></h2>
+      <h2>A table set<br>with <em class="u">intention.</em></h2>
       <p>Not a buffet. You order, you sit, you talk — a gentle ritual to start each day.</p>
     </div>
 
     <div class="bk-coffee-content">
       <div class="bk-grid">
         <div>
-          <h3>Ground floor of the <em>Twenty Six</em> building.</h3>
+          <h3>Ground floor of the <em class="u">Twenty Six</em> building.</h3>
           <p>Breakfast is served in the Twenty Six restaurant downstairs — a room that functions as a living room for District VI. A short menu, cooked to order, that shifts with the seasons.</p>
           <p>We don't do buffets. You order, you sit, you talk. Eggs cooked by someone who cares.</p>
           <a href="breakfast.html" class="bk-cta">See the full menu →</a>
@@ -2551,7 +2576,7 @@ body.menu-open nav.top { transform: none !important; }
         <div class="bk-right">
           <div class="bk-fact"><span class="l">Hours</span><span class="v">07:30 — 11:00</span></div>
           <div class="bk-fact"><span class="l">Place</span><span class="v">Twenty Six, ground</span></div>
-          <div class="bk-fact"><span class="l">Style</span><span class="v"><em>À la carte</em></span></div>
+          <div class="bk-fact"><span class="l">Style</span><span class="v"><em class="u">À la carte</em></span></div>
           <div class="bk-fact"><span class="l">Price</span><span class="v">Ask reception</span></div>
           <div class="bk-fact"><span class="l">Service</span><span class="v">Ordered at table</span></div>
         </div>
@@ -2579,7 +2604,7 @@ body.menu-open nav.top { transform: none !important; }
     <div class="dn-content" id="neigh">
       <div class="plate-id"><span class="n">V</span><span>·</span><span>District VI, on foot</span></div>
       <div class="plate-title-block">
-        <h2>A quarter worth<br>the <em>walk.</em></h2>
+        <h2>A quarter worth<br>the <em class="u">walk.</em></h2>
         <p class="plate-deck">Király utca runs through one of Budapest's most walkable districts. Seven short steps from the door — the places we send guests when they ask.</p>
       </div>
     </div>
@@ -2644,7 +2669,7 @@ body.menu-open nav.top { transform: none !important; }
 <section class="reserve-plate" id="reserve" data-label="05 / Reservations">
   <div class="reserve-inner">
     <div class="reserve-over">06 / Reservations</div>
-    <h2>Begin <em>your</em><br>Budapest chapter.</h2>
+    <h2>Begin <em class="u">your</em><br>Budapest chapter.</h2>
     <p>Booking here gets you our best rate, and puts you straight through to the people who run the house.</p>
     <form class="reserve-form" id="reserveForm">
       <div class="field">
@@ -4147,6 +4172,21 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     if (e.matches) setOpen(false);
   });
   window.addEventListener('pageshow', function (e) { if (e.persisted) setOpen(false); });
+})();
+</script>
+<script>
+/* Draw each emphasis underline once its word is in view (see em.u). */
+(function () {
+  var words = document.querySelectorAll('em.u');
+  if (!words.length || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-drawn');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
+  Array.prototype.forEach.call(words, function (w) { io.observe(w); });
 })();
 </script>
 </body>

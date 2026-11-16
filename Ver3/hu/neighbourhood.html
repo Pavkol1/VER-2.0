@@ -468,7 +468,28 @@ body.menu-open nav.top { transform: none !important; }
 .foot-legal a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .foot-legal a[aria-current="true"] { color: rgba(255,255,255,0.82); }
 .foot-legal .sep { opacity: 0.4; }
+
+/* ── Emphasis: an underline, not a colour ─────────────────────────────────
+   A word marked <em class="u"> keeps the colour of the heading around it and
+   gets the house underline instead: 2px of gold at display sizes, fading to
+   nothing at its right end, drawn left to right once the word scrolls into
+   view. The same line as the intro's "stories" (.intro-strip .em-word).
+   Without JavaScript, or with reduced motion, the line is simply there. */
+em.u { color: inherit !important; display: inline-block; }
+em.u::after {
+  content: ""; display: block;
+  height: max(1px, 0.017em); margin-top: -0.08em;
+  background: linear-gradient(90deg, var(--accent), rgba(185,144,78,0));
+  transform-origin: left center; transform: scaleX(1);
+  transition: transform 0.9s var(--ease) 0.15s;
+}
+html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
+@media (prefers-reduced-motion: reduce) {
+  em.u::after, html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(1); transition: none; }
+}
 </style>
+<script>/* emphasis underline: hide until drawn, only where it can be drawn */
+if ('IntersectionObserver' in window) document.documentElement.classList.add('u-armed');</script>
 </head>
 <body>
 <a href="#main" class="skip-link">Ugrás a tartalomra</a>
@@ -550,7 +571,7 @@ body.menu-open nav.top { transform: none !important; }
   <div class="plate-content">
     <div class="plate-id"><span class="n">V</span><span>·</span><span>VI. kerület, gyalogosan</span></div>
     <div class="plate-title-block">
-      <h1>Egy negyed, amiért<br>érdemes <em>sétálni.</em></h1>
+      <h1>Egy negyed, amiért<br>érdemes <em class="u">sétálni.</em></h1>
       <p class="plate-deck">A Király utca Budapest egyik leginkább bejárható negyedén fut végig. Ezekre a helyekre küldjük a vendégeinket, ha kérdezik — és ide járunk mi magunk is.</p>
     </div>
   </div>
@@ -579,7 +600,7 @@ body.menu-open nav.top { transform: none !important; }
 
     <div class="place-cats">
       <div class="place-cat">
-        <h2>Kávé és <em>pékségek</em></h2>
+        <h2>Kávé és <em class="u">pékségek</em></h2>
         <div class="place-item"><div class="place-name">Gerbeaud</div><div class="place-note">Történelmi kávéház, Vörösmarty tér · 8 perc</div></div>
         <div class="place-item"><div class="place-name">Onyx Coffee</div><div class="place-note">Specialty pörkölő, V. kerület · 10 perc</div></div>
         <div class="place-item"><div class="place-name">Espresso Embassy</div><div class="place-note">Harmadik hullám, Arany János utca · 12 perc</div></div>
@@ -587,7 +608,7 @@ body.menu-open nav.top { transform: none !important; }
         <div class="place-item"><div class="place-name">Vian</div><div class="place-note">Liszt Ferenc téri terasz · 8 perc</div></div>
       </div>
       <div class="place-cat">
-        <h2>Bárok és <em>esték</em></h2>
+        <h2>Bárok és <em class="u">esték</em></h2>
         <div class="place-item"><div class="place-name">Szimpla Kert</div><div class="place-note">Az eredeti romkocsma · 4 min</div></div>
         <div class="place-item"><div class="place-name">Gozsdu Udvar</div><div class="place-note">Hét udvar, tele bárokkal · 5 perc</div></div>
         <div class="place-item"><div class="place-name">Mazel Tov</div><div class="place-note">Kertbár, közel-keleti · 4 perc</div></div>
@@ -595,7 +616,7 @@ body.menu-open nav.top { transform: none !important; }
         <div class="place-item"><div class="place-name">Spíler</div><div class="place-note">A Gozsdu udvar sarkán · 5 perc</div></div>
       </div>
       <div class="place-cat">
-        <h2>Kultúra és <em>látnivalók</em></h2>
+        <h2>Kultúra és <em class="u">látnivalók</em></h2>
         <div class="place-item"><div class="place-name">Operaház</div><div class="place-note">Andrássy út, 2022-ben felújítva · 6 perc</div></div>
         <div class="place-item"><div class="place-name">Rumbach utcai zsinagóga</div><div class="place-note">Zsidónegyed, 1872 · 3 perc</div></div>
         <div class="place-item"><div class="place-name">Dohány utcai zsinagóga</div><div class="place-note">Európa legnagyobbika · 8 perc</div></div>
@@ -1018,6 +1039,21 @@ body.menu-open nav.top { transform: none !important; }
     if (e.matches) setOpen(false);
   });
   window.addEventListener('pageshow', function (e) { if (e.persisted) setOpen(false); });
+})();
+</script>
+<script>
+/* Draw each emphasis underline once its word is in view (see em.u). */
+(function () {
+  var words = document.querySelectorAll('em.u');
+  if (!words.length || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-drawn');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
+  Array.prototype.forEach.call(words, function (w) { io.observe(w); });
 })();
 </script>
 </body>

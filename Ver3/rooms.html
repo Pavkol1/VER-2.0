@@ -508,7 +508,28 @@ body.menu-open nav.top { transform: none !important; }
 .foot-legal a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .foot-legal a[aria-current="true"] { color: rgba(255,255,255,0.82); }
 .foot-legal .sep { opacity: 0.4; }
+
+/* ── Emphasis: an underline, not a colour ─────────────────────────────────
+   A word marked <em class="u"> keeps the colour of the heading around it and
+   gets the house underline instead: 2px of gold at display sizes, fading to
+   nothing at its right end, drawn left to right once the word scrolls into
+   view. The same line as the intro's "stories" (.intro-strip .em-word).
+   Without JavaScript, or with reduced motion, the line is simply there. */
+em.u { color: inherit !important; display: inline-block; }
+em.u::after {
+  content: ""; display: block;
+  height: max(1px, 0.017em); margin-top: -0.08em;
+  background: linear-gradient(90deg, var(--accent), rgba(185,144,78,0));
+  transform-origin: left center; transform: scaleX(1);
+  transition: transform 0.9s var(--ease) 0.15s;
+}
+html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
+@media (prefers-reduced-motion: reduce) {
+  em.u::after, html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(1); transition: none; }
+}
 </style>
+<script>/* emphasis underline: hide until drawn, only where it can be drawn */
+if ('IntersectionObserver' in window) document.documentElement.classList.add('u-armed');</script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
@@ -591,7 +612,7 @@ body.menu-open nav.top { transform: none !important; }
   <div class="plate-content">
     <div class="plate-id"><span class="n">II</span><span>·</span><span>Six characters, forty-four rooms</span></div>
     <div class="plate-title-block">
-      <h1>The <em>rooms.</em></h1>
+      <h1>The <em class="u">rooms.</em></h1>
       <p class="plate-deck">Every room in the house has a number and a nature. Choose by size, by mood, by what you need a stay to feel like.</p>
     </div>
   </div>
@@ -1163,6 +1184,21 @@ body.menu-open nav.top { transform: none !important; }
     if (e.matches) setOpen(false);
   });
   window.addEventListener('pageshow', function (e) { if (e.persisted) setOpen(false); });
+})();
+</script>
+<script>
+/* Draw each emphasis underline once its word is in view (see em.u). */
+(function () {
+  var words = document.querySelectorAll('em.u');
+  if (!words.length || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-drawn');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
+  Array.prototype.forEach.call(words, function (w) { io.observe(w); });
 })();
 </script>
 </body>

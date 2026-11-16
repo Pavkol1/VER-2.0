@@ -397,7 +397,28 @@ body.menu-open nav.top { transform: none !important; }
 .foot-legal a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .foot-legal a[aria-current="true"] { color: rgba(255,255,255,0.82); }
 .foot-legal .sep { opacity: 0.4; }
+
+/* ── Emphasis: an underline, not a colour ─────────────────────────────────
+   A word marked <em class="u"> keeps the colour of the heading around it and
+   gets the house underline instead: 2px of gold at display sizes, fading to
+   nothing at its right end, drawn left to right once the word scrolls into
+   view. The same line as the intro's "stories" (.intro-strip .em-word).
+   Without JavaScript, or with reduced motion, the line is simply there. */
+em.u { color: inherit !important; display: inline-block; }
+em.u::after {
+  content: ""; display: block;
+  height: max(1px, 0.017em); margin-top: -0.08em;
+  background: linear-gradient(90deg, var(--accent), rgba(185,144,78,0));
+  transform-origin: left center; transform: scaleX(1);
+  transition: transform 0.9s var(--ease) 0.15s;
+}
+html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
+@media (prefers-reduced-motion: reduce) {
+  em.u::after, html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(1); transition: none; }
+}
 </style>
+<script>/* emphasis underline: hide until drawn, only where it can be drawn */
+if ('IntersectionObserver' in window) document.documentElement.classList.add('u-armed');</script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
@@ -479,7 +500,7 @@ body.menu-open nav.top { transform: none !important; }
   <div class="plate-content">
     <div class="plate-id"><span class="n">III</span><span>·</span><span>Rituals of the house</span></div>
     <div class="plate-title-block">
-      <h1>Little <em>luxuries.</em></h1>
+      <h1>Little <em class="u">luxuries.</em></h1>
       <p class="plate-deck">Not amenities for a brochure — the actual things that make a stay feel like itself. A bar you'd come back to. A gym run by people who care. A desk when you need one.</p>
     </div>
   </div>
@@ -512,7 +533,7 @@ body.menu-open nav.top { transform: none !important; }
   </div>
   <div class="pf-info">
     <div class="pf-tag">III · 02 — Body</div>
-    <h2>Gym, with <em>GoActive</em></h2>
+    <h2>Gym, with <em class="u">GoActive</em></h2>
     <p>We don't run the gym ourselves — our neighbours at GoActive do, and they do it better than we could. Full Technogym equipment, a sauna, and a team that knows the names of regulars. Ask at reception and we'll arrange your access.</p>
     <p>A five-minute walk from the hotel. Classes available on their schedule — book ahead, they fill quickly.</p>
     <div class="pf-facts">
@@ -839,6 +860,21 @@ body.menu-open nav.top { transform: none !important; }
     if (e.matches) setOpen(false);
   });
   window.addEventListener('pageshow', function (e) { if (e.persisted) setOpen(false); });
+})();
+</script>
+<script>
+/* Draw each emphasis underline once its word is in view (see em.u). */
+(function () {
+  var words = document.querySelectorAll('em.u');
+  if (!words.length || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-drawn');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
+  Array.prototype.forEach.call(words, function (w) { io.observe(w); });
 })();
 </script>
 </body>

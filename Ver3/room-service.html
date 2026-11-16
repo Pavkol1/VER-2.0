@@ -484,7 +484,28 @@ body.menu-open nav.top { transform: none !important; }
 .foot-legal a { color: rgba(255,255,255,0.35); border-bottom: 1px solid transparent; transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
 .foot-legal a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .foot-legal .sep { opacity: 0.4; }
+
+/* ── Emphasis: an underline, not a colour ─────────────────────────────────
+   A word marked <em class="u"> keeps the colour of the heading around it and
+   gets the house underline instead: 2px of gold at display sizes, fading to
+   nothing at its right end, drawn left to right once the word scrolls into
+   view. The same line as the intro's "stories" (.intro-strip .em-word).
+   Without JavaScript, or with reduced motion, the line is simply there. */
+em.u { color: inherit !important; display: inline-block; }
+em.u::after {
+  content: ""; display: block;
+  height: max(1px, 0.017em); margin-top: -0.08em;
+  background: linear-gradient(90deg, var(--accent), rgba(185,144,78,0));
+  transform-origin: left center; transform: scaleX(1);
+  transition: transform 0.9s var(--ease) 0.15s;
+}
+html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
+@media (prefers-reduced-motion: reduce) {
+  em.u::after, html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(1); transition: none; }
+}
 </style>
+<script>/* emphasis underline: hide until drawn, only where it can be drawn */
+if ('IntersectionObserver' in window) document.documentElement.classList.add('u-armed');</script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
@@ -558,7 +579,7 @@ body.menu-open nav.top { transform: none !important; }
   <div class="rs-hero-in">
     <div class="plate-id"><span class="n">26</span><span>·</span><span>Room service · Twenty Six</span></div>
     <div class="rs-title">
-      <h1 id="rsTitle"><span class="ln"><span>Twenty Six,</span></span><span class="ln"><span><em>upstairs.</em></span></span></h1>
+      <h1 id="rsTitle"><span class="ln"><span>Twenty Six,</span></span><span class="ln"><span><em class="u">upstairs.</em></span></span></h1>
       <p class="rs-deck">The restaurant menu, brought to your door. Pick your dishes, tell us your room number, and the kitchen takes it from there.</p>
     </div>
     <div class="rs-switch">
@@ -1764,6 +1785,21 @@ body.menu-open nav.top { transform: none !important; }
   var m0 = nowMin();
   setMenu(openNow('afternoon', m0) ? 'afternoon' : 'day', false);
   setInterval(function () { status(); refreshCta(); }, 60000);
+})();
+</script>
+<script>
+/* Draw each emphasis underline once its word is in view (see em.u). */
+(function () {
+  var words = document.querySelectorAll('em.u');
+  if (!words.length || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-drawn');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
+  Array.prototype.forEach.call(words, function (w) { io.observe(w); });
 })();
 </script>
 </body>

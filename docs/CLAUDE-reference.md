@@ -177,7 +177,8 @@ GSAP + ScrollTrigger load **deferred** just before the inline `<script>` block o
 ```
 
 **Typography** (Google Fonts, same `<link>` on every page):
-- Headings: `Libre Caslon Text` (serif), often with italic `em` in `--primary` or `--accent` — free stand-in for the commercial **Gangster** the client referenced
+- Headings: `Libre Caslon Text` (serif), often with an italic `em` — free stand-in for the commercial **Gangster** the client referenced
+- **Emphasis on dark surfaces is an underline, not gold text** (client, 2026-11-16). Mark the word `<em class="u">`: it keeps the heading’s colour and gets the house underline — 2px of `--accent` at display sizes (`max(1px, 0.017em)`), fading to transparent at its right end, drawn left to right once the word is in view. The same line as the intro’s `.em-word` (“Our *stories*…”), which is scroll-driven instead. Each page carries one `em.u` style block, a one-line `u-armed` script before `</head>` (hides the line only where an `IntersectionObserver` can draw it) and the observer before `</body>`; without JS or with reduced motion the line is simply shown. In the hero only the `.sp-fill` copy draws it, 1.9s late, after the wipe. **Do not reintroduce gold-coloured words.** Emphasis on the light paper pages stays `--accent-ink` green (FAQ, legal pages, room names) — a different role, untouched; the gold `—` dashes in the neighbourhood lists are decoration and stay gold.
 - Body/UI: `Schibsted Grotesk` — free stand-in for **ABC Monument Grotesk**; if the client buys licences, swap to self-hosted originals
 - Labels/overlines/mono: `JetBrains Mono`, 10–11px, `letter-spacing: 0.18em–0.28em`, uppercase
 - `Playfair Display` + `Pinyon Script` are used by the hero logo wordmark system
