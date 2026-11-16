@@ -2179,14 +2179,44 @@ html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
 .sp-out em.u::after { visibility: hidden; }
 .sp-fill em.u::after { transition-delay: 1.9s; }
 
-/* ── Headings on dark surfaces are gold, not white (client, 2026-11-16) ──
-   Any heading painted white or cream on a dark surface carries .hg. On the
-   light paper pages headings stay ink: gold on paper fails contrast. */
-.hg { color: var(--accent) !important; }
-/* The hero title's two copies follow suit: the fill that wipes in is gold,
-   and the outline it wipes over is a gold hairline instead of a cream one. */
-.sp-fill { color: var(--accent) !important; }
-.sp-out { -webkit-text-stroke-color: rgba(185,144,78,0.55) !important; }
+/* ── Headings on dark surfaces: champagne gold (client, 2026-11-16) ──────
+   Any heading that would be white or cream on a dark surface carries .hg:
+   a metal gradient clipped to the letters at 80% strength, and a glint that
+   crosses it once when it comes into view and every 40 seconds after.
+   Where words or lines animate on a layer of their own, the metal goes on
+   them instead, because a layered child does not show through its heading's
+   clip: .hg-split for spans in the markup, .hg-words for words a script
+   splits out — and only once it has, so the heading never goes blank.
+   The hero fill and room service's script-built "Choose 4" card take the
+   same metal. On the light paper pages headings stay ink: gold on paper
+   fails contrast. */
+.hg, .sp-fill, .dish.combo .dish-name,
+.hg-split .w, .hg-split .ln > span, .hg-words[data-split="true"] .reserve-word {
+  color: transparent !important;
+  -webkit-background-clip: text; background-clip: text;
+  background-image:
+    linear-gradient(110deg, rgba(255,251,238,0) 42%, rgba(255,251,238,0.72) 50%, rgba(255,251,238,0) 58%),
+    linear-gradient(100deg, rgba(143,122,87,0.8) 0%, rgba(191,169,130,0.8) 20%, rgba(233,220,190,0.8) 36%, rgba(201,179,138,0.8) 52%, rgba(158,135,94,0.8) 70%, rgba(216,199,162,0.8) 88%, rgba(169,144,104,0.8) 100%);
+  background-size: 260% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: -60% 0, 0 0;
+}
+.hg-split, .hg-words[data-split="true"] { background-image: none; }
+.sp-out { -webkit-text-stroke-color: rgba(201,179,138,0.5) !important; }
+@keyframes hgGlint {
+  0%   { background-position: 160% 0, 0 0; }
+  6%   { background-position: -60% 0, 0 0; }
+  100% { background-position: -60% 0, 0 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hg.glint:not(.hg-split):not([data-split="true"]),
+  .hg-split.glint .w,
+  .hg-words.glint[data-split="true"] .reserve-word { animation: hgGlint 40s cubic-bezier(0.45, 0, 0.25, 1) 0.6s infinite; }
+  .sp-fill { animation: hgGlint 40s cubic-bezier(0.45, 0, 0.25, 1) 2.4s infinite; }
+  .dish.combo .dish-name { animation: hgGlint 40s cubic-bezier(0.45, 0, 0.25, 1) 1.2s infinite; }
+  .hg-split.glint .ln > span { animation: lineRise 1.1s var(--ease) both, hgGlint 40s cubic-bezier(0.45, 0, 0.25, 1) 0.6s infinite; }
+  .hg-split.glint .ln:nth-child(2) > span { animation-delay: 0.12s, 0.72s; }
+}
 </style>
 <script type="application/ld+json">
 {
@@ -2377,7 +2407,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
   <div class="intro-inner">
     <div class="intro-text">
       <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VI · Király utca 26</span></div>
-      <h2 class="hg"><span class="w">Our</span> <span class="w em-word">stories…</span></h2>
+      <h2 class="hg hg-split"><span class="w">Our</span> <span class="w em-word">stories…</span></h2>
       <p class="deck" id="introDeck"><span class="rw">Forty-four</span> <span class="rw">rooms,</span> <span class="rw">six</span> <span class="rw">characters,</span> <span class="rw">one</span> <span class="rw">Twenty</span> <span class="rw">Six</span> <span class="rw">building.</span> <span class="rw">A</span> <span class="rw">small</span> <span class="rw">house</span> <span class="rw">on</span> <span class="rw">Király</span> <span class="rw">utca,</span> <span class="rw">lived-in</span> <span class="rw">and</span> <span class="rw">attentive</span> <span class="rw">—</span> <span class="rw">the</span> <span class="rw">opposite</span> <span class="rw">of</span> <span class="rw">anonymous.</span></p>
       <p class="deck deck--secondary"><span class="rw">Discover</span> <span class="rw">the</span> <span class="rw">epitome</span> <span class="rw">of</span> <span class="rw">uniqueness</span> <span class="rw">at</span> <span class="rw">our</span> <span class="rw">boutique</span> <span class="rw">hotel,</span> <span class="rw">where</span> <span class="rw">every</span> <span class="rw">corner</span> <span class="rw">is</span> <span class="rw">infused</span> <span class="rw">with</span> <span class="rw">design</span> <span class="rw">and</span> <span class="rw">excitement.</span> <span class="rw">Your</span> <span class="rw">search</span> <span class="rw">for</span> <span class="rw">the</span> <span class="rw">perfect</span> <span class="rw">destination</span> <span class="rw">ends</span> <span class="rw">here.</span> <span class="rw">Welcome</span> <span class="rw">to</span> <span class="rw">a</span> <span class="rw">world</span> <span class="rw">where</span> <span class="rw">unforgettable</span> <span class="rw">experiences</span> <span class="rw">await</span> <span class="rw">at</span> <span class="rw">every</span> <span class="rw">turn.</span></p>
     </div>
@@ -2678,7 +2708,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
 <section class="reserve-plate" id="reserve" data-label="05 / Reservations">
   <div class="reserve-inner">
     <div class="reserve-over">06 / Reservations</div>
-    <h2 class="hg">Begin <em class="u">your</em><br>Budapest chapter.</h2>
+    <h2 class="hg hg-words">Begin <em class="u">your</em><br>Budapest chapter.</h2>
     <p>Booking here gets you our best rate, and puts you straight through to the people who run the house.</p>
     <form class="reserve-form" id="reserveForm">
       <div class="field">
@@ -4196,6 +4226,19 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     });
   }, { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
   Array.prototype.forEach.call(words, function (w) { io.observe(w); });
+})();
+</script>
+<script>
+/* Start each gold heading's glint when it first comes into view (see .hg). */
+(function () {
+  var hs = document.querySelectorAll('.hg');
+  if (!hs.length) return;
+  var go = function (h) { h.classList.add('glint'); };
+  if (!('IntersectionObserver' in window)) { Array.prototype.forEach.call(hs, go); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (!e.isIntersecting) return; go(e.target); io.unobserve(e.target); });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.5 });
+  Array.prototype.forEach.call(hs, function (h) { io.observe(h); });
 })();
 </script>
 </body>
