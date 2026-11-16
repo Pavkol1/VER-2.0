@@ -2178,6 +2178,15 @@ html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
    (.sp-fill) that wipes in. Only the fill draws the line, after its wipe. */
 .sp-out em.u::after { visibility: hidden; }
 .sp-fill em.u::after { transition-delay: 1.9s; }
+
+/* ── Headings on dark surfaces are gold, not white (client, 2026-11-16) ──
+   Any heading painted white or cream on a dark surface carries .hg. On the
+   light paper pages headings stay ink: gold on paper fails contrast. */
+.hg { color: var(--accent) !important; }
+/* The hero title's two copies follow suit: the fill that wipes in is gold,
+   and the outline it wipes over is a gold hairline instead of a cream one. */
+.sp-fill { color: var(--accent) !important; }
+.sp-out { -webkit-text-stroke-color: rgba(185,144,78,0.55) !important; }
 </style>
 <script type="application/ld+json">
 {
@@ -2368,7 +2377,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
   <div class="intro-inner">
     <div class="intro-text">
       <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VI. · Király utca 26</span></div>
-      <h2><span class="w em-word">Történeteink…</span></h2>
+      <h2 class="hg"><span class="w em-word">Történeteink…</span></h2>
       <p class="deck" id="introDeck"><span class="rw">Negyvennégy</span> <span class="rw">szoba,</span> <span class="rw">hat</span> <span class="rw">karakter,</span> <span class="rw">egy</span> <span class="rw">Twenty</span> <span class="rw">Six</span> <span class="rw">épület.</span> <span class="rw">Egy</span> <span class="rw">kis</span> <span class="rw">ház</span> <span class="rw">a</span> <span class="rw">Király</span> <span class="rw">utcában,</span> <span class="rw">lakott</span> <span class="rw">és</span> <span class="rw">figyelmes</span> <span class="rw">—</span> <span class="rw">az</span> <span class="rw">arctalanság</span> <span class="rw">ellentéte.</span></p>
       <p class="deck deck--secondary"><span class="rw">Fedezze</span> <span class="rw">fel</span> <span class="rw">az</span> <span class="rw">egyediség</span> <span class="rw">megtestesülését</span> <span class="rw">butikhotelünkben,</span> <span class="rw">ahol</span> <span class="rw">minden</span> <span class="rw">sarok</span> <span class="rw">tervezéssel</span> <span class="rw">és</span> <span class="rw">izgalommal</span> <span class="rw">telt.</span> <span class="rw">A</span> <span class="rw">tökéletes</span> <span class="rw">úti</span> <span class="rw">cél</span> <span class="rw">keresése</span> <span class="rw">itt</span> <span class="rw">véget</span> <span class="rw">ér.</span> <span class="rw">Üdvözöljük</span> <span class="rw">egy</span> <span class="rw">világban,</span> <span class="rw">ahol</span> <span class="rw">minden</span> <span class="rw">fordulónál</span> <span class="rw">felejthetetlen</span> <span class="rw">élmények</span> <span class="rw">várnak.</span></p>
     </div>
@@ -2397,7 +2406,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
   <div class="plate-content">
     <div class="plate-id"><span class="n">III</span><span>·</span><span>A ház rituáléi</span></div>
     <div class="plate-title-block">
-      <h2>Apró <em class="u">luxusok.</em></h2>
+      <h2 class="hg">Apró <em class="u">luxusok.</em></h2>
       <p class="plate-deck">Az apró dolgok, amelyektől egy ittlét különleges lesz. Egy bár a földszinten, egy edzőterem és egy íróasztal néhány percre — mindegyiknek megvan a maga ritmusa.</p>
     </div>
   </div>
@@ -2411,7 +2420,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
         <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/restaurant/restaurant-01-800.webp 800w, ../assets/photos/restaurant/restaurant-01-1200.webp 1200w, ../assets/photos/restaurant/restaurant-01.webp 1600w"><img decoding="async" loading="lazy" src="../assets/photos/restaurant/restaurant-01.jpg" alt="Bár és lounge"></picture>
         <div class="inner">
           <div class="tag">III · 01 — Társasági</div>
-          <h3>Bár és <em class="u">lounge</em></h3>
+          <h3 class="hg">Bár és <em class="u">lounge</em></h3>
           <p>Magyar vermutok, tokaji natúrborok, ráérősen kevert klasszikusok. Egy tér, amely öt óra után minden este kicsordul a Twenty Six udvarára.</p>
           <a href="pleasures.html#bar" class="more">A bár fejezete →</a>
         </div>
@@ -2420,7 +2429,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
         <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/GYM/GoActive-5-19-800.webp 800w, ../assets/photos/GYM/GoActive-5-19-1200.webp 1200w, ../assets/photos/GYM/GoActive-5-19.webp 1600w"><img decoding="async" loading="lazy" src="../assets/photos/GYM/GoActive-5-19.jpg" alt="Edzőterem"></picture>
         <div class="inner">
           <div class="tag">III · 02 — Test</div>
-          <h3>Edzőterem, <em class="u">GoActive</em></h3>
+          <h3 class="hg">Edzőterem, <em class="u">GoActive</em></h3>
           <p>Szomszédaink, a GoActive, öt percre — Technogym gépek és szauna. A recepció megszervezi a belépést.</p>
           <a href="pleasures.html#gym" class="more">Órarend →</a>
         </div>
@@ -2429,7 +2438,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
         <picture><source type="image/webp" sizes="(max-width: 880px) 100vw, 55vw" srcset="../assets/photos/Coworking/coworking26-800.webp 800w, ../assets/photos/Coworking/coworking26-1200.webp 1200w, ../assets/photos/Coworking/coworking26.webp 1600w"><img decoding="async" loading="lazy" src="../assets/photos/Coworking/coworking26.jpg" alt="Create 26"></picture>
         <div class="inner">
           <div class="tag">III · 03 — Munka</div>
-          <h3>Create 26 <em class="u">coworking</em></h3>
+          <h3 class="hg">Create 26 <em class="u">coworking</em></h3>
           <p>Csendes szint saját íróasztalokkal és tárgyalókkal a Twenty Six épületben. Szóljon a recepción, és intézünk egy asztalt.</p>
           <a href="pleasures.html#coworking" class="more">Asztalt kérek →</a>
         </div>
@@ -2561,14 +2570,14 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
 
     <div class="bk-hero-copy">
       <div class="plate-id"><span class="n">IV</span><span>·</span><span>Reggeli a Twenty Six-ben</span></div>
-      <h2>Egy asztal,<br><em class="u">szándékkal</em> megterítve.</h2>
+      <h2 class="hg">Egy asztal,<br><em class="u">szándékkal</em> megterítve.</h2>
       <p>Nem büfé. Ön rendel, leül, beszélget — szelíd rituálé minden nap kezdetére.</p>
     </div>
 
     <div class="bk-coffee-content">
       <div class="bk-grid">
         <div>
-          <h3>A <em class="u">Twenty Six</em> épület földszintjén.</h3>
+          <h3 class="hg">A <em class="u">Twenty Six</em> épület földszintjén.</h3>
           <p>A reggelit a földszinti Twenty Six étteremben szolgáljuk fel — egy teremben, amely a VI. kerület nappalijaként működik. Rövid étlap, frissen elkészítve, amely az évszakokkal együtt változik.</p>
           <p>Nálunk nincs büfé. Ön rendel, leül, beszélget. A tojást olyasvalaki készíti, akinek fontos.</p>
           <a href="breakfast.html" class="bk-cta">A teljes étlap →</a>
@@ -2604,7 +2613,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
     <div class="dn-content" id="neigh">
       <div class="plate-id"><span class="n">V</span><span>·</span><span>VI. kerület, gyalogosan</span></div>
       <div class="plate-title-block">
-        <h2>Egy negyed, amiért<br>érdemes <em class="u">sétálni.</em></h2>
+        <h2 class="hg">Egy negyed, amiért<br>érdemes <em class="u">sétálni.</em></h2>
         <p class="plate-deck">A Király utca Budapest egyik leginkább bejárható negyedén fut végig. Hét rövid séta a kaputól — azok a helyek, ahová a vendégeinket küldjük.</p>
       </div>
     </div>
@@ -2669,7 +2678,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
 <section class="reserve-plate" id="reserve" data-label="05 / Reservations">
   <div class="reserve-inner">
     <div class="reserve-over">06 / Foglalás</div>
-    <h2>Kezdje el <em class="u">a saját</em><br>budapesti fejezetét.</h2>
+    <h2 class="hg">Kezdje el <em class="u">a saját</em><br>budapesti fejezetét.</h2>
     <p>Az itteni foglalással a legjobb árunkat kapja, és egyenesen azokhoz kerül, akik a házat viszik.</p>
     <form class="reserve-form" id="reserveForm">
       <div class="field">
@@ -2699,7 +2708,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
 <footer id="contact">
   <div class="foot-grid">
     <div>
-      <h3>Stories</h3>
+      <h3 class="hg">Stories</h3>
       <div class="sub">Budapest · Király utca 26</div>
       <address>Twenty Six épület<br>Király utca 26, 1061 Budapest<br>Magyarország</address>
       <a href="tel:+3618080980" class="ph">+36 1 808 0980</a><br>

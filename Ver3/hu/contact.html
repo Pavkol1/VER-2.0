@@ -420,6 +420,11 @@ html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
 @media (prefers-reduced-motion: reduce) {
   em.u::after, html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(1); transition: none; }
 }
+
+/* ── Headings on dark surfaces are gold, not white (client, 2026-11-16) ──
+   Any heading painted white or cream on a dark surface carries .hg. On the
+   light paper pages headings stay ink: gold on paper fails contrast. */
+.hg { color: var(--accent) !important; }
 </style>
 <script>/* emphasis underline: hide until drawn, only where it can be drawn */
 if ('IntersectionObserver' in window) document.documentElement.classList.add('u-armed');</script>
@@ -504,7 +509,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
   <div class="plate-content">
     <div class="plate-id"><span class="n">VI</span><span>·</span><span>Megtalál minket · Király utca 26</span></div>
     <div class="plate-title-block">
-      <h1>Írjon <em class="u">nekünk.</em></h1>
+      <h1 class="hg">Írjon <em class="u">nekünk.</em></h1>
       <p class="plate-deck">Kis csapat vagyunk, és minden üzenetet elolvasunk. Akár foglalásról, sajtómegkeresésről vagy olyan kérdésről van szó, amelyre csak mi tudunk válaszolni — még aznap jelentkezünk.</p>
     </div>
   </div>
@@ -600,7 +605,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
 <footer>
   <div class="foot-grid">
     <div>
-      <h3>Stories</h3>
+      <h3 class="hg">Stories</h3>
       <div class="sub">Budapest · Király utca 26</div>
       <address>Twenty Six épület<br>Király utca 26, 1061 Budapest<br>Magyarország</address>
       <a href="tel:+3618080980" class="ph">+36 1 808 0980</a><br>

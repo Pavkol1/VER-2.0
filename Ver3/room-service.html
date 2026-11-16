@@ -503,6 +503,13 @@ html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
 @media (prefers-reduced-motion: reduce) {
   em.u::after, html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(1); transition: none; }
 }
+
+/* ── Headings on dark surfaces are gold, not white (client, 2026-11-16) ──
+   Any heading painted white or cream on a dark surface carries .hg. On the
+   light paper pages headings stay ink: gold on paper fails contrast. */
+.hg { color: var(--accent) !important; }
+/* The "Choose 4" card is built by script on a dark green ground. */
+.dish.combo .dish-name { color: var(--accent) !important; }
 </style>
 <script>/* emphasis underline: hide until drawn, only where it can be drawn */
 if ('IntersectionObserver' in window) document.documentElement.classList.add('u-armed');</script>
@@ -579,7 +586,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
   <div class="rs-hero-in">
     <div class="plate-id"><span class="n">26</span><span>·</span><span>Room service · Twenty Six</span></div>
     <div class="rs-title">
-      <h1 id="rsTitle"><span class="ln"><span>Twenty Six,</span></span><span class="ln"><span><em class="u">upstairs.</em></span></span></h1>
+      <h1 class="hg" id="rsTitle"><span class="ln"><span>Twenty Six,</span></span><span class="ln"><span><em class="u">upstairs.</em></span></span></h1>
       <p class="rs-deck">The restaurant menu, brought to your door. Pick your dishes, tell us your room number, and the kitchen takes it from there.</p>
     </div>
     <div class="rs-switch">
@@ -604,7 +611,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
 <footer>
   <div class="foot-grid">
     <div>
-      <h3>Stories</h3>
+      <h3 class="hg">Stories</h3>
       <div class="sub">Budapest · Király utca 26</div>
       <address>Twenty Six Building<br>Király utca 26, 1061 Budapest<br>Hungary</address>
       <a href="tel:+3618080980" class="ph">+36 1 808 0980</a><br>

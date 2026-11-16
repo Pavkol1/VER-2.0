@@ -416,6 +416,11 @@ html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
 @media (prefers-reduced-motion: reduce) {
   em.u::after, html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(1); transition: none; }
 }
+
+/* ── Headings on dark surfaces are gold, not white (client, 2026-11-16) ──
+   Any heading painted white or cream on a dark surface carries .hg. On the
+   light paper pages headings stay ink: gold on paper fails contrast. */
+.hg { color: var(--accent) !important; }
 </style>
 <script>/* emphasis underline: hide until drawn, only where it can be drawn */
 if ('IntersectionObserver' in window) document.documentElement.classList.add('u-armed');</script>
@@ -500,7 +505,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
   <div class="plate-content">
     <div class="plate-id"><span class="n">III</span><span>·</span><span>Rituals of the house</span></div>
     <div class="plate-title-block">
-      <h1>Little <em class="u">luxuries.</em></h1>
+      <h1 class="hg">Little <em class="u">luxuries.</em></h1>
       <p class="plate-deck">Not amenities for a brochure — the actual things that make a stay feel like itself. A bar you'd come back to. A gym run by people who care. A desk when you need one.</p>
     </div>
   </div>
@@ -533,7 +538,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
   </div>
   <div class="pf-info">
     <div class="pf-tag">III · 02 — Body</div>
-    <h2>Gym, with <em class="u">GoActive</em></h2>
+    <h2 class="hg">Gym, with <em class="u">GoActive</em></h2>
     <p>We don't run the gym ourselves — our neighbours at GoActive do, and they do it better than we could. Full Technogym equipment, a sauna, and a team that knows the names of regulars. Ask at reception and we'll arrange your access.</p>
     <p>A five-minute walk from the hotel. Classes available on their schedule — book ahead, they fill quickly.</p>
     <div class="pf-facts">
@@ -569,7 +574,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
 <footer>
   <div class="foot-grid">
     <div>
-      <h3>Stories</h3>
+      <h3 class="hg">Stories</h3>
       <div class="sub">Budapest · Király utca 26</div>
       <address>Twenty Six Building<br>Király utca 26, 1061 Budapest<br>Hungary</address>
       <a href="tel:+3618080980" class="ph">+36 1 808 0980</a><br>

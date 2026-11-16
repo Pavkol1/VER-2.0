@@ -416,6 +416,11 @@ html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
 @media (prefers-reduced-motion: reduce) {
   em.u::after, html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(1); transition: none; }
 }
+
+/* ── Headings on dark surfaces are gold, not white (client, 2026-11-16) ──
+   Any heading painted white or cream on a dark surface carries .hg. On the
+   light paper pages headings stay ink: gold on paper fails contrast. */
+.hg { color: var(--accent) !important; }
 </style>
 <script>/* emphasis underline: hide until drawn, only where it can be drawn */
 if ('IntersectionObserver' in window) document.documentElement.classList.add('u-armed');</script>
@@ -500,7 +505,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
   <div class="plate-content">
     <div class="plate-id"><span class="n">III</span><span>·</span><span>A ház rituáléi</span></div>
     <div class="plate-title-block">
-      <h1>Apró <em class="u">luxusok.</em></h1>
+      <h1 class="hg">Apró <em class="u">luxusok.</em></h1>
       <p class="plate-deck">Nem prospektusba való szolgáltatások — hanem azok a dolgok, amelyektől egy ittlét önmaga lesz. Egy bár, ahová visszatérne. Egy edzőterem, amelyet olyanok visznek, akiknek fontos. És egy íróasztal, amikor szüksége van rá.</p>
     </div>
   </div>
@@ -533,7 +538,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
   </div>
   <div class="pf-info">
     <div class="pf-tag">III · 02 — Test</div>
-    <h2>Edzőterem, <em class="u">GoActive</em></h2>
+    <h2 class="hg">Edzőterem, <em class="u">GoActive</em></h2>
     <p>Az edzőtermet nem mi üzemeltetjük — hanem a szomszédunk, a GoActive, és jobban csinálják, mint mi tudnánk. Teljes Technogym felszereltség, szauna, és egy csapat, amely név szerint ismeri a törzsvendégeket. Minden foglalás mellé díjmentes.</p>
     <p>Öt perc séta a szállodától. Az órák az alábbi rend szerint érhetők el — foglaljon előre, gyorsan betelnek.</p>
     <div class="pf-facts">
@@ -569,7 +574,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
 <footer>
   <div class="foot-grid">
     <div>
-      <h3>Stories</h3>
+      <h3 class="hg">Stories</h3>
       <div class="sub">Budapest · Király utca 26</div>
       <address>Twenty Six épület<br>Király utca 26, 1061 Budapest<br>Magyarország</address>
       <a href="tel:+3618080980" class="ph">+36 1 808 0980</a><br>

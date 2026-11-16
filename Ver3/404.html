@@ -408,6 +408,11 @@ body.menu-open nav.top { transform: none !important; }
 .nf-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .nf-links .n { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--text-3); }
 .legal-body { padding: 0 clamp(40px, 6vw, 96px) clamp(72px, 9vw, 110px); }
+
+/* ── Headings on dark surfaces are gold, not white (client, 2026-11-16) ──
+   Any heading painted white or cream on a dark surface carries .hg. On the
+   light paper pages headings stay ink: gold on paper fails contrast. */
+.hg { color: var(--accent) !important; }
 </style>
 </head>
 <body>
@@ -506,7 +511,7 @@ body.menu-open nav.top { transform: none !important; }
 <footer>
   <div class="foot-grid">
     <div>
-      <h3>Stories</h3>
+      <h3 class="hg">Stories</h3>
       <div class="sub">Budapest · Király utca 26</div>
       <address>Twenty Six Building<br>Király utca 26, 1061 Budapest<br>Hungary</address>
       <a href="tel:+3618080980" class="ph">+36 1 808 0980</a><br>
