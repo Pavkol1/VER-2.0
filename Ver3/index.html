@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stories Budapest — A hotel of stories, quietly told.</title>
+<title>Stories Budapest — A hotel of Stories, quietly told.</title>
 <meta name="description" content="A 44-room boutique hotel in Budapest District VI, on Király utca. Six room characters, à la carte breakfast, a bar &amp; lounge, and a courtyard garden — quietly told, not shouted.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://secrethotel.netlify.app/">
@@ -12,13 +12,13 @@
 <link rel="alternate" hreflang="x-default" href="https://secrethotel.netlify.app/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Stories Hotel Budapest">
-<meta property="og:title" content="Stories Budapest — A hotel of stories, quietly told.">
+<meta property="og:title" content="Stories Budapest — A hotel of Stories, quietly told.">
 <meta property="og:description" content="A 44-room boutique hotel in Budapest District VI, on Király utca. Six room characters, à la carte breakfast, a bar &amp; lounge, and a courtyard garden — quietly told, not shouted.">
 <meta property="og:url" content="https://secrethotel.netlify.app/">
 <meta property="og:image" content="https://secrethotel.netlify.app/assets/brand/hero.jpg">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Stories Budapest — A hotel of stories, quietly told.">
+<meta name="twitter:title" content="Stories Budapest — A hotel of Stories, quietly told.">
 <meta name="twitter:description" content="A 44-room boutique hotel in Budapest District VI, on Király utca. Six room characters, à la carte breakfast, a bar &amp; lounge, and a courtyard garden — quietly told, not shouted.">
 <meta name="twitter:image" content="https://secrethotel.netlify.app/assets/brand/hero.jpg">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -442,24 +442,70 @@ body:not(.page-home) { --logo-init-p: 1; }
   opacity: 0.45;
   z-index: 2;
 }
-/* Self-drawing facade sketch — the section's background layer. Strokes are
-   traced vector data; the pen draws itself once the section scrolls in. */
-.intro-sketch {
-  position: absolute; inset: 0;
-  pointer-events: none;
-  z-index: 0;
+/* The self-drawing facade sketch, hung as a picture (client, 2026-11-17:
+   design A, the patinated gilt frame). Strokes are traced vector data; the pen
+   draws itself once the frame scrolls into view. The frame is four mitred
+   sides lit from the top left (a moulding profile, a row of dull beads, a
+   patina grain), a thin slip, a dark linen mat with a bevelled window, and
+   glass; a soft sheen crosses frame and glass as the section scrolls by. */
+.intro-art { min-width: 0; }
+.ia-frame {
+  --fw: clamp(16px, 2.1vw, 32px);
+  --profile: #17130c 0%, #3d3222 6%, #7d6c4c 11%, #a3936f 14%, #615338 20%, #30281b 29%, #4d4130 40%, #7a6a4c 49%, #66573c 57%, #2e2619 70%, #4f4330 80%, #8f7f5f 87%, #5a4c34 93%, #1f190f 100%;
+  --bead: radial-gradient(circle, #b4a37f 0 16%, #6e5f42 36%, #2c2417 54%, transparent 60%);
+  --patina: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0.7'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  position: relative; margin: 0; padding: var(--fw);
+  filter: drop-shadow(0 36px 34px rgba(0,0,0,0.6)) drop-shadow(0 6px 8px rgba(0,0,0,0.45));
 }
-.intro-sketch svg {
-  width: 100%; height: 100%; display: block;
-}
-/* Group carries the glow + the readability dial-back, so the strokes stay
-   atmosphere rather than competing with the copy sitting on top of them. */
-.intro-sketch g {
-  opacity: 0.5;
-  filter: drop-shadow(0 0 5px rgba(217, 178, 94, 0.45));
-}
+.ia-s { position: absolute; inset: 0; border-radius: 2px; background-blend-mode: normal, overlay, normal; }
+.ia-s.t { clip-path: polygon(0 0, 100% 0, calc(100% - var(--fw)) var(--fw), var(--fw) var(--fw));
+  background: var(--bead) 0 calc(var(--fw) * 0.7) / calc(var(--fw) * 0.19) calc(var(--fw) * 0.19) repeat-x,
+              var(--patina) 0 0 / 180px 180px,
+              linear-gradient(180deg, var(--profile)) 0 0 / 100% var(--fw) no-repeat; filter: brightness(1.1); }
+.ia-s.b { clip-path: polygon(var(--fw) calc(100% - var(--fw)), calc(100% - var(--fw)) calc(100% - var(--fw)), 100% 100%, 0 100%);
+  background: var(--bead) left 0 bottom calc(var(--fw) * 0.7) / calc(var(--fw) * 0.19) calc(var(--fw) * 0.19) repeat-x,
+              var(--patina) 0 0 / 180px 180px,
+              linear-gradient(0deg, var(--profile)) 0 100% / 100% var(--fw) no-repeat; filter: brightness(0.66); }
+.ia-s.l { clip-path: polygon(0 0, var(--fw) var(--fw), var(--fw) calc(100% - var(--fw)), 0 100%);
+  background: var(--bead) calc(var(--fw) * 0.7) 0 / calc(var(--fw) * 0.19) calc(var(--fw) * 0.19) repeat-y,
+              var(--patina) 0 0 / 180px 180px,
+              linear-gradient(90deg, var(--profile)) 0 0 / var(--fw) 100% no-repeat; filter: brightness(0.98); }
+.ia-s.r { clip-path: polygon(100% 0, 100% 100%, calc(100% - var(--fw)) calc(100% - var(--fw)), calc(100% - var(--fw)) var(--fw));
+  background: var(--bead) right calc(var(--fw) * 0.7) top 0 / calc(var(--fw) * 0.19) calc(var(--fw) * 0.19) repeat-y,
+              var(--patina) 0 0 / 180px 180px,
+              linear-gradient(270deg, var(--profile)) 100% 0 / var(--fw) 100% no-repeat; filter: brightness(0.8); }
+.ia-sheen { position: absolute; inset: 0; padding: var(--fw); pointer-events: none; border-radius: 2px; opacity: 0.3;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude;
+  background: linear-gradient(112deg, rgba(255,247,224,0) 38%, rgba(255,247,224,0.5) 46%, rgba(255,255,255,0.8) 50%, rgba(255,247,224,0.5) 54%, rgba(255,247,224,0) 62%) var(--sx, 120%) 0 / 260% 100% no-repeat;
+  mix-blend-mode: overlay; }
+.ia-slip { position: relative; padding: clamp(3px, 0.3vw, 5px);
+  background: linear-gradient(135deg, #a8977a, #6f6047 40%, #9c8a6a 60%, #54482f);
+  box-shadow: 0 0 0 1px rgba(20,14,6,0.85), inset 0 0 0 1px rgba(255,240,205,0.25); }
+/* the mat: a dark linen, bottom-weighted, with the frame's shadow falling on it */
+.ia-mat { position: relative; padding: clamp(18px, 2.6vw, 42px) clamp(18px, 2.6vw, 42px) clamp(24px, 3.2vw, 52px);
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.016) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0,0,0,0.12) 0 1px, transparent 1px 3px), #101914;
+  box-shadow: inset 7px 9px 16px rgba(0,0,0,0.6), inset -2px -2px 6px rgba(0,0,0,0.3); }
+/* the bevelled window shows the mat's pale core, lit from the top left */
+.ia-art { position: relative; aspect-ratio: 1448 / 1086; background: #0a110d; overflow: hidden;
+  border: 3px solid; border-color: #4f4b40 #b9af96 #d8cfb6 #6f6a5a; box-shadow: inset 1px 2px 5px rgba(0,0,0,0.6); }
+.ia-art svg { width: 100%; height: 100%; display: block; }
 /* Strokes rest fully retracted (dashoffset = length, written by JS) so the
    finished drawing never flashes before the pen starts. */
+.ia-art svg g { opacity: 0.95; filter: drop-shadow(0 0 5px rgba(217, 178, 94, 0.45)); }
+.ia-glass { position: absolute; inset: var(--fw); pointer-events: none; z-index: 2;
+  background: linear-gradient(118deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.07) 38%, rgba(255,255,255,0) 45%, rgba(255,255,255,0.035) 58%, rgba(255,255,255,0) 64%) var(--gx, 80%) 0 / 240% 100% no-repeat; }
+/* a small, rubbed brass plaque on the bottom rail */
+.ia-plaque { position: absolute; z-index: 3; left: 50%; bottom: calc(var(--fw) / 2); transform: translate(-50%, 50%);
+  display: flex; gap: 14px; align-items: center; padding: 5px 22px; border-radius: 2px; white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: #241c0e;
+  text-shadow: 0 1px 0 rgba(220,205,170,0.35);
+  background: linear-gradient(180deg, #b9a77f 0%, #8a7752 45%, #a49270 60%, #6c5c3e 100%);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,250,230,0.45), inset 0 -1px 0 rgba(60,40,10,0.45); }
+.ia-plaque::before, .ia-plaque::after { content: ""; position: absolute; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e8dcbc, #6c5c3e 70%); box-shadow: 0 0 0 0.5px rgba(50,35,10,0.6); }
+.ia-plaque::before { left: 8px; } .ia-plaque::after { right: 8px; }
+.ia-plaque i { width: 3px; height: 3px; transform: rotate(45deg); background: #4a3e28; }
 /* Bottom edge fades to #050605 so it still flows seamlessly into the
    spotlight-bridge (#050605) below, same seam-avoidance as before. */
 .intro-sketch-fade {
@@ -470,10 +516,13 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .intro-inner {
   position: relative;
+  z-index: 2;
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(48px, 6vw, 110px);
+  align-items: center;
 }
 .intro-text { min-width: 0; }
 
@@ -548,6 +597,9 @@ body:not(.page-home) { --logo-init-p: 1; }
 }
 .intro-strip .deck + .deck { margin-top: 1.1em; }
 @media (max-width: 880px) {
+  .intro-inner { grid-template-columns: minmax(0, 1fr); row-gap: 56px; }
+  .ia-plaque { font-size: 7px; letter-spacing: 0.16em; padding: 4px 16px; gap: 8px; }
+  .ia-plaque::before { left: 5px; } .ia-plaque::after { right: 5px; }
   .intro-meta  { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 40px; padding-top: 22px; }
   .intro-meta .v { font-size: 15px; }
 }
@@ -2160,10 +2212,10 @@ body.menu-open nav.top { transform: none !important; }
    A word marked <em class="u"> gets the house underline: 2px at display
    sizes, fading to nothing at its right end, drawn left to right once the
    word scrolls into view — the same line as the intro's "stories"
-   (.intro-strip .em-word). Its colours, a gold word on a gold line, are
-   set with the headings below. Without JavaScript, or with reduced
+   (.intro-strip .em-word). The word keeps the flat accent gold its own
+   rules give it; the line's colour is set with the headings below. Without JavaScript, or with reduced
    motion, the line is simply there. */
-em.u { color: inherit !important; display: inline-block; }
+em.u { display: inline-block; }
 em.u::after {
   content: ""; display: block;
   height: max(1px, 0.017em); margin-top: -0.08em;
@@ -2180,48 +2232,49 @@ html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
 .sp-out em.u::after { visibility: hidden; }
 .sp-fill em.u::after { transition-delay: 1.9s; }
 
+/* ── Mobile bar (client, 2026-11-17) ─────────────────────────────────────
+   Wherever the menu button shows (≤1024px): the wordmark on the left,
+   Reserve in the middle, the button in the right corner. The side columns
+   are equal, so Reserve sits on the true centre. The language pill, where
+   it still shows (561–1024px), sits just left of the button. */
+@media (max-width: 1024px) {
+  nav.top { grid-template-columns: 1fr auto 1fr; }
+  nav.top .nav-right { display: contents; }
+  nav.top .nav-brand, nav.top .nav-brand-slot { grid-column: 1; grid-row: 1; justify-self: start; }
+  nav.top .nav-cta { grid-column: 2; grid-row: 1; justify-self: center; }
+  nav.top .m-burger { grid-column: 3; grid-row: 1; justify-self: end; margin: 0 -11px 0 0; }
+  nav.top .lang-toggle { grid-column: 3; grid-row: 1; justify-self: end; margin-right: 46px; }
+}
+
+/* ── Phones: no spotlight scene (client, 2026-11-17) ─────────────────────
+   The three-part scene of the man in the light is drawn to the shape of the
+   screen (background-size: 100% 100%), so on a tall phone it stretches.
+   There the bridge collapses (to no height, not display:none: the chapter
+   bar measures its offsetTop) and the two sections carry the site's own
+   wash instead — from the dark of the intro to the wine of the rooms. */
+@media (max-width: 880px) {
+  .spotlight-bridge { min-height: 0; height: 0; }
+  .spotlight-sticky { display: none; }
+  #pleasures { height: auto; min-height: 0; margin-top: 0; -webkit-mask-image: none; mask-image: none;
+    background: linear-gradient(180deg, #050605 0%, #0d0508 100%); }
+  #pleasures .bg { display: none; }
+  #pleasures .plate-content { padding-top: 72px; padding-bottom: 32px; row-gap: 40px; }
+  #pleasures .scrollcue { display: none; }
+  .pleasures-body { margin-top: 0; min-height: 0; padding-top: 24px; -webkit-mask-image: none; mask-image: none; background: #0d0508; }
+  .pleasures-body::before { background-image: none; }
+  .pleasures-body::after { background: linear-gradient(180deg, #0d0508 0%, #1c0610 28%, #300511 56%, #420213 80%, #4F0014 100%); }
+}
+
 /* ── Headings on dark surfaces (client, 2026-11-17) ───────────────────────
-   Chosen in the headings playground: the heading is warm cream (#F0EAD6) at
-   84%, and only its emphasised word is gold — a pale-gold metal clipped to
-   the letters at 92%, with a gold underline and a soft glint once a minute,
-   the first a minute after the heading comes into view.
-   A heading on a dark surface carries .hg; its gold word is <em class="u">.
-   The metal is a background, and a background paints only inside its box,
-   so each gold word grows its box with padding cancelled by an equal
-   negative margin (layout unchanged) — otherwise ascenders, descenders and
-   the overhang of an italic last letter stand outside it and stay unfilled. A layered child does not show through
-   a parent's clip, so where the word itself is split into layered spans the
-   metal goes on those: the intro's .em-word, and the reserve headline's
-   words inside its <em>, once the script has split them. The hero's outline
-   copy keeps its word unpainted, so the word does not show before the wipe. */
-.hg, .sp-fill, .dish.combo .dish-name { color: rgba(240,234,214,0.84) !important; }
-em.u, .hg-split .w.em-word, .hg-words[data-split="true"] em.u .reserve-word {
-  color: transparent !important;
-  -webkit-background-clip: text; background-clip: text;
-  background-image:
-    linear-gradient(110deg, rgba(255,251,238,0) 42%, rgba(255,251,238,0.58) 50%, rgba(255,251,238,0) 58%),
-    linear-gradient(100deg, rgba(168,148,110,0.92) 0%, rgba(205,188,152,0.92) 20%, rgba(242,233,211,0.92) 36%, rgba(216,201,166,0.92) 52%, rgba(179,160,123,0.92) 70%, rgba(227,214,184,0.92) 88%, rgba(188,169,134,0.92) 100%);
-  background-size: 260% 100%, 100% 100%;
-  background-repeat: no-repeat;
-  background-position: -60% 0, 0 0;
-  padding: 0.24em 0.12em; margin: -0.24em -0.12em;
-}
-.hg-words[data-split="true"] em.u { background-image: none; padding: 0; margin: 0; }
-/* Every gold word is italic, as chosen; the intro's word is a span, not an <em>. */
-.intro-strip h2 .w.em-word { font-style: italic; }
-.sp-out em.u { background-image: none !important; }
-em.u::after, .intro-strip h2 .w.em-word::after { background: linear-gradient(90deg, rgba(201,179,138,0.95), rgba(201,179,138,0)); }
-@keyframes hgGlint {
-  0%   { background-position: 160% 0, 0 0; }
-  96.5% { background-position: 160% 0, 0 0; animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1); }
-  100% { background-position: -60% 0, 0 0; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .hg.glint em.u,
-  .hg-split.glint .w.em-word,
-  .hg-words.glint[data-split="true"] em.u .reserve-word,
-  .sp-fill em.u { animation: hgGlint 60s linear infinite; }
-}
+   A heading on a dark surface (.hg, with the hero's fill and room service's
+   "Choose 4" card) is a softened white, #F0EAD6 at 92% — an alpha on the
+   colour, not opacity, so its one emphasised word (<em class="u">) keeps the
+   flat accent gold its own rules give it, at full strength, on an underline
+   of the same gold. No metal, no glint. The <span class="hg-t"> wrappers left
+   from the metal version are inert. */
+.hg, .sp-fill, .dish.combo .dish-name { color: rgba(240,234,214,0.92) !important; }
+em.u::after, .intro-strip h2 .w.em-word::after { background: linear-gradient(90deg, rgba(185,144,78,0.95), rgba(185,144,78,0)); }
+.intro-strip h2 .w.em-word { color: var(--accent); font-style: italic; }
 </style>
 <script type="application/ld+json">
 {
@@ -2385,7 +2438,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
 
   <div class="sp-body">
     <div class="sp-kicker"><span class="rule"></span>Budapest VI · Est. 2019<span class="rule"></span></div>
-    <h1 class="sp-ttl"><span class="sp-out">A hotel of <em class="u">stories,</em><br>quietly told.</span><span class="sp-fill" aria-hidden="true">A hotel of <em class="u">stories,</em><br>quietly told.</span></h1>
+    <h1 class="sp-ttl"><span class="sp-out">A hotel of <em class="u">Stories,</em><br>quietly told.</span><span class="sp-fill" aria-hidden="true">A hotel of <em class="u">Stories,</em><br>quietly told.</span></h1>
     <p class="sp-sub">Forty-four rooms, six characters — a small house on Király utca.</p>
     <div class="sp-acts">
       <a class="sp-btn-solid" href="https://ibe.sabeeapp.com/v3/p/Stories-Boutique-Hotel?p=063b197ca9a16951" target="_blank" rel="noopener">Book a stay <span aria-hidden="true">&rarr;</span></a>
@@ -2405,16 +2458,22 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
 
 <!-- INTRO STRIP — editorial reveal as logo shrinks into nav -->
 <section class="intro-strip" id="intro" data-label="01 / The House">
-  <div class="intro-sketch" aria-hidden="true">
-    <svg id="introSketch" viewBox="0 0 1448 1086" preserveAspectRatio="xMidYMid slice" focusable="false"></svg>
-  </div>
   <div class="intro-sketch-fade" aria-hidden="true"></div>
   <div class="intro-inner">
     <div class="intro-text">
       <div class="overline"><span>I</span><span>·</span><span>Stories Hotel · Budapest VI · Király utca 26</span></div>
-      <h2 class="hg hg-split"><span class="w">Our</span> <span class="w em-word">stories…</span></h2>
+      <h2 class="hg hg-split"><span class="w">Our</span> <span class="w em-word">Stories…</span></h2>
       <p class="deck" id="introDeck"><span class="rw">Forty-four</span> <span class="rw">rooms,</span> <span class="rw">six</span> <span class="rw">characters,</span> <span class="rw">one</span> <span class="rw">Twenty</span> <span class="rw">Six</span> <span class="rw">building.</span> <span class="rw">A</span> <span class="rw">small</span> <span class="rw">house</span> <span class="rw">on</span> <span class="rw">Király</span> <span class="rw">utca,</span> <span class="rw">lived-in</span> <span class="rw">and</span> <span class="rw">attentive</span> <span class="rw">—</span> <span class="rw">the</span> <span class="rw">opposite</span> <span class="rw">of</span> <span class="rw">anonymous.</span></p>
       <p class="deck deck--secondary"><span class="rw">Discover</span> <span class="rw">the</span> <span class="rw">epitome</span> <span class="rw">of</span> <span class="rw">uniqueness</span> <span class="rw">at</span> <span class="rw">our</span> <span class="rw">boutique</span> <span class="rw">hotel,</span> <span class="rw">where</span> <span class="rw">every</span> <span class="rw">corner</span> <span class="rw">is</span> <span class="rw">infused</span> <span class="rw">with</span> <span class="rw">design</span> <span class="rw">and</span> <span class="rw">excitement.</span> <span class="rw">Your</span> <span class="rw">search</span> <span class="rw">for</span> <span class="rw">the</span> <span class="rw">perfect</span> <span class="rw">destination</span> <span class="rw">ends</span> <span class="rw">here.</span> <span class="rw">Welcome</span> <span class="rw">to</span> <span class="rw">a</span> <span class="rw">world</span> <span class="rw">where</span> <span class="rw">unforgettable</span> <span class="rw">experiences</span> <span class="rw">await</span> <span class="rw">at</span> <span class="rw">every</span> <span class="rw">turn.</span></p>
+    </div>
+    <div class="intro-art">
+      <figure class="ia-frame">
+        <i class="ia-s t" aria-hidden="true"></i><i class="ia-s r" aria-hidden="true"></i><i class="ia-s b" aria-hidden="true"></i><i class="ia-s l" aria-hidden="true"></i>
+        <i class="ia-sheen" aria-hidden="true"></i>
+        <div class="ia-slip"><div class="ia-mat"><div class="ia-art"><svg id="introSketch" viewBox="0 0 1448 1086" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true"></svg></div></div></div>
+        <i class="ia-glass" aria-hidden="true"></i>
+        <figcaption class="ia-plaque"><span>Twenty Six building</span><i aria-hidden="true"></i><span>Király utca 26</span></figcaption>
+      </figure>
     </div>
   </div>
   <div class="intro-meta">
@@ -2465,7 +2524,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('u-
         <div class="inner">
           <div class="tag">III · 02 — Body</div>
           <h3 class="hg"><span class="hg-t">Gym, with <em class="u">GoActive</em></span></h3>
-          <p>Our neighbours at GoActive, five minutes away — Technogym equipment and a sauna. Reception can arrange access.</p>
+          <p>GoActive, five minutes away — Technogym equipment and a sauna. Reception can arrange access.</p>
           <a href="pleasures.html#gym" class="more">See schedule →</a>
         </div>
       </div>
@@ -3051,7 +3110,7 @@ window.whenLibsReady = function (fn) {
   var introStrip  = document.querySelector('.intro-strip');
   var reduceMo    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ── Self-drawing facade sketch (background of this section). Traced
+  // ── Self-drawing facade sketch (the framed picture in this section). Traced
   // stroke data; each path is drawn by animating stroke-dashoffset at a
   // constant "pen speed" so the whole pass reads as one continuous hand.
   // Draws once, the first time the section scrolls into view.
@@ -3133,7 +3192,8 @@ window.whenLibsReady = function (fn) {
     }, { rootMargin: '100% 0px' });
     sketchWarm.observe(introStrip);
 
-    // Reveal once when the section enters viewport
+    // Reveal once when the framed picture is in view — on a phone it sits
+    // below the text, so the section's own entry would be too early.
     var introObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
@@ -3143,8 +3203,8 @@ window.whenLibsReady = function (fn) {
           introObs.disconnect();
         }
       });
-    }, { threshold: 0.25 });
-    introObs.observe(introStrip);
+    }, { threshold: 0.3 });
+    introObs.observe(introStrip.querySelector('.ia-art') || introStrip);
   }
 
   // Scroll-fill (tresmarescapital-style): the headline, both deck paragraphs
@@ -3180,6 +3240,17 @@ window.whenLibsReady = function (fn) {
           onUpdate: function (self) {
             if (emWord) emWord.style.setProperty('--underline', self.progress > 0.3 ? 1 : 0);
           }
+        }
+      });
+    }
+    // Light travels across the frame and its glass as the picture scrolls by.
+    var introFrame = introStrip.querySelector('.ia-frame');
+    if (introFrame) {
+      ScrollTrigger.create({
+        trigger: introFrame, start: 'top bottom', end: 'bottom top', scrub: 0.6,
+        onUpdate: function (self) {
+          introFrame.style.setProperty('--sx', (135 - 170 * self.progress).toFixed(1) + '%');
+          introFrame.style.setProperty('--gx', (100 - 90 * self.progress).toFixed(1) + '%');
         }
       });
     }
@@ -4231,19 +4302,6 @@ body.classList.toggle('in-cinema', e.isIntersecting);
     });
   }, { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
   Array.prototype.forEach.call(words, function (w) { io.observe(w); });
-})();
-</script>
-<script>
-/* Start each gold heading's glint when it first comes into view (see .hg). */
-(function () {
-  var hs = document.querySelectorAll('.hg');
-  if (!hs.length) return;
-  var go = function (h) { h.classList.add('glint'); };
-  if (!('IntersectionObserver' in window)) { Array.prototype.forEach.call(hs, go); return; }
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) { if (!e.isIntersecting) return; go(e.target); io.unobserve(e.target); });
-  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.5 });
-  Array.prototype.forEach.call(hs, function (h) { io.observe(h); });
 })();
 </script>
 </body>
