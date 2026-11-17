@@ -522,6 +522,11 @@ html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
 .hg-words:not([data-split="true"]) { padding-block: 0.16em; margin-block: -0.16em calc(28px - 0.16em); }
 .sp-fill { padding: 0.3em; margin: -0.3em; }
 .sp-out { -webkit-text-stroke-color: rgba(201,179,138,0.5) !important; }
+/* Room service's "Choose 4" card sits on green, where the standard stops
+   fall to 2.5:1; lifted stops keep its darkest point at 4.0:1. */
+.dish.combo .dish-name { background-image:
+    linear-gradient(110deg, rgba(255,251,238,0) 42%, rgba(255,251,238,0.8) 50%, rgba(255,251,238,0) 58%),
+    linear-gradient(100deg, rgba(182,160,122,0.9) 0%, rgba(204,184,146,0.9) 20%, rgba(238,227,202,0.9) 36%, rgba(211,192,155,0.9) 52%, rgba(187,164,126,0.9) 70%, rgba(223,208,174,0.9) 88%, rgba(194,171,134,0.9) 100%); }
 @keyframes hgGlint {
   0%   { background-position: 160% 0, 0 0; }
   96.5% { background-position: 160% 0, 0 0; animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1); }
