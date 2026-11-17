@@ -409,58 +409,47 @@ body.menu-open nav.top { transform: none !important; }
 .nf-links .n { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--text-3); }
 .legal-body { padding: 0 clamp(40px, 6vw, 96px) clamp(72px, 9vw, 110px); }
 
-/* ── Headings on dark surfaces: champagne gold (client, 2026-11-16) ──────
-   Any heading that would be white or cream on a dark surface carries .hg:
-   a metal gradient clipped to the letters at 90% strength, and a glint that
-   crosses it once a minute — the first a minute after it comes into view.
-
-   The metal is a background, and a background paints only inside its box.
-   These headings set line-height near 0.95, so ascenders and descenders
-   stand outside the box and would be left unfilled. So the metal never sits
-   on a heading's own box:
-   • ordinary headings wrap their text in <span class="hg-t">, an inline box,
-     which is as tall as the font itself whatever the line-height;
-   • words or lines that animate on a layer of their own carry the metal
-     themselves (a layered child does not show through a parent's clip), and
-     grow their box with padding cancelled by an equal negative margin:
-     .hg-split for spans in the markup, .hg-words for words a script splits
-     out — which keeps its own metal until it has been split;
-   • the hero fill and room service's script-built "Choose 4" card likewise.
-   On the light paper pages headings stay ink: gold on paper fails contrast. */
-.hg-t, .sp-fill, .dish.combo .dish-name,
-.hg-split .w, .hg-split .ln > span,
-.hg-words .reserve-word, .hg-words:not([data-split="true"]) {
+/* ── Headings on dark surfaces (client, 2026-11-17) ───────────────────────
+   Chosen in the headings playground: the heading is warm cream (#F0EAD6) at
+   84%, and only its emphasised word is gold — a pale-gold metal clipped to
+   the letters at 92%, with a gold underline and a soft glint once a minute,
+   the first a minute after the heading comes into view.
+   A heading on a dark surface carries .hg; its gold word is <em class="u">.
+   The metal is a background, and a background paints only inside its box,
+   so each gold word grows its box with padding cancelled by an equal
+   negative margin (layout unchanged) — otherwise ascenders, descenders and
+   the overhang of an italic last letter stand outside it and stay unfilled. A layered child does not show through
+   a parent's clip, so where the word itself is split into layered spans the
+   metal goes on those: the intro's .em-word, and the reserve headline's
+   words inside its <em>, once the script has split them. The hero's outline
+   copy keeps its word unpainted, so the word does not show before the wipe. */
+.hg, .sp-fill, .dish.combo .dish-name { color: rgba(240,234,214,0.84) !important; }
+em.u, .hg-split .w.em-word, .hg-words[data-split="true"] em.u .reserve-word {
   color: transparent !important;
   -webkit-background-clip: text; background-clip: text;
   background-image:
-    linear-gradient(110deg, rgba(255,251,238,0) 42%, rgba(255,251,238,0.8) 50%, rgba(255,251,238,0) 58%),
-    linear-gradient(100deg, rgba(143,122,87,0.9) 0%, rgba(191,169,130,0.9) 20%, rgba(233,220,190,0.9) 36%, rgba(201,179,138,0.9) 52%, rgba(158,135,94,0.9) 70%, rgba(216,199,162,0.9) 88%, rgba(169,144,104,0.9) 100%);
+    linear-gradient(110deg, rgba(255,251,238,0) 42%, rgba(255,251,238,0.58) 50%, rgba(255,251,238,0) 58%),
+    linear-gradient(100deg, rgba(168,148,110,0.92) 0%, rgba(205,188,152,0.92) 20%, rgba(242,233,211,0.92) 36%, rgba(216,201,166,0.92) 52%, rgba(179,160,123,0.92) 70%, rgba(227,214,184,0.92) 88%, rgba(188,169,134,0.92) 100%);
   background-size: 260% 100%, 100% 100%;
   background-repeat: no-repeat;
   background-position: -60% 0, 0 0;
+  padding: 0.24em 0.12em; margin: -0.24em -0.12em;
 }
-.hg-split .w, .hg-split .ln > span, .hg-words .reserve-word { padding-block: 0.24em; margin-block: -0.24em; }
-.hg-words:not([data-split="true"]) { padding-block: 0.16em; margin-block: -0.16em calc(28px - 0.16em); }
-.sp-fill { padding: 0.3em; margin: -0.3em; }
-.sp-out { -webkit-text-stroke-color: rgba(201,179,138,0.5) !important; }
-/* Room service's "Choose 4" card sits on green, where the standard stops
-   fall to 2.5:1; lifted stops keep its darkest point at 4.0:1. */
-.dish.combo .dish-name { background-image:
-    linear-gradient(110deg, rgba(255,251,238,0) 42%, rgba(255,251,238,0.8) 50%, rgba(255,251,238,0) 58%),
-    linear-gradient(100deg, rgba(182,160,122,0.9) 0%, rgba(204,184,146,0.9) 20%, rgba(238,227,202,0.9) 36%, rgba(211,192,155,0.9) 52%, rgba(187,164,126,0.9) 70%, rgba(223,208,174,0.9) 88%, rgba(194,171,134,0.9) 100%); }
+.hg-words[data-split="true"] em.u { background-image: none; padding: 0; margin: 0; }
+/* Every gold word is italic, as chosen; the intro's word is a span, not an <em>. */
+.intro-strip h2 .w.em-word { font-style: italic; }
+.sp-out em.u { background-image: none !important; }
+em.u::after, .intro-strip h2 .w.em-word::after { background: linear-gradient(90deg, rgba(201,179,138,0.95), rgba(201,179,138,0)); }
 @keyframes hgGlint {
   0%   { background-position: 160% 0, 0 0; }
   96.5% { background-position: 160% 0, 0 0; animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1); }
   100% { background-position: -60% 0, 0 0; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .hg.glint .hg-t,
-  .hg-split.glint .w,
-  .hg-words.glint:not([data-split="true"]),
-  .hg-words.glint .reserve-word { animation: hgGlint 60s linear infinite; }
-  .sp-fill, .dish.combo .dish-name { animation: hgGlint 60s linear infinite; }
-  .hg-split.glint .ln > span { animation: lineRise 1.1s var(--ease) both, hgGlint 60s linear infinite; }
-  .hg-split.glint .ln:nth-child(2) > span { animation-delay: 0.12s, 0s; }
+  .hg.glint em.u,
+  .hg-split.glint .w.em-word,
+  .hg-words.glint[data-split="true"] em.u .reserve-word,
+  .sp-fill em.u { animation: hgGlint 60s linear infinite; }
 }
 </style>
 </head>
