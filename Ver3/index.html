@@ -2275,6 +2275,13 @@ html.u-armed em.u:not(.is-drawn)::after { transform: scaleX(0); }
 .hg, .sp-fill, .dish.combo .dish-name { color: rgba(240,234,214,0.92) !important; }
 em.u::after, .intro-strip h2 .w.em-word::after { background: linear-gradient(90deg, rgba(185,144,78,0.95), rgba(185,144,78,0)); }
 .intro-strip h2 .w.em-word { color: var(--accent); font-style: italic; }
+/* Phones and touch screens (client, 2026-11-17): there the lit circle of the
+   hero photo sits right behind the title, and the softened white is lost
+   against the bright window. The whole title is filled with the accent gold
+   instead, at full strength, with a soft shadow to lift it off the light. */
+@media (max-width: 880px), (hover: none) {
+  .sp-fill { color: var(--accent) !important; text-shadow: 0 2px 16px rgba(5,10,8,0.55); }
+}
 </style>
 <script type="application/ld+json">
 {
